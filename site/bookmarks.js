@@ -127,5 +127,10 @@ $('exportNetscape').addEventListener('click',()=>{
   }catch(e){$('netscapePreview').textContent='导出失败：'+String(e.message||e).slice(0,160);}
 });
 window.addEventListener('aq:language-change',render);
+try{
+ const query=sessionStorage.getItem('avenqir.bookmarks.quick-query.v90');
+ sessionStorage.removeItem('avenqir.bookmarks.quick-query.v90');
+ if(query&&$('filterLinks'))$('filterLinks').value=String(query).slice(0,120);
+}catch{}
 render();
 })();
