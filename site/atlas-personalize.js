@@ -3,7 +3,7 @@
 (function(root){
  const KEY='avenqir.atlas.local-recommend.v1', DAY=86400000, TTL=60, MAX=30;
  const own=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
- const category=x=>typeof x==='string'&&x.trim().length>0&&x.length<=32&&!/[\x00-\x1f<>]/.test(x)&&!['__proto__','constructor','prototype'].includes(x)?x.trim():null;
+ const category=x=>typeof x==='string'&&x.trim().length>0&&x.length<=32&&!/[\x00-\x1f<>\\/:?#@.]/.test(x)&&!['__proto__','constructor','prototype'].includes(x)?x.trim():null;
  const today=(now=Date.now())=>Math.floor(now/DAY);
  const blank=()=>({v:1,enabled:false,interests:[],activity:{}});
  function clean(raw,now=today()){
