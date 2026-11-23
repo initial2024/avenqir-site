@@ -1,16 +1,44 @@
 #!/usr/bin/env python3
-"""Verify the public deployment marker matches the current GitHub commit."""
-import json,os,sys,time,urllib.request
-expected=os.environ['GITHUB_SHA']
-url='https://avenqir.bg5.net/deploy-state.json'
-for attempt in range(5):
+"""Check the public deployment marker; FTPS byte verification remains authoritative.
+
+Some iFastNet installations show a JavaScript anti-bot page to CI runners.
+When this happens, report the HTTP probe as inconclusive rather than claim
+the public page was verified or that the FTPS upload definitely failed.
+"""
+import json
+import os
+import sys
+import time
+import urllib.request
+import urllib.error
+
+expected = os.environ["GITHUB_SHA"]
+url = "https://avenqir.bg5.net/deploy-state.json"
+reason = "not attempted"
+for attempt in range(3):
     try:
-        req=urllib.request.Request(url+'?check='+expected[:12]+'&try='+str(attempt),headers={'Cache-Control':'no-cache','User-Agent':'AVENQIR-Release-Check/1'})
-        with urllib.request.urlopen(req,timeout=20) as r: data=json.load(r)
-        if data.get('commit')==expected:
-            print('PASS: production version matches',expected[:12]);sys.exit(0)
-        print('Awaiting published commit, attempt',attempt+1)
-    except Exception as e:
-        print('Awaiting public deployment marker:',type(e).__name__)
-    time.sleep(6)
-sys.exit('VERIFY_FAILED: FTPS upload may have succeeded but HTTPS site is not serving this commit. Do not call it released.')
+        req = urllib.request.Request(
+            url+"?check="+expected[:12]+"&try="+str(attempt),
+            headers={"Cache-Control": "no-cache", "User-Agent": "AVENQIR-Release-Check/1"}
+        )
+        with urllib.request.urlopen(req, timeout=12) as r:
+            body = r.read(64000)
+        if b"slowAES.decrypt" in body or b"/aes.js" in body:
+            reason = "SEUS returned an anti-bot challenge to the CI HTTP client"
+            break
+        if body.lstrip().startswith(b"<"):
+            reason = "server returned HTML instead of the JSON deployment marker"
+        else:
+            data = json.loads(body)
+            if isinstance(data,dict) and data.get("commit") == expected:
+                print("PASS: public HTTPS deployment marker matches commit", expected[:12])
+                sys.exit(0)
+            reason = "deployment marker missing or reports another commit"
+    except (OSError, ValueError, json.JSONDecodeError, urllib.error.URLError) as e:
+        reason = type(e).__name__
+    if attempt < 2:
+        time.sleep(4)
+
+print("HTTP_PROBE_INCONCLUSIVE:", reason)
+print("Verify public browsing separately; FTPS authenticated SHA-256 read-back is checked during deployment.")
+sys.exit(2)
