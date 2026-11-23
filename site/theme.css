@@ -345,3 +345,21 @@
 /* Region select uses native optgroups to keep a 40-region mobile picker scannable. */
 .search-body #atlasRegionSelect optgroup{font-weight:700;color:var(--ui-ink,#243f59)}
 .search-body #atlasRegionSelect option{font-weight:400;color:var(--ui-ink,#243f59)}
+
+/* v8.9: security risk overview is informational, never a certification badge. */
+.search-body .atlas-security-panel{max-width:1150px;margin:0 auto 21px;padding:clamp(16px,3vw,24px);border:1px solid var(--ui-line,#cddce9);border-radius:18px;background:var(--ui-card,#fff);color:var(--ui-ink,#233b54)}
+.search-body .atlas-security-heading{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}
+.search-body .atlas-security-heading h2{color:var(--ui-ink,#233b54);margin:5px 0 7px;font-size:clamp(19px,2.3vw,22px)}
+.search-body .atlas-security-heading p,.search-body .atlas-security-foot{color:var(--ui-sub,#647a91);font-size:12px;line-height:1.65;margin:0}
+.search-body .atlas-security-heading strong{color:var(--ui-ink,#233b54)}
+.search-body .atlas-security-external{flex:none;border:1px solid var(--ui-line,#cddce9);background:var(--ui-alt,#edf4fb);border-radius:11px;padding:10px 13px;color:var(--ui-link,#2b6fbe);font-size:12px;text-decoration:none;font-weight:680}
+.search-body .atlas-security-external:hover,.search-body .atlas-security-lookup:hover{text-decoration:underline}
+.search-body .atlas-security-counts{margin:17px 0 11px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+.search-body .atlas-security-metric{min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:3px;background:var(--ui-alt,#eff4f9);border:1px solid var(--ui-line,#e0e8ef);border-radius:11px;padding:10px 11px}
+.search-body .atlas-security-metric strong{font-size:20px;color:var(--ui-ink,#233b54)}
+.search-body .atlas-security-metric span{font-weight:700;font-size:12px;color:var(--ui-ink,#233b54)}
+.search-body .atlas-security-metric small{font-size:10px;color:var(--ui-sub,#647a91);line-height:1.5}
+.search-body .atlas-security-lookup{font-size:11px;font-weight:680;color:var(--ui-link,#2676c8);text-decoration:none}
+.search-body .atlas-result-blocked{color:var(--ui-sub,#8995a2)!important;cursor:not-allowed;text-decoration:none!important}
+@media(max-width:850px){.search-body .atlas-security-counts{grid-template-columns:repeat(3,minmax(0,1fr))}.search-body .atlas-security-heading{flex-wrap:wrap}}
+@media(max-width:510px){.search-body .atlas-security-panel{margin:0 10px 16px;padding:14px 12px}.search-body .atlas-security-counts{grid-template-columns:repeat(2,minmax(0,1fr))}.search-body .atlas-security-external{width:100%;text-align:center}.search-body .atlas-security-metric strong{font-size:18px}}

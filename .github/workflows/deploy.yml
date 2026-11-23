@@ -33,6 +33,7 @@ jobs:
         run: |
           python3 scripts/verify_site.py
           python3 scripts/audit_public.py
+          python3 scripts/audit_directory_links.py
       - name: Simulate FTPS create, overwrite and rollback
         run: |
           python3 -m unittest discover -s tests -v
@@ -46,6 +47,7 @@ jobs:
           node tests/test_atlas_specialist.cjs
           node tests/test_atlas_taxonomy.cjs
           node tests/test_atlas_region.cjs
+          node tests/test_atlas_safety.cjs
       - name: Check PHP and JavaScript syntax
         shell: bash
         run: |

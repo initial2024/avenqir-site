@@ -2,7 +2,7 @@
 <html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f8fd"><meta name="referrer" content="no-referrer"><meta name="description" content="AVENQIR Link Atlas：独立策展的公开网站目录。搜索网站、按分类发现资源，支持多设备访问。">
 <title>网站搜索 · AVENQIR Link Atlas</title>
-<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="common.css?v=12"><link rel="stylesheet" href="directory-search.css?v=17"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="theme.css?v=19"></head>
+<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="common.css?v=12"><link rel="stylesheet" href="directory-search.css?v=17"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="theme.css?v=20"></head>
 <body class="search-body"><header class="headbar"><div class="wrap head-inner"><a class="logo" href="index.html"><span class="logoicon">⬡</span> AVENQIR</a><a class="aq-theme-link" data-aq-theme-link="1" aria-label="切换显示模式" href="appearance.html">◐ <span class="aq-theme-link-label">模式</span></a><button type="button" class="menu-toggle" aria-controls="global-nav" aria-expanded="false" aria-label="打开导航菜单">☰ <span>菜单</span></button><nav id="global-nav" class="main-nav" aria-label="网站导航"><a href="index.html">首页</a><a href="directory.html" class="active" aria-current="page">网站搜索</a><a href="bookmarks.html">我的书签</a><a href="notes.html">笔记</a><a href="fun.html">小游戏</a><a href="daily.html">日常</a><a href="check.html">网络检测</a><a href="tools.html">工具箱</a><a href="projects.html">GitHub</a><a href="domains.html">DNS</a><a href="logs.html">日志</a><a href="feedback.php">留言反馈</a></nav><span class="microbadge">ATLAS / v8.7</span></div></header>
 <main class="directory-main">
 <section class="search-hero" aria-labelledby="atlasTitle">
@@ -14,6 +14,17 @@
   <div id="atlasSuggestions" class="atlas-suggestions" hidden role="listbox" aria-label="搜索建议"></div>
  </form>
  <div class="atlas-search-actions"><span class="kbd-hint">按 <kbd>/</kbd> 快速搜索</span><button type="button" class="atlas-random" id="atlasRandom">↗ 随机发现</button><span class="atlas-privacy">搜索本站目录，不自动联系第三方；跳转时按来源核对情况提示</span></div>
+</section>
+<section class="atlas-security-panel" aria-labelledby="atlasSecurityTitle">
+ <div class="atlas-security-heading">
+  <div><span class="atlas-flows-eyebrow">EXTERNAL LINK SCREENING / 网址核验</span>
+   <h2 id="atlasSecurityTitle">🔎 网址结构与来源核对</h2>
+   <p>已对内置链接实施 HTTPS、内网地址、危险协议、重复及可疑结构检查。<strong>这不是恶意软件扫描或第三方安全认证。</strong></p>
+  </div>
+  <a href="https://transparencyreport.google.com/safe-browsing/search" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer" class="atlas-security-external">手动查 Google Safe Browsing ↗</a>
+ </div>
+ <div id="atlasSecurityCounts" class="atlas-security-counts" role="status" aria-live="polite">正在本机核对已加载的目录…</div>
+ <p class="atlas-security-foot">“官方来源已核对”仅表示该条精确 HTTPS 地址的来源记录通过审查；其他网站即使可以访问，也不代表已验证安全。第三方风险查询需要你主动点击后才会向查询服务传送公开网址。</p>
 </section>
 <section class="atlas-taxonomy" aria-labelledby="atlasTaxonomyTitle">
   <div class="atlas-taxonomy-head"><div><span class="atlas-flows-eyebrow">BROWSE BY TOPIC / 分类导航</span>
@@ -93,4 +104,4 @@
   <button id="atlasExternalGo" class="btn primary" type="button">我了解风险，继续访问</button>
   <label class="atlas-remember-choice"><input type="checkbox" id="atlasRemember" autocomplete="off"> <span>记住此网址的确认选择 30 天（仅此浏览器，可随时清除）</span></label>
  </div>
-</form></dialog><script src="link-gate.js?v=12" defer></script><script src="atlas-paths.js?v=16" defer></script><script src="atlas-expansion.js?v=15" defer></script><script src="atlas-specialist.js?v=16" defer></script><script src="atlas-depth-a.js?v=17" defer></script><script src="atlas-depth-b.js?v=17" defer></script><script src="atlas-depth-c.js?v=17" defer></script><script src="atlas-depth-d.js?v=17" defer></script><script src="atlas-ai.js?v=18" defer></script><script src="atlas-regional.js?v=18" defer></script><script src="atlas-everyday.js?v=18" defer></script><script src="atlas-regional-ext.js?v=18" defer></script><script src="atlas-everyday-ext.js?v=18" defer></script><script src="atlas-taxonomy.js?v=18" defer></script><script src="atlas-catalog-core.js?v=19" defer></script><script src="atlas-personalize.js?v=16" defer></script><script src="atlas-personalize-ui.js?v=16" defer></script><script src="atlas-region.js?v=18" defer></script><script src="atlas-region-ui.js?v=18" defer></script><script src="directory.js?v=18" defer></script><script src="site.js?v=18" defer></script><script src="theme.js?v=15" defer></script></body></html>
+</form></dialog><script src="link-gate.js?v=20" defer></script><script src="atlas-paths.js?v=16" defer></script><script src="atlas-expansion.js?v=15" defer></script><script src="atlas-specialist.js?v=16" defer></script><script src="atlas-depth-a.js?v=17" defer></script><script src="atlas-depth-b.js?v=17" defer></script><script src="atlas-depth-c.js?v=17" defer></script><script src="atlas-depth-d.js?v=17" defer></script><script src="atlas-ai.js?v=18" defer></script><script src="atlas-regional.js?v=18" defer></script><script src="atlas-everyday.js?v=18" defer></script><script src="atlas-regional-ext.js?v=18" defer></script><script src="atlas-everyday-ext.js?v=18" defer></script><script src="atlas-taxonomy.js?v=18" defer></script><script src="atlas-catalog-core.js?v=19" defer></script><script src="atlas-safety.js?v=20" defer></script><script src="atlas-personalize.js?v=16" defer></script><script src="atlas-personalize-ui.js?v=16" defer></script><script src="atlas-region.js?v=18" defer></script><script src="atlas-region-ui.js?v=18" defer></script><script src="directory.js?v=20" defer></script><script src="site.js?v=20" defer></script><script src="theme.js?v=15" defer></script></body></html>

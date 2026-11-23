@@ -4,6 +4,7 @@
  const safeUrl=v=>{try{const u=new URL(v);return ['http:','https:'].includes(u.protocol)&&!u.username&&!u.password?u.href:null}catch{return null}};
  const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=String(text);return n};
  const linkGate=window.AVENQIR_LINK_GATE;
+ const safety=window.AVENQIR_ATLAS_SAFETY;
  const externalDialog=$('atlasExternalDialog');
  const externalGo=$('atlasExternalGo');
  const rememberBox=$('atlasRemember');
@@ -201,7 +202,25 @@
    const matched=records.filter(r=>meaningful(r).some(v=>v.includes(q))).slice(0,5);if(!matched.length){suggestClose();return}
    matched.forEach(r=>{const b=el('button','atlas-suggest-item',r.name);b.type='button';b.setAttribute('role','option');b.append(el('small','',new URL(r.url).hostname+' · '+r.category));b.addEventListener('click',()=>{replaceQuery(r.name);suggestClose();input.focus()});suggest.append(b)});suggest.hidden=false;
  }
+ function renderSafetyAudit(){
+   const wrapper=$('atlasSecurityCounts');if(!wrapper||!safety)return;
+   const totals=safety.summary(records);
+   const cells=[
+     ['已检查结构',totals.total+' 条','仅验证网址规则，并非在线扫描'],
+     ['来源已核对',totals.reviewed+' 条','精确官网来源，不等于安全认证'],
+     ['来源待核对',totals.pending+' 条','外链访问前仍提示确认'],
+     ['需额外警惕',totals.caution+' 条','参数、特殊域名或中转链接'],
+     ['结构已阻断',totals.blocked+' 条','无法直接点击访问']
+   ];
+   wrapper.replaceChildren();
+   for(const [name,value,note] of cells){
+     const box=el('div','atlas-security-metric');
+     box.append(el('strong','',value),el('span','',name),el('small','',note));
+     wrapper.append(box);
+   }
+ }
  function draw(){const list=filtered(), shown=list.slice(0,limit);results.replaceChildren();$('atlasEmpty').hidden=list.length!==0;
+   renderSafetyAudit();
    $('resultsTitle').textContent=mode==='saved'?'我的收藏':selectedFlow?paths.flows.find(f=>f.id===selectedFlow).title:query?'搜索结果':category?category+' · 网站':groupId?((taxonomy.groups||[]).find(g=>g.id===groupId)?.title||'其他收录'):'精选网站';
    summary.textContent=(query?'匹配':'目录')+' '+list.length+' 个网站 · 显示 '+shown.length+' 条 / 总目录 '+records.length+' 条'+(category?' · 分类：'+category:'')+(groupId?' · 当前主题分组已筛选':'');
    const counter=$('atlasLiveCount');if(counter)counter.textContent='已整理 '+records.length+' 个独立网址 · '+paths.flows.length+' 条任务路径 · '+new Set(records.map(x=>x.category)).size+' 个分类';
@@ -210,11 +229,11 @@
    for(const x of shown){const url=safeUrl(x.url);if(!url)continue;const host=new URL(url).hostname;
      const card=el('article','atlas-result');const icon=el('div','atlas-result-icon',x.name.slice(0,1).toLocaleUpperCase());icon.setAttribute('aria-hidden','true');
      const data=el('div','atlas-result-info');const hostrow=el('div','atlas-hostline');hostrow.append(el('span','atlas-host',host),el('span','atlas-chip',x.category||'其他'));data.append(hostrow);
-     const a=el('a','atlas-result-title',x.name+' ↗');const reviewed=!!linkGate?.officialSourceReviewed(url);const permitted=isAllowed(url);a.href=permitted?url:'leave.html?url='+encodeURIComponent(url)+'&name='+encodeURIComponent(x.name);a.rel='noopener noreferrer';a.referrerPolicy='no-referrer';a.addEventListener('click',e=>{
+     const a=el('a','atlas-result-title',x.name+' ↗');const reviewed=!!linkGate?.officialSourceReviewed(url);const permitted=isAllowed(url);a.href=permitted?url:'leave.html?url='+encodeURIComponent(url)+'&name='+encodeURIComponent(x.name);a.rel='noopener noreferrer';a.referrerPolicy='no-referrer';const rating=safety?.inspect(url);if(rating?.type==='blocked'){a.removeAttribute('href');a.setAttribute('aria-disabled','true');a.classList.add('atlas-result-blocked');}a.addEventListener('click',e=>{if(rating?.type==='blocked'){e.preventDefault();return;}
        if(e.button!==0||e.ctrlKey||e.metaKey||e.altKey||e.shiftKey)return;
        if(!permitted){e.preventDefault();showExternal(url,x.name);}
        else trackOpen(url);
-     });data.append(a);data.append(el('small',permitted?'atlas-review-ok':'atlas-review-unknown',reviewed?'官方来源已核对 · 直接访问':permitted?'本机已记住 · 直接访问':'第三方来源未核验 · 点击后确认'));
+     });data.append(a);data.append(el('small',reviewed?'atlas-review-ok':'atlas-review-unknown',rating?.label||(reviewed?'官方来源已核对 · 非安全认证':permitted?'本机已记住（来源未核对）':'第三方来源待核对 · 点击后确认')));
      data.append(el('p','atlas-result-desc',x.description||'访问网站'));
      const report=el('a','atlas-report-link','报告失效 ↗');report.href='feedback.php?type=broken&url='+encodeURIComponent(url);report.setAttribute('aria-label','报告 '+x.name+' 链接失效');
      const cmp=el('button','atlas-compare-add',compareUrls.includes(url)?'✓ 已加入对比':'＋ 对比');
@@ -225,7 +244,16 @@
        else {const status=$('atlasCompareStatus');if(status)status.textContent='最多同时比较三个网址，先移除一个。';return;}
        draw();
      });
-     const cardActions=el('div','atlas-card-actions');cardActions.append(report,cmp);data.append(cardActions);
+     const cardActions=el('div','atlas-card-actions');cardActions.append(report,cmp);
+     const externalCheck=safety?.googleStatusLink(url);
+     if(externalCheck){
+       const check=el('a','atlas-security-lookup','查外部风险 ↗');
+       check.href=externalCheck;check.target='_blank';check.rel='noopener noreferrer';check.referrerPolicy='no-referrer';
+       check.title='仅点击后才会把此公开网址交给 Google Safe Browsing 查询；检测结果可能滞后或缺失，不能证明绝对安全';
+       check.setAttribute('aria-label','向 Google Safe Browsing 主动查询 '+x.name+' 的风险状态');
+       cardActions.append(check);
+     }
+     data.append(cardActions);
      const star=el('button','atlas-star'+(favorites.includes(x.url)?' saved':''),favorites.includes(x.url)?'★':'☆');star.type='button';star.title=favorites.includes(x.url)?'取消收藏':'收藏到本机';star.setAttribute('aria-label',star.title);star.addEventListener('click',()=>{if(favorites.includes(x.url))favorites=favorites.filter(u=>u!==x.url);else {favorites.push(x.url);localRecommendations?.recordSave(x.category);}storeFavorites();draw();localRecommendations?.render()});
      card.append(icon,data,star);results.append(card);
    }
