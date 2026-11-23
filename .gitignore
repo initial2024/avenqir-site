@@ -1,0 +1,20 @@
+# Secrets and site-generated runtime state — NEVER commit, even in a public fork
+site/_private/
+site/_store/
+site/private-settings.php
+site/feedback-config.php
+site/deploy-state.json
+**/.env
+**/.env.*
+**/*secret*
+**/*password*
+**/*credential*
+**/*SETUP-CODE*
+**/*backup*
+**/*.key
+**/*.pem
+*.log
+*.zip
+__pycache__/
+*.pyc
+.DS_Store

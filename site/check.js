@@ -1,0 +1,61 @@
+'use strict';
+const $ = id => document.getElementById(id);
+const show = (id,msg,cls='') => { const e=$(id);e.textContent=msg;e.className='status '+cls; };
+const kv=(key,value,detail='')=>{const d=document.createElement('div');d.className='kv';const a=document.createElement('div');a.className='key';a.textContent=key;const b=document.createElement('div');b.className='val';b.textContent=String(value??'未知');d.append(a,b);if(detail){const c=document.createElement('div');c.className='detail';c.textContent=detail;d.append(c);}return d;};
+const add=(container,k,v,detail='')=>container.append(kv(k,v,detail));
+const small=e=>e==null?'未提供':String(e);
+const pad=n=>String(n).padStart(2,'0');
+let currentIP=null, recentLocal=null, intervalId=null, querying=false;
+const snapkey='avenqir_v4_network_snapshots',autoKey='avenqir_v4_ip_consent',intervalKey='avenqir_v4_refresh';
+function offsetString(){const m=-new Date().getTimezoneOffset();return `UTC${m<0?'-':'+'}${pad(Math.floor(Math.abs(m)/60))}:${pad(Math.abs(m)%60)}`;}
+function inspect(){
+ const d=new Date(); const tz=(()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone||'未知'}catch{return '不可用'}})();
+ const s={testedAt:d.toISOString(),timezone:tz,offset:offsetString(),lang:navigator.language||'未知',languages:(navigator.languages||[]).join(', ')||'未知',ua:navigator.userAgent||'未知',viewport:`${document.documentElement.clientWidth} × ${window.innerHeight} CSS px`,screen:`${screen.width} × ${screen.height} CSS px`,pixelRatio:devicePixelRatio??'未知',https:location.protocol==='https:',secureContext:window.isSecureContext===true,visibility:document.visibilityState,online:navigator.onLine,webRTC:!!window.RTCPeerConnection,clipboard:!!navigator.clipboard,webgl:(()=>{try{const c=document.createElement('canvas');return c.getContext('webgl2')?'WebGL2 支持':c.getContext('webgl')?'WebGL1 支持':'不可用'}catch{return '不可用'}})()};
+ recentLocal=s;const grid=$('browserGrid');grid.replaceChildren();[
+ ['JS 时区',s.timezone,'Intl.DateTimeFormat().resolvedOptions()'],['UTC 偏移',s.offset],['浏览器语言',s.lang],['语言列表',s.languages],['视口',s.viewport,'包含页面 UI 与浏览器影响'],['设备屏幕',s.screen],['设备像素比',s.pixelRatio],['安全上下文',s.secureContext?'是':'否'],['当前在线标记',s.online?'在线':'离线','navigator.onLine 仅作为线索'],['WebRTC API',s.webRTC?'可用':'不可用','不代表泄露'],['剪贴板接口',s.clipboard?'可用':'不可用'],['WebGL 支持',s.webgl],['User-Agent',s.ua]].forEach(([k,v,d])=>add(grid,k,v,d||''));return s;
+}
+$('localRun').addEventListener('click',inspect);inspect();
+window.addEventListener('resize',()=>{const v=document.documentElement.clientWidth+' × '+window.innerHeight+' CSS px';if(recentLocal){recentLocal.viewport=v;const cards=$('browserGrid').children; if(cards[4]) cards[4].querySelector('.val').textContent=v;}},{passive:true});
+function validIP(ip){if(!ip)return true;if(ip.length>45||!/^[A-Fa-f0-9:.]+$/.test(ip))return false;if(ip.includes(':'))return ip.includes('::')||ip.split(':').length>=3;const parts=ip.split('.');return parts.length===4&&parts.every(p=>/^\d{1,3}$/.test(p)&&+p<=255);}
+async function fetchTime(url,timeout=8500){const c=new AbortController(),timer=setTimeout(()=>c.abort(),timeout);try{const r=await fetch(url,{signal:c.signal,cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);return await r.json();}finally{clearTimeout(timer)}}
+async function queryIP(){if(querying)return;const ip=$('ipInput').value.trim();if(!validIP(ip)){show('ipStatus','IP 格式错误：请输入 IPv4 或 IPv6；查询自己的出口请留空。','bad');return;}
+ querying=true;$('ipRun').disabled=true;$('ipBadge').textContent='查询中';show('ipStatus','正在从 IPWhois 获取地址信息（失败会尝试降级）…');$('ipGrid').replaceChildren();currentIP=null;
+ const errors=[];let data=null,source='';
+ try{
+  try{const v=await fetchTime('https://ipwho.is/'+encodeURIComponent(ip));if(!v || v.success===false)throw Error(v?.message||'查询未成功');data={ip:v.ip,city:v.city,region:v.region,country:v.country,asn:v.connection?.asn,isp:v.connection?.isp,org:v.connection?.org,network_type:null};source='ipwho.is';}catch(e){errors.push('IPWhois: '+e.message)}
+  if(!data && !ip){try{const v=await fetchTime('https://get.geojs.io/v1/ip/geo.json');if(!v?.ip)throw Error('未返回 IP');data={ip:v.ip,city:v.city,region:v.region,country:v.country,asn:v.asn,isp:v.organization||v.org,org:v.organization,network_type:null};source='GeoJS';}catch(e){errors.push('GeoJS: '+e.message)}}
+  if(!data && !ip){try{const v=await fetchTime('https://api64.ipify.org?format=json');if(!v?.ip)throw Error('未返回 IP');data={ip:v.ip};source='ipify（仅 IP）';}catch(e){errors.push('ipify: '+e.message)}}
+  if(!data)throw Error(errors.join('；'));
+  currentIP={...data,source,checkedAt:new Date().toISOString()};const g=$('ipGrid');[['公网出口 IP',data.ip],['国家 / 地区',data.country||'未知'],['区域 / 城市',[data.region,data.city].filter(Boolean).join(' / ')||'未知'],['ASN',data.asn||'未提供'],['ISP / 组织',data.isp||data.org||'未提供'],['VPN / 代理 / 风险评分','未检测']].forEach(([k,v])=>add(g,k,v));
+  $('ipBadge').textContent='已完成';$('ipBadge').className='pill good';$('ipSource').textContent='数据来源：'+source+'。GeoIP 位置为数据库估计，不是设备 GPS；VPN/代理和平台风控均未进行检测。';show('ipStatus','查询成功 · '+new Date().toLocaleTimeString()+' · 数据源 '+source,'good');
+ }catch(e){$('ipBadge').textContent='不可用';$('ipBadge').className='pill bad';show('ipStatus','查询失败：'+String(e.message).slice(0,300)+'。可稍后再试或打开下方第三方检测网站。','bad');}
+ finally{querying=false;$('ipRun').disabled=false;}
+}
+$('ipRun').addEventListener('click',queryIP);
+function savePreference(){try{localStorage.setItem(autoKey,$('ipAuto').checked?'yes':'no');localStorage.setItem(intervalKey,$('refreshInterval').value)}catch(e){show('ipStatus','当前浏览器禁止保存设置；自动查询偏好不会跨会话保留。','warn')}configureRefresh();}
+$('ipAuto').addEventListener('change',()=>{savePreference();if($('ipAuto').checked)queryIP()});$('refreshInterval').addEventListener('change',savePreference);
+function configureRefresh(){if(intervalId){clearInterval(intervalId);intervalId=null}const x=Number($('refreshInterval').value);if(x>=300000&&$('ipAuto').checked){intervalId=setInterval(()=>{if(!document.hidden&&navigator.onLine)queryIP()},x);}}
+try{$('ipAuto').checked=localStorage.getItem(autoKey)==='yes';const x=localStorage.getItem(intervalKey);if(['0','300000','900000'].includes(x))$('refreshInterval').value=x;}catch{}
+configureRefresh();if($('ipAuto').checked&&document.visibilityState==='visible')queryIP();
+$('latencyRun').addEventListener('click',async()=>{const b=$('latencyRun');b.disabled=true;show('latencyStatus','正在请求本网站的静态文件…');const start=performance.now();const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),9000);try{const r=await fetch('probe.txt?check='+Date.now(),{signal:ctrl.signal,cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);await r.text();const ms=Math.round(performance.now()-start);show('latencyStatus','同源 HTTP 往返 '+ms+' ms（单次采样，不代表 Ping / 网络速度）','good');}catch(e){show('latencyStatus','检测失败：'+e.message,'bad');}finally{clearTimeout(timer);b.disabled=false;}});
+$('typing').addEventListener('focus',()=>show('typingStatus','输入框已获取焦点；请检查键盘是否弹出。'));
+$('typing').addEventListener('input',e=>show('typingStatus','已输入 '+Array.from(e.target.value).length+' 个 Unicode 字符（键盘输入事件正常）','good'));
+$('clipWrite').addEventListener('click',async()=>{try{await navigator.clipboard.writeText('AVENQIR clipboard test '+new Date().toISOString());show('clipStatus','写入剪贴板成功','good')}catch(e){show('clipStatus','写入失败：'+e.message+'，请尝试长按复制。','bad')}});
+$('clipRead').addEventListener('click',async()=>{try{const t=await navigator.clipboard.readText();$('pasting').value=t;show('clipStatus','剪贴板读取成功，字符数 '+t.length,'good')}catch(e){show('clipStatus','读取被拒绝或不受支持（需手势、HTTPS/浏览器许可）：'+e.message,'warn')}});
+$('pasting').addEventListener('input',()=>show('clipStatus','输入/粘贴事件正常，文本长度 '+$('pasting').value.length,'good'));
+$('fileSelect').addEventListener('change',()=>{const f=$('fileSelect').files?.[0];show('fileStatus',f?`选择成功：${f.name} · ${(f.size/1024).toFixed(1)} KiB（未上传）`:'未选择文件',f?'good':'')});
+$('downloadTest').addEventListener('click',()=>{const blob=new Blob(['AVENQIR download test · '+new Date().toISOString()+'\n'],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='avenqir-download-test.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);show('downloadStatus','已触发下载；是否真正保存请检查系统下载列表。','warn')});
+$('storageTest').addEventListener('click',()=>{const key='avenqir_v4_storage_probe';try{const value=String(Date.now());localStorage.setItem(key,value);if(localStorage.getItem(key)!==value)throw Error('读写不一致');localStorage.removeItem(key);show('storageStatus','LocalStorage 写入/读取/删除通过','good')}catch(e){show('storageStatus','存储失败：'+e.message,'bad')}});
+$('webglTest').addEventListener('click',()=>{try{const c=document.createElement('canvas');const type=c.getContext('webgl2')?'WebGL2':c.getContext('webgl')?'WebGL1':'未提供';show('webglStatus','当前支持：'+type,type==='未提供'?'warn':'good')}catch(e){show('webglStatus','失败：'+e.message,'bad')}});
+function getHistory(){try{const x=JSON.parse(localStorage.getItem(snapkey)||'[]');return Array.isArray(x)?x.slice(0,20):[]}catch{return []}}
+function setHistory(xs){try{localStorage.setItem(snapkey,JSON.stringify(xs.slice(0,20)));return true}catch(e){show('historyStatus','无法保存本地历史：'+e.message,'bad');return false}}
+function safeString(v){return v==null?'未查询':String(v)}
+function renderHistory(){const list=$('historyList');list.replaceChildren();const h=getHistory();if(!h.length){const p=document.createElement('p');p.className='hint';p.textContent='没有历史。切换浏览器/网络或应用版本后，可以再次保存对比。';list.append(p)}h.forEach((v,i)=>{const e=document.createElement('div');e.className='histitem';const text=document.createElement('div');const b=document.createElement('b');b.textContent=new Date(v.testedAt).toLocaleString()+' · '+(v.timezone||'未知');const p=document.createElement('p');p.textContent=(v.ip||'未查询 IP')+' · '+(v.ua||'UA 未知').slice(0,75);const del=document.createElement('button');del.className='btn mini-btn ghost';del.textContent='删除';del.addEventListener('click',()=>{const next=getHistory();next.splice(i,1);setHistory(next);renderHistory()});text.append(b,p);e.append(text,del);list.append(e)});
+ const pre=$('compareOutput');if(h.length<2){pre.textContent='至少保存两次快照后自动比较。';return}const [a,b]=h;const lines=[];for(const k of ['timezone','offset','lang','languages','ua','viewport','screen','pixelRatio','webRTC','webgl','ip','asn','isp','source']){if(safeString(a[k])!==safeString(b[k]))lines.push(k+'\n  本次：'+safeString(a[k])+'\n  上次：'+safeString(b[k]))}pre.textContent=lines.length?lines.join('\n\n'):'两次主要字段相同（忽略采样时间）';}
+$('saveSnap').addEventListener('click',()=>{const v=inspect(),s={...v,ip:currentIP?.ip||null,asn:currentIP?.asn||null,isp:currentIP?.isp||null,source:currentIP?.source||null};const h=getHistory();h.unshift(s);if(setHistory(h))show('historyStatus','快照已保存到此浏览器本地（'+Math.min(h.length,20)+'/20）','good');renderHistory()});
+$('clearSnap').addEventListener('click',()=>{if(!confirm('确认清空本浏览器保存的所有网络历史？'))return;setHistory([]);renderHistory();show('historyStatus','历史已清空','good')});
+$('exportSnap').addEventListener('click',()=>{const obj={exportedAt:new Date().toISOString(),snapshots:getHistory(),latestLocal:recentLocal,latestIP:currentIP};const b=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='avenqir-report-'+new Date().toISOString().slice(0,10)+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500);show('historyStatus','已触发本地 JSON 下载；报告包含 IP/UA，请勿公开分享。','warn')});
+renderHistory();
+
+// On-demand shared host PHP heartbeat, deliberately excludes private configuration.
+$('phpRun').addEventListener('click',async()=>{const b=$('phpRun');b.disabled=true;show('phpStatus','正在访问同站 PHP 检测接口…');try{const r=await fetch('status.php?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const j=await r.json();if(!j.ok||j.runtime!=='PHP')throw Error('返回值无效');show('phpStatus',`PHP 运行正常：${j.version} · 服务器 UTC ${j.server_utc}（未读取凭据）`,'good')}catch(e){show('phpStatus','PHP 接口不可用：'+e.message+'（不影响静态页面）','warn')}finally{b.disabled=false}});

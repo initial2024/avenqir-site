@@ -1,0 +1,39 @@
+{
+  "name": "AVENQIR · 探索、工具与解压",
+  "short_name": "AVENQIR",
+  "description": "跨设备公开网址目录、个人书签、笔记、小游戏和实用工具",
+  "lang": "zh-CN",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "theme_color": "#0b1b26",
+  "background_color": "#070c16",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "网站搜索",
+      "short_name": "网址",
+      "url": "./directory.html",
+      "description": "搜索公开网址目录"
+    },
+    {
+      "name": "留言反馈",
+      "short_name": "留言",
+      "url": "./feedback.php",
+      "description": "提交建议和失效链接报告"
+    },
+    {
+      "name": "常用工具",
+      "short_name": "工具",
+      "url": "./tools.html",
+      "description": "本地工具箱"
+    }
+  ]
+}
