@@ -226,7 +226,7 @@
          else if(multiCategories.has(name))multiCategories.delete(name);
          else multiCategories.add(name);
        }else{category=name;multiCategories.clear();}
-       selectedFlow='';limit=24;choiceBar();draw();$('atlasResults').scrollIntoView({behavior:'smooth',block:'start'});
+       selectedFlow='';limit=24;choiceBar();drawPaths();draw();$('atlasResults').scrollIntoView({behavior:'smooth',block:'start'});
      });
      cats.append(button);
    };
@@ -402,7 +402,7 @@
  input.addEventListener('input',refreshEngines);
  for(const a of engineLinks)a.addEventListener('click',refreshEngines);
  refreshEngines();
- document.addEventListener('keydown',e=>{const t=e.target;const typing=t&&(t.matches('input,textarea,select')||t.isContentEditable);if((e.key==='/'&&!typing)||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k')){e.preventDefault();input.focus();input.select()}});
+ document.addEventListener('keydown',e=>{const t=e.target;const typing=t&&(t.matches('input,textarea,select')||t.isContentEditable);if(e.key==='/'&&!typing){e.preventDefault();input.focus();input.select()}});
  document.addEventListener('click',e=>{if(!e.target.closest('.atlas-search-form'))suggestClose()});
  localRecommendations=window.AVENQIR_LOCAL_RECOMMEND_UI?.mount({
    items:()=>records,favorites:()=>favorites,open:showExternal,
