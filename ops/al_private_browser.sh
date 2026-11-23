@@ -165,12 +165,7 @@ diagnose_browser(){
   else
     echo "NO_XVFB_LOG"
   fi
-  echo "--- browser.log ---"
-  if [ -f "$PROFILE/browser.log" ]; then
-    tail -n 20 "$PROFILE/browser.log"
-  else
-    echo "NO_BROWSER_LOG"
-  fi
+  echo "Browser activity and profile logs are intentionally excluded: they may contain private URLs or tokens."
   echo "=== END AL DIAG ==="
 }
 stop_browser(){
