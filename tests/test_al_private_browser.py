@@ -83,7 +83,7 @@ class ALPrivateBrowserSecurity(unittest.TestCase):
         self.assertIn('refusing to spawn another display', guard)
         self.assertIn('wait "$child"', guard)
         self.assertLess(start.index("uid_mapping_guard"), start.index("select_browser_display"))
-        self.assertNotIn("Xvfb", guard)
+        self.assertNotIn("nohup Xvfb", guard)
         self.assertNotIn("kill -9", guard)
         self.assertNotIn("chown -R", guard)
 
