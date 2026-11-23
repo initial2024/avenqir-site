@@ -1,5 +1,8 @@
 name: AVENQIR - import verified source once
 on:
+  push:
+    branches: [main]
+    paths: ['AVENQIR-Public-AutoDeploy-v1.zip']
   workflow_dispatch:
 permissions:
   contents: write
@@ -30,6 +33,13 @@ jobs:
               if stat.S_IFMT(x.external_attr>>16)==stat.S_IFLNK or x.file_size>3_000_000:raise SystemExit('BLOCK: symlink or size')
               dest=Path(*path.parts);dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(z.read(x))
           p.unlink()
+          # Extra deployment approval defaults to false even if an old variable is true.
+          deploy=Path('.github/workflows/deploy.yml')
+          body=deploy.read_text(encoding='utf-8')
+          gate="vars.AVENQIR_AUTO_DEPLOY == 'true' &&"
+          if body.count(gate)!=1:raise SystemExit('BLOCK: missing expected deployment gate')
+          body=body.replace(gate,gate+"\n      vars.AVENQIR_INITIAL_DEPLOY_APPROVED == 'true' &&")
+          deploy.write_text(body,encoding='utf-8')
           PY
           python3 scripts/verify_site.py
           python3 scripts/audit_public.py
