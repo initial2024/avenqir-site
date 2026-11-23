@@ -80,7 +80,7 @@ for(const x of ['fetch(', 'XMLHttpRequest','sendBeacon(','navigator.serviceWorke
 for(const x of ['atlasLocalToggle','atlasLocalBody','atlasLocalCategories','atlasLocalCards','atlasLocalClear','atlasLocalStatus']){
  assert.ok(html.includes('id="'+x+'"'),'missing opt-in UI: '+x);
 }
-assert.ok(html.indexOf('atlas-personalize.js?v=16')<html.indexOf('atlas-personalize-ui.js?v=16'));
+assert.ok(html.indexOf('atlas-personalize.js?v=16')<html.indexOf('atlas-personalize-ui.js?v=29'));
 assert.ok(html.indexOf('atlas-personalize-ui.js?v=16')<html.indexOf('directory.js?v=25'));
 assert.ok(wiring.includes("localRecommendations?.recordOpen("),'approved navigation records category');
 assert.ok(wiring.includes("localRecommendations?.recordSave("),'save records category');
