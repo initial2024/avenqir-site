@@ -81,7 +81,7 @@ for(const x of ['atlasLocalToggle','atlasLocalBody','atlasLocalCategories','atla
  assert.ok(html.includes('id="'+x+'"'),'missing opt-in UI: '+x);
 }
 assert.ok(html.indexOf('atlas-personalize.js?v=16')<html.indexOf('atlas-personalize-ui.js?v=16'));
-assert.ok(html.indexOf('atlas-personalize-ui.js?v=16')<html.indexOf('directory.js?v=18'));
+assert.ok(html.indexOf('atlas-personalize-ui.js?v=16')<html.indexOf('directory.js?v=20'));
 assert.ok(wiring.includes("localRecommendations?.recordOpen("),'approved navigation records category');
 assert.ok(wiring.includes("localRecommendations?.recordSave("),'save records category');
 assert.ok(wiring.includes('items:()=>records'),'recommendations recompute with actual catalog');
