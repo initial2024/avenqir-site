@@ -1,7 +1,7 @@
 name: AVENQIR / feature checks (no deployment)
 on:
   push:
-    branches: ['feature/quick-search-local-transfer-20261123', 'feature/netscape-bookmarks-themes-20261123', 'fix/theme-navigation-cache-20261123', 'feature/atlas-v85-mobile-discovery-20261123', 'feature/atlas-v86-optin-local-recommendations-20261123', 'feature/atlas-v87-category-expansion-20261123', 'feature/atlas-v88-region-optin-deeper-directory-20261123', 'feature/atlas-v89-security-audit-20261123', 'feature/atlas-v90-guided-workflows-search-transfer-20261123']
+    branches: ['feature/quick-search-local-transfer-20261123', 'feature/netscape-bookmarks-themes-20261123', 'fix/theme-navigation-cache-20261123', 'feature/atlas-v85-mobile-discovery-20261123', 'feature/atlas-v86-optin-local-recommendations-20261123', 'feature/atlas-v87-category-expansion-20261123', 'feature/atlas-v88-region-optin-deeper-directory-20261123', 'feature/atlas-v89-security-audit-20261123', 'feature/atlas-v90-guided-workflows-search-transfer-20261123', 'feature/avenqir-v91-orbit-bridge-i18n-hardcoded-20261123']
   pull_request:
     branches: [main]
 
@@ -37,6 +37,8 @@ jobs:
           node tests/test_atlas_safety.cjs
           node tests/test_atlas_i18n.cjs
           node tests/test_transfer_v90.cjs
+          node tests/test_orbit_bridge.cjs
+          node tests/test_i18n_v91.cjs
           php tests/test_server_url_classification.php
       - name: Validate JavaScript and PHP syntax
         shell: bash
