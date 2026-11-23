@@ -110,8 +110,8 @@ start_browser(){
   fi
   sleep 2
   if command -v ss >/dev/null; then
-    ss -ltn | grep -Eq '127\\.0\\.0\\.1:5901[[:space:]]' || fail "VNC did not bind 127.0.0.1:5901 (no public fallback)"
-    if ss -ltn | grep -Eq '(^|[[:space:]])(0\\.0\\.0\\.0|\\*):5901[[:space:]]'; then
+    ss -ltn | grep -Eq '127\.0\.0\.1:5901[[:space:]]' || fail "VNC did not bind 127.0.0.1:5901 (no public fallback)"
+    if ss -ltn | grep -Eq '(^|[[:space:]])(0\.0\.0\.0|\*):5901[[:space:]]'; then
       fail "Unexpected publicly reachable VNC interface: STOP and inspect"
     fi
   fi
