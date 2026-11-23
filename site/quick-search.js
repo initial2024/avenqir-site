@@ -51,6 +51,27 @@
       return score(b)-score(a);
     }).slice(0,12);
   }
+  const STORE='avenqir.quick-search.recent.v90';
+  const SECRET_QUERY='avenqir.bookmarks.quick-query.v90';
+  const PUBLIC_QUERY='avenqir.atlas.quick-query.v90';
+  function readSession(key){try{return sessionStorage.getItem(key)}catch{return null}}
+  function rememberAction(url){
+    try{
+      const arr=JSON.parse(sessionStorage.getItem(STORE)||'[]');
+      const recent=Array.isArray(arr)?arr.filter(x=>typeof x==='string').slice(0,15):[];
+      sessionStorage.setItem(STORE,JSON.stringify([url,...recent.filter(x=>x!==url)].slice(0,15)));
+    }catch{}
+  }
+  function bookmarksFor(query){
+    if(!query)return [];
+    let items=[];
+    try{const raw=JSON.parse(localStorage.getItem('avenqir_v6_bookmarks')||'[]');if(Array.isArray(raw))items=raw.slice(0,200);}catch{}
+    const terms=normalize(query).split(/\s+/).filter(Boolean);
+    return items.filter(x=>x&&typeof x.name==='string'&&typeof x.url==='string'&&terms.every(term=>
+      normalize([x.name,x.category||'',x.note||'',x.url].join(' ')).includes(term)||
+      (window.AVENQIR_ATLAS_FIND?.matches(term,[x.name,x.category||''])||false)
+    )).slice(0,4).map(x=>({title:x.name,keywords:'私人书签 · 仅本机检索',url:'bookmarks.html#library',kind:'private',query:x.name}));
+  }
   const attach=()=>{
     const bar=document.querySelector('.head-inner');
     if(!bar || document.getElementById('aqQuickSearch'))return;
@@ -82,20 +103,38 @@
     const results=document.createElement('div');results.className='aq-search-results';results.id='aqSearchResults';
     results.setAttribute('role','list');
     const hint=document.createElement('div');hint.className='aq-search-hint';
-    const hintText=document.createElement('span');hintText.textContent='仅检索本站功能，不读取私人书签和笔记。';
+    const hintText=document.createElement('span');hintText.textContent='支持本机私人书签和公开网址目录搜索；不读取笔记、不上传私人书签。';
     const explore=document.createElement('a');explore.href='directory.html';explore.textContent='探索公开网址 ↗';
     hint.append(hintText,explore);
     shell.append(heading,row,results,hint);dialog.append(shell);document.body.append(dialog);
     const update=()=>{
-      const found=find(input.value);results.replaceChildren();
+      const query=input.value.trim();
+      let found=find(input.value),recents=[];
+      try{const parsed=JSON.parse(readSession(STORE)||'[]');if(Array.isArray(parsed))recents=parsed;}catch{}
+      found.sort((a,b)=>{
+        const ai=recents.indexOf(a.url),bi=recents.indexOf(b.url);
+        return (ai<0?10000:ai)-(bi<0?10000:bi);
+      });
+      const local=bookmarksFor(query);
+      const shortcuts=query?[{title:'在公开网址目录搜索：'+query.slice(0,50),keywords:'按当前浏览器内的关键词检索收录网站',url:'directory.html#atlasResults',kind:'public',query}]:[];
+      found=[...local,...found.slice(0,Math.max(0,11-local.length)),...shortcuts].slice(0,12);
+      results.replaceChildren();
       for(const item of found){
         const a=document.createElement('a');a.className='aq-search-result';
         a.href=item.url;a.setAttribute('role','listitem');
         const title=document.createElement('strong');title.textContent=item.title;
-        const url=document.createElement('small');url.textContent=item.url;
+        const url=document.createElement('small');url.textContent=item.kind==='private'?'私人书签 · 当前浏览器':item.kind==='public'?'公开目录 · 本地搜索':item.url;
         const arrow=document.createElement('span');arrow.className='aq-result-arrow';arrow.textContent='↗';arrow.setAttribute('aria-hidden','true');
         const body=document.createElement('span');body.className='aq-result-body';body.append(title,url);
-        a.append(body,arrow);results.append(a);
+        a.append(body,arrow);
+        a.addEventListener('click',()=>{
+          try{
+            if(item.kind==='private')sessionStorage.setItem(SECRET_QUERY,item.query);
+            else if(item.kind==='public')sessionStorage.setItem(PUBLIC_QUERY,item.query);
+            else rememberAction(item.url);
+          }catch{}
+        });
+        results.append(a);
       }
       if(!found.length){
         const p=document.createElement('p');p.className='aq-cmd-empty';p.textContent='没有对应的本站功能。可以试试公开网址搜索。';results.append(p);
@@ -111,7 +150,7 @@
     button.addEventListener('click',open);close.addEventListener('click',hide);
     input.addEventListener('input',update);
     input.addEventListener('keydown',e=>{
-      if(e.key==='Enter'){const first=results.querySelector('a');if(first){e.preventDefault();location.assign(first.href);}}
+      if(e.key==='Enter'){const first=results.querySelector('a');if(first){e.preventDefault();first.click();}}
     });
     dialog.addEventListener('click',e=>{if(e.target===dialog)hide();});
     dialog.addEventListener('close',()=>{button.setAttribute('aria-expanded','false');});

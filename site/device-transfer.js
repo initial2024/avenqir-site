@@ -40,17 +40,33 @@
     if(main) return ks.length ? data[main].length+' 条' : '无记录';
     return ks.length+' 组记录';
   }
+  function download(content,type,suffix){
+    const blob=new Blob([content],{type});
+    const url=URL.createObjectURL(blob),link=document.createElement('a');
+    link.href=url;link.download='avenqir-device-'+new Date().toISOString().slice(0,10)+suffix;
+    document.body.append(link);link.click();link.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),10000);
+  }
+  const mode=$('transferMode'),modeHint=$('transferModeHint');
+  mode?.addEventListener('change',()=>{
+    if(modeHint)modeHint.textContent=mode.value==='merge'?
+      '合并：书签按 ID / URL、笔记按 ID 去重；本机冲突记录优先；计时与游戏现有状态不覆盖，只补缺失项。':
+      '覆盖：只替换文件中存在且本次勾选的项目，覆盖前请先导出当前设备的 JSON。';
+  });
+  $('transferExportMarkdown')?.addEventListener('click',()=>{
+    if(!chosen().length){status('请至少选择一类导出内容。',true);return;}
+    try{
+      const pack=API.makeExport(localStorage,chosen());
+      download(API.toMarkdown(pack.archive.data),'text/markdown;charset=utf-8','.md');
+      status('已导出可读 Markdown（不可恢复）。'+(pack.skipped.length?' 跳过 '+pack.skipped.length+' 组无效数据。':''),!!pack.skipped.length);
+    }catch(e){status('Markdown 导出失败：'+String(e.message||e).slice(0,130),true);}
+  });
   $('transferExport').addEventListener('click',()=>{
     const groups=chosen();
     if(!groups.length){status('请至少选择一类数据。',true);return;}
     try {
       const pack=API.makeExport(localStorage,groups);
-      const text=JSON.stringify(pack.archive,null,2);
-      const blob=new Blob([text],{type:'application/json;charset=utf-8'});
-      const url=URL.createObjectURL(blob),link=document.createElement('a');
-      link.href=url;link.download='avenqir-device-'+new Date().toISOString().slice(0,10)+'.json';
-      document.body.append(link);link.click();link.remove();
-      setTimeout(()=>URL.revokeObjectURL(url),10000);
+      download(JSON.stringify(pack.archive,null,2),'application/json;charset=utf-8','.json');
       const msg='已生成本地备份，共 '+Object.keys(pack.archive.data).length+' 组数据。';
       status(msg+(pack.skipped.length?' 另外跳过 '+pack.skipped.length+' 组格式无效的数据。':''),!!pack.skipped.length);
     } catch(e){status('导出失败：'+String(e.message||e).slice(0,130),true);}
@@ -69,7 +85,7 @@
         p.append(a,b);preview.append(p);
       }
       const small=document.createElement('p');small.className='hint';
-      small.textContent='导入只覆盖文件中包含且已经勾选的项目；不删除文件中没有的记录。';
+      small.textContent='只处理文件中包含且勾选的数据；“合并”优先保留本机已存在的记录，“覆盖”按文件替换对应项目；两者都不删除备份里不存在的项目。';
       preview.append(small);
       restore.disabled=false;
       status('已完成文件格式检查。检查预览后，选择类别并点击恢复。');
@@ -81,10 +97,15 @@
     const groups=chosen(),keys=API.selectedKeys(loaded,groups);
     if(!keys.length){status('所选类别在文件中没有可恢复的数据。',true);return;}
     const summary=groups.map(g=>API.GROUPS[g]?.label).filter(Boolean).join('、');
-    if(!confirm('将用备份覆盖此浏览器中选中的已有数据（'+summary+'），其他已打开的网页可能保留旧状态。确定恢复 '+keys.length+' 组记录吗？'))return;
+    const action=mode?.value==='replace'?'replace':'merge';
+    let preview;
+    try{preview=API.prepareImport(localStorage,loaded,keys,action);}
+    catch(e){status('恢复预检查失败：'+String(e.message||e).slice(0,150),true);return;}
+    const label=action==='merge'?'合并（本机冲突数据优先保留）':'覆盖（文件中对应类别的本机数据将被替换）';
+    if(!confirm('准备 '+label+'：'+summary+'。预计写入 '+preview.counts.written+' 组，原样保留 '+preview.counts.unchanged+' 组。请确保其他标签页的数据已保存。确定吗？'))return;
     try{
-      const n=API.importInto(localStorage,loaded,keys);
-      status('成功恢复 '+n+' 组数据。请关闭其他 AVENQIR 标签页，然后刷新对应页面。');
+      const n=API.importInto(localStorage,loaded,keys,action);
+      status('已按“'+(action==='merge'?'合并':'覆盖')+'”模式恢复 '+n+' 组数据；未修改 '+preview.counts.unchanged+' 组本机数据。请关闭其他 AVENQIR 标签页，然后刷新对应页面。');
       clearPreview();
     }catch(e){status('恢复失败：'+String(e.message||e).slice(0,150),true);}
   });

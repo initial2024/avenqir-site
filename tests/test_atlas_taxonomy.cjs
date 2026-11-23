@@ -77,7 +77,7 @@ for(const target of ['atlasGroupBar','atlasCategorySearch','atlasExpandCategorie
  assert.ok(dir.includes('id="'+target+'"'),'missing taxonomy UI control: '+target);
 }
 assert.ok(dir.includes('atlas-taxonomy.js?v=18'));
-assert.ok(dir.indexOf('atlas-taxonomy.js?v=18')<dir.indexOf('directory.js?v=20'));
+assert.ok(dir.indexOf('atlas-taxonomy.js?v=18')<dir.indexOf('directory.js?v=24'));
 assert.ok(sw.includes("'./atlas-taxonomy.js'"));
 assert.ok(css.includes('.atlas-group-bar')&&css.includes('.atlas-taxonomy .atlas-categories'));
 assert.ok(css.includes('@media(max-width:420px)'),'mobile taxonomy CSS present');

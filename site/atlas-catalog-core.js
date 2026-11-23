@@ -6,11 +6,18 @@
  function validURL(v){if(typeof v!=='string'||v.length>1800)return null;try{const u=new URL(v);return (u.protocol==='https:'||u.protocol==='http:')&&!u.username&&!u.password?u.href:null}catch{return null}}
  function sanitize(items){
   if(!Array.isArray(items)||items.length>500)throw Error('目录数据数量异常');
-  return items.filter(x=>x&&typeof x.name==='string'&&typeof x.category==='string'&&typeof x.description==='string'&&validURL(x.url))
-    .map(x=>({name:x.name.slice(0,90),category:x.category.slice(0,40),url:validURL(x.url),description:x.description.slice(0,320)}));
+  return items.filter(x=>x&&typeof x.name==='string'&&typeof x.description==='string'&&
+    (x.category===undefined||typeof x.category==='string')&&validURL(x.url))
+    .map(x=>({
+      name:x.name.slice(0,90),category:typeof x.category==='string'?x.category.slice(0,40):'',
+      url:validURL(x.url),description:x.description.slice(0,320),
+      // Only explicit labels supplied by the public backend; no locality-based guessing.
+      languages:(Array.isArray(x.languages)||typeof x.languages==='string')?
+        (root.AVENQIR_ATLAS_ENRICH?.explicitLanguages(x)||[]):[]
+    }));
  }
  function combine(...groups){const used=new Set();return groups.flat().filter(x=>{const url=validURL(x?.url);if(!url||used.has(url))return false;used.add(url);return true;});}
- function catalog(serverItems=[]){return combine(serverItems,base,extras,root.AVENQIR_ATLAS_PATHS?.links||[],root.AVENQIR_ATLAS_EXPANSION?.links||[],root.AVENQIR_ATLAS_SPECIALIST?.links||[],root.AVENQIR_ATLAS_DEPTH_A?.links||[],root.AVENQIR_ATLAS_DEPTH_B?.links||[],root.AVENQIR_ATLAS_DEPTH_C?.links||[],root.AVENQIR_ATLAS_DEPTH_D?.links||[],root.AVENQIR_ATLAS_AI?.links||[],root.AVENQIR_ATLAS_REGIONAL?.links||[],root.AVENQIR_ATLAS_EVERYDAY?.links||[],root.AVENQIR_ATLAS_REGIONAL_EXT?.links||[],root.AVENQIR_ATLAS_EVERYDAY_EXT?.links||[]);}
+ function catalog(serverItems=[]){return combine(serverItems,base,extras,root.AVENQIR_ATLAS_PATHS?.links||[],root.AVENQIR_ATLAS_EXPANSION?.links||[],root.AVENQIR_ATLAS_SPECIALIST?.links||[],root.AVENQIR_ATLAS_DEPTH_A?.links||[],root.AVENQIR_ATLAS_DEPTH_B?.links||[],root.AVENQIR_ATLAS_DEPTH_C?.links||[],root.AVENQIR_ATLAS_DEPTH_D?.links||[],root.AVENQIR_ATLAS_AI?.links||[],root.AVENQIR_ATLAS_REGIONAL?.links||[],root.AVENQIR_ATLAS_EVERYDAY?.links||[],root.AVENQIR_ATLAS_REGIONAL_EXT?.links||[],root.AVENQIR_ATLAS_EVERYDAY_EXT?.links||[]).map(x=>root.AVENQIR_ATLAS_ENRICH?.enrich(x)||x);}
  async function load(){
   const fallback=catalog();
   if(typeof fetch!=='function')return {items:fallback,remote:false};

@@ -38,8 +38,8 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     $links=public_links();
     if($act==='save'){
       $id=text_limit($_POST['id']??'',40);
-      $row=valid_link($_POST['name']??'',$_POST['url']??'',$_POST['category']??'',$_POST['description']??'',$id);
-      if(!$row){$failure=true;$notice='网址无效：只接受完整的 http / https 地址。';}
+      $row=valid_link($_POST['name']??'',$_POST['url']??'',$_POST['category']??'',$_POST['description']??'',$id,$_POST['languages']??'');
+      if(!$row){$failure=true;$notice='网址或语言标签无效：仅接受合法 http(s) 地址和最多八个支持的语言代码。';}
       else{
         $pos=null;
         foreach($links as $i=>$x)if(($x['id']??'')===$id){$pos=$i;break;}
@@ -58,8 +58,8 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
       if(strlen($raw)>22000 || count($lines)>80){$failure=true;$notice='每批最多80行、22KB。';}
       else{
         $new=[];$invalid=[];
-        foreach($lines as $i=>$line){if(trim($line)==='')continue;$parts=explode('|',$line,4);if(count($parts)<3){$invalid[]=$i+1;continue;}
-          $r=valid_link($parts[0],$parts[1],$parts[2],$parts[3]??'');if(!$r){$invalid[]=$i+1;continue;}$new[]=$r;
+        foreach($lines as $i=>$line){if(trim($line)==='')continue;$parts=explode('|',$line,5);if(count($parts)<2){$invalid[]=$i+1;continue;}
+          $r=valid_link($parts[0],$parts[1],$parts[2]??'',$parts[3]??'','',$parts[4]??'');if(!$r){$invalid[]=$i+1;continue;}$new[]=$r;
         }
         if($invalid){$failure=true;$notice='第 '.implode(', ',$invalid).' 行格式错误，整批未导入。';}
         elseif(count($new)+count($links)>MAX_LINKS){$failure=true;$notice='导入后超过总数上限。';}
@@ -82,7 +82,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
             if(!is_array($row)){ $clean=null;break;}
             $id=text_limit($row['id']??'',40);
             if($id===''||in_array($id,$ids,true)){ $clean=null;break;}
-            $n=valid_link($row['name']??'',$row['url']??'',$row['category']??'',$row['description']??'',$id);
+            $n=valid_link($row['name']??'',$row['url']??'',$row['category']??'',$row['description']??'',$id,$row['languages']??'');
             if(!$n||in_array($n['url'],$urls,true)){ $clean=null;break;}
             $clean[]=$n;$ids[]=$id;$urls[]=$n['url'];
           }
@@ -123,8 +123,8 @@ if($logged&&isset($_GET['edit']))foreach(public_links() as $r)if(($r['id']??'')=
 <div class="layout"><section class="panel wide"><div class="sectionhead"><div><span class="label">PUBLIC CATALOG</span><h2>当前公开网址（<?= count(public_links()) ?> 条）</h2><p>手机上点击编辑即可修改；不同设备再次打开目录会获得服务器最新数据。</p></div><a class="btn ghost" href="admin.php?export=1">下载 JSON 备份</a></div><div class="admin-list">
 <?php foreach(public_links() as $x): ?><div class="admin-item"><div><strong><?= e($x['name']) ?></strong><p><?= e($x['category']) ?> · <?= e($x['url']) ?></p></div><div class="btnrow"><a class="btn ghost mini-btn" href="admin.php?edit=<?= urlencode($x['id']) ?>#editor">编辑</a><form method="post"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= e($x['id']) ?>"><button class="btn ghost mini-btn" type="submit">删除</button></form></div></div><?php endforeach; ?>
 </div></section>
-<section class="panel" id="editor"><span class="label">EDITOR</span><h2><?= $edit?'编辑现有条目':'新增公开网址' ?></h2><form method="post" class="stack"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><input type="hidden" name="action" value="save"><input type="hidden" name="id" value="<?= e($edit['id']??'') ?>"><label>显示名称<input name="name" maxlength="90" value="<?= e($edit['name']??'') ?>" required></label><label>完整网址<input name="url" type="url" inputmode="url" maxlength="1800" value="<?= e($edit['url']??'') ?>" placeholder="https://example.org" required></label><label>分类<input name="category" maxlength="40" value="<?= e($edit['category']??'实用') ?>" required></label><label>介绍<input name="description" maxlength="320" value="<?= e($edit['description']??'') ?>"></label><button class="btn primary">保存到所有设备可见的公开目录</button></form></section>
-<section class="panel"><span class="label">BULK IMPORT</span><h2>批量快速新增</h2><p class="hint">每行：名称 | URL | 分类 | 备注。重复 URL 自动跳过；只导入合法 http(s) 网址。</p><form method="post" class="stack"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><input type="hidden" name="action" value="bulk"><textarea name="bulk" maxlength="22000" rows="9" placeholder="OpenStreetMap | https://www.openstreetmap.org/ | 地图 | 开放地图"></textarea><button class="btn primary">批量导入</button></form><p class="hint">升级网站时不要删除或覆盖 `_store/`，特别是其中的 links.php 与 auth.php。</p></section>
+<section class="panel" id="editor"><span class="label">EDITOR</span><h2><?= $edit?'编辑现有条目':'新增公开网址' ?></h2><form method="post" class="stack"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><input type="hidden" name="action" value="save"><input type="hidden" name="id" value="<?= e($edit['id']??'') ?>"><label>显示名称<input name="name" maxlength="90" value="<?= e($edit['name']??'') ?>" required></label><label>完整网址<input name="url" type="url" inputmode="url" maxlength="1800" value="<?= e($edit['url']??'') ?>" placeholder="https://example.org" required></label><label>分类（可留空自动建议）<input name="category" maxlength="40" value="<?= e($edit['category']??'') ?>" placeholder="如：AI编程、科研、地图；留空自动分类"></label><p class="hint">留空后系统根据已知官方域名或明确关键词自动分类；证据不足写为“待分类”。你填写的分类始终优先，不代表该网站安全认证。</p><label>介绍<input name="description" maxlength="320" value="<?= e($edit['description']??'') ?>"></label><label>支持的页面语言（可选）<input name="languages" maxlength="100" value="<?= e(implode(',',is_array($edit['languages']??null)?$edit['languages']:[])) ?>" placeholder="en,ja,zh-Hans"></label><p class="hint">最多八种语言，用逗号分隔。只填写网页实际支持的语言；留空表示未知，不会由国家、地区或域名后缀推断。</p><button class="btn primary">保存到所有设备可见的公开目录</button></form></section>
+<section class="panel"><span class="label">BULK IMPORT</span><h2>批量快速新增</h2><p class="hint">每行：名称 | URL | 分类（可空） | 备注 | 语言代码（可空）。例如：Research | https://example.org/ | 学术 | 公开检索 | en,fr。重复 URL 自动跳过；分类留空时谨慎自动建议，无法确认则标“待分类”；仅接受合法 http(s) 地址。</p><form method="post" class="stack"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><input type="hidden" name="action" value="bulk"><textarea name="bulk" maxlength="22000" rows="9" placeholder="OpenStreetMap | https://www.openstreetmap.org/ | 地图 | 开放地图"></textarea><button class="btn primary">批量导入</button></form><p class="hint">升级网站时不要删除或覆盖 `_store/`，特别是其中的 links.php 与 auth.php。</p></section>
 <section class="panel"><span class="label">RESTORE / BACKUP</span><h2>从 JSON 备份恢复公开目录</h2><p class="hint">仅接受本后台导出的 avenqir-public-v7 格式。此操作会覆盖服务器上的全部公开网址，恢复前先导出当前数据。</p><form method="post" enctype="multipart/form-data" class="stack"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><input type="hidden" name="action" value="restore"><input type="file" name="backup" accept=".json,application/json" required><label class="toggleline"><input type="checkbox" name="confirm_restore" value="yes" required> 我确认覆盖当前全部公开目录</label><button type="submit" class="btn ghost">恢复备份 JSON</button></form></section>
 <section class="panel"><span class="label">ACCOUNT SECURITY</span><h2>更换管理员密码</h2><form method="post" class="stack"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><input type="hidden" name="action" value="change_password"><label>当前密码<input type="password" name="old_password" autocomplete="current-password" required></label><label>新密码（至少14字符）<input type="password" name="new_password" minlength="14" autocomplete="new-password" required></label><label>重复新密码<input type="password" name="new_confirm" minlength="14" autocomplete="new-password" required></label><button type="submit" class="btn ghost">修改密码并退出登录</button></form></section></div>
 <form method="post" class="admin-logout"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><input type="hidden" name="action" value="logout"><button class="btn ghost">退出管理后台</button></form>
