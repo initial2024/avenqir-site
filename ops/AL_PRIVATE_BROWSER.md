@@ -168,6 +168,47 @@ The script does not install or start `cloudflared` and cannot claim web
 reachability. It does not create Cloudflare DNS, tunnels, Access apps or
 policies without an explicit owner-selected Cloudflare account and hostname.
 
+## Altare web console cannot accept password prompts
+
+If `x11vnc -storepasswd /var/lib/albrowser/.vnc/passwd` immediately
+returns to `root@sandbox:~#` without `Enter VNC password:`, do **not**
+type a password into the shell. Its stdin is not interactive.
+
+The new mobile bootstrap also installs `/opt/avenqir/al_vnc_password_auto.py`.
+This generates a fresh 8-character random VNC password locally, pipes it into
+`x11vnc -storepasswd` via stdin (not process arguments), and creates the
+actual VNC auth file at `/var/lib/albrowser/.vnc/passwd` with mode 0600 owned
+by `albrowser`. It prints **no password by default**. A separate
+mode-0600 root-only plaintext copy at `/root/.al-vnc-password-once` is
+only for the owner to retrieve once; it is automatically removed after
+revealing. x11vnc's password file is reversible obfuscation, not
+cryptographic encryption, so Cloudflare Access is still mandatory.
+
+After rerunning the current public mobile bootstrap:
+
+```bash
+curl -fsSLo /tmp/als https://raw.githubusercontent.com/initial2024/avenqir-site/main/site/al-setup.txt
+test "$(head -n 1 /tmp/als)" = '#!/usr/bin/env bash' && bash /tmp/als
+bash /opt/avenqir/al_private_browser.sh password-auto
+```
+
+You must see `AL_VNC_PASSWORD_SET=YES`. Run these only when your AL
+resources are sufficient. If the password file already exists, `password-auto`
+**refuses to overwrite it**. Do not repeatedly rotate the VNC password.
+
+**Once your screen is private**, run
+
+```bash
+bash /opt/avenqir/al_private_browser.sh password-reveal
+```
+
+It will show the one-time generated password and immediately delete the
+root-only plaintext copy. Save it privately in your password manager.
+**Never upload a screenshot of this output to ChatGPT/GitHub**, and never
+share the password in chat. The actual VNC encrypted-format auth file
+remains in place so you can continue to `start` and `status`.
+Do not copy it into the AVENQIR website or Android APK.
+
 ## Private HTTPS browser UI (Cloudflare Access)
 
 Official guide:
