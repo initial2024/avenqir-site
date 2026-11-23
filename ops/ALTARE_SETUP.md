@@ -24,6 +24,31 @@ curl --proto '=https' --tlsv1.2 -fsSL \
 bash /tmp/avenqir-altare-bootstrap.sh
 ```
 
+### Short commands for narrow Android web terminals
+
+Review the publicly deployed [short read-only installer](../site/al.txt) first.
+After the [AVENQIR FTPS deployment](../.github/workflows/deploy.yml) has actually succeeded,
+open the **Altare Sandbox console** and enter these **one at a time**, pressing Enter
+after each line:
+
+```bash
+curl -fsSLo /tmp/al.sh https://avenqir.bg5.net/al.txt
+head -n 1 /tmp/al.sh
+bash /tmp/al.sh
+```
+
+The second command must show exactly `#!/usr/bin/env bash`. If it instead
+shows HTML / an anti-bot page or the download errors, **do not execute it**.
+Use the full pinned GitHub-source command above instead. The shortcut only
+fetches and invokes the existing public `ops/altare_bootstrap.sh`; it has no
+tokens, logins, email access, APK signing or production website writes.
+
+`test -f /opt/avenqir/altare_cross_region_report.py` is merely a presence
+check; it **does not install** the collector. Long lines wrapping visually in
+a mobile terminal are not evidence that the command succeeded. Look for
+`=== END ALTARE REPORT ===` and `=== BOOTSTRAP COMPLETE ===` printed
+by the actual installer.
+
 Inspect the bootstrap from GitHub before running remote shell scripts. The
 bootstrap installs only two Python scripts under `/opt/avenqir` and prints a
 **real, completed read-only test report**, ending with `BOOTSTRAP COMPLETE`.
