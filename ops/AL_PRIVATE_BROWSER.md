@@ -56,6 +56,36 @@ candidate), `AL_PRIVATE_VNC_LOCAL_ONLY=YES`, and status shows
 needs real AL machine acceptance. Do not expose port 5901 publicly
 or use Chrome `--no-sandbox`.
 
+## Xvfb :89 false negative in Altare web console
+
+The owner has now provided the **next** direct machine evidence:
+`ps -ef` shows Xvfb `:88` PID 7375 and Xvfb `:89` PID 7427
+running; `/tmp/.X11-unix/X89` is a socket; the Xvfb log ends
+`Errors from xkbcomp are not fatal to the X server`. The previous
+`AL_BROWSER_DENY: Virtual display :89 failed` was therefore
+likely a **process-detection false negative**, not an Xvfb startup
+failure. Whether PID 7427 belongs to an earlier application has
+not been independently verified.
+
+The original program used `pgrep -u albrowser -f "^Xvfb :89..."`.
+That is brittle when Altare's process display has truncated user names
+or the executable appears as `/usr/bin/Xvfb`. The current script
+writes a private `.al-xvfb.<DISPLAY>.pid` file when **it** launches a
+screen and subsequently checks the PID's actual `/proc` command-line,
+numeric UID and live Unix socket. This makes status idempotent without
+adopting another process. Existing unmarked Xvfb processes, including
+the already running `:89`, are deliberately **not claimed**. The next
+unoccupied display may be `:90`.
+
+After updating **only the launcher** from the official GitHub raw
+URL, verify `bash -n` and run `start`, then `status`.
+If the result reports `AL_SELECTED_DISPLAY=:90` and all three
+services RUNNING, continue to separately configure Cloudflare
+Access/Tunnel. If it reports `ownership/PID/socket verification`
+failed, check the numeric UID of the new PID versus `id -u albrowser`
+before changing anything. Do **not** remove X locks, kill processes,
+rotate the already-saved VNC password, or weaken Chrome's sandbox.
+
 ## AL Console: curl (77) / missing root CA certificates
 
 A **real device screenshot** showed:
