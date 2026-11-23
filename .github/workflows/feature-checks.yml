@@ -30,6 +30,7 @@ jobs:
           node tests/test_atlas_paths.cjs
           node tests/test_dynamic_atlas.cjs
           node tests/test_atlas_personalize.cjs
+          node tests/test_atlas_specialist.cjs
       - name: Validate JavaScript and PHP syntax
         shell: bash
         run: |
