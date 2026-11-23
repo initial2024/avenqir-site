@@ -9,7 +9,7 @@ const stat=s=>{$('noteStatus').textContent=s};
 function render(){const q=$('noteSearch').value.toLowerCase().trim(),root=$('noteList');root.replaceChildren();notes.slice().sort((a,b)=>b.at-a.at).filter(x=>(x.title+' '+x.body).toLowerCase().includes(q)).forEach(x=>{const b=document.createElement('button');b.className='note-list-item'+(x.id===current?' active':'');b.type='button';const t=document.createElement('strong');t.textContent=x.title||'未命名笔记';const p=document.createElement('small');p.textContent=x.body.trim().slice(0,80)||'空笔记';b.append(t,p);b.addEventListener('click',()=>select(x.id));root.append(b)});$('notesCount').textContent=notes.length+' / 30 条'}
 function select(id){save();current=id;const x=notes.find(x=>x.id===id);$('noteTitle').value=x?.title||'';$('noteBody').value=x?.body||'';$('noteTitle').disabled=$('noteBody').disabled=!x;$('saveNote').disabled=$('exportNote').disabled=$('deleteNote').disabled=!x;render();updateStats();stat(x?'已载入笔记':'点击新建笔记开始')}
 function save(){clearTimeout(saveTimer);if(!current)return;const x=notes.find(x=>x.id===current);if(!x)return;x.title=$('noteTitle').value.slice(0,100);x.body=$('noteBody').value.slice(0,30000);x.at=Date.now();if(persist())stat('已保存在此浏览器 · '+new Date().toLocaleTimeString());render();updateStats()}
-function updateStats(){const s=$('noteBody').value;$('noteStats').textContent=s.length+' 字符 · '+(s?String(s.split(/\r?\n/).length):'0')+' 行'}
+function updateStats(){const s=$('noteBody').value;$('noteStats').textContent=s.length+' 字符 · '+(s?String(s.split(/\r?\n/).length):'0')+' 行';window.avenqirRefreshNotePreview?.() }
 $('newNote').addEventListener('click',()=>{save();if(notes.length>=30){stat('最多保存 30 条笔记');return}const x={id:makeId(),title:'',body:'',at:Date.now()};notes.unshift(x);persist();select(x.id);$('noteTitle').focus()});
 $('noteSearch').addEventListener('input',render);
 [$('noteTitle'),$('noteBody')].forEach(el=>el.addEventListener('input',()=>{updateStats();stat('有待保存的更改…');clearTimeout(saveTimer);saveTimer=setTimeout(save,500)}));
@@ -20,8 +20,28 @@ $('deleteNote').addEventListener('click',()=>{if(!current)return;if(!confirm('�
 $('exportAllNotes').addEventListener('click',()=>{save();download(JSON.stringify({format:'avenqir-notes-v6',exportedAt:new Date().toISOString(),notes},null,2),'avenqir-notes-'+new Date().toISOString().slice(0,10)+'.json','application/json;charset=utf-8');$('notesBackupStatus').textContent='已生成备份。请妥善保存文件。'});
 $('importNotes').addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;try{if(f.size>2*1024*1024)throw Error('超过 2MB');const o=JSON.parse(await f.text());if(o?.format!=='avenqir-notes-v6'||!Array.isArray(o.notes)||o.notes.length>30)throw Error('格式错误或超过 30 条');const arr=o.notes.map(clean);if(arr.some(x=>!x)||new Set(arr.map(x=>x.id)).size!==arr.length)throw Error('内容格式错误');if(!confirm('导入将覆盖现有所有笔记，确认继续？'))return;notes=arr;current=null;persist();select(notes[0]?.id||null);$('notesBackupStatus').textContent='导入成功，共 '+notes.length+' 条。'}catch(ex){$('notesBackupStatus').textContent='导入失败：'+String(ex.message).slice(0,120)}finally{e.target.value=''}});
 // Line diff via bounded LCS, max 200 lines each => <=40k cells.
-$('compareBtn').addEventListener('click',()=>{const A=$('oldText').value.split(/\r?\n/),B=$('newText').value.split(/\r?\n/);if(A.length>200||B.length>200){$('diffOutput').textContent='每侧最多 200 行。';return}let n=A.length,m=B.length;const dp=Array.from({length:n+1},()=>new Uint16Array(m+1));for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--)dp[i][j]=A[i]===B[j]?1+dp[i+1][j+1]:Math.max(dp[i+1][j],dp[i][j+1]);let i=0,j=0,res=[],added=0,removed=0;while(i<n||j<m){if(i<n&&j<m&&A[i]===B[j]){res.push('  '+A[i]);i++;j++}else if(j<m&&(i===n||dp[i][j+1]>=dp[i+1][j])){res.push('+ '+B[j++]);added++}else{res.push('- '+A[i++]);removed++}}$('diffOutput').textContent=`新增 ${added} 行 / 删除 ${removed} 行\n\n`+res.join('\n')});
+$('compareBtn').addEventListener('click',()=>{
+  const A=$('oldText').value.split(/\r?\n/),B=$('newText').value.split(/\r?\n/);
+  if(A.length>200||B.length>200){$('diffOutput').textContent='每侧最多 200 行。';return;}
+  const trim=$('diffTrim').checked,ignoreCase=$('diffCase').checked;
+  const norm=s=>{let v=trim?s.trim():s;return ignoreCase?v.toLocaleLowerCase():v;};
+  const X=A.map(norm),Y=B.map(norm);
+  const n=A.length,m=B.length,dp=Array.from({length:n+1},()=>new Uint16Array(m+1));
+  for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--)
+    dp[i][j]=X[i]===Y[j]?1+dp[i+1][j+1]:Math.max(dp[i+1][j],dp[i][j+1]);
+  let i=0,j=0,res=[],added=0,removed=0;
+  while(i<n||j<m){
+    if(i<n&&j<m&&X[i]===Y[j]){res.push('  '+B[j]);i++;j++;}
+    else if(j<m&&(i===n||dp[i][j+1]>=dp[i+1][j])){res.push('+ '+B[j++]);added++;}
+    else{res.push('- '+A[i++]);removed++;}
+  }
+  $('diffOutput').textContent='新增 '+added+' 行 / 删除 '+removed+' 行\n\n'+res.join('\n');
+});
 const show=(key,val)=>{const row=document.createElement('div');row.className='record';const h=document.createElement('strong');h.textContent=key;const p=document.createElement('p');p.textContent=String(val);row.append(h,p);$('timeOutput').append(row)};
 $('nowTime').addEventListener('click',()=>{$('timeInput').value=String(Date.now())});
-$('convertTime').addEventListener('click',()=>{const s=$('timeInput').value.trim();$('timeOutput').replaceChildren();let d;if(/^[-+]?\d+(?:\.\d+)?$/.test(s)){const v=Number(s);d=new Date(s.length<=10?v*1000:v)}else d=new Date(s);if(!Number.isFinite(d.getTime())){show('错误','不是有效时间戳或 ISO 日期');return}show('Unix 秒',Math.floor(d.getTime()/1000));show('Unix 毫秒',d.getTime());show('ISO / UTC',d.toISOString());show('当前设备本地时间',d.toLocaleString());show('当前设备时区',Intl.DateTimeFormat().resolvedOptions().timeZone||'未知')});
+$('convertTime').addEventListener('click',()=>{const s=$('timeInput').value.trim();$('timeOutput').replaceChildren();let d;if(/^[-+]?\d+(?:\.\d+)?$/.test(s)){const v=Number(s);d=new Date(s.length<=10?v*1000:v)}else d=new Date(s);if(!Number.isFinite(d.getTime())){show('错误','不是有效时间戳或 ISO 日期');return}show('Unix 秒',Math.floor(d.getTime()/1000));show('Unix 毫秒',d.getTime());show('ISO / UTC',d.toISOString());show('当前设备本地时间',d.toLocaleString());show('当前设备时区',Intl.DateTimeFormat().resolvedOptions().timeZone||'未知');
+ const diff=(d.getTime()-Date.now())/1000,mag=Math.abs(diff);
+ const units=mag<60?['second',Math.round(diff)]:mag<3600?['minute',Math.round(diff/60)]:mag<86400?['hour',Math.round(diff/3600)]:['day',Math.round(diff/86400)];
+ show('相对时间',mag<10?'刚刚':new Intl.RelativeTimeFormat('zh-CN',{numeric:'auto'}).format(units[1],units[0])+(mag>=30*86400?'（按天近似）':''));
+});
 select(notes[0]?.id||null);})();
