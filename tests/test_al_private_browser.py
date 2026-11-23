@@ -26,7 +26,9 @@ class ALPrivateBrowserSecurity(unittest.TestCase):
         self.assertIn('AL_VNC_PASSWORD_PROMPT=TTY',source)
         self.assertIn('x11vnc -storepasswd "$PROFILE/.vnc/passwd" </dev/tty',source)
         self.assertNotIn('runuser -u "$U" -- x11vnc -storepasswd',source)
-        self.assertNotIn('-storepasswd "
+        self.assertNotIn('-storepasswd "$VNC_PASSWORD"',source)
+        self.assertNotIn('-storepasswd "$password"',source)
+        self.assertNotIn('-storepasswd "$pass"',source)
         self.assertNotIn("cloudflared tunnel --url",source)
         self.assertNotIn("systemctl",source)
         self.assertIn("memory.max",source)
