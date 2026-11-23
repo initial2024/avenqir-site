@@ -3,7 +3,7 @@
 const CACHE = 'avenqir-v83-static-20261123';
 const ASSETS = [
   './index.html','./directory.html','./directory.js','./directory-search.css','./directory-seed.json',
-  './module-switcher.js','./quick-search.js','./site.js','./common.css','./theme.js','./theme.css',
+  './module-switcher.js','./quick-search.js','./site.js','./common.css','./theme.js','./theme.css','./link-gate.js',
   './bookmarks.html','./bookmarks.js','./netscape-format.js','./notes.html','./notes.js','./notes-enhance.js',
   './transfer.html','./transfer-schema.js','./device-transfer.js',
   './fun.html','./fun.js','./daily.html','./daily.js','./check.html','./check.js',
