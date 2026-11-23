@@ -66,6 +66,33 @@ uid_mapping_diagnostic(){
     echo "AL_MARKED_XVFB_DISPLAY=:$n PID=$pid UID=$uid EXPECTED_UID=$expected"
   done
 }
+# A short-lived process created with the SAME runuser/sh background pattern
+# as Xvfb. No display, VNC, Chrome or network access is started; it waits
+# for the child to exit so repeated diagnostics leave no orphan services.
+uid_child_probe(){
+  need_root
+  local xbin
+  printf 'AL_PROBE_EXPECTED_UID='
+  id -u "$U" || return 1
+  xbin="$(command -v Xvfb || true)"
+  if [ -n "$xbin" ]; then
+    printf 'AL_XVFB_BINARY_MODE='
+    stat -Lc '%A %u:%g %n' "$xbin" || true
+  fi
+  runuser -u "$U" -- sh -c '
+    printf "AL_PROBE_SHELL_UID="; id -u
+    sleep 3 >/dev/null 2>&1 &
+    child=$!
+    printf "AL_PROBE_CHILD_UID="
+    if [ -r "/proc/$child/status" ]; then
+      sed -n "s/^Uid:[[:space:]]*\\([0-9]*\\).*/\\1/p" "/proc/$child/status" | head -n 1
+    else
+      echo "PROC_UNAVAILABLE"
+    fi
+    wait "$child"
+  ' || fail "Short-lived runuser child UID probe failed"
+  echo "AL_PROBE_COMPLETE=YES"
+}
 uid_mapping_guard(){
   local expected observed n pid uid marker
   local -a argv=()
@@ -325,6 +352,7 @@ case "${1:-}" in
   status) status_browser ;;
   diagnose) diagnose_browser ;;
   uid-check) need_root; uid_mapping_diagnostic ;;
+  uid-probe) uid_child_probe ;;
   stop) stop_browser ;;
   *) echo "Usage: bash al_private_browser.sh check|install|password|password-auto|password-reveal|start|status|stop"; exit 2 ;;
 esac
