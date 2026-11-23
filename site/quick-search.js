@@ -3,9 +3,10 @@
 (() => {
   const entries = [
     ['公开网址搜索','目录 搜索 分类 推荐 网站','directory.html'],
+    ['任务路径探索','按任务找网址 研究 材料 网站排错 隐私 图片 本地AI','directory.html#atlasFlowsTitle'],
     ['我的私人书签','收藏 网址 标签 待读 search bookmarks','bookmarks.html#library'],
     ['浏览器书签 HTML 互通','netscape chrome firefox 导入 导出 html 书签 迁移','bookmarks.html#transfer'],
-    ['主题显示设置','护眼 浅色 暗色 跟随系统 外观 颜色','index.html'],
+    ['主题显示设置','护眼 浅色 暗色 跟随系统 外观 颜色','appearance.html'],
     ['添加书签','收藏 编辑 增加 网址','bookmarks.html#editor'],
     ['书签备份','书签 导出 导入 备份','bookmarks.html#transfer'],
     ['本地笔记','笔记 备忘录 文字 note','notes.html#pad'],
