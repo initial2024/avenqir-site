@@ -130,6 +130,28 @@ for(const code of interfaceLocales){
 }
 assert.equal(localePacks.regionGroup('东亚'),'East Asia','unsupported runtime locale should fall back to English');
 assert.equal(localePacks.PACK_KEYS.length,8,'regional labels must cover eight recurring UI roles');
+const previousTestDocument=globalThis.document;
+try {
+ for (const code of interfaceLocales) {
+  globalThis.document={documentElement:{lang:code}};
+  for (const label of localePacks.PACK_KEYS) {
+   const translated=localePacks.phrase(label);
+   assert.ok(typeof translated==='string' && translated.length>2,
+    'Missing '+label+' label for '+code);
+  }
+ }
+ globalThis.document={documentElement:{lang:'ja'}};
+ assert.equal(localePacks.language(),'ja','Japanese locale must remain Japanese');
+ assert.ok(localePacks.phrase('auto').includes('タイムゾーン'));
+ globalThis.document={documentElement:{lang:'zh-Hant'}};
+ assert.equal(localePacks.language(),'zh-Hant','Traditional Chinese must not collapse to Simplified');
+ assert.ok(localePacks.phrase('auto').includes('根據'));
+ globalThis.document={documentElement:{lang:'ar'}};
+ assert.ok(localePacks.phrase('auto').includes('المنطقة'));
+} finally {
+ if(previousTestDocument===undefined) delete globalThis.document;
+ else globalThis.document=previousTestDocument;
+}
 assert.ok(ui.includes("new Intl.DisplayNames"),'country and area names use browser locale data');
 assert.ok(ui.includes("phrase('auto')"),'auto selector localized, not hard-coded Chinese');
 const regionUi=require(path.join(dir,'atlas-region-ui.js'));
