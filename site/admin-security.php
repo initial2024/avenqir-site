@@ -98,3 +98,23 @@ function aq_private_access_url($raw): ?string {
   if(preg_match('/^(?=.{4,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z]{2,63}$/D',$host)!==1)return null;
   return 'https://'.$host.'/';
 }
+
+/** Serialize recovery-code consumption and TOTP step tracking across sessions.
+ * The exclusive lock is stored in the protected directory, not in the web root.
+ * Used only after auth database was first initialized by the owner.
+ */
+function aq_mfa_consume_login(string $password,string $factor): ?array {
+  $lockPath=__DIR__.'/_store/.admin-mfa.lock';
+  $handle=@fopen($lockPath,'c');
+  if($handle===false)return null;
+  if(!flock($handle,LOCK_EX)){fclose($handle);return null;}
+  try{
+    $latest=stored_read('auth');
+    if(!is_array($latest)||!password_verify($password,(string)($latest['password_hash']??''))||!aq_mfa_enabled($latest))return null;
+    $updated=aq_mfa_verify_and_consume($latest,$factor);
+    if($updated===null||!stored_write('auth',$updated))return null;
+    return $updated;
+  }finally{
+    flock($handle,LOCK_UN);fclose($handle);
+  }
+}
