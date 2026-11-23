@@ -6,16 +6,24 @@
  const linkGate=window.AVENQIR_LINK_GATE;
  const externalDialog=$('atlasExternalDialog');
  const externalGo=$('atlasExternalGo');
+ const rememberBox=$('atlasRemember');
+ let storage=null;try{storage=window.localStorage}catch{}
+ const isAllowed=url=>!!linkGate?.maySkipConfirmation(url,storage);
+ const dangerous=url=>linkGate?.urlRisk(url)?.blocked!==false;
+ function updateApprovals(){const n=linkGate?.approvalCount(storage)||0;const status=$('atlasApprovalCount');if(status)status.textContent=n?'本机已记住 '+n+' 个第三方网址（30 天自动过期）':'本机没有记住的第三方网址';}
+ $('atlasClearApprovals')?.addEventListener('click',()=>{if(!confirm('清除本机所有已记住的网址选择？清除后下次访问需要重新确认。'))return;linkGate?.clearRemembered(storage);updateApprovals();draw();});
  let awaitingExternal=null;
  function showExternal(url,name){
    const href=safeUrl(url);
    if(!href)return;
-   if(linkGate?.officialSourceReviewed(href)){
+   if(dangerous(href))return;
+   if(isAllowed(href)){
      window.location.assign(href);
      return;
    }
    const u=new URL(href);
    awaitingExternal=href;
+   if(rememberBox){rememberBox.checked=false;rememberBox.disabled=!linkGate?.urlRisk(href)?.rememberable;rememberBox.closest('label').hidden=rememberBox.disabled;}
    $('atlasExternalName').textContent=String(name||u.hostname).slice(0,90);
    $('atlasExternalHost').textContent='访问域名：'+u.hostname;
    $('atlasExternalUrl').textContent=href;
@@ -28,9 +36,11 @@
    }
  }
  if(externalGo)externalGo.addEventListener('click',()=>{
-   const href=awaitingExternal;awaitingExternal=null;
+   const href=awaitingExternal;
+   if(href&&rememberBox?.checked)linkGate?.remember(href,storage);
+   awaitingExternal=null;
    if(externalDialog?.open)externalDialog.close();
-   if(href&&safeUrl(href))window.location.assign(href);
+   if(href&&!dangerous(href)&&safeUrl(href))window.location.assign(href);
  });
  externalDialog?.addEventListener('close',()=>{awaitingExternal=null;});
  const initialData=[{"id":"r1","name":"GitHub","url":"https://github.com/","category":"开发","description":"开源项目与代码仓库"},{"id":"r2","name":"MDN Web Docs","url":"https://developer.mozilla.org/zh-CN/","category":"开发","description":"Web 开发技术文档"},{"id":"r3","name":"Can I use","url":"https://caniuse.com/","category":"开发","description":"浏览器兼容性查询"},{"id":"r4","name":"Internet Archive","url":"https://archive.org/","category":"互联网","description":"历史网页与公共资源"},{"id":"r5","name":"Project Gutenberg","url":"https://www.gutenberg.org/","category":"阅读","description":"公版电子书资源"},{"id":"r6","name":"OpenStreetMap","url":"https://www.openstreetmap.org/","category":"地图","description":"开放地图数据与社区"},{"id":"r7","name":"Wikimedia Commons","url":"https://commons.wikimedia.org/","category":"创作","description":"自由许可媒体素材"},{"id":"r8","name":"Pixabay","url":"https://pixabay.com/","category":"创作","description":"可浏览图片与视频素材，注意单项授权"},{"id":"r9","name":"Photopea","url":"https://www.photopea.com/","category":"创作","description":"浏览器图片与 PSD 编辑器"},{"id":"r10","name":"Excalidraw","url":"https://excalidraw.com/","category":"创作","description":"在线白板与手绘流程图"},{"id":"r11","name":"Khan Academy","url":"https://www.khanacademy.org/","category":"教育","description":"开放课程学习"},{"id":"r12","name":"MIT OpenCourseWare","url":"https://ocw.mit.edu/","category":"教育","description":"麻省理工学院开放课程"},{"id":"r13","name":"Google Scholar","url":"https://scholar.google.com/","category":"学术","description":"学术搜索"},{"id":"r14","name":"arXiv","url":"https://arxiv.org/","category":"学术","description":"预印本公开检索"},{"id":"r15","name":"NASA Image Library","url":"https://images.nasa.gov/","category":"科学","description":"NASA 图片与视频资源"},{"id":"r16","name":"NIST Chemistry WebBook","url":"https://webbook.nist.gov/chemistry/","category":"科学","description":"化学物性检索"},{"id":"r17","name":"Cloudflare Radar","url":"https://radar.cloudflare.com/","category":"网络","description":"互联网趋势和网络信息"},{"id":"r18","name":"BrowserLeaks","url":"https://browserleaks.com/","category":"网络","description":"浏览器 API 和 WebRTC 检测"},{"id":"r19","name":"DNSChecker","url":"https://dnschecker.org/","category":"网络","description":"DNS 传播查看"},{"id":"r20","name":"SSL Labs","url":"https://www.ssllabs.com/ssltest/","category":"网络","description":"网站 HTTPS 检测"},{"id":"r21","name":"Speedtest","url":"https://www.speedtest.net/","category":"实用","description":"网络速度测试"},{"id":"r22","name":"time.is","url":"https://time.is/","category":"实用","description":"准确时间与时区显示"},{"id":"r23","name":"Have I Been Pwned","url":"https://haveibeenpwned.com/","category":"安全","description":"查询邮箱是否涉及已知泄漏"},{"id":"r24","name":"VirusTotal","url":"https://www.virustotal.com/gui/home/url","category":"安全","description":"可疑公开 URL 分析；切勿上传私密文件"},{"id":"r25","name":"Open Library","url":"https://openlibrary.org/","category":"阅读","description":"图书目录与借阅信息"},{"id":"r26","name":"The Guardian","url":"https://www.theguardian.com/","category":"新闻","description":"英文新闻"},{"id":"r27","name":"BBC News","url":"https://www.bbc.com/news","category":"新闻","description":"国际新闻"},{"id":"r28","name":"itch.io","url":"https://itch.io/games/free","category":"休闲","description":"免费独立游戏"},{"id":"r29","name":"Chess.com","url":"https://www.chess.com/","category":"休闲","description":"国际象棋"},{"id":"r30","name":"GeoGuessr","url":"https://www.geoguessr.com/","category":"休闲","description":"地理探索游戏（部分功能可能付费）"}];
@@ -71,7 +81,7 @@
    for(const x of shown){const url=safeUrl(x.url);if(!url)continue;const host=new URL(url).hostname;
      const card=el('article','atlas-result');const icon=el('div','atlas-result-icon',x.name.slice(0,1).toLocaleUpperCase());icon.setAttribute('aria-hidden','true');
      const data=el('div','atlas-result-info');const hostrow=el('div','atlas-hostline');hostrow.append(el('span','atlas-host',host),el('span','atlas-chip',x.category||'其他'));data.append(hostrow);
-     const a=el('a','atlas-result-title',x.name+' ↗');const reviewed=!!linkGate?.officialSourceReviewed(url);a.href=reviewed?url:'leave.html?url='+encodeURIComponent(url)+'&name='+encodeURIComponent(x.name);a.rel='noopener noreferrer';a.referrerPolicy='no-referrer';a.addEventListener('click',e=>{if(!reviewed){e.preventDefault();showExternal(url,x.name);}});data.append(a);data.append(el('small',linkGate?.officialSourceReviewed(url)?'atlas-review-ok':'atlas-review-unknown',linkGate?.officialSourceReviewed(url)?'官方来源已核对 · 直接访问':'第三方来源未核验 · 点击后确认'));
+     const a=el('a','atlas-result-title',x.name+' ↗');const reviewed=!!linkGate?.officialSourceReviewed(url);const permitted=isAllowed(url);a.href=permitted?url:'leave.html?url='+encodeURIComponent(url)+'&name='+encodeURIComponent(x.name);a.rel='noopener noreferrer';a.referrerPolicy='no-referrer';a.addEventListener('click',e=>{if(!permitted){e.preventDefault();showExternal(url,x.name);}});data.append(a);data.append(el('small',permitted?'atlas-review-ok':'atlas-review-unknown',reviewed?'官方来源已核对 · 直接访问':permitted?'本机已记住 · 直接访问':'第三方来源未核验 · 点击后确认'));
      data.append(el('p','atlas-result-desc',x.description||'访问网站'));
      const report=el('a','atlas-report-link','报告失效 ↗');report.href='feedback.php?type=broken&url='+encodeURIComponent(url);report.setAttribute('aria-label','报告 '+x.name+' 链接失效');data.append(report);
      const star=el('button','atlas-star'+(favorites.includes(x.url)?' saved':''),favorites.includes(x.url)?'★':'☆');star.type='button';star.title=favorites.includes(x.url)?'取消收藏':'收藏到本机';star.setAttribute('aria-label',star.title);star.addEventListener('click',()=>{if(favorites.includes(x.url))favorites=favorites.filter(u=>u!==x.url);else favorites.push(x.url);storeFavorites();draw()});
@@ -87,10 +97,14 @@
  $('atlasClear').addEventListener('click',()=>{replaceQuery('');suggestClose();input.focus()});
  $('atlasMore').addEventListener('click',()=>{limit+=12;draw()});
  $('atlasRandom').addEventListener('click',()=>{let entries=filtered();if(!entries.length)entries=records;const entry=entries[Math.floor(Math.random()*entries.length)];if(entry)showExternal(entry.url,entry.name)});
- document.querySelectorAll('[data-external]').forEach(b=>b.addEventListener('click',()=>{const url=linkGate?.searchEngineDestination(b.dataset.external,input.value);if(url)window.location.assign(url);}));
+ const engineLinks=[...document.querySelectorAll('[data-search-provider]')];
+ function refreshEngines(){for(const a of engineLinks){const target=linkGate?.searchEngineDestination(a.dataset.searchProvider,input.value);if(target)a.href=target;}}
+ input.addEventListener('input',refreshEngines);
+ for(const a of engineLinks)a.addEventListener('click',refreshEngines);
+ refreshEngines();
  document.addEventListener('keydown',e=>{const t=e.target;const typing=t&&(t.matches('input,textarea,select')||t.isContentEditable);if((e.key==='/'&&!typing)||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k')){e.preventDefault();input.focus();input.select()}});
  document.addEventListener('click',e=>{if(!e.target.closest('.atlas-search-form'))suggestClose()});
  function sanitize(rows){if(!Array.isArray(rows)||rows.length>500)throw Error('记录数量异常');return rows.filter(x=>x&&typeof x.name==='string'&&typeof x.category==='string'&&typeof x.description==='string'&&safeUrl(x.url)).map(x=>({name:x.name.slice(0,90),category:x.category.slice(0,40),url:safeUrl(x.url),description:x.description.slice(0,320)}))}
- choiceBar();draw();
+ updateApprovals();choiceBar();draw();
  (async()=>{const ctl=new AbortController();const timer=setTimeout(()=>ctl.abort(),7000);try{const r=await fetch('public-api.php?ts='+Date.now(),{cache:'no-store',signal:ctl.signal,credentials:'omit'});if(!r.ok)throw Error('HTTP '+r.status);if(!(r.headers.get('content-type')||'').includes('application/json'))throw Error('缺少 JSON 响应');const data=await r.json();if(data.ok!==true)throw Error('API 数据无效');records=combine(sanitize(data.items),extraData);source.textContent='公开目录 · 管理数据 + 精选资源';loaded=true;choiceBar();draw()}catch(e){source.textContent='使用内置目录';summary.textContent='无法实时读取后台，显示内置示例（不会覆盖已有数据）';console.warn('Avenqir directory fallback:',e.message)}finally{clearTimeout(timer)}})();
 })();
