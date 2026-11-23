@@ -2,8 +2,8 @@
 <html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f8fd"><meta name="referrer" content="no-referrer"><meta name="description" content="AVENQIR Link Atlas：独立策展的公开网站目录。搜索网站、按分类发现资源，支持多设备访问。">
 <title>网站搜索 · AVENQIR Link Atlas</title>
-<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="common.css?v=12"><link rel="stylesheet" href="directory-search.css?v=14"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="theme.css?v=16"></head>
-<body class="search-body"><header class="headbar"><div class="wrap head-inner"><a class="logo" href="index.html"><span class="logoicon">⬡</span> AVENQIR</a><a class="aq-theme-link" data-aq-theme-link="1" aria-label="切换显示模式" href="appearance.html">◐ <span class="aq-theme-link-label">模式</span></a><button type="button" class="menu-toggle" aria-controls="global-nav" aria-expanded="false" aria-label="打开导航菜单">☰ <span>菜单</span></button><nav id="global-nav" class="main-nav" aria-label="网站导航"><a href="index.html">首页</a><a href="directory.html" class="active" aria-current="page">网站搜索</a><a href="bookmarks.html">我的书签</a><a href="notes.html">笔记</a><a href="fun.html">小游戏</a><a href="daily.html">日常</a><a href="check.html">网络检测</a><a href="tools.html">工具箱</a><a href="projects.html">GitHub</a><a href="domains.html">DNS</a><a href="logs.html">日志</a><a href="feedback.php">留言反馈</a></nav><span class="microbadge">ATLAS / v8.6</span></div></header>
+<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="common.css?v=12"><link rel="stylesheet" href="directory-search.css?v=17"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="theme.css?v=17"></head>
+<body class="search-body"><header class="headbar"><div class="wrap head-inner"><a class="logo" href="index.html"><span class="logoicon">⬡</span> AVENQIR</a><a class="aq-theme-link" data-aq-theme-link="1" aria-label="切换显示模式" href="appearance.html">◐ <span class="aq-theme-link-label">模式</span></a><button type="button" class="menu-toggle" aria-controls="global-nav" aria-expanded="false" aria-label="打开导航菜单">☰ <span>菜单</span></button><nav id="global-nav" class="main-nav" aria-label="网站导航"><a href="index.html">首页</a><a href="directory.html" class="active" aria-current="page">网站搜索</a><a href="bookmarks.html">我的书签</a><a href="notes.html">笔记</a><a href="fun.html">小游戏</a><a href="daily.html">日常</a><a href="check.html">网络检测</a><a href="tools.html">工具箱</a><a href="projects.html">GitHub</a><a href="domains.html">DNS</a><a href="logs.html">日志</a><a href="feedback.php">留言反馈</a></nav><span class="microbadge">ATLAS / v8.7</span></div></header>
 <main class="directory-main">
 <section class="search-hero" aria-labelledby="atlasTitle">
  <div class="atlas-icon" aria-hidden="true">✦</div><p class="atlas-kicker">AVENQIR / LINK ATLAS</p>
@@ -36,6 +36,16 @@
 </section>
 <div class="atlas-layout">
 <section class="atlas-content" aria-labelledby="resultsTitle">
+ <section class="atlas-taxonomy" aria-labelledby="atlasTaxonomyTitle">
+  <div class="atlas-taxonomy-head"><div><span class="atlas-flows-eyebrow">BROWSE BY TOPIC / 分类导航</span>
+   <h2 id="atlasTaxonomyTitle">按照领域探索资源</h2>
+   <p id="atlasTaxonomySummary" role="status">分类数量根据已加载的目录自动计算</p></div></div>
+  <div id="atlasGroupBar" class="atlas-group-bar" role="group" aria-label="选择资源领域"></div>
+  <div class="atlas-category-tools"><label for="atlasCategorySearch" class="sr-only">搜索网站分类</label>
+   <input type="search" id="atlasCategorySearch" placeholder="查找分类，例如材料、天文、数据库…" maxlength="40" autocomplete="off" aria-label="查找网址分类">
+   <button type="button" id="atlasExpandCategories" aria-expanded="false">展开全部分类</button>
+  </div>
+ </section>
  <div class="atlas-tabs" role="group" aria-label="筛选网站"><button class="atlas-tab active" id="atlasAll" data-tab="all" type="button" aria-pressed="true">全部网站</button><button class="atlas-tab" id="atlasSaved" data-tab="saved" type="button" aria-pressed="false">★ 我的收藏</button><span class="atlas-spacer"></span><label for="atlasSort" class="sr-only">结果排序</label><select id="atlasSort"><option value="relevance">相关性优先</option><option value="name">名称 A–Z</option></select></div>
  <div id="atlasCategories" class="atlas-categories" role="group" aria-label="网站分类"></div><div class="atlas-preferences"><span id="atlasApprovalCount">本机没有记住的第三方网址</span><button type="button" id="atlasClearApprovals">清除本机已记住的跳转选择</button></div>
  <div class="atlas-discovery-tools"><label class="atlas-reviewed-filter" for="atlasReviewedOnly"><input id="atlasReviewedOnly" type="checkbox"> 只看已核对官方来源</label><button type="button" id="atlasExportFavorites">导出本机收藏 JSON</button><a href="transfer.html">跨设备备份与恢复 ↗</a><small id="atlasExportStatus" role="status" aria-live="polite"></small></div>
@@ -61,4 +71,4 @@
   <button id="atlasExternalGo" class="btn primary" type="button">我了解风险，继续访问</button>
   <label class="atlas-remember-choice"><input type="checkbox" id="atlasRemember" autocomplete="off"> <span>记住此网址的确认选择 30 天（仅此浏览器，可随时清除）</span></label>
  </div>
-</form></dialog><script src="link-gate.js?v=12" defer></script><script src="atlas-paths.js?v=16" defer></script><script src="atlas-expansion.js?v=15" defer></script><script src="atlas-specialist.js?v=16" defer></script><script src="atlas-catalog-core.js?v=16" defer></script><script src="atlas-personalize.js?v=16" defer></script><script src="atlas-personalize-ui.js?v=16" defer></script><script src="directory.js?v=16" defer></script><script src="site.js?v=16" defer></script><script src="theme.js?v=15" defer></script></body></html>
+</form></dialog><script src="link-gate.js?v=12" defer></script><script src="atlas-paths.js?v=16" defer></script><script src="atlas-expansion.js?v=15" defer></script><script src="atlas-specialist.js?v=16" defer></script><script src="atlas-depth-a.js?v=17" defer></script><script src="atlas-depth-b.js?v=17" defer></script><script src="atlas-depth-c.js?v=17" defer></script><script src="atlas-depth-d.js?v=17" defer></script><script src="atlas-taxonomy.js?v=17" defer></script><script src="atlas-catalog-core.js?v=17" defer></script><script src="atlas-personalize.js?v=16" defer></script><script src="atlas-personalize-ui.js?v=16" defer></script><script src="directory.js?v=17" defer></script><script src="site.js?v=16" defer></script><script src="theme.js?v=15" defer></script></body></html>
