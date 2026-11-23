@@ -8,15 +8,18 @@ const expanded=require(path.join(site,'atlas-expansion.js'));
 const specialist=require(path.join(site,'atlas-specialist.js'));
 const depthNames=['a','b','c','d'];
 const depth=depthNames.map(n=>require(path.join(site,'atlas-depth-'+n+'.js')));
+const ai=require(path.join(site,'atlas-ai.js'));
+const regional=require(path.join(site,'atlas-regional.js'));
+const everyday=require(path.join(site,'atlas-everyday.js'));
 const taxonomy=require(path.join(site,'atlas-taxonomy.js'));
 const catalog=require(path.join(site,'atlas-catalog-core.js'));
 const gate=require(path.join(site,'link-gate.js'));
 const all=catalog.catalog();
-const expected=catalog.base.length+catalog.extras.length+atlas.links.length+expanded.links.length+specialist.links.length+depth.reduce((n,x)=>n+x.links.length,0);
-assert.equal(expected,559,'expected 310 genuinely added unique URLs');
-assert.equal(all.length,559,'live merged catalog must actually include 559 resources');
+const expected=catalog.base.length+catalog.extras.length+atlas.links.length+expanded.links.length+specialist.links.length+depth.reduce((n,x)=>n+x.links.length,0)+ai.links.length+regional.links.length+everyday.links.length;
+assert.equal(expected,776,'expected complete dynamic merged catalog');
+assert.equal(all.length,776,'live merged catalog must actually include 559 resources');
 assert.equal(depth.reduce((n,x)=>n+x.links.length,0),310,'310 new resources in four distinct depth files');
-assert.equal(new Set(all.map(x=>new URL(x.url).href)).size,559,'no normalized URL duplicates');
+assert.equal(new Set(all.map(x=>new URL(x.url).href)).size,776,'no normalized URL duplicates');
 const counts=new Map();
 const ids=new Set();
 for(const x of all){
@@ -31,7 +34,7 @@ for(const x of all){
  assert.ok(!u.hostname.endsWith('.local')&&!u.hostname.endsWith('.internal'),'no private network destinations');
  counts.set(x.category,(counts.get(x.category)||0)+1);
 }
-assert.equal(counts.size,44,'catalog needs a meaningful range of resource categories');
+assert.equal(counts.size,50,'catalog needs a meaningful range of resource categories');
 assert.ok([...counts.values()].every(n=>n>=8),'no empty/singleton/sparse published categories');
 assert.equal(taxonomy.groups.length,8,'eight discoverable mobile topic groups');
 const covered=new Set();
@@ -64,14 +67,14 @@ for(const n of depthNames){
  assert.ok(dir.includes('src="'+p+'"'),'directory missing depth '+n);
  assert.ok(home.includes('src="'+p+'"'),'homepage missing depth '+n);
  assert.ok(sw.includes("'./atlas-depth-"+n+".js'"),'SW missing depth '+n);
- assert.ok(dir.indexOf(p)<dir.indexOf('atlas-catalog-core.js?v=17'),'directory scripts must preserve data before consumer order');
- assert.ok(home.indexOf(p)<home.indexOf('atlas-catalog-core.js?v=17'),'home scripts must preserve data before consumer order');
+ assert.ok(dir.indexOf(p)<dir.indexOf('atlas-catalog-core.js?v=18'),'directory scripts must preserve data before consumer order');
+ assert.ok(home.indexOf(p)<home.indexOf('atlas-catalog-core.js?v=18'),'home scripts must preserve data before consumer order');
 }
 for(const target of ['atlasGroupBar','atlasCategorySearch','atlasExpandCategories','atlasCategories','atlasTaxonomySummary']){
  assert.ok(dir.includes('id="'+target+'"'),'missing taxonomy UI control: '+target);
 }
-assert.ok(dir.includes('atlas-taxonomy.js?v=17'));
-assert.ok(dir.indexOf('atlas-taxonomy.js?v=17')<dir.indexOf('directory.js?v=17'));
+assert.ok(dir.includes('atlas-taxonomy.js?v=18'));
+assert.ok(dir.indexOf('atlas-taxonomy.js?v=17')<dir.indexOf('directory.js?v=18'));
 assert.ok(sw.includes("'./atlas-taxonomy.js'"));
 assert.ok(css.includes('.atlas-group-bar')&&css.includes('.atlas-taxonomy .atlas-categories'));
 assert.ok(css.includes('@media(max-width:420px)'),'mobile taxonomy CSS present');
@@ -80,11 +83,11 @@ assert.ok(js.includes("atlasCategorySearch"),'category search wired');
 assert.ok(js.includes("expandedCategories"),'category expansion wired');
 assert.ok(js.includes("atlasTaxonomySummary"),'category count is runtime generated');
 assert.ok(summary.includes("new Set(info.items.map(x=>x.category))"),'home category counts are dynamic');
-assert.ok(!home.includes("559 个精选网址"),'do not hardcode promotional URL totals');
-assert.ok(!dir.includes("559 个独立网址"),'directory total must be runtime generated');
-assert.equal(catalog.catalog([{name:'追加',url:'https://new-public-resource.example/',category:'新的后台分类',description:'测试动态后台条目'}]).length,560,'backend entries must remain dynamic after expansion');
+assert.ok(!home.includes("776 个精选网址"),'do not hardcode promotional URL totals');
+assert.ok(!dir.includes("776 个独立网址"),'directory total must be runtime generated');
+assert.equal(catalog.catalog([{name:'追加',url:'https://new-public-resource.example/',category:'新的后台分类',description:'测试动态后台条目'} ]).length,777,'backend entries must remain dynamic after expansion');
 const newCount=new Map(counts);newCount.set('新的后台分类',1);
-assert.equal(newCount.size,45,'backend may introduce a new dynamic category');
+assert.equal(newCount.size,51,'backend may introduce a new dynamic category');
 assert.ok(all.some(x=>x.url==='https://read.claua.de/'),'public English reader remains in catalog');
 assert.ok(!all.some(x=>x.url==='https://english.claua.de/'),'private reader must never appear');
-console.log('PASS: 559 independent HTTPS resources, 44 non-sparse categories, 8 unique groups, dynamic admin entries, mobile UI and security boundaries');
+console.log('PASS: 776 independent HTTPS resources, 50 non-sparse categories, 8 unique groups, dynamic admin entries, mobile UI and security boundaries');
