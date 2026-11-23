@@ -43,6 +43,11 @@
    }
    return EXTRA[lang]?.[key]||EXTRA.en?.[key]||key;
  }
+ const CATEGORY_EN={"学术":"Academic","科研":"Research","教育":"Education","英语阅读":"English reading","语言":"Languages","阅读":"Reading","数学":"Mathematics","科学":"Science","材料":"Materials","化学":"Chemistry","物理":"Physics","天文":"Astronomy","生物":"Biology","地球科学":"Earth science","环境气候":"Climate & environment","医疗健康":"Health","电子工程":"Electronics","AI":"AI","AI交流":"AI chat","AI检测":"AI detection","数据":"Data","AI官网":"AI official sites","AI绘图":"AI images","AI视频":"AI video","AI编程":"AI coding","AI语音":"AI voice","AI研究":"AI research","开发":"Development","前端开发":"Frontend","数据库":"Databases","运维部署":"Deployment","开源项目":"Open source","网络":"Network","安全":"Security","互联网":"Internet","创作":"Creative tools","产品设计":"Product design","音视频":"Audio & video","休闲":"Entertainment","实用":"Utilities","旅游出行":"Travel & transport","地图":"Maps","在线办公":"Online productivity","软件应用":"Apps","新闻":"News","文化":"Culture","人文历史":"History & humanities","科技资讯":"Technology news","法律政策":"Law & policy","经济金融":"Economics & finance"};
+ const GROUP_EN={"study":"Learning & research","science":"Science & engineering","ai":"AI & data","developer":"Development & deployment","network":"Network & security","design":"Design & creation","life":"Everyday & exploration","world":"Culture & news"};
+ const GROUP_DESC_EN={"study":"Study, evidence and research","science":"Physical sciences and engineering","ai":"AI platforms, tools and data","developer":"Code, services and deployment","network":"Network diagnosis and security","design":"Visual, creative and media tools","life":"Services for daily life","world":"Culture, policy and information"};
+ function category(name){return locale.startsWith('zh-')?name:CATEGORY_EN[name]||name;}
+ function group(id,type){return locale.startsWith('zh-')?null:type==='description'?GROUP_DESC_EN[id]||null:GROUP_EN[id]||null;}
  const aliases={
   'index.html':'home','directory.html':'directory','bookmarks.html':'bookmarks','notes.html':'notes',
   'fun.html':'fun','daily.html':'daily','tools.html':'tools','transfer.html':'transfer',
@@ -54,7 +59,7 @@
    for(const a of root.document?.querySelectorAll('#global-nav a')||[]){
      let path;try{path=new URL(a.getAttribute('href'),root.location.href).pathname.split('/').pop();}catch{continue;}
      const key=aliases[path];if(!key)continue;
-     a.textContent=fallback[key]&&locale!=='zh-Hans'&&locale!=='zh-Hant'?fallback[key]:translate('nav.'+key);
+     a.textContent=LABEL_KEYS.includes(key)?translate('nav.'+key):(locale==='zh-Hans'?{health:'站点状态',projects:'GitHub 项目',domains:'DNS 台账',logs:'日志',feedback:'留言反馈'}[key]:locale==='zh-Hant'?{health:'網站狀態',projects:'GitHub 專案',domains:'DNS 記錄',logs:'日誌',feedback:'意見回饋'}[key]:fallback[key])||a.textContent;
    }
    const theme=root.document?.querySelector('.aq-theme-link-label');
    if(theme)theme.textContent=translate('nav.appearance');
@@ -95,6 +100,7 @@
     if(multi){const input=multi.querySelector('input');multi.replaceChildren(input,root.document.createTextNode(translate('bookmarks.multi')));}
   }else if(pathname==='transfer.html'){
     set('.scenic-hero h1 .grad','transfer.heading');
+    const heading=$('.scenic-hero h1');if(heading){const first=[...heading.childNodes].find(x=>x.nodeType===3);if(first)first.nodeValue=locale==='zh-Hans'?'一个文件，':locale==='zh-Hant'?'一個檔案，':' ';}
     set('#transferExport','transfer.exportJson');
     set('#transferExportMarkdown','transfer.exportMarkdown');
     set('#transferRestore','transfer.restore');
@@ -144,7 +150,7 @@
    if(menu)head.insertBefore(label,menu);else head.append(label);
    apply();
  }
- const api=Object.freeze({KEY,LOCALES,LABEL_KEYS,normalize,detect,browser,getManual,translate,apply,set,get locale(){return locale;}});
+ const api=Object.freeze({KEY,LOCALES,LABEL_KEYS,normalize,detect,browser,getManual,translate,category,group,apply,set,get locale(){return locale;}});
  root.AVENQIR_I18N=api;
  if(typeof module==='object'&&module.exports)module.exports=api;
  if(root.document){if(root.document.readyState==='loading')root.document.addEventListener('DOMContentLoaded',control,{once:true});else control();}
