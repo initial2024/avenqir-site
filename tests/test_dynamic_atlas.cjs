@@ -13,13 +13,15 @@ const depthD=require(path.join(base,'atlas-depth-d.js'));
 const ai=require(path.join(base,'atlas-ai.js'));
 const regional=require(path.join(base,'atlas-regional.js'));
 const everyday=require(path.join(base,'atlas-everyday.js'));
+const regionalExt=require(path.join(base,'atlas-regional-ext.js'));
+const everydayExt=require(path.join(base,'atlas-everyday-ext.js'));
 const catalog=require(path.join(base,'atlas-catalog-core.js'));
 const gate=require(path.join(base,'link-gate.js'));
 const current=catalog.catalog();
-const staticTotal=catalog.base.length+catalog.extras.length+paths.links.length+expanded.links.length+specialist.links.length+depthA.links.length+depthB.links.length+depthC.links.length+depthD.links.length+ai.links.length+regional.links.length+everyday.links.length;
+const staticTotal=catalog.base.length+catalog.extras.length+paths.links.length+expanded.links.length+specialist.links.length+depthA.links.length+depthB.links.length+depthC.links.length+depthD.links.length+ai.links.length+regional.links.length+everyday.links.length+regionalExt.links.length+everydayExt.links.length;
 assert.ok(expanded.links.length>=80,'expanded resources must be significant');
 assert.equal(current.length,staticTotal,'catalog data must be actually merged and deduplicated');
-assert.equal(current.length,776,'expanded directory must include all curated depths');
+assert.equal(current.length,1028,'expanded directory must include all curated depths');
 assert.equal(new Set(current.map(x=>x.url)).size,current.length,'all static URLs unique');
 for(const x of current){
  assert.ok(x.name&&x.category&&x.description);
