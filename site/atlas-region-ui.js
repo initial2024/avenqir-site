@@ -2,10 +2,45 @@
 /* Regional UI: no fetch, no IP geolocation, no location permission, no server sync. */
 (function(root){
  const api=root.AVENQIR_ATLAS_REGION;
- const E=()=>!!root.AVENQIR_I18N&&!root.AVENQIR_I18N.locale.startsWith('zh-');
+ // The document language is the language actually shown to the visitor. Use it as
+ // the authoritative presentation signal when a long-lived PWA has stale modules.
+ const locale=()=>{
+  const page=String(root.document?.documentElement?.lang||'').trim();
+  const setting=String(root.AVENQIR_I18N?.locale||'').trim();
+  if(page&&!/^zh(?:-|$)/i.test(page))return page;
+  return setting||page||'en';
+ };
+ const E=()=>!/^zh(?:-|$)/i.test(locale());
  const T=(zh,en)=>E()?en:zh;
  const category=name=>root.AVENQIR_I18N?.category(name)||name;
- const regionName=r=>{if(!E())return r.label;try{return new Intl.DisplayNames([root.AVENQIR_I18N.locale],{type:'region'}).of(r.code)||r.label;}catch{return r.code;}};
+ const regionName=r=>{if(!E())return r.label;try{return new Intl.DisplayNames([locale()],{type:'region'}).of(r.code)||r.code;}catch{return r.code;}};
+ // Explicit English summaries are written against the curated record, not generated
+ // by contacting an outside translator. Unknown records use their existing category
+ // as a conservative label; source metadata can always be expanded verbatim.
+ const EN_DESCRIPTIONS=Object.freeze({
+  every011:'Ride-hailing, transportation and delivery services in Singapore',
+  every012:'Online grocery and supermarket shopping in Singapore',
+  every013:'Singapore rail transport updates and service notices',
+  every014:'Singapore postal services and parcel tracking',
+  every015:'Municipal feedback and community services in Singapore',
+  rg88017:'Singapore government information and public services',
+  rg88018:'Official social and economic statistics for Singapore',
+  rg88019:'Public open-data portal for Singapore',
+  rg88020:'Official Singapore weather forecasts',
+  rg88021:'Singapore public transport information',
+  rg88022:'Singapore library and digital reading resources',
+  rg88023:'Official education information from Singapore’s Ministry of Education',
+  rg88024:'Singapore parks and ecological resources'
+ });
+ function englishDescription(item,regionLabel){
+   const original=String(item?.description||'').trim();
+   if(original&&!/[\u3400-\u9fff]/.test(original))return original;
+   if(Object.hasOwn(EN_DESCRIPTIONS,item?.id))return EN_DESCRIPTIONS[item.id];
+   const topic=category(item?.category||'');
+   const cleanTopic=String(topic||'').replace(/[\u3400-\u9fff]/g,'').trim();
+   const cleanRegion=String(regionLabel||'').replace(/[\u3400-\u9fff]/g,'').trim();
+   return (cleanTopic||'Public website')+' resources for '+(cleanRegion||'the selected region')+'.';
+ }
  function mount({items,favorites,open,reviewed}){
   if(!api||typeof document==='undefined')return null;
   const $=id=>document.getElementById(id);
@@ -58,9 +93,14 @@
     a.href=reviewed(item.url)?item.url:'leave.html?url='+encodeURIComponent(item.url)+'&name='+encodeURIComponent(item.name);
     a.referrerPolicy='no-referrer';a.rel='noopener noreferrer';
     a.addEventListener('click',e=>{if(e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();open(item.url,item.name);});
-    const desc=el('p','atlas-local-description',E()&&/[\u3400-\u9fff]/.test(item.description||'')?
-      'Original source description is in Chinese; website title and link remain unchanged.':item.description);
-    box.append(top,a,desc,el('small','atlas-local-trust',reviewed(item.url)?T('来源已核对（非安全认证）','Exact source checked (not a safety certificate)'):T('第三方网站 · 跳转前确认','Third-party website · confirm before leaving')));
+    const desc=el('p','atlas-local-description',E()?englishDescription(item,label):item.description);
+    box.append(top,a,desc);
+    if(E()&&/[\u3400-\u9fff]/.test(item.description||'')){
+      const original=el('details','atlas-original-desc');
+      original.append(el('summary','', 'Original source description (Chinese)'),el('p','atlas-local-description',item.description));
+      box.append(original);
+    }
+    box.append(el('small','atlas-local-trust',reviewed(item.url)?T('来源已核对（非安全认证）','Exact source checked (not a safety certificate)'):T('第三方网站 · 跳转前确认','Third-party website · confirm before leaving')));
     cards.append(box);
    }
   }
@@ -81,7 +121,7 @@
   render();
   return Object.freeze({render});
  }
- const result=Object.freeze({mount});
+ const result=Object.freeze({mount,englishDescription});
  root.AVENQIR_ATLAS_REGION_UI=result;
  if(typeof module==='object'&&module.exports)module.exports=result;
 })(typeof window!=='undefined'?window:globalThis);
