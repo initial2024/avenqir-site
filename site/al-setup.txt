@@ -41,6 +41,7 @@ python3 /opt/avenqir/al_browser_preflight.py
 echo "AL_SETUP_NOTE=No Chrome/VNC packages or keys were installed by this bootstrap."
 echo "AL_NEXT_STEP=Confirm >=2048 MiB assigned RAM and >=3 GiB Sandbox disk quota in Altare Resources."
 echo "AL_NEXT_COMMAND=bash /opt/avenqir/al_private_browser.sh install"
-echo "AL_THEN=bash /opt/avenqir/al_private_browser.sh password"
+echo "AL_THEN=bash /opt/avenqir/al_private_browser.sh password-auto"
+echo "AL_THEN=bash /opt/avenqir/al_private_browser.sh password-reveal (PRIVATE: shows password exactly once; do NOT share screenshots)"
 echo "AL_THEN=bash /opt/avenqir/al_private_browser.sh start"
 echo "AL_THEN=bash /opt/avenqir/al_private_browser.sh status"
