@@ -23,6 +23,10 @@ def validate():
         if p.suffix.lower() not in ALLOWED:raise ValueError(f'Unapproved type: {rel}')
         if any(x in p.name.lower() for x in ('secret','private','password','credential','backup','setup-code','key.pem')):raise ValueError(f'Sensitive-looking filename: {rel}')
         if p.stat().st_size>MAX_FILE:raise ValueError(f'Oversized file: {rel}')
+        if p.suffix.lower()=='.html':
+            sample=p.read_bytes()
+            if b'slowAES.decrypt' in sample or b'/aes.js' in sample:
+                raise ValueError(f'Anti-bot challenge HTML is not original website source: {rel}')
         total+=p.stat().st_size
         files.append(p)
     if not files or total>MAX_TOTAL:raise ValueError('Empty or oversized deploy')
