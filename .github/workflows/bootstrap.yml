@@ -1,0 +1,48 @@
+name: AVENQIR - import verified source once
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  import:
+    if: github.repository == 'initial2024/avenqir-site' && github.actor == 'initial2024'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Verify and extract public source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib,stat,zipfile
+          from pathlib import Path,PurePosixPath
+          p=Path('AVENQIR-Public-AutoDeploy-v1.zip')
+          sha='294883609db62d0fc8e245aca4a2de5d3874233b0546bab0b017881a3213d6cb'
+          if not p.is_file() or hashlib.sha256(p.read_bytes()).hexdigest()!=sha: raise SystemExit('BLOCK: archive hash mismatch')
+          allowed={'.gitignore','README-开始使用.md','.github/workflows/deploy.yml'}
+          with zipfile.ZipFile(p) as z:
+            files=[x for x in z.infolist() if not x.is_dir()]
+            if len(files)!=53 or len(set(x.filename for x in files))!=53:raise SystemExit('BLOCK: archive entries')
+            for x in files:
+              path=PurePosixPath(x.filename)
+              if path.is_absolute() or '..' in path.parts or '\\' in x.filename:raise SystemExit('BLOCK: invalid filename')
+              if x.filename not in allowed and not x.filename.startswith(('site/','scripts/','tests/')):raise SystemExit('BLOCK: unexpected path')
+              if stat.S_IFMT(x.external_attr>>16)==stat.S_IFLNK or x.file_size>3_000_000:raise SystemExit('BLOCK: symlink or size')
+              dest=Path(*path.parts);dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(z.read(x))
+          p.unlink()
+          PY
+          python3 scripts/verify_site.py
+          python3 scripts/audit_public.py
+          python3 -m unittest discover -s tests -v
+          for f in site/*.php; do php -l "$f"; done
+          for f in site/*.js; do node --check "$f"; done
+      - name: Commit public site without deploying
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add site scripts tests .gitignore README-开始使用.md .github/workflows/deploy.yml
+          git diff --cached --quiet && exit 0
+          git commit -m 'Import verified AVENQIR public website source'
+          git push origin HEAD:main
