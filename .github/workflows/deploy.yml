@@ -48,6 +48,8 @@ jobs:
           node tests/test_atlas_taxonomy.cjs
           node tests/test_atlas_region.cjs
           node tests/test_atlas_safety.cjs
+          node tests/test_atlas_i18n.cjs
+          node tests/test_transfer_v90.cjs
       - name: Check PHP and JavaScript syntax
         shell: bash
         run: |
