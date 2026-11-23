@@ -43,7 +43,7 @@
    }
    return EXTRA[lang]?.[key]||EXTRA.en?.[key]||key;
  }
- const CATEGORY_EN={"学术":"Academic","科研":"Research","教育":"Education","英语阅读":"English reading","语言":"Languages","阅读":"Reading","数学":"Mathematics","科学":"Science","材料":"Materials","化学":"Chemistry","物理":"Physics","天文":"Astronomy","生物":"Biology","地球科学":"Earth science","环境气候":"Climate & environment","医疗健康":"Health","电子工程":"Electronics","AI":"AI","AI交流":"AI chat","AI检测":"AI detection","数据":"Data","AI官网":"AI official sites","AI绘图":"AI images","AI视频":"AI video","AI编程":"AI coding","AI语音":"AI voice","AI研究":"AI research","开发":"Development","前端开发":"Frontend","数据库":"Databases","运维部署":"Deployment","开源项目":"Open source","网络":"Network","安全":"Security","互联网":"Internet","创作":"Creative tools","产品设计":"Product design","音视频":"Audio & video","休闲":"Entertainment","实用":"Utilities","旅游出行":"Travel & transport","地图":"Maps","在线办公":"Online productivity","软件应用":"Apps","新闻":"News","文化":"Culture","人文历史":"History & humanities","科技资讯":"Technology news","法律政策":"Law & policy","经济金融":"Economics & finance"};
+ const CATEGORY_EN={"待分类":"Needs categorization","学术":"Academic","科研":"Research","教育":"Education","英语阅读":"English reading","语言":"Languages","阅读":"Reading","数学":"Mathematics","科学":"Science","材料":"Materials","化学":"Chemistry","物理":"Physics","天文":"Astronomy","生物":"Biology","地球科学":"Earth science","环境气候":"Climate & environment","医疗健康":"Health","电子工程":"Electronics","AI":"AI","AI交流":"AI chat","AI检测":"AI detection","数据":"Data","AI官网":"AI official sites","AI绘图":"AI images","AI视频":"AI video","AI编程":"AI coding","AI语音":"AI voice","AI研究":"AI research","开发":"Development","前端开发":"Frontend","数据库":"Databases","运维部署":"Deployment","开源项目":"Open source","网络":"Network","安全":"Security","互联网":"Internet","创作":"Creative tools","产品设计":"Product design","音视频":"Audio & video","休闲":"Entertainment","实用":"Utilities","旅游出行":"Travel & transport","地图":"Maps","在线办公":"Online productivity","软件应用":"Apps","新闻":"News","文化":"Culture","人文历史":"History & humanities","科技资讯":"Technology news","法律政策":"Law & policy","经济金融":"Economics & finance"};
  const GROUP_EN={"study":"Learning & research","science":"Science & engineering","ai":"AI & data","developer":"Development & deployment","network":"Network & security","design":"Design & creation","life":"Everyday & exploration","world":"Culture & news"};
  const GROUP_DESC_EN={"study":"Study, evidence and research","science":"Physical sciences and engineering","ai":"AI platforms, tools and data","developer":"Code, services and deployment","network":"Network diagnosis and security","design":"Visual, creative and media tools","life":"Services for daily life","world":"Culture, policy and information"};
  function category(name){return locale.startsWith('zh-')?name:CATEGORY_EN[name]||name;}
@@ -91,6 +91,18 @@
     set('#atlasSecurityTitle','directory.securityHeading');
     set('#atlasRegionTitle','directory.regionHeading');
     set('#atlasFlowsTitle','directory.flowHeading');
+    const siteLang=$('#atlasSiteLanguageMode');
+    if(siteLang){
+      const translated=!locale.startsWith('zh-');
+      const labels=translated?[
+        'Prefer my interface language (unknown sites stay visible)',
+        'All languages, keep original order',
+        'Only sites explicitly matching my language'
+      ]:['优先当前界面语言（未知语言仍显示）','全部语言，不按语言重排','只显示明确标注且匹配的语言'];
+      [...siteLang.options].forEach((option,i)=>{if(labels[i])option.textContent=labels[i];});
+      const label=siteLang.closest('label');if(label&&label.firstChild&&label.firstChild.nodeType===3)
+       label.firstChild.nodeValue=translated?'Website language ':'网页语言 ';
+    }
     const multi=$('#atlasMultiCategory')?.closest('label');
     if(multi){const input=multi.querySelector('input');multi.replaceChildren(input,root.document.createTextNode(translate('directory.multi')));}
   }else if(pathname==='bookmarks.html'){
