@@ -39,6 +39,20 @@ class ALPrivateBrowserSecurity(unittest.TestCase):
         self.assertNotIn("x11vnc -nopw", source)
         self.assertNotIn("cloudflared tunnel --url", source)
         self.assertNotIn("systemctl", source)
+        self.assertIn('PROFILE/.al-xvfb.${number}.pid', source)
+        self.assertIn('mapfile -d', source)
+        self.assertIn('"/proc/$pid/status"', source)
+        self.assertIn('id -u "$U"', source)
+        self.assertIn('actual_uid', source)
+        self.assertIn('"/tmp/.X11-unix/X${number}"', source)
+        self.assertIn('xpid=$!', source)
+        self.assertIn('chmod 0600 "$HOME/.al-xvfb.', source)
+        self.assertIn('AL_XVFB_DISPLAY=:$n', source)
+        self.assertNotIn('pgrep -u "$U" -f "^Xvfb', source)
+        self.assertNotIn('pkill -u "$U" -x "Xvfb"', source)
+        self.assertNotIn('kill 7427', source)
+        self.assertNotIn('kill 7375', source)
+
         self.assertIn("AL_PRIVATE_VNC_LOCAL_ONLY=YES", source)
 
     def test_auto_uses_pipe_not_process_arguments(self):
