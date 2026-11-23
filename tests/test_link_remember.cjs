@@ -35,9 +35,9 @@ assert.equal(gate.approvalCount(store),0);
 assert.equal(gate.isRemembered(site,store),false);
 const txt=require('node:fs').readFileSync(require('node:path').resolve(__dirname,'../site/directory.html'),'utf8');
 for(const engine of ['google','bing','duck']){
- assert.match(txt,new RegExp('data-search-provider="'+engine+'" href="https://'));
+ assert.match(txt,new RegExp('data-no-match-engine="'+engine+'" rel="noreferrer noopener" referrerpolicy="no-referrer" href="https://'));
 }
 assert.ok(!txt.includes('data-external="google"'),'no old dead-end search buttons');
 assert.match(txt,/id="atlasRemember"/);
 assert.match(txt,/id="atlasClearApprovals"/);
-console.log('PASS: 30-day exact URL approval, expiry, revoke, dangerous URL hard-block and native search links');
+console.log('PASS: 30-day exact URL approval, expiry, revoke, dangerous URL hard-block and native consent-based external search links');
