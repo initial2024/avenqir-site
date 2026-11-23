@@ -30,8 +30,8 @@ assert.equal(model.setInterest('教育',true),true);
 assert.equal(model.setInterest('安全',true),true);
 assert.equal(model.setInterest('材料',true),true);
 assert.equal(model.setInterest('__proto__',true),false);
-assert.equal(model.record('https://example.com/secret','open'),true,'category is data, but never a URL in real UI');
-// Deliberately avoid URL-shaped category values in real tracking — model guard must reject them.
+assert.equal(model.record('https://example.com/secret','open'),false,'category aggregation must reject raw URLs');
+assert.equal(model.record('example.com','open'),false,'category aggregation must reject hostnames');
 assert.equal(map.has(KEY),true);
 const stored=JSON.parse(map.get(KEY));
 assert.equal(stored.v,1);
@@ -39,7 +39,7 @@ assert.equal(stored.enabled,true);
 assert.equal(stored.activity['材料'].opens,2);
 assert.equal(stored.activity['科研'].saves,1);
 assert.deepEqual(stored.interests,['教育','安全','材料']);
-assert.equal('https://example.com/secret' in stored.activity,true,'fixture tests model input boundary');
+assert.equal('https://example.com/secret' in stored.activity,false,'do not persist concrete websites');
 const fixture=[
  {url:'https://science.example/1',category:'材料',name:'材料数据库',description:'材料'},
  {url:'https://science.example/2',category:'材料',name:'晶体结构',description:'晶体'},
