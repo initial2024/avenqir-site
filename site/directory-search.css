@@ -63,3 +63,16 @@
 .atlas-external-dialog-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
 .atlas-external-dialog-actions button{flex:1 1 180px;min-height:48px;white-space:normal}
 @media(max-width:480px){.atlas-external-dialog{width:calc(100% - 16px);max-height:92dvh;border-radius:16px}.atlas-external-dialog-actions{flex-direction:column}}
+
+
+/* Stable native web-search anchors even when script initialization is unavailable. */
+.atlas-external-actions .atlas-engine-link{display:inline-flex;align-items:center;justify-content:center;text-align:center;flex:1 1 85px;min-height:44px;padding:9px 12px;border:1px solid #c6d9ec;border-radius:10px;background:#fff;color:#2f5e93;font-size:13px;font-weight:650;text-decoration:none}
+.atlas-external-actions .atlas-engine-link:hover,.atlas-external-actions .atlas-engine-link:focus-visible{color:#14518f;background:#eaf4ff;border-color:#79afe0}
+.atlas-preferences{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin:10px 0;padding:9px 12px;border-radius:10px;background:#f4f8fd;border:1px solid #dae7f4;font-size:11px;color:#536b80}
+.atlas-preferences button{font-size:11px;border:1px solid #c2d7ec;color:#346597;background:#fff;border-radius:8px;min-height:38px;padding:7px 12px}
+.atlas-remember-choice{display:flex;align-items:flex-start;gap:10px;padding:11px 0;color:#395974;font-size:13px;line-height:1.55;grid-column:1/-1}
+.atlas-remember-choice input{width:19px!important;height:19px;min-width:19px;min-height:0!important;margin:2px 0 0;accent-color:#2666a6}
+.atlas-remember-choice[hidden]{display:none!important}
+:root[data-aq-theme="dark"] .search-body :is(.atlas-preferences,.atlas-engine-link){background:#162b45;color:#cfe8fa;border-color:#567792}
+:root[data-aq-theme="eye"] .search-body :is(.atlas-preferences,.atlas-engine-link){background:#f6ecd8;color:#58482d;border-color:#b9a588}
+@media(max-width:480px){.atlas-external-actions .atlas-engine-link{font-size:12px;min-width:75px;padding:8px 7px}.atlas-preferences{display:grid;gap:7px}.atlas-preferences button{width:100%}}
