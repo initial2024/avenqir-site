@@ -70,6 +70,23 @@ class ALPrivateBrowserSecurity(unittest.TestCase):
         self.assertNotIn('kill 7537', source)
         self.assertNotIn('rm /tmp/.X91-lock', source)
 
+    def test_bg_uid_probe_is_fail_closed_before_any_xvfb(self):
+        source = SETUP.read_text()
+        guard = source[source.index("uid_mapping_guard(){"):source.index("select_browser_display(){")]
+        start = source[source.index("start_browser(){"):source.index("diagnose_browser(){")]
+        self.assertIn('background_uid="$(runuser -u "$U" -- sh -c', guard)
+        self.assertIn('sleep 2 >/dev/null 2>&1 &', guard)
+        self.assertIn('ps -o comm= -p "$child"', guard)
+        self.assertIn('ps -o uid= -p "$child"', guard)
+        self.assertIn('AL_UID_BACKGROUND=$background_uid', guard)
+        self.assertIn('background child runs as UID $background_uid', guard)
+        self.assertIn('refusing to spawn another display', guard)
+        self.assertIn('wait "$child"', guard)
+        self.assertLess(start.index("uid_mapping_guard"), start.index("select_browser_display"))
+        self.assertNotIn("Xvfb", guard)
+        self.assertNotIn("kill -9", guard)
+        self.assertNotIn("chown -R", guard)
+
     def test_short_lived_uid_probe_cannot_create_more_displays(self):
         source = SETUP.read_text()
         probe = source[source.index("uid_child_probe(){"):source.index("uid_mapping_guard(){")]
