@@ -46,6 +46,7 @@ jobs:
   deploy:
     needs: verify
     if: >-
+      false &&
       vars.AVENQIR_DEPLOY_PAUSED != 'true' &&
       github.repository == 'initial2024/avenqir-site' &&
       github.actor == 'initial2024' &&
