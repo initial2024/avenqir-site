@@ -26,7 +26,7 @@ class Parse(HTMLParser):
 class Features(unittest.TestCase):
     def test_static_wiring(self):
         expected={
-          'backup.html':['transferCategories','transferExport','transferInput','transferRestore','transferStatus'],
+          'transfer.html':['transferCategories','transferExport','transferInput','transferRestore','transferStatus'],
           'tools.html':['codec','codecInput','codecB64Encode','codecB64Decode','codecUrlEncode','codecUrlDecode','color','colorHex','colorPicker'],
           'notes.html':['notePreviewToggle','noteMarkdownPreview','diffTrim','diffCase','timeOutput'],
           'index.html':[]
@@ -46,20 +46,20 @@ class Features(unittest.TestCase):
         self.assertGreaterEqual(len(entries),35)
         self.assertEqual(len(entries),len(set(entries)))
         for entry in entries:self.assertTrue((SITE/entry).is_file(),entry)
-        for asset in ('quick-search.js','backup.js','backup-schema.js','backup.html','notes-enhance.js','tool-addons.js'):
+        for asset in ('quick-search.js','device-transfer.js','transfer-schema.js','transfer.html','notes-enhance.js','tool-addons.js'):
             self.assertIn(asset,entries)
         self.assertIn('slowAES.decrypt',s)
         self.assertIn('/_private/',s)
         self.assertIn('/_store/',s)
     def test_backup_privacy_and_static_features(self):
-        for file in ('backup.js','backup-schema.js','quick-search.js','notes-enhance.js','tool-addons.js'):
+        for file in ('device-transfer.js','transfer-schema.js','quick-search.js','notes-enhance.js','tool-addons.js'):
             data=(SITE/file).read_text('utf-8')
             self.assertNotIn('.innerHTML',data)
             self.assertNotIn('eval(',data)
-            if file in ('backup.js','backup-schema.js'):
+            if file in ('device-transfer.js','transfer-schema.js'):
                 self.assertNotIn('fetch(',data)
                 self.assertNotIn('XMLHttpRequest',data)
-        self.assertIn('AVENQIR_TRANSFER',(SITE/'backup-schema.js').read_text('utf-8'))
+        self.assertIn('AVENQIR_TRANSFER',(SITE/'transfer-schema.js').read_text('utf-8'))
         self.assertIn('aria-haspopup',(SITE/'quick-search.js').read_text('utf-8'))
 
 if __name__=='__main__':
