@@ -117,7 +117,7 @@ def make_markdown(report, run_url, older=None):
         *history,
         HISTORY_END,
         "",
-        "此 Issue 自动更新同一条记录，避免每周新增一条 Issue；"
+        "此 Issue 自动更新同一条记录，避免每天新增一条 Issue；"
         "完整 JSON 报告在各自的 GitHub Actions Artifact 中保存，受 GitHub 保留期限制。",
         "",
     ]
