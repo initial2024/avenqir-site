@@ -114,20 +114,53 @@ for(const source of ['atlas-ai.js','atlas-regional.js','atlas-everyday.js','atla
 for(const tag of ['atlasRegionToggle','atlasRegionStatus','atlasRegionBody','atlasRegionSelect','atlasRegionCards','atlasRegionClear']){
  assert.ok(html.includes('id="'+tag+'"'),'missing local region control '+tag);
 }
-assert.ok(html.indexOf('atlas-region.js?v=18')<html.indexOf('atlas-region-ui.js?v=29'));
-assert.ok(html.indexOf('atlas-region-ui.js?v=29')<html.indexOf('directory.js?v=25'));
+assert.ok(html.indexOf('atlas-region.js?v=18')<html.indexOf('atlas-region-ui.js?v=30'));
+assert.ok(html.includes('atlas-region-ui.js?v=30') && html.indexOf('atlas-region-ui.js?v=30')<html.indexOf('directory.js?v=25'),'v9.4 region UI must precede directory runtime');
 assert.ok(ui.includes('optgroup'),'40-region selector needs grouping');
 assert.ok(ui.includes("root.document?.documentElement?.lang"),'region UI must match visible document language');
 assert.ok(ui.includes("Original source description (Chinese)"),'original source remains accessible on demand');
 assert.ok(ui.includes("new Intl.DisplayNames"),'country names should follow chosen display language');
 assert.ok(ui.includes('englishDescription(item,label)'),'English regional cards need a readable summary');
+const localePacks = require(path.join(dir,'atlas-region-ui.js'));
+const interfaceLocales = require(path.join(dir,'aq-i18n.js')).LOCALES.map(x=>x.code);
+assert.deepEqual(localePacks.localeCodes,interfaceLocales,'all 40 interface languages must have regional labels');
+for(const code of interfaceLocales){
+ const uiPack=localePacks.localeCodes.includes(code);
+ assert.equal(uiPack,true,'Missing regional UI locale '+code);
+}
+assert.equal(localePacks.regionGroup('东亚'),'East Asia','unsupported runtime locale should fall back to English');
+assert.equal(localePacks.PACK_KEYS.length,8,'regional labels must cover eight recurring UI roles');
+const previousTestDocument=globalThis.document;
+try {
+ for (const code of interfaceLocales) {
+  globalThis.document={documentElement:{lang:code}};
+  for (const label of localePacks.PACK_KEYS) {
+   const translated=localePacks.phrase(label);
+   assert.ok(typeof translated==='string' && translated.length>2,
+    'Missing '+label+' label for '+code);
+  }
+ }
+ globalThis.document={documentElement:{lang:'ja'}};
+ assert.equal(localePacks.language(),'ja','Japanese locale must remain Japanese');
+ assert.ok(localePacks.phrase('auto').includes('タイムゾーン'));
+ globalThis.document={documentElement:{lang:'zh-Hant'}};
+ assert.equal(localePacks.language(),'zh-Hant','Traditional Chinese must not collapse to Simplified');
+ assert.ok(localePacks.phrase('auto').includes('根據'));
+ globalThis.document={documentElement:{lang:'ar'}};
+ assert.ok(localePacks.phrase('auto').includes('المنطقة'));
+} finally {
+ if(previousTestDocument===undefined) delete globalThis.document;
+ else globalThis.document=previousTestDocument;
+}
+assert.ok(ui.includes("new Intl.DisplayNames"),'country and area names use browser locale data');
+assert.ok(ui.includes("phrase('auto')"),'auto selector localized, not hard-coded Chinese');
 const regionUi=require(path.join(dir,'atlas-region-ui.js'));
 assert.equal(regionUi.englishDescription({id:'every011',category:'旅游出行',description:'新加坡出行与配送服务'},'Singapore'),
  'Ride-hailing, transportation and delivery services in Singapore');
 assert.equal(regionUi.englishDescription({id:'every014',category:'实用',description:'新加坡邮政和包裹查询'},'Singapore'),
  'Singapore postal services and parcel tracking');
 const genericDescription=regionUi.englishDescription({id:'unknown',category:'Utilities',description:'第三方网站'},'Japan');
-assert.ok(!/[\\u3400-\\u9fff]/.test(genericDescription),'English fallback should not leak Chinese text');
+assert.ok(!/[\u3400-\u9fff]/.test(genericDescription),'English fallback should not leak Chinese text');
 assert.ok(genericDescription.includes('Japan'));
 assert.ok(wiring.includes('regionRecommendations?.render()'),'new catalog must re-render local regions');
 for(const source of [ui,model]){
