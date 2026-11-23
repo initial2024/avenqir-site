@@ -55,3 +55,21 @@ body{overflow-x:hidden;background:radial-gradient(circle at 70% 0%,#17405844,tra
 
 /* v8 compact sections */
 [hidden]{display:none!important}.module-picker{display:flex;gap:9px;overflow-x:auto;scrollbar-width:thin;padding:7px 3px 14px;margin:12px 0 20px;grid-column:1/-1;max-width:100%}.module-picker-tab{white-space:nowrap;min-height:44px;padding:11px 18px;border-radius:999px;border:1px solid #6889ad66;background:#10263b;color:#a8c5df;font-size:13px;cursor:pointer}.module-picker-tab.active{color:#08192a;background:linear-gradient(135deg,#52d5f4,#a6baff);border-color:#88ceff;font-weight:800}.module-picker-tab:focus-visible{outline:3px solid #86d8ff;outline-offset:2px}.module-picker+section.panel{grid-column:1/-1}.module-picker~section[hidden]{display:none!important}@media(max-width:520px){.module-picker{margin:7px -7px 12px;padding:4px 7px 13px}.module-picker-tab{padding:10px 15px;font-size:12px}}
+
+
+/* AVENQIR v8.2 global feature finder, accessible on touch devices. */
+.aq-quick-search{border:1px solid #7eb8df77;background:#12344b;color:#e6f4ff;border-radius:12px;min-height:42px;padding:9px 13px;display:inline-flex;align-items:center;gap:12px;white-space:nowrap;font-size:13px;margin-left:auto}
+.aq-quick-search kbd{font-size:10px;font-family:inherit;border:1px solid #8fc3e866;padding:2px 5px;border-radius:5px;color:#bcd9ef}
+.headbar .aq-quick-search+.menu-toggle{margin-left:0}
+.aq-search-dialog{box-sizing:border-box;position:fixed;inset:12vh 12px auto;width:min(600px,calc(100% - 24px));max-height:78vh;overflow:auto;background:#0d2034;color:#eef8ff;padding:0;border:1px solid #89c7ef77;border-radius:18px;box-shadow:0 30px 85px #000c}
+.aq-search-dialog::backdrop{background:#020815bd;backdrop-filter:blur(4px)}
+.aq-search-top{position:sticky;top:0;display:flex;align-items:center;gap:9px;z-index:2;padding:16px;background:#0d2034;border-bottom:1px solid #ffffff22}
+.aq-search-top input{flex:1;min-width:0;max-width:none}
+.aq-search-close{width:auto;min-height:44px;padding:9px 12px;background:#18374d;color:#e9f5ff;border:1px solid #87b9da66;border-radius:10px}
+.aq-search-results{display:grid;gap:3px;padding:10px 13px;max-height:52vh;overflow:auto}
+.aq-search-result{display:flex;flex-direction:column;gap:2px;padding:12px 13px;border-radius:9px;border:1px solid transparent;color:#eaf7ff}
+.aq-search-result:hover,.aq-search-result:focus-visible{background:#173952;border-color:#80cffa77}
+.aq-search-result strong{font-size:14px}.aq-search-result small{color:#9fb9cf;font-size:11px;overflow-wrap:anywhere}
+.aq-search-hint{color:#a9c2d5;font-size:12px;margin:0;padding:10px 20px 17px}
+@media(max-width:850px){.aq-quick-search{margin-left:auto;padding:8px 10px;font-size:12px}.aq-quick-search kbd{display:none}}
+@media(max-width:410px){.aq-quick-search{font-size:11px;gap:4px;padding:8px 9px}.aq-search-top{padding:12px}.aq-search-dialog{inset:8vh 8px auto;width:calc(100% - 16px)}}
