@@ -53,7 +53,7 @@
   input.addEventListener('change',async()=>{
     clearPreview();const file=input.files?.[0];if(!file)return;
     try{
-      if(file.size>2*1024*1024) throw Error('文件超过 2 MB');
+      if(file.size>4*1024*1024) throw Error('文件超过 4 MB');
       const obj=JSON.parse(await file.text());
       loaded=API.readArchive(obj);
       for(const [group,title] of categories){
