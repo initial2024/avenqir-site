@@ -1,7 +1,7 @@
 'use strict';
 /* Register offline shell after page load. Offline is best-effort only. */
 if('serviceWorker' in navigator && location.protocol==='https:') {
-  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=12',{updateViaCache:'none'}).catch(()=>{}));
 }
 
 /* v7 responsive navigation, no background network polling. */
@@ -12,16 +12,9 @@ if('serviceWorker' in navigator && location.protocol==='https:') {
 (() => {
   if (document.querySelector('script[data-aq-search]')) return;
   const script=document.createElement('script');
-  script.src='./quick-search.js?v=1';
+  script.src='./quick-search.js?v=12';
   script.dataset.aqSearch='1';
   document.head.append(script);
 })();
 
 
-/* Appearance settings are loaded on every page sharing the navigation shell. */
-(() => {
-  if(document.querySelector('script[data-aq-appearance]'))return;
-  const script=document.createElement('script');
-  script.src='./theme.js?v=1';script.dataset.aqAppearance='1';
-  document.head.append(script);
-})();
