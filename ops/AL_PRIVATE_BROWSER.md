@@ -165,6 +165,42 @@ If child shows 999, investigate background process policy with Altare.
 Do not run `start` or open Cloudflare Tunnel until the ownership
 boundary is understood.
 
+## Real background UID drift: UID 998 foreground, UID 999 background
+
+The owner ran the exact safe diagnostic in Altare's utility-server console:
+
+```bash
+runuser -u albrowser -- sh -c 'id -u; sleep 3 & p=$!; ps -o pid,uid,args -p "$p"; wait "$p"'
+```
+
+It printed **998** for the foreground shell and **999** for the background
+`sleep 3`. The latter belongs to the local Altare `container`
+account. This establishes that the issue is **not specific to the
+Xvfb binary or its keymap warnings**. It does not yet prove *why* the
+background process uses UID 999 (for example, it would be premature
+to assert a platform-wide Altare user-remapping policy).
+
+The launcher's `uid_mapping_guard` now tests an actual disposable
+background child and refuses to allocate another screen when its
+numeric UID differs from the dedicated `albrowser` UID. It also
+checks pre-existing PID markers and rejects their foreign ownership.
+The verification step may print `AL_UID_BACKGROUND=999` followed by
+`AL_BROWSER_DENY`; this is an intentional safety result. **Do not
+repeat `start` until a supported long-lived process execution
+mechanism retaining UID 998 is demonstrated**.
+
+Altare documents Sandbox SSH and persistent processes via
+`tmux`, `screen` or `nohup`:
+https://docs.altare.gg/sandboxes
+and describes SSH setup:
+https://docs.altare.gg/platform/connecting .
+Connecting over **SSH to the existing Sandbox** (without opening
+VNC ports) is a reasonable way to test whether an interactive SSH
+session preserves the expected UID for background tasks. This has
+not been tested on the owner's Sandbox and is not yet a resolution.
+Keep VNC localhost-only and do not launch Chrome or Cloudflare
+Tunnel until the UID boundary and its isolation are verified.
+
 ## AL Console: curl (77) / missing root CA certificates
 
 A **real device screenshot** showed:
