@@ -75,6 +75,8 @@
   }
   const L=(cn,en)=>rootLocale()?.startsWith('zh-')?cn:en;
  const rootLocale=()=>window.AVENQIR_I18N?.locale||'en';
+ const EN_NAMES={"directory.html":"Public website search","directory.html#atlasFlowsTitle":"Guided tasks","bookmarks.html#library":"Private bookmarks","bookmarks.html#transfer":"Bookmark HTML backup","appearance.html":"Appearance settings","bookmarks.html#editor":"Add bookmarks","notes.html#pad":"Local notes","notes.html#textCompare":"Text comparison","notes.html#timestamp":"Unix time converter","notes.html#notesBackup":"Notes backup","transfer.html":"Data transfer","daily.html#focus":"Focus timer","daily.html#tasks":"Daily tasks","daily.html#decide":"Random choice","daily.html#localBackup":"Game backups","fun.html#game2048":"2048 game","fun.html#memory":"Memory game","fun.html#pop":"Pop bubble game","fun.html#breathe":"Breathing exercise","fun.html#sketch":"Drawing pad","tools.html#dns":"DNS lookup","tools.html#hash":"SHA-256 file check","tools.html#image":"Image compression","tools.html#json":"JSON formatter","tools.html#url":"URL parser","tools.html#codec":"Base64 and URL codecs","tools.html#color":"Color conversion","tools.html#traffic":"Traffic estimate","check.html#network":"IP and browser diagnostics","check.html#tests":"Compatibility tests","domains.html":"DNS changes","projects.html":"GitHub Releases","logs.html":"Android logs","health.html":"Website health","deploy-status.html":"Deployment status","feedback.php":"Feedback","orbit-bridge.html":"Orbit Hub × local helper"};
+ const localizedTitle=item=>item.kind?item.title:(rootLocale().startsWith('zh-')?item.title:EN_NAMES[item.url]||item.title);
  const attach=()=>{
     const bar=document.querySelector('.head-inner');
     if(!bar || document.getElementById('aqQuickSearch'))return;
@@ -82,9 +84,9 @@
     button.type='button';button.id='aqQuickSearch';button.className='aq-quick-search';
     button.setAttribute('aria-haspopup','dialog');
     button.setAttribute('aria-controls','aqCommandPalette');
-    button.setAttribute('aria-label','打开本站功能搜索');
+    button.setAttribute('aria-label',L('打开本站功能搜索','Open feature search'));
     const icon=document.createElement('span');icon.className='aq-quick-search-icon';icon.setAttribute('aria-hidden','true');icon.textContent='⌕';
-    const label=document.createElement('span');label.className='aq-quick-search-label';label.textContent='功能搜索';
+    const label=document.createElement('span');label.className='aq-quick-search-label';label.textContent=L('功能搜索','Search tools');
     const kbd=document.createElement('kbd');kbd.textContent='Ctrl K';
     button.append(icon,label,kbd);
     const nav=bar.querySelector('.menu-toggle');
@@ -93,23 +95,33 @@
     dialog.setAttribute('aria-labelledby','aqSearchTitle');
     const shell=document.createElement('div');shell.className='aq-cmd-shell';
     const heading=document.createElement('div');heading.className='aq-cmd-heading';
-    const title=document.createElement('strong');title.id='aqSearchTitle';title.textContent='快速打开功能';
+    const title=document.createElement('strong');title.id='aqSearchTitle';title.textContent=L('快速打开功能','Find tools and bookmarks');
     const close=document.createElement('button');close.type='button';close.className='aq-search-close';
-    close.textContent='关闭';close.setAttribute('aria-label','关闭功能搜索');
+    close.textContent=L('关闭','Close');close.setAttribute('aria-label',L('关闭功能搜索','Close feature search'));
     heading.append(title,close);
     const row=document.createElement('div');row.className='aq-cmd-input-row';
     const searchIcon=document.createElement('span');searchIcon.textContent='⌕';searchIcon.setAttribute('aria-hidden','true');
     const input=document.createElement('input');input.type='search';input.maxLength=80;
-    input.autocomplete='off';input.placeholder='搜索功能名称，例如 DNS、笔记、书签';
-    input.setAttribute('aria-label','输入要查找的功能');input.id='aqSearchQuery';
+    input.autocomplete='off';input.placeholder=L('搜索功能名称，例如 DNS、笔记、书签','Search DNS, notes, bookmarks and tools');
+    input.setAttribute('aria-label',L('输入要查找的功能','Search features'));input.id='aqSearchQuery';
     row.append(searchIcon,input);
     const results=document.createElement('div');results.className='aq-search-results';results.id='aqSearchResults';
     results.setAttribute('role','list');
     const hint=document.createElement('div');hint.className='aq-search-hint';
-    const hintText=document.createElement('span');hintText.textContent='支持本机私人书签和公开网址目录搜索；不读取笔记、不上传私人书签。';
-    const explore=document.createElement('a');explore.href='directory.html';explore.textContent='探索公开网址 ↗';
+    const hintText=document.createElement('span');hintText.textContent=L('支持本机私人书签和公开网址目录搜索；不读取笔记、不上传私人书签。','Find local bookmarks and public sites. Private data is not uploaded.');
+    const explore=document.createElement('a');explore.href='directory.html';explore.textContent=L('探索公开网址 ↗','Explore public sites ↗');
     hint.append(hintText,explore);
     shell.append(heading,row,results,hint);dialog.append(shell);document.body.append(dialog);
+    window.addEventListener('aq:language-change',()=>{
+      button.setAttribute('aria-label',L('打开本站功能搜索','Open feature search'));
+      label.textContent=L('功能搜索','Search tools');
+      title.textContent=L('快速打开功能','Find tools and bookmarks');
+      close.textContent=L('关闭','Close');
+      input.placeholder=L('搜索功能名称，例如 DNS、笔记、书签','Search DNS, notes, bookmarks and tools');
+      hintText.textContent=L('支持本机私人书签和公开网址目录搜索；不读取笔记、不上传私人书签。','Find local bookmarks and public sites. Private data is not uploaded.');
+      explore.textContent=L('探索公开网址 ↗','Explore public sites ↗');
+      if(dialog.open)update();
+    });
     const update=()=>{
       const query=input.value.trim();
       let found=find(input.value),recents=[];
@@ -119,14 +131,14 @@
         return (ai<0?10000:ai)-(bi<0?10000:bi);
       });
       const local=bookmarksFor(query);
-      const shortcuts=query?[{title:'在公开网址目录搜索：'+query.slice(0,50),keywords:'按当前浏览器内的关键词检索收录网站',url:'directory.html#atlasResults',kind:'public',query}]:[];
+      const shortcuts=query?[{title:L('在公开网址目录搜索：','Search public directory: ')+query.slice(0,50),keywords:'local directory search',url:'directory.html#atlasResults',kind:'public',query}]:[];
       found=[...local,...found.slice(0,Math.max(0,11-local.length)),...shortcuts].slice(0,12);
       results.replaceChildren();
       for(const item of found){
         const a=document.createElement('a');a.className='aq-search-result';
         a.href=item.url;a.setAttribute('role','listitem');
-        const title=document.createElement('strong');title.textContent=item.title;
-        const url=document.createElement('small');url.textContent=item.kind==='private'?'私人书签 · 当前浏览器':item.kind==='public'?'公开目录 · 本地搜索':item.url;
+        const title=document.createElement('strong');title.textContent=localizedTitle(item);
+        const url=document.createElement('small');url.textContent=item.kind==='private'?L('私人书签 · 当前浏览器','Private bookmark · on this device'):item.kind==='public'?L('公开目录 · 本地搜索','Public directory · local search'):item.url;
         const arrow=document.createElement('span');arrow.className='aq-result-arrow';arrow.textContent='↗';arrow.setAttribute('aria-hidden','true');
         const body=document.createElement('span');body.className='aq-result-body';body.append(title,url);
         a.append(body,arrow);
@@ -140,7 +152,7 @@
         results.append(a);
       }
       if(!found.length){
-        const p=document.createElement('p');p.className='aq-cmd-empty';p.textContent='没有对应的本站功能。可以试试公开网址搜索。';results.append(p);
+        const p=document.createElement('p');p.className='aq-cmd-empty';p.textContent=L('没有对应的本站功能。可以试试公开网址搜索。','No matching feature. Try the website directory.');results.append(p);
       }
     };
     function hide(){if(dialog.open&&typeof dialog.close==='function')dialog.close();else dialog.removeAttribute('open');button.setAttribute('aria-expanded','false');}
