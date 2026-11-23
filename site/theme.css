@@ -94,3 +94,12 @@
 :root:is([data-aq-theme="light"],[data-aq-theme="eye"]) .footer{
   border-color:var(--aq-border);
 }
+
+:root[data-aq-theme="light"] .grad:not(.scenic-hero .grad){
+  background:linear-gradient(105deg,#166491,#2556a5,#186d56);
+  background-clip:text;color:transparent;
+}
+:root[data-aq-theme="eye"] .grad:not(.scenic-hero .grad){
+  background:linear-gradient(105deg,#77601e,#87592c,#447454);
+  background-clip:text;color:transparent;
+}
