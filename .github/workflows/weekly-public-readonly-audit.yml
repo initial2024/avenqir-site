@@ -1,0 +1,90 @@
+name: AVENQIR - weekly public-only audit and one GitHub Issue
+
+on:
+  schedule:
+    # Mondays 02:23 UTC = 11:23 Japan time. Schedules may start late.
+    - cron: "23 2 * * 1"
+  workflow_dispatch:
+    inputs:
+      sample:
+        description: "Number of public curated links to check"
+        type: choice
+        required: true
+        default: "20"
+        options: ["0", "10", "20", "40"]
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/weekly-public-readonly-audit.yml"
+      - "ops/altare_readonly_audit.py"
+      - "ops/publish_readonly_issue.py"
+      - "tests/test_readonly_ops.py"
+  pull_request:
+    paths:
+      - ".github/workflows/weekly-public-readonly-audit.yml"
+      - "ops/altare_readonly_audit.py"
+      - "ops/publish_readonly_issue.py"
+      - "tests/test_readonly_ops.py"
+
+# Never deploy, mutate the website, or access production FTPS/email credentials.
+permissions:
+  contents: read
+
+concurrency:
+  group: avenqir-readonly-weekly-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Offline safety regression
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Parse scripts and run offline tests
+        run: |
+          set -euo pipefail
+          python3 -m py_compile ops/altare_readonly_audit.py ops/publish_readonly_issue.py
+          python3 -m unittest discover -s tests -p "test_readonly_ops.py" -v
+
+  audit:
+    name: Public endpoints, 40 locales, sample catalog, Issue + JSON evidence
+    needs: validate
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Collect public-only checks from GitHub runner
+        env:
+          SAMPLE: ${{ inputs.sample || '20' }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/avenqir-public-audit"
+          python3 ops/altare_readonly_audit.py \
+            --sample "$SAMPLE" \
+            --vantage github-actions \
+            --report-dir "$RUNNER_TEMP/avenqir-public-audit"
+      - name: Save the unmodified JSON evidence before updating Issue
+        uses: actions/upload-artifact@v4
+        with:
+          name: avenqir-public-audit-${{ github.run_id }}
+          path: ${{ runner.temp }}/avenqir-public-audit/public-audit-*.json
+          retention-days: 30
+          if-no-files-found: error
+      - name: Create or update one GitHub Issue with latest results
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python3 ops/publish_readonly_issue.py \
+            --report-dir "$RUNNER_TEMP/avenqir-public-audit" \
+            --run-url "$RUN_URL"

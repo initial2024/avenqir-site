@@ -132,6 +132,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sample", type=int, default=20, help="0..40 third-party links per run")
     parser.add_argument("--report-dir", default="/opt/utility/reports")
+    parser.add_argument("--vantage", choices=("altare", "github-actions"),
+                        default="altare", help="Label the actual external measurement point")
     args = parser.parse_args()
     if not 0 <= args.sample <= 40:
         parser.error("--sample must be 0..40")
@@ -147,7 +149,8 @@ def main():
     locales = locale_audit()
     report = {
         "created_utc": today.isoformat(timespec="seconds"),
-        "region": "Altare external vantage only (not Android user speed)",
+        "region": ("Altare sandbox" if args.vantage == "altare" else "GitHub Actions runner") +
+                  " external network only (not Android user speed)",
         "fixed_endpoints": len(FIXED),
         "sampled_links": len(urls),
         "catalog_note": catalog_note,
@@ -161,7 +164,8 @@ def main():
     counts = {}
     for row in rows:
         counts[row["status"]] = counts.get(row["status"], 0) + 1
-    print("=== ALTARE / AVENQIR READ-ONLY AUDIT ===")
+    print("=== AVENQIR READ-ONLY PUBLIC AUDIT ===")
+    print("Vantage:", args.vantage)
     print("UTC:", report["created_utc"])
     print("Endpoints:", len(FIXED), "Catalog sample:", len(urls),
           "Locales:", locales.get("status"), locales.get("locales", "?"))
@@ -174,7 +178,9 @@ def main():
     print("CANDIDATE_BROKEN = needs manual review; never auto-remove.")
     print("UNKNOWN = timeout/redirect/403/rate limit; not proof of failure.")
     print("Full report:", folder / name)
-    print("=== END REPORT (COPY ABOVE) ===")
+    print("=== END PUBLIC AUDIT ===")
+    if args.vantage == "github-actions":
+        print("Auto-published to one GitHub Issue after artifact upload.")
 
 
 if __name__ == "__main__":
