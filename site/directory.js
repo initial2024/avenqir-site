@@ -47,10 +47,11 @@
  const catalog=window.AVENQIR_ATLAS_CATALOG;
  if(!catalog)throw Error('目录核心未加载');
  const paths=window.AVENQIR_ATLAS_PATHS||{links:[],flows:[],itemsForFlow:()=>[]};
+ const taxonomy=window.AVENQIR_ATLAS_TAXONOMY||{groups:[],categoriesFor:()=>[],groupFor:()=>null};
  const params=new URLSearchParams(location.search);
  const input=$('atlasQuery'),results=$('atlasResults'),cats=$('atlasCategories'),summary=$('atlasSummary'),source=$('atlasSource'),suggest=$('atlasSuggestions');
  const combine=catalog.combine;
- let records=catalog.catalog(), query=(params.get('q')||'').slice(0,140),category='',mode='all',limit=24,loaded=false,selectedFlow='',reviewedOnly=false;
+ let records=catalog.catalog(), query=(params.get('q')||'').slice(0,140),category='',mode='all',limit=24,loaded=false,selectedFlow='',reviewedOnly=false,groupId='',expandedCategories=false;
  const key='avenqir.link-atlas.favorites.v8';let favorites=[],compareUrls=[];let pendingNoMatchQuery='';
  let localRecommendations=null;
  function trackOpen(url){
@@ -65,8 +66,13 @@
    if(!terms.every(w=>fields.some(v=>v.includes(w))))return -1;
    return terms.reduce((acc,t)=>acc+(fields[0]===t?12:fields[0].startsWith(t)?8:fields[0].includes(t)?6:0)+(fields[1].includes(t)?4:0)+(fields[2].includes(t)?3:0)+(fields[3].includes(t)?1:0),0);
  }
+ function matchingGroup(x){
+   if(!groupId)return true;
+   if(groupId==='other')return !taxonomy.groupFor(x.category);
+   return taxonomy.groupFor(x.category)===groupId;
+ }
  function filtered(){const flow=paths.flows.find(f=>f.id===selectedFlow);const selectedUrls=flow?new Set(flow.urls):null;
-   let r=records.map(x=>({x,rank:score(x)})).filter(({x,rank})=>rank>=0&&(!category||x.category===category)&&(mode!=='saved'||favorites.includes(x.url))&&(!selectedUrls||selectedUrls.has(x.url))&&(!reviewedOnly||!!linkGate?.officialSourceReviewed(x.url)));
+   let r=records.map(x=>({x,rank:score(x)})).filter(({x,rank})=>rank>=0&&matchingGroup(x)&&(!category||x.category===category)&&(mode!=='saved'||favorites.includes(x.url))&&(!selectedUrls||selectedUrls.has(x.url))&&(!reviewedOnly||!!linkGate?.officialSourceReviewed(x.url)));
    if($('atlasSort').value==='name')r.sort((a,b)=>a.x.name.localeCompare(b.x.name,'zh-CN'));
    else if(query)r.sort((a,b)=>b.rank-a.rank||a.x.name.localeCompare(b.x.name,'zh-CN'));
    else if(selectedUrls)r.sort((a,b)=>flow.urls.indexOf(a.x.url)-flow.urls.indexOf(b.x.url));
@@ -82,7 +88,7 @@
      b.append(el('span','atlas-flow-icon',f.icon),el('strong','',f.title),el('small','',f.subtitle));
      const note=el('span','atlas-flow-note',f.note);b.append(note);
      b.addEventListener('click',()=>{
-       selectedFlow=selectedFlow===f.id?'':f.id;category='';mode='all';query='';input.value='';limit=24;
+       selectedFlow=selectedFlow===f.id?'':f.id;category='';groupId='';mode='all';query='';input.value='';limit=24;
        const u=new URL(location.href);u.searchParams.delete('q');history.replaceState(null,'',u.pathname+u.search+u.hash);
        document.querySelectorAll('[data-tab]').forEach(t=>{const active=t.dataset.tab==='all';t.classList.toggle('active',active);t.setAttribute('aria-pressed',String(active));});
        refreshEngines();suggestClose();drawPaths();choiceBar();draw();
@@ -109,10 +115,85 @@
      if(msg)msg.textContent='已导出 '+items.length+' 条收藏；完整跨设备恢复请使用“数据迁移”。';
    }catch(e){if(msg)msg.textContent='无法导出：'+String(e.message||e).slice(0,100);}
  });
- function choiceBar(){let counts=new Map();records.forEach(r=>counts.set(r.category,(counts.get(r.category)||0)+1));let entries=[...counts.entries()].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],'zh-CN'));
-   cats.replaceChildren();const add=(name,count)=>{let b=el('button','atlas-cat'+(category===name?' selected':''),name||'全部');b.type='button';b.setAttribute('aria-pressed',String(category===name));b.addEventListener('click',()=>{category=name;limit=24;choiceBar();draw()});cats.append(b)};add('',records.length);entries.forEach(([name,count])=>add(name,count));
-   const side=$('atlasCategoryCount');side.replaceChildren();entries.slice(0,12).forEach(([name,count])=>{let b=el('button','',name+' '+count);b.type='button';b.addEventListener('click',()=>{category=name;limit=24;choiceBar();draw();window.scrollTo({top:Math.max(0,$('atlasResults').getBoundingClientRect().top+window.scrollY-150),behavior:'smooth'})});side.append(b)});
+ function choiceBar(){
+   const counts=new Map();
+   records.forEach(x=>counts.set(x.category,(counts.get(x.category)||0)+1));
+   const categories=[...counts.entries()].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],'zh-CN'));
+   const totalCategories=categories.length;
+   const knownGroups=taxonomy.groups||[];
+   const knownCats=new Set(knownGroups.flatMap(g=>g.categories));
+   const otherCategories=categories.filter(([name])=>!knownCats.has(name)).map(([name])=>name);
+   const groups=[...knownGroups];
+   if(otherCategories.length)groups.push({id:'other',title:'其他收录',icon:'🗃️',description:'来自站点后台的新增分类',categories:otherCategories});
+   const bar=$('atlasGroupBar');
+   if(bar){
+     bar.replaceChildren();
+     const makeGroup=(id,label,desc,count,iconText)=>{
+       const button=el('button','atlas-group'+(groupId===id?' selected':''));button.type='button';
+       button.setAttribute('aria-pressed',String(groupId===id));
+       button.append(el('span','atlas-group-icon',iconText),el('strong','',label+' · '+count),el('small','',desc));
+       button.addEventListener('click',()=>{
+         groupId=id;category='';selectedFlow='';limit=24;
+         if($('atlasCategorySearch'))$('atlasCategorySearch').value='';
+         expandedCategories=false;choiceBar();drawPaths();draw();
+         $('atlasResults').scrollIntoView({behavior:'smooth',block:'start'});
+       });
+       bar.append(button);
+     };
+     makeGroup('','全部领域','浏览完整收录',records.length,'✦');
+     groups.forEach(g=>{
+       const n=records.filter(x=>g.categories.includes(x.category)).length;
+       if(n>0)makeGroup(g.id,g.title,g.description,n,g.icon);
+     });
+   }
+   const hint=$('atlasTaxonomySummary');
+   if(hint)hint.textContent='已加载 '+records.length+' 个独立网址 · '+totalCategories+' 个分类 · '+knownGroups.length+' 个主题分组（点击筛选）';
+   const inputCategory=$('atlasCategorySearch');
+   const needle=normalize(inputCategory?.value);
+   let entries=categories.filter(([name])=>(!groupId||(groupId==='other'?!taxonomy.groupFor(name):taxonomy.groupFor(name)===groupId))&&(!needle||normalize(name).includes(needle)));
+   // Keep the selected category visible even when it would not rank in the first 12.
+   const totalInGroup=categories.reduce((n,[name,count])=>n+(!groupId||(groupId==='other'?!taxonomy.groupFor(name):taxonomy.groupFor(name)===groupId)?count:0),0);
+   const visibleCategories=entries.length;
+   if(!expandedCategories&&!needle)entries=entries.slice(0,12);
+   cats.replaceChildren();
+   const add=(name,count)=>{
+     const title=name?name+' · '+count:'全部 · '+totalInGroup;
+     const button=el('button','atlas-cat'+(category===name?' selected':''),title);
+     button.type='button';button.setAttribute('aria-pressed',String(category===name));
+     button.addEventListener('click',()=>{category=name;limit=24;choiceBar();draw();$('atlasResults').scrollIntoView({behavior:'smooth',block:'start'});});
+     cats.append(button);
+   };
+   if(!needle)add('',totalInGroup);
+   for(const [name,count] of entries)add(name,count);
+   if(!entries.length&&needle)cats.append(el('p','atlas-taxonomy-no-match','没有匹配的分类。请换一个分类关键词。'));
+   const expand=$('atlasExpandCategories');
+   if(expand){
+     expand.hidden=!!needle||visibleCategories<=12;
+     expand.setAttribute('aria-expanded',String(expandedCategories));
+     expand.textContent=expandedCategories?'收起分类':'展开全部 '+visibleCategories+' 个分类';
+   }
+   const side=$('atlasCategoryCount');
+   if(side){
+     side.replaceChildren();
+     categories.slice(0,16).forEach(([name,count])=>{
+       let button=el('button','',name+' · '+count);button.type='button';
+       button.addEventListener('click',()=>{
+         groupId=taxonomy.groupFor(name)||'other';category=name;expandedCategories=true;limit=24;
+         if(inputCategory)inputCategory.value='';
+         choiceBar();draw();
+         window.scrollTo({top:Math.max(0,$('atlasResults').getBoundingClientRect().top+window.scrollY-150),behavior:'smooth'});
+       });
+       side.append(button);
+     });
+   }
  }
+ $('atlasExpandCategories')?.addEventListener('click',()=>{
+   expandedCategories=!expandedCategories;choiceBar();
+ });
+ $('atlasCategorySearch')?.addEventListener('input',()=>{
+   groupId='';category='';selectedFlow='';expandedCategories=true;limit=24;
+   choiceBar();drawPaths();draw();
+ });
  function replaceQuery(v){query=v.slice(0,140);input.value=query;limit=24;draw();const u=new URL(location.href);query?u.searchParams.set('q',query):u.searchParams.delete('q');history.replaceState(null,'',u.pathname+u.search+u.hash)}
  function suggestClose(){suggest.hidden=true;suggest.replaceChildren()}
  function suggestions(){const q=normalize(input.value);suggest.replaceChildren();if(q.length<2){suggestClose();return}
@@ -120,8 +201,8 @@
    matched.forEach(r=>{const b=el('button','atlas-suggest-item',r.name);b.type='button';b.setAttribute('role','option');b.append(el('small','',new URL(r.url).hostname+' · '+r.category));b.addEventListener('click',()=>{replaceQuery(r.name);suggestClose();input.focus()});suggest.append(b)});suggest.hidden=false;
  }
  function draw(){const list=filtered(), shown=list.slice(0,limit);results.replaceChildren();$('atlasEmpty').hidden=list.length!==0;
-   $('resultsTitle').textContent=mode==='saved'?'我的收藏':selectedFlow?paths.flows.find(f=>f.id===selectedFlow).title:query?'搜索结果':category?category+' · 网站':'精选网站';
-   summary.textContent=(query?'匹配':'目录')+' '+list.length+' 个网站 · 显示 '+shown.length+' 条 / 总目录 '+records.length+' 条'+(category?' · 分类：'+category:'');
+   $('resultsTitle').textContent=mode==='saved'?'我的收藏':selectedFlow?paths.flows.find(f=>f.id===selectedFlow).title:query?'搜索结果':category?category+' · 网站':groupId?((taxonomy.groups||[]).find(g=>g.id===groupId)?.title||'其他收录'):'精选网站';
+   summary.textContent=(query?'匹配':'目录')+' '+list.length+' 个网站 · 显示 '+shown.length+' 条 / 总目录 '+records.length+' 条'+(category?' · 分类：'+category:'')+(groupId?' · 当前主题分组已筛选':'');
    const counter=$('atlasLiveCount');if(counter)counter.textContent='已整理 '+records.length+' 个独立网址 · '+paths.flows.length+' 条任务路径 · '+new Set(records.map(x=>x.category)).size+' 个分类';
    const more=$('atlasMore'),all=$('atlasShowAll');more.textContent='再显示 '+Math.min(24,Math.max(0,list.length-limit))+' 条 ↓';
    if(all){all.hidden=list.length<=shown.length;all.textContent='一次显示全部 '+list.length+' 条';}

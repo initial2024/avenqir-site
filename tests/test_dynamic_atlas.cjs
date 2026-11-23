@@ -6,13 +6,17 @@ const base=path.resolve(__dirname,'../site');
 const paths=require(path.join(base,'atlas-paths.js'));
 const expanded=require(path.join(base,'atlas-expansion.js'));
 const specialist=require(path.join(base,'atlas-specialist.js'));
+const depthA=require(path.join(base,'atlas-depth-a.js'));
+const depthB=require(path.join(base,'atlas-depth-b.js'));
+const depthC=require(path.join(base,'atlas-depth-c.js'));
+const depthD=require(path.join(base,'atlas-depth-d.js'));
 const catalog=require(path.join(base,'atlas-catalog-core.js'));
 const gate=require(path.join(base,'link-gate.js'));
 const current=catalog.catalog();
-const staticTotal=catalog.base.length+catalog.extras.length+paths.links.length+expanded.links.length+specialist.links.length;
+const staticTotal=catalog.base.length+catalog.extras.length+paths.links.length+expanded.links.length+specialist.links.length+depthA.links.length+depthB.links.length+depthC.links.length+depthD.links.length;
 assert.ok(expanded.links.length>=80,'expanded resources must be significant');
 assert.equal(current.length,staticTotal,'catalog data must be actually merged and deduplicated');
-assert.ok(current.length>=200);
+assert.equal(current.length,559,'expanded directory must include all curated depths');
 assert.equal(new Set(current.map(x=>x.url)).size,current.length,'all static URLs unique');
 for(const x of current){
  assert.ok(x.name&&x.category&&x.description);
@@ -49,4 +53,5 @@ assert.ok(localPref.includes('localStorage.removeItem(KEY)'), 'user needs local 
 assert.ok(!localPref.includes('body.value'),'never remember feedback bodies');
 assert.ok(!localPref.includes('innerHTML'),'never inject visitor text as HTML');
 assert.ok(!home.includes('126 个精选入口'));
+assert.ok(homeJS.includes('new Set(info.items.map(x=>x.category))'),'homepage category count must be dynamic');
 console.log('PASS: dynamic '+current.length+'-URL catalog, backend update/duplicate, show-all, submit-only suggestions and opt-in local feedback');

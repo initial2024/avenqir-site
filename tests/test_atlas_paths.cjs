@@ -10,12 +10,16 @@ const transfer=globalThis.AVENQIR_TRANSFER;
 const core=fs.readFileSync(path.join(base,'directory.js'),'utf8');
 const expansion=require(path.join(base,'atlas-expansion.js'));
 const specialist=require(path.join(base,'atlas-specialist.js'));
+const depthA=require(path.join(base,'atlas-depth-a.js'));
+const depthB=require(path.join(base,'atlas-depth-b.js'));
+const depthC=require(path.join(base,'atlas-depth-c.js'));
+const depthD=require(path.join(base,'atlas-depth-d.js'));
 const catalog=require(path.join(base,'atlas-catalog-core.js'));
 const legacy=[...catalog.base,...catalog.extras];
 assert.equal(atlas.links.length,32);
 assert.equal(atlas.flows.length,11);
 const urls=new Set();
-for(const x of [...legacy,...atlas.links,...expansion.links,...specialist.links]){
+for(const x of [...legacy,...atlas.links,...expansion.links,...specialist.links,...depthA.links,...depthB.links,...depthC.links,...depthD.links]){
   assert.ok(x.name&&x.category&&x.description,'missing description for '+x.id);
   const u=new URL(x.url);
   assert.equal(u.protocol,'https:','HTTPS-only public catalog entry');
@@ -25,7 +29,7 @@ for(const x of [...legacy,...atlas.links,...expansion.links,...specialist.links]
   urls.add(u.href);
 }
 assert.equal(urls.size,catalog.catalog().length);
-assert.ok(urls.size>=200,'new catalog must actually expand beyond 200 unique entries');
+assert.equal(urls.size,559,'catalog must represent the full curated expansion');
 for(const flow of atlas.flows){
  assert.ok(flow.id&&flow.title&&flow.note);
  assert.ok(flow.urls.length>=4 && flow.urls.length<=5);
@@ -46,8 +50,8 @@ const html=fs.readFileSync(path.join(base,'directory.html'),'utf8');
 for(const name of ['atlasFlowGrid','atlasFlowStatus','atlasResetFlow','atlasReviewedOnly','atlasExportFavorites','atlasExportStatus']){
  assert.ok(html.includes('id="'+name+'"'),'missing interface element '+name);
 }
-assert.ok(html.indexOf('atlas-paths.js?v=16')<html.indexOf('directory.js?v=16'));
-assert.ok(html.indexOf('atlas-specialist.js?v=16')<html.indexOf('atlas-catalog-core.js?v=16'));
+assert.ok(html.indexOf('atlas-paths.js?v=16')<html.indexOf('directory.js?v=17'));
+assert.ok(html.indexOf('atlas-specialist.js?v=16')<html.indexOf('atlas-catalog-core.js?v=17'));
 const sw=fs.readFileSync(path.join(base,'sw.js'),'utf8');
 assert.ok(sw.includes("'./atlas-paths.js'"),'offline addon missing');
 assert.ok(core.includes('paths.flows.find('));
