@@ -3,7 +3,8 @@
 
 For an existing file, stage a complete copy first, keep the old file in runner
 memory, replace it with STOR, download/check the new SHA-256, and attempt a
-rollback on failure. No FTP updater can provide whole-site atomicity.
+rollback on failure. Existing customized binary images are not overwritten by
+unattended deployments. No FTP updater can provide whole-site atomicity.
 """
 import ftplib
 import hashlib
