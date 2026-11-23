@@ -9,12 +9,13 @@ require(path.join(base,'transfer-schema.js'));
 const transfer=globalThis.AVENQIR_TRANSFER;
 const core=fs.readFileSync(path.join(base,'directory.js'),'utf8');
 const expansion=require(path.join(base,'atlas-expansion.js'));
+const specialist=require(path.join(base,'atlas-specialist.js'));
 const catalog=require(path.join(base,'atlas-catalog-core.js'));
 const legacy=[...catalog.base,...catalog.extras];
 assert.equal(atlas.links.length,32);
-assert.equal(atlas.flows.length,7);
+assert.equal(atlas.flows.length,11);
 const urls=new Set();
-for(const x of [...legacy,...atlas.links,...expansion.links]){
+for(const x of [...legacy,...atlas.links,...expansion.links,...specialist.links]){
   assert.ok(x.name&&x.category&&x.description,'missing description for '+x.id);
   const u=new URL(x.url);
   assert.equal(u.protocol,'https:','HTTPS-only public catalog entry');
@@ -30,10 +31,10 @@ for(const flow of atlas.flows){
  assert.ok(flow.urls.length>=4 && flow.urls.length<=5);
  assert.equal(new Set(flow.urls).size,flow.urls.length,'no duplicate task steps');
  for(const u of flow.urls)assert.ok(urls.has(u),'unknown flow URL: '+u);
- const list=atlas.itemsForFlow(flow.id,[...legacy,...atlas.links]);
+ const list=atlas.itemsForFlow(flow.id,[...legacy,...atlas.links,...expansion.links,...specialist.links]);
  assert.deepEqual(list.map(x=>x.url),flow.urls,'preserve ordered task trail');
 }
-assert.deepEqual(atlas.itemsForFlow('__unknown__',[...legacy,...atlas.links]),[]);
+assert.deepEqual(atlas.itemsForFlow('__unknown__',[...legacy,...atlas.links,...expansion.links,...specialist.links]),[]);
 assert.equal(gate.officialSourceReviewed('https://jupyter.org/try'),true);
 assert.equal(gate.officialSourceReviewed('https://lookup.icann.org/'),true);
 assert.equal(gate.officialSourceReviewed('https://zenodo.org/'),true);
@@ -45,8 +46,8 @@ const html=fs.readFileSync(path.join(base,'directory.html'),'utf8');
 for(const name of ['atlasFlowGrid','atlasFlowStatus','atlasResetFlow','atlasReviewedOnly','atlasExportFavorites','atlasExportStatus']){
  assert.ok(html.includes('id="'+name+'"'),'missing interface element '+name);
 }
-assert.ok(html.indexOf('atlas-paths.js?v=15')<html.indexOf('directory.js?v=15'));
-assert.ok(html.indexOf('atlas-expansion.js?v=15')<html.indexOf('atlas-catalog-core.js?v=15'));
+assert.ok(html.indexOf('atlas-paths.js?v=16')<html.indexOf('directory.js?v=16'));
+assert.ok(html.indexOf('atlas-specialist.js?v=16')<html.indexOf('atlas-catalog-core.js?v=16'));
 const sw=fs.readFileSync(path.join(base,'sw.js'),'utf8');
 assert.ok(sw.includes("'./atlas-paths.js'"),'offline addon missing');
 assert.ok(core.includes('paths.flows.find('));
@@ -69,4 +70,4 @@ const dst=new Map();
 const storage2={getItem:k=>dst.has(k)?dst.get(k):null,setItem:(k,v)=>dst.set(k,v),removeItem:k=>dst.delete(k)};
 assert.equal(transfer.importInto(storage2,imported,[favKey]),1);
 assert.deepEqual(JSON.parse(dst.get(favKey)),favs);
-console.log('PASS: '+urls.size+' unique HTTPS catalog entries, 7 task trails, source gates and offline favorites restore');
+console.log('PASS: '+urls.size+' unique HTTPS catalog entries, 11 task trails, source gates and offline favorites restore');

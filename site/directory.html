@@ -2,8 +2,8 @@
 <html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f8fd"><meta name="referrer" content="no-referrer"><meta name="description" content="AVENQIR Link Atlas：独立策展的公开网站目录。搜索网站、按分类发现资源，支持多设备访问。">
 <title>网站搜索 · AVENQIR Link Atlas</title>
-<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="common.css?v=12"><link rel="stylesheet" href="directory-search.css?v=14"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="theme.css?v=15"></head>
-<body class="search-body"><header class="headbar"><div class="wrap head-inner"><a class="logo" href="index.html"><span class="logoicon">⬡</span> AVENQIR</a><a class="aq-theme-link" data-aq-theme-link="1" aria-label="切换显示模式" href="appearance.html">◐ <span class="aq-theme-link-label">模式</span></a><button type="button" class="menu-toggle" aria-controls="global-nav" aria-expanded="false" aria-label="打开导航菜单">☰ <span>菜单</span></button><nav id="global-nav" class="main-nav" aria-label="网站导航"><a href="index.html">首页</a><a href="directory.html" class="active" aria-current="page">网站搜索</a><a href="bookmarks.html">我的书签</a><a href="notes.html">笔记</a><a href="fun.html">小游戏</a><a href="daily.html">日常</a><a href="check.html">网络检测</a><a href="tools.html">工具箱</a><a href="projects.html">GitHub</a><a href="domains.html">DNS</a><a href="logs.html">日志</a><a href="feedback.php">留言反馈</a></nav><span class="microbadge">ATLAS / v8.5</span></div></header>
+<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="common.css?v=12"><link rel="stylesheet" href="directory-search.css?v=14"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="theme.css?v=16"></head>
+<body class="search-body"><header class="headbar"><div class="wrap head-inner"><a class="logo" href="index.html"><span class="logoicon">⬡</span> AVENQIR</a><a class="aq-theme-link" data-aq-theme-link="1" aria-label="切换显示模式" href="appearance.html">◐ <span class="aq-theme-link-label">模式</span></a><button type="button" class="menu-toggle" aria-controls="global-nav" aria-expanded="false" aria-label="打开导航菜单">☰ <span>菜单</span></button><nav id="global-nav" class="main-nav" aria-label="网站导航"><a href="index.html">首页</a><a href="directory.html" class="active" aria-current="page">网站搜索</a><a href="bookmarks.html">我的书签</a><a href="notes.html">笔记</a><a href="fun.html">小游戏</a><a href="daily.html">日常</a><a href="check.html">网络检测</a><a href="tools.html">工具箱</a><a href="projects.html">GitHub</a><a href="domains.html">DNS</a><a href="logs.html">日志</a><a href="feedback.php">留言反馈</a></nav><span class="microbadge">ATLAS / v8.6</span></div></header>
 <main class="directory-main">
 <section class="search-hero" aria-labelledby="atlasTitle">
  <div class="atlas-icon" aria-hidden="true">✦</div><p class="atlas-kicker">AVENQIR / LINK ATLAS</p>
@@ -18,6 +18,21 @@
 <section class="atlas-flows" aria-labelledby="atlasFlowsTitle">
  <div class="atlas-flows-heading"><div><span class="atlas-flows-eyebrow">TASK-FIRST DISCOVERY / 任务优先</span><h2 id="atlasFlowsTitle">不知道去哪个网站？按要完成的事情找。</h2><p id="atlasFlowStatus" role="status">选择一个任务场景，直接查看对应资源和使用顺序</p></div><button type="button" id="atlasResetFlow" hidden>清除场景筛选</button></div>
  <div id="atlasFlowGrid" class="atlas-flow-grid" role="group" aria-label="按任务查找网站"></div>
+</section>
+<section class="atlas-local-panel" aria-labelledby="atlasLocalTitle">
+  <div class="atlas-local-top">
+    <div><span class="atlas-flows-eyebrow">YOUR DISCOVERY / ON YOUR DEVICE</span>
+      <h2 id="atlasLocalTitle">✨ 只属于你的网址推荐</h2>
+      <p>默认关闭。开启后只按<strong>本站目录分类</strong>记录主动打开与新增收藏的次数；不读取浏览器历史、搜索词、私人书签和笔记。</p>
+    </div>
+    <label class="atlas-local-switch" for="atlasLocalToggle"><input type="checkbox" id="atlasLocalToggle" autocomplete="off"><span>开启个性化</span></label>
+  </div>
+  <p id="atlasLocalStatus" class="atlas-local-status" role="status">目前关闭。本功能不会自动记录使用行为。</p>
+  <div id="atlasLocalBody" class="atlas-local-body" hidden>
+    <div class="atlas-local-preferences"><strong>选择你的兴趣分类（可选，最多 12 个）</strong><div id="atlasLocalCategories" class="atlas-local-categories" role="group" aria-label="个性化兴趣分类"></div></div>
+    <div id="atlasLocalCards" class="atlas-local-cards" aria-live="polite"></div>
+    <div class="atlas-local-foot"><span>本地规则推荐 · 显示推荐原因 · 仅 60 天分类汇总 · 不联网同步偏好</span><button id="atlasLocalClear" type="button">清除记录并关闭</button></div>
+  </div>
 </section>
 <div class="atlas-layout">
 <section class="atlas-content" aria-labelledby="resultsTitle">
@@ -46,4 +61,4 @@
   <button id="atlasExternalGo" class="btn primary" type="button">我了解风险，继续访问</button>
   <label class="atlas-remember-choice"><input type="checkbox" id="atlasRemember" autocomplete="off"> <span>记住此网址的确认选择 30 天（仅此浏览器，可随时清除）</span></label>
  </div>
-</form></dialog><script src="link-gate.js?v=12" defer></script><script src="atlas-paths.js?v=15" defer></script><script src="atlas-expansion.js?v=15" defer></script><script src="atlas-catalog-core.js?v=15" defer></script><script src="directory.js?v=15" defer></script><script src="site.js?v=15" defer></script><script src="theme.js?v=15" defer></script></body></html>
+</form></dialog><script src="link-gate.js?v=12" defer></script><script src="atlas-paths.js?v=16" defer></script><script src="atlas-expansion.js?v=15" defer></script><script src="atlas-specialist.js?v=16" defer></script><script src="atlas-catalog-core.js?v=16" defer></script><script src="atlas-personalize.js?v=16" defer></script><script src="atlas-personalize-ui.js?v=16" defer></script><script src="directory.js?v=16" defer></script><script src="site.js?v=16" defer></script><script src="theme.js?v=15" defer></script></body></html>
