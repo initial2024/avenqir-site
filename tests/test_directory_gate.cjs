@@ -35,10 +35,19 @@ for(const r of records){
 assert.ok(!code.includes('window.open('),'avoid popup blockers on mobile');
 assert.ok(code.includes('window.location.assign('),'use same-tab direct navigation');
 assert.ok(code.includes('showExternal(url,x.name)'),'warn for unreviewed links');
+assert.ok(code.includes("a.href=reviewed?url:'leave.html?url='"),'unreviewed context-menu clicks must use a local warning page');
+assert.ok(code.includes("const reviewed=!!linkGate?.officialSourceReviewed(url)"));
 assert.ok(code.includes('combine(sanitize(data.items),extraData)'),'curated extras must survive server override');
 const page=fs.readFileSync(path.resolve(__dirname,'../site/directory.html'),'utf8');
 for(const id of ['atlasExternalDialog','atlasExternalName','atlasExternalHost','atlasExternalUrl','atlasExternalCancel','atlasExternalGo']){
  assert.ok(page.includes('id="'+id+'"'),id);
 }
 assert.ok(page.includes('name="referrer" content="no-referrer"'));
+const leave=fs.readFileSync(path.resolve(__dirname,'../site/leave.html'),'utf8');
+const script=fs.readFileSync(path.resolve(__dirname,'../site/leave.js'),'utf8');
+assert.ok(leave.includes('id="leaveContinue"'));
+assert.ok(leave.includes('noindex,nofollow'));
+assert.ok(script.includes('go.disabled=false'));
+assert.ok(!script.includes('window.open('));
+assert.ok(!script.includes('setTimeout('));
 console.log('PASS: reviewed-only bypass, unknown/suspicious confirmation, same-tab search engines, 24 curated sites and warning dialog');
