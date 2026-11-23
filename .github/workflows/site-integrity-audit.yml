@@ -1,0 +1,67 @@
+name: AVENQIR - read-only partial deployment audit
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/site-integrity-audit.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Read-only check site and image integrity (never write or delete)
+        env:
+          FTPS_USERNAME: \${{ secrets.AVENQIR_FTPS_USERNAME }}
+          FTPS_PASSWORD: \${{ secrets.AVENQIR_FTPS_PASSWORD }}
+        run: |
+          python3 - <<'PY'
+          import os,ftplib,ssl,io,hashlib,json,sys
+          from pathlib import Path
+          names=['hero-lake.webp','index.html','bookmarks.html','common.css',
+                 'daily.html','device-transfer.js','notes.html','tools.html',
+                 'transfer.html','sw.js','deploy-state.json']
+          def digest(blob):return hashlib.sha256(blob).hexdigest()[:16]
+          ftp=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=30)
+          try:
+              ftp.connect('ftpupload.net',21,timeout=30)
+              ftp.login(os.environ['FTPS_USERNAME'],os.environ['FTPS_PASSWORD'])
+              ftp.prot_p();ftp.set_pasv(True);ftp.cwd('avenqir.bg5.net/htdocs')
+              print('TLS_AUTH_AND_ROOT=PASS')
+              try:
+                  names_at_root={n.rsplit('/',1)[-1] for n in ftp.nlst()}
+                  staged=[x for x in names_at_root if x.startswith('hero-lake.webp.avenqir-upload-')]
+                  print('HERO_STAGING_TEMP_COUNT='+str(len(staged)))
+              except ftplib.all_errors as e:
+                  print('ROOT_LIST=UNAVAILABLE_'+type(e).__name__)
+              for name in names:
+                  target=Path('site')/name
+                  expect=target.read_bytes() if target.is_file() else None
+                  data=io.BytesIO()
+                  try:
+                      ftp.retrbinary('RETR '+name,data.write,blocksize=65536)
+                      blob=data.getvalue()
+                      status='MATCH' if expect is not None and blob==expect else 'DIFFERENT'
+                      if expect is None:status='REMOTE_ONLY'
+                      print('CHECK '+name+' '+status+' bytes='+str(len(blob))+' sha16='+digest(blob))
+                      if name=='deploy-state.json':
+                          try:
+                              marker=json.loads(blob)
+                              print('DEPLOY_MARKER_COMMIT='+str(marker.get('commit','invalid'))[:40])
+                          except Exception:
+                              print('DEPLOY_MARKER_FORMAT=INVALID')
+                  except ftplib.error_perm as e:
+                      print('CHECK '+name+' MISSING_OR_FORBIDDEN ftp_code='+str(e)[:3])
+                  except ftplib.all_errors as e:
+                      print('CHECK '+name+' READ_ERROR='+type(e).__name__)
+                      raise
+          except ftplib.all_errors as e:
+              sys.exit('FTPS_READ_ONLY_AUDIT_FAILED: '+type(e).__name__)
+          finally:
+              try:ftp.quit()
+              except Exception:pass
+          PY
