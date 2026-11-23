@@ -425,3 +425,8 @@
 .orbit-link-risk{font-size:11px;color:var(--ui-sub,#63798e)}
 .orbit-empty{font-size:12px;color:var(--ui-sub,#63798e)}
 @media(max-width:760px){.orbit-bridge-wrap{grid-template-columns:1fr;gap:12px}.orbit-companion-panel:last-child{grid-column:auto}}
+
+/* Source metadata stays accessible but is not silently machine translated. */
+.search-body .atlas-original-desc{margin:6px 0;color:var(--ui-sub,#61788e);font-size:12px}
+.search-body .atlas-original-desc summary{cursor:pointer;color:var(--ui-link,#266cb1);padding:5px 0;font-weight:650}
+.search-body .atlas-original-desc p{margin:6px 0 0;line-height:1.6;overflow-wrap:anywhere}
