@@ -149,6 +149,7 @@
    const menu=head.querySelector('.menu-toggle');
    if(menu)head.insertBefore(label,menu);else head.append(label);
    apply();
+   try{root.dispatchEvent(new CustomEvent('aq:language-change',{detail:{locale,manual:!!manual}}));}catch{}
  }
  const api=Object.freeze({KEY,LOCALES,LABEL_KEYS,normalize,detect,browser,getManual,translate,category,group,apply,set,get locale(){return locale;}});
  root.AVENQIR_I18N=api;
