@@ -48,6 +48,8 @@
  const catalog=window.AVENQIR_ATLAS_CATALOG;
  if(!catalog)throw Error('目录核心未加载');
  const paths=window.AVENQIR_ATLAS_PATHS||{links:[],flows:[],itemsForFlow:()=>[]};
+ const guides=window.AVENQIR_ATLAS_GUIDES;
+ const guideProgress=new Map();
  const taxonomy=window.AVENQIR_ATLAS_TAXONOMY||{groups:[],categoriesFor:()=>[],groupFor:()=>null};
  const params=new URLSearchParams(location.search);
  const input=$('atlasQuery'),results=$('atlasResults'),cats=$('atlasCategories'),summary=$('atlasSummary'),source=$('atlasSource'),suggest=$('atlasSuggestions');
@@ -81,6 +83,38 @@
    return r.map(y=>y.x);
  }
  function storeFavorites(){try{localStorage.setItem(key,JSON.stringify(favorites))}catch{}}
+ function drawGuide(){
+   const box=$('atlasGuide'),flow=paths.flows.find(f=>f.id===selectedFlow);
+   const guide=guides?.forFlow(flow);if(!box)return;
+   box.hidden=!guide;if(!guide)return;
+   $('atlasGuideTitle').textContent='操作引导 · '+flow.title;
+   $('atlasGuideOutcome').textContent=guide.outcome;
+   $('atlasGuideCheck').textContent=guide.check;
+   const steps=$('atlasGuideSteps');steps.replaceChildren();
+   const marked=guideProgress.get(flow.id)||new Set();
+   function progress(){const n=marked.size;$('atlasGuideProgress').textContent='已确认 '+n+' / '+guide.steps.length+' 步（仅本页）';}
+   for(const step of guide.steps){
+     const li=el('li','atlas-guide-step');const top=el('div','atlas-guide-step-head');
+     const label=el('label','atlas-guide-check-label');const check=el('input');check.type='checkbox';check.checked=marked.has(step.number);
+     check.setAttribute('aria-label','标记步骤 '+step.number+' 已完成');
+     check.addEventListener('change',()=>{check.checked?marked.add(step.number):marked.delete(step.number);guideProgress.set(flow.id,marked);progress();});
+     label.append(check,el('strong','',step.number+'. '+step.title));
+     top.append(label);
+     const item=records.find(x=>x.url===step.url);
+     const name=item?.name||new URL(step.url).hostname;
+     const action=el('a','atlas-guide-link',name+' ↗');
+     const can=isAllowed(step.url);const bad=dangerous(step.url);
+     if(!bad)action.href=can?step.url:'leave.html?url='+encodeURIComponent(step.url)+'&name='+encodeURIComponent(name);
+     else{action.setAttribute('aria-disabled','true');action.textContent='网址结构已阻断';}
+     action.rel='noopener noreferrer';action.referrerPolicy='no-referrer';
+     action.addEventListener('click',e=>{if(bad){e.preventDefault();return;}
+       if(e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;
+       e.preventDefault();showExternal(step.url,name);
+     });
+     li.append(top,el('p','',step.detail),action);steps.append(li);
+   }
+   progress();
+ }
  function drawPaths(){
    const wrap=$('atlasFlowGrid');if(!wrap)return;
    wrap.replaceChildren();
@@ -94,12 +128,13 @@
        const u=new URL(location.href);u.searchParams.delete('q');history.replaceState(null,'',u.pathname+u.search+u.hash);
        document.querySelectorAll('[data-tab]').forEach(t=>{const active=t.dataset.tab==='all';t.classList.toggle('active',active);t.setAttribute('aria-pressed',String(active));});
        refreshEngines();suggestClose();drawPaths();choiceBar();draw();
-       $('atlasResults').scrollIntoView({behavior:'smooth',block:'start'});
+       (selectedFlow?$('atlasGuide'):$('atlasResults')).scrollIntoView({behavior:'smooth',block:'start'});
      });
      wrap.append(b);
    }
    const reset=$('atlasResetFlow');if(reset)reset.hidden=!selectedFlow;
    const info=$('atlasFlowStatus');if(info)info.textContent=selectedFlow?'已选择：'+paths.flows.find(f=>f.id===selectedFlow).title+' · 按推荐步骤排列':'选择一个任务场景，直接查看对应资源和使用顺序';
+   drawGuide();
  }
  $('atlasResetFlow')?.addEventListener('click',()=>{selectedFlow='';drawPaths();draw();});
  const reviewedBox=$('atlasReviewedOnly');
@@ -331,7 +366,7 @@
  catalog.load().then(data=>{
   records=data.items;
   source.textContent=data.remote?'在线目录 + 本地精选':'内置精选目录（后台不可用）';
-  loaded=true;choiceBar();draw();localRecommendations?.render();regionRecommendations?.render();
+  loaded=true;choiceBar();draw();localRecommendations?.render();regionRecommendations?.render();drawGuide();
   if(pendingNoMatchQuery)openNoMatch();
  });
 })();
