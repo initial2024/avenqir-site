@@ -129,6 +129,17 @@ set_password_auto(){
   echo "Do not paste your password or screenshot into ChatGPT or GitHub."
   unset generated
 }
+set_password_auto(){
+  need_root
+  require_installed
+  [ -f /opt/avenqir/al_vnc_password_auto.py ] || fail "Download the new al_vnc_password_auto.py helper first"
+  python3 /opt/avenqir/al_vnc_password_auto.py setup
+}
+reveal_password_once(){
+  need_root
+  [ -f /opt/avenqir/al_vnc_password_auto.py ] || fail "Missing auto password helper"
+  python3 /opt/avenqir/al_vnc_password_auto.py reveal
+}
 start_browser(){
   need_root
   require_installed
@@ -192,6 +203,8 @@ case "${1:-}" in
   check) check ;;
   install) install_browser ;;
   password) set_password ;;
+  password-auto) set_password_auto ;;
+  password-reveal) reveal_password_once ;;
   password-auto) set_password_auto ;;
   start) start_browser ;;
   status) status_browser ;;
