@@ -57,51 +57,69 @@
     const button=document.createElement('button');
     button.type='button';button.id='aqQuickSearch';button.className='aq-quick-search';
     button.setAttribute('aria-haspopup','dialog');
-    button.setAttribute('aria-label','快速搜索 AVENQIR 网站功能');
-    button.textContent='⌕ 搜索功能';
-    const small=document.createElement('kbd');small.textContent='Ctrl K';button.append(small);
+    button.setAttribute('aria-controls','aqCommandPalette');
+    button.setAttribute('aria-label','打开本站功能搜索');
+    const icon=document.createElement('span');icon.className='aq-quick-search-icon';icon.setAttribute('aria-hidden','true');icon.textContent='⌕';
+    const label=document.createElement('span');label.className='aq-quick-search-label';label.textContent='功能搜索';
+    const kbd=document.createElement('kbd');kbd.textContent='Ctrl K';
+    button.append(icon,label,kbd);
     const nav=bar.querySelector('.menu-toggle');
     if(nav)bar.insertBefore(button,nav);else bar.append(button);
-    const dialog=document.createElement('dialog');dialog.className='aq-search-dialog';
-    dialog.setAttribute('aria-label','快速搜索网站功能');
-    const form=document.createElement('form');form.method='dialog';form.className='aq-search-top';
+    const dialog=document.createElement('dialog');dialog.id='aqCommandPalette';dialog.className='aq-search-dialog';
+    dialog.setAttribute('aria-labelledby','aqSearchTitle');
+    const shell=document.createElement('div');shell.className='aq-cmd-shell';
+    const heading=document.createElement('div');heading.className='aq-cmd-heading';
+    const title=document.createElement('strong');title.id='aqSearchTitle';title.textContent='快速打开功能';
+    const close=document.createElement('button');close.type='button';close.className='aq-search-close';
+    close.textContent='关闭';close.setAttribute('aria-label','关闭功能搜索');
+    heading.append(title,close);
+    const row=document.createElement('div');row.className='aq-cmd-input-row';
+    const searchIcon=document.createElement('span');searchIcon.textContent='⌕';searchIcon.setAttribute('aria-hidden','true');
     const input=document.createElement('input');input.type='search';input.maxLength=80;
-    input.autocomplete='off';input.placeholder='搜索 DNS、APK、笔记、2048…';
+    input.autocomplete='off';input.placeholder='搜索功能名称，例如 DNS、笔记、书签';
     input.setAttribute('aria-label','输入要查找的功能');input.id='aqSearchQuery';
-    const close=document.createElement('button');close.className='aq-search-close';
-    close.textContent='关闭';close.type='submit';form.append(input,close);
+    row.append(searchIcon,input);
     const results=document.createElement('div');results.className='aq-search-results';results.id='aqSearchResults';
-    const hint=document.createElement('p');hint.className='aq-search-hint';
-    hint.textContent='只搜索本站功能，不读取你的笔记、书签或私人数据。';
-    dialog.append(form,results,hint);document.body.append(dialog);
+    results.setAttribute('role','list');
+    const hint=document.createElement('div');hint.className='aq-search-hint';
+    const hintText=document.createElement('span');hintText.textContent='仅检索本站功能，不读取私人书签和笔记。';
+    const explore=document.createElement('a');explore.href='directory.html';explore.textContent='探索公开网址 ↗';
+    hint.append(hintText,explore);
+    shell.append(heading,row,results,hint);dialog.append(shell);document.body.append(dialog);
     const update=()=>{
       const found=find(input.value);results.replaceChildren();
       for(const item of found){
         const a=document.createElement('a');a.className='aq-search-result';
-        a.href=item.url;const title=document.createElement('strong');title.textContent=item.title;
-        const url=document.createElement('small');url.textContent=item.url;a.append(title,url);
-        results.append(a);
+        a.href=item.url;a.setAttribute('role','listitem');
+        const title=document.createElement('strong');title.textContent=item.title;
+        const url=document.createElement('small');url.textContent=item.url;
+        const arrow=document.createElement('span');arrow.className='aq-result-arrow';arrow.textContent='↗';arrow.setAttribute('aria-hidden','true');
+        const body=document.createElement('span');body.className='aq-result-body';body.append(title,url);
+        a.append(body,arrow);results.append(a);
       }
-      if(!found.length){const p=document.createElement('p');p.className='hint';
-        p.textContent='没有找到相应功能。可尝试较短关键词。';results.append(p);}
+      if(!found.length){
+        const p=document.createElement('p');p.className='aq-cmd-empty';p.textContent='没有对应的本站功能。可以试试公开网址搜索。';results.append(p);
+      }
     };
-    const open=()=>{
+    function hide(){if(dialog.open&&typeof dialog.close==='function')dialog.close();else dialog.removeAttribute('open');button.setAttribute('aria-expanded','false');}
+    function open(){
       if(dialog.open){input.focus();return;}
       input.value='';update();
-      if(typeof dialog.showModal==='function')dialog.showModal();
-      else dialog.setAttribute('open','');
-      input.focus();
-    };
-    button.addEventListener('click',open);
+      if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');
+      button.setAttribute('aria-expanded','true');input.focus();
+    }
+    button.addEventListener('click',open);close.addEventListener('click',hide);
     input.addEventListener('input',update);
-    dialog.addEventListener('click',e=>{
-      if(e.target===dialog){dialog.close?.();if(!dialog.close)dialog.removeAttribute('open');}
+    input.addEventListener('keydown',e=>{
+      if(e.key==='Enter'){const first=results.querySelector('a');if(first){e.preventDefault();location.assign(first.href);}}
     });
+    dialog.addEventListener('click',e=>{if(e.target===dialog)hide();});
+    dialog.addEventListener('close',()=>{button.setAttribute('aria-expanded','false');});
     document.addEventListener('keydown',e=>{
+      if(e.defaultPrevented)return;
       const focused=document.activeElement?.tagName||'';
-      if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){
-        e.preventDefault();open();
-      }else if(e.key==='/'&&!e.ctrlKey&&!e.altKey&&!e.metaKey&&!/INPUT|TEXTAREA|SELECT/.test(focused)&&!document.activeElement?.isContentEditable){
+      if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();open();}
+      else if(e.key==='/'&&!e.ctrlKey&&!e.altKey&&!e.metaKey&&!/INPUT|TEXTAREA|SELECT/.test(focused)&&!document.activeElement?.isContentEditable&&!document.body.classList.contains('search-body')){
         e.preventDefault();open();
       }
     });
