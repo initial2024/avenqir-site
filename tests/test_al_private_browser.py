@@ -70,6 +70,22 @@ class ALPrivateBrowserSecurity(unittest.TestCase):
         self.assertNotIn('kill 7537', source)
         self.assertNotIn('rm /tmp/.X91-lock', source)
 
+    def test_short_lived_uid_probe_cannot_create_more_displays(self):
+        source = SETUP.read_text()
+        probe = source[source.index("uid_child_probe(){"):source.index("uid_mapping_guard(){")]
+        self.assertIn('uid-probe) uid_child_probe ;;', source)
+        self.assertIn('runuser -u "$U" -- sh -c', probe)
+        self.assertIn('sleep 3 >/dev/null 2>&1 &', probe)
+        self.assertIn('wait "$child"', probe)
+        self.assertIn('AL_PROBE_CHILD_UID=', probe)
+        self.assertIn('AL_PROBE_COMPLETE=YES', probe)
+        self.assertIn('AL_XVFB_BINARY_MODE=', probe)
+        self.assertNotIn('Xvfb :', probe)
+        self.assertNotIn('x11vnc', probe)
+        self.assertNotIn('google-chrome-stable', probe)
+        self.assertNotIn('kill ', probe)
+        self.assertNotIn('rm -f ', probe)
+
     def test_auto_uses_pipe_not_process_arguments(self):
         shell=SETUP.read_text()
         helper=(ROOT/"ops/al_vnc_password_auto.py").read_text()
