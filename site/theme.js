@@ -10,7 +10,7 @@
   if(typeof module==='object'&&module.exports)module.exports=API;
   if(typeof document==='undefined')return;
   if(!document.querySelector('link[data-aq-theme-css],link[href*="theme.css"]')){
-    const css=document.createElement('link');css.rel='stylesheet';css.href='theme.css?v=12';
+    const css=document.createElement('link');css.rel='stylesheet';css.href='theme.css?v=15';
     css.dataset.aqThemeCss='1';document.head.append(css);
   }
   let preference='system';

@@ -1,11 +1,11 @@
 "use strict";
-/* AVENQIR v8.4 offline shell. No private documents, PHP, or API records cached. */
-const CACHE = 'avenqir-v84-static-20261123a';
+/* AVENQIR v8.5 offline shell. No private documents, PHP, or API records cached. */
+const CACHE = 'avenqir-v85-static-20261123a';
 const ASSETS = [
-  './index.html','./appearance.html','./directory.html','./directory.js','./atlas-paths.js','./directory-search.css','./directory-seed.json','./leave.html','./leave.js',
+  './index.html','./appearance.html','./directory.html','./directory.js','./atlas-paths.js','./atlas-expansion.js','./atlas-catalog-core.js','./atlas-summary.js','./directory-search.css','./directory-seed.json','./leave.html','./leave.js',
   './module-switcher.js','./quick-search.js','./site.js','./common.css','./theme.js','./theme.css','./link-gate.js',
   './bookmarks.html','./bookmarks.js','./netscape-format.js','./notes.html','./notes.js','./notes-enhance.js',
-  './transfer.html','./transfer-schema.js','./device-transfer.js',
+  './transfer.html','./transfer-schema.js','./device-transfer.js','./feedback-pref.js',
   './fun.html','./fun.js','./daily.html','./daily.js','./check.html','./check.js',
   './tools.html','./tools.js','./tool-addons.js',
   './projects.html','./projects.js','./domains.html','./domains.js','./logs.html','./logs.js',

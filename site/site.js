@@ -1,7 +1,7 @@
 'use strict';
 /* Register offline shell after page load. Offline is best-effort only. */
 if('serviceWorker' in navigator && location.protocol==='https:') {
-  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=12',{updateViaCache:'none'}).catch(()=>{}));
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=15',{updateViaCache:'none'}).catch(()=>{}));
 }
 
 /* v7 responsive navigation, no background network polling. */
@@ -12,7 +12,7 @@ if('serviceWorker' in navigator && location.protocol==='https:') {
 (() => {
   if (document.querySelector('script[data-aq-search]')) return;
   const script=document.createElement('script');
-  script.src='./quick-search.js?v=12';
+  script.src='./quick-search.js?v=15';
   script.dataset.aqSearch='1';
   document.head.append(script);
 })();

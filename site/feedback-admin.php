@@ -85,7 +85,7 @@ if($logged && $db instanceof PDO){
   }catch(Throwable $e){$notice='读取留言失败，请检查数据库状态。';$error=true;}
 }
 $kind_names=['feedback'=>'网站反馈','link'=>'网址推荐','broken'=>'失效链接','contact'=>'联系站长'];
-?><!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0a1827"><link rel="stylesheet" href="common.css?v=81"><link rel="stylesheet" href="feedback.css?v=81"><title>留言管理 · AVENQIR</title></head><body>
+?><!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0a1827"><link rel="stylesheet" href="common.css?v=81"><link rel="stylesheet" href="feedback.css?v=81"><link rel="stylesheet" href="theme.css?v=15"><title>留言管理 · AVENQIR</title></head><body>
 <?= fb_nav() ?>
 <main class="wrap fb-admin-page"><div class="fb-admin-heading"><span class="label">PRIVATE MESSAGE INBOX</span><h1>留言管理后台</h1><p class="hint">仅站长可见 · 不向访客公开邮箱和消息内容 · 不自动发送邮件</p></div>
 <?php if($notice!==''):?><div class="fb-alert <?= $error?'fb-error':'fb-ok' ?>" role="status"><?= fb_e($notice) ?></div><?php endif;?>
@@ -103,4 +103,4 @@ $kind_names=['feedback'=>'网站反馈','link'=>'网址推荐','broken'=>'失效
 <form method="post" data-confirm-delete="true"><input type="hidden" name="csrf" value="<?= fb_e($csrf) ?>"><input type="hidden" name="action" value="delete"><input type="hidden" name="confirm" value="yes"><input type="hidden" name="id" value="<?= (int)$m['id'] ?>"><button class="btn ghost">删除</button></form></div></article><?php endforeach; ?></section>
 <section class="panel"><span class="label">ACCOUNT & SAFETY</span><h2>站长后台设置</h2><p class="hint">建议每周查看一次留言，定期清理无用消息并备份。邮件通知尚未开通。</p><form method="post" class="stack"><input type="hidden" name="csrf" value="<?= fb_e($csrf) ?>"><input type="hidden" name="action" value="change_password"><label>原密码<input type="password" name="old" required></label><label>新密码（至少14字符）<input type="password" name="next" minlength="14" required></label><label>确认新密码<input type="password" name="again" minlength="14" required></label><button class="btn ghost">修改密码并退出登录</button></form>
 <form method="post" style="margin-top:22px"><input type="hidden" name="csrf" value="<?= fb_e($csrf) ?>"><input type="hidden" name="action" value="logout"><button class="btn ghost">安全退出后台</button></form></section></div>
-<?php endif; ?></main><script src="site.js?v=8" defer></script><script src="feedback-admin.js?v=81" defer></script></body></html>
+<?php endif; ?></main><script src="site.js?v=15" defer></script><script src="theme.js?v=15" defer></script><script src="feedback-admin.js?v=81" defer></script></body></html>
