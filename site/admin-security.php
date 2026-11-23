@@ -103,6 +103,19 @@ function aq_private_access_url($raw): ?string {
  * The exclusive lock is stored in the protected directory, not in the web root.
  * Used only after auth database was first initialized by the owner.
  */
+function aq_mfa_lock_ready(): bool {
+  // Activation must fail closed if this shared host cannot create / lock the
+  // same protected file required for all future TOTP / recovery logins.
+  $dir=__DIR__.'/_store';
+  if(!is_dir($dir))return false;
+  $handle=@fopen($dir.'/.admin-mfa.lock','c');
+  if($handle===false)return false;
+  try{
+    if(!@flock($handle,LOCK_EX|LOCK_NB))return false;
+    @flock($handle,LOCK_UN);
+    return true;
+  }finally{@fclose($handle);}
+}
 function aq_mfa_consume_login(string $password,string $factor): ?array {
   $lockPath=__DIR__.'/_store/.admin-mfa.lock';
   $handle=@fopen($lockPath,'c');
