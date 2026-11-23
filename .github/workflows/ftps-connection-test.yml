@@ -1,0 +1,40 @@
+name: AVENQIR - safe FTPS connection test
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  connection:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify required Secrets and encrypted FTP access (read-only)
+        env:
+          FTPS_USERNAME: ${{ secrets.AVENQIR_FTPS_USERNAME }}
+          FTPS_PASSWORD: ${{ secrets.AVENQIR_FTPS_PASSWORD }}
+        run: |
+          python3 - <<'PY'
+          import os,ftplib,ssl,sys
+          user=os.getenv('FTPS_USERNAME','')
+          pwd=os.getenv('FTPS_PASSWORD','')
+          if not user or not pwd:
+              sys.exit('DENY: one or both AVENQIR_FTPS_* Secrets are empty or missing')
+          if '\n' in user or '\n' in pwd or '\r' in user or '\r' in pwd:
+              sys.exit('DENY: invalid newline in a Secret')
+          ftp=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=20)
+          try:
+              ftp.connect('ftpupload.net',21,timeout=20)
+              ftp.login(user,pwd)
+              ftp.prot_p()
+              ftp.set_pasv(True)
+              ftp.cwd('avenqir.bg5.net/htdocs')
+              ftp.pwd()
+              print('PASS: authenticated TLS + target web root accessible; no files read, written or deleted')
+          except ftplib.error_perm as exc:
+              sys.exit('DENY: FTP login/path refused ('+str(exc)[:3]+'); inspect credentials or remote path')
+          except (OSError,ssl.SSLError,ftplib.all_errors) as exc:
+              sys.exit('DENY: connection or TLS failure: '+type(exc).__name__)
+          finally:
+              try: ftp.quit()
+              except Exception: pass
+          PY
