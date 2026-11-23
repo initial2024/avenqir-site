@@ -1,10 +1,10 @@
 "use strict";
-/* AVENQIR v8.2 offline shell. No private documents, PHP, or API records cached. */
-const CACHE = 'avenqir-v82-static-20261123';
+/* AVENQIR v8.3 offline shell. No private documents, PHP, or API records cached. */
+const CACHE = 'avenqir-v83-static-20261123b';
 const ASSETS = [
-  './index.html','./directory.html','./directory.js','./directory-search.css','./directory-seed.json',
-  './module-switcher.js','./quick-search.js','./site.js','./common.css',
-  './bookmarks.html','./bookmarks.js','./notes.html','./notes.js','./notes-enhance.js',
+  './index.html','./directory.html','./directory.js','./directory-search.css','./directory-seed.json','./leave.html','./leave.js',
+  './module-switcher.js','./quick-search.js','./site.js','./common.css','./theme.js','./theme.css','./link-gate.js',
+  './bookmarks.html','./bookmarks.js','./netscape-format.js','./notes.html','./notes.js','./notes-enhance.js',
   './transfer.html','./transfer-schema.js','./device-transfer.js',
   './fun.html','./fun.js','./daily.html','./daily.js','./check.html','./check.js',
   './tools.html','./tools.js','./tool-addons.js',

@@ -29,6 +29,9 @@ class Features(unittest.TestCase):
           'transfer.html':['transferCategories','transferExport','transferInput','transferRestore','transferStatus'],
           'tools.html':['codec','codecInput','codecB64Encode','codecB64Decode','codecUrlEncode','codecUrlDecode','color','colorHex','colorPicker'],
           'notes.html':['notePreviewToggle','noteMarkdownPreview','diffTrim','diffCase','timeOutput'],
+          'bookmarks.html':['exportNetscape','importNetscape','netscapeMode','netscapePreview','confirmNetscape'],
+          'directory.html':['atlasExternalDialog','atlasExternalGo','atlasExternalCancel','atlasExternalHost'],
+          'leave.html':['leaveContinue','leaveFullUrl'],
           'index.html':[]
         }
         for file,required in expected.items():
@@ -46,7 +49,7 @@ class Features(unittest.TestCase):
         self.assertGreaterEqual(len(entries),35)
         self.assertEqual(len(entries),len(set(entries)))
         for entry in entries:self.assertTrue((SITE/entry).is_file(),entry)
-        for asset in ('quick-search.js','device-transfer.js','transfer-schema.js','transfer.html','notes-enhance.js','tool-addons.js'):
+        for asset in ('quick-search.js','device-transfer.js','transfer-schema.js','transfer.html','notes-enhance.js','tool-addons.js','netscape-format.js','theme.js','theme.css','link-gate.js','leave.html','leave.js'):
             self.assertIn(asset,entries)
         self.assertIn('slowAES.decrypt',s)
         self.assertIn('/_private/',s)

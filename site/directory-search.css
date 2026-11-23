@@ -43,3 +43,23 @@
 @media(prefers-reduced-motion:reduce){.atlas-search-wrap{transition:none}}
 
 .atlas-report-link{display:inline-block;margin-top:6px;font-size:11px;color:#5d7792;text-decoration:none}.atlas-report-link:hover,.atlas-report-link:focus-visible{color:#2362b5;text-decoration:underline}
+
+
+/* v8.3: reviewed source indicators and a real second-confirmation exit dialog. */
+.atlas-review-ok,.atlas-review-unknown{display:block;font-size:10px;line-height:1.5;margin:1px 0 4px}
+.atlas-review-ok{color:#176d51}
+.atlas-review-unknown{color:#9b6426}
+.atlas-external-dialog{position:fixed;inset:0;margin:auto;width:min(530px,calc(100% - 24px));max-height:min(88dvh,700px);overflow:auto;background:#fff;color:#243951;border:1px solid #bed1e6;border-radius:22px;box-shadow:0 18px 75px #0618336b;padding:0}
+.atlas-external-dialog::backdrop{background:#071425bf;backdrop-filter:blur(5px)}
+.atlas-external-dialog-inner{padding:clamp(18px,4vw,30px);margin:0}
+.atlas-external-symbol{width:45px;height:45px;border-radius:13px;background:#fff1d8;border:1px solid #f5c57b;display:grid;place-items:center;font-size:25px;color:#98620f;margin-bottom:14px}
+.atlas-external-dialog h2{font-size:21px;line-height:1.4;color:#1d344e;margin:0 0 12px}
+.atlas-external-dialog p{font-size:13px;line-height:1.75;color:#4b5f73}
+.atlas-external-host{display:flex;flex-direction:column;padding:12px 14px;background:#eef5fd;border:1px solid #d6e2ed;border-radius:12px}
+.atlas-external-host b{font-size:14px;color:#25425d}
+.atlas-external-host span{font-size:12px;word-break:break-word}
+.atlas-external-url{overflow-wrap:anywhere;word-break:break-all;max-height:130px;overflow:auto;margin:8px 0;padding:8px 11px;background:#f7faff;border-radius:8px;font:11px/1.6 ui-monospace,monospace!important}
+.atlas-external-warn{padding:12px 14px;border-left:3px solid #de9a42;background:#fff6e5;border-radius:6px}
+.atlas-external-dialog-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
+.atlas-external-dialog-actions button{flex:1 1 180px;min-height:48px;white-space:normal}
+@media(max-width:480px){.atlas-external-dialog{width:calc(100% - 16px);max-height:92dvh;border-radius:16px}.atlas-external-dialog-actions{flex-direction:column}}

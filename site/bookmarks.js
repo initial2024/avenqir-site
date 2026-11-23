@@ -41,5 +41,79 @@ function download(v,name){const b=new Blob([v],{type:'application/json;charset=u
 $('exportBookmarks').addEventListener('click',()=>{download(JSON.stringify({format:'avenqir-bookmarks-v6',date:new Date().toISOString(),links},null,2),'avenqir-links-'+new Date().toISOString().slice(0,10)+'.json');status('已生成全部网址备份，建议存到手机或个人云盘。')});
 $('importBookmarks').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>1024*1024)throw Error('文件超过 1MB');const v=JSON.parse(await file.text());if(v?.format!=='avenqir-bookmarks-v6'||!Array.isArray(v.links)||v.links.length>200)throw Error('格式错误或网址数量超出上限');const arr=v.links.map(clean);if(arr.some(x=>!x)||new Set(arr.map(x=>x.id)).size!==arr.length)throw Error('含有无效网址或重复 ID');if(!confirm('导入将覆盖当前所有网址，确定继续？'))return;links=arr;persist();render();status('导入成功，共 '+arr.length+' 条网址。')}catch(ex){status('导入失败：'+String(ex.message).slice(0,120))}finally{e.target.value=''}});
 $('resetBookmarks').addEventListener('click',()=>{if(!confirm('将清空自定义网址和修改，恢复全部默认条目。建议先导出，确定继续？'))return;links=DEFAULT_LINKS.map(clean);persist();clearForm();render();status('已恢复默认网址列表。')});
+
+/* Netscape Bookmark HTML transfer. Existing JSON backup remains unchanged. */
+const net=window.AVENQIR_NETSCAPE;
+let pendingNetscape=null;
+function describeNetscape(){
+  const preview=$('netscapePreview'),button=$('confirmNetscape');
+  if(!pendingNetscape||!net){button.disabled=true;return;}
+  const replace=$('netscapeMode').value==='replace';
+  const used=new Set(links.map(x=>x.url));
+  const additions=pendingNetscape.records.filter(x=>!used.has(x.url));
+  const total=replace?pendingNetscape.records.length:links.length+additions.length;
+  const over=total>net.LIMIT;
+  preview.textContent='文件中 '+pendingNetscape.total+' 条，'+pendingNetscape.records.length+
+    ' 条有效不重复，'+pendingNetscape.skipped+' 条无效，'+pendingNetscape.duplicates+
+    ' 条文件内重复。'+(replace?
+      ' 将替换当前 '+links.length+' 条书签，导入 '+total+' 条。':
+      ' 将保留现有 '+links.length+' 条，新增 '+additions.length+' 条；已有相同网址不重复导入。')+
+    (over?' 超过 200 条上限，请先整理当前书签，或更换导入方式。':'');
+  button.disabled=over||(!replace&&additions.length===0);
+}
+$('netscapeMode').addEventListener('change',describeNetscape);
+$('importNetscape').addEventListener('change',async e=>{
+  pendingNetscape=null;$('confirmNetscape').disabled=true;
+  const file=e.target.files?.[0];if(!file)return;
+  try {
+    if(!net)throw Error('书签格式模块未加载');
+    if(file.size>net.MAX_BYTES)throw Error('文件超过 1 MB');
+    const text=await file.text();
+    pendingNetscape=net.parse(text);
+    describeNetscape();
+  }catch(error){$('netscapePreview').textContent='读取失败：'+String(error.message||error).slice(0,180);}
+  finally{e.target.value='';}
+});
+$('cancelNetscape').addEventListener('click',()=>{
+  pendingNetscape=null;$('confirmNetscape').disabled=true;
+  $('netscapePreview').textContent='已清除预览，当前书签没有变化。';
+});
+$('confirmNetscape').addEventListener('click',()=>{
+  if(!net||!pendingNetscape)return;
+  const mode=$('netscapeMode').value,replace=mode==='replace';
+  const used=new Set(links.map(x=>x.url));
+  const additions=pendingNetscape.records.filter(x=>!used.has(x.url));
+  const selected=replace?pendingNetscape.records:additions;
+  const next=replace?selected.map(x=>({...x,id:newId()})):
+    links.concat(selected.map(x=>({...x,id:newId()})));
+  if(next.length>net.LIMIT||(!replace&&!selected.length)){
+    describeNetscape();return;
+  }
+  const question=replace?
+    '确定替换现有全部 '+links.length+' 条书签？原有收藏/待读状态将丢失，建议先导出 JSON。':
+    '确定合并新增 '+selected.length+' 条网址？现有书签及收藏标记会保留。';
+  if(!confirm(question))return;
+  try {
+    // Write before swapping in-memory data, so failed quotas never present false success.
+    localStorage.setItem(KEY,JSON.stringify(next));
+    links=next;
+    pendingNetscape=null;
+    $('confirmNetscape').disabled=true;
+    $('netscapePreview').textContent='导入成功，现有 '+links.length+' 条书签。';
+    render();status('Netscape HTML 导入成功。');
+  }catch(err){$('netscapePreview').textContent='导入未写入：'+String(err.message||err).slice(0,150);}
+});
+$('exportNetscape').addEventListener('click',()=>{
+  try {
+    if(!net)throw Error('书签格式模块未加载');
+    const output=net.exportHTML(links);
+    const url=URL.createObjectURL(new Blob([output],{type:'text/html;charset=utf-8'}));
+    const a=document.createElement('a');a.href=url;
+    a.download='avenqir-bookmarks-'+new Date().toISOString().slice(0,10)+'.html';
+    document.body.append(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),10000);
+    $('netscapePreview').textContent='已生成标准 HTML 书签文件。';
+  }catch(e){$('netscapePreview').textContent='导出失败：'+String(e.message||e).slice(0,160);}
+});
 render();
 })();
