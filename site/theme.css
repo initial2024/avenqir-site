@@ -103,3 +103,48 @@
   background:linear-gradient(105deg,#77601e,#87592c,#447454);
   background-clip:text;color:transparent;
 }
+
+
+/* Link Atlas has a separate search-engine skin; explicitly honor global themes. */
+:root[data-aq-theme="dark"] .search-body{
+  --atlas-text:#edf5ff;--atlas-muted:#a9bbce;--atlas-blue:#7ab9fa;
+  background:linear-gradient(180deg,#101e32,#081421 48%,#07101b);
+  color:#edf5ff;
+}
+:root[data-aq-theme="eye"] .search-body{
+  --atlas-text:#403729;--atlas-muted:#6c5d45;--atlas-blue:#785e34;
+  background:linear-gradient(180deg,#f0e8d6,#eee4cd 55%,#ede1c8);
+  color:#403729;
+}
+:root[data-aq-theme="dark"] .search-body :is(.atlas-content,.atlas-side-card,.atlas-external,.atlas-search-wrap,.atlas-suggestions,.atlas-external-dialog,.atlas-external-host,.atlas-external-url,.atlas-external-warn){
+  background:#102137;color:#eaf4ff;border-color:#496881;
+}
+:root[data-aq-theme="eye"] .search-body :is(.atlas-content,.atlas-side-card,.atlas-external,.atlas-search-wrap,.atlas-suggestions,.atlas-external-dialog,.atlas-external-host,.atlas-external-url,.atlas-external-warn){
+  background:#fff8e8;color:#403729;border-color:#bcad91;
+}
+:root[data-aq-theme="dark"] .search-body :is(.search-hero h1,.search-hero h1 span,.atlas-sub,.atlas-results-heading h2,.atlas-results-heading p,.atlas-side-card h2,.atlas-side-card p,.atlas-side-card a,.atlas-result-desc,.atlas-host,.atlas-external-dialog h2,.atlas-external-dialog p,.atlas-external-host b,.atlas-external-warn,.atlas-external-url,.atlas-external b,.atlas-external p,.atlas-kicker,.atlas-privacy){
+ color:#d6e6f6;
+}
+:root[data-aq-theme="eye"] .search-body :is(.search-hero h1,.search-hero h1 span,.atlas-sub,.atlas-results-heading h2,.atlas-results-heading p,.atlas-side-card h2,.atlas-side-card p,.atlas-side-card a,.atlas-result-desc,.atlas-host,.atlas-external-dialog h2,.atlas-external-dialog p,.atlas-external-host b,.atlas-external-warn,.atlas-external-url,.atlas-external b,.atlas-external p,.atlas-kicker,.atlas-privacy){
+ color:#51452f;
+}
+:root[data-aq-theme="dark"] .search-body :is(.atlas-cat,.atlas-cat.selected,.atlas-chip,.atlas-result-icon,.atlas-more,.atlas-tab,.atlas-category-count button,.atlas-external-actions button,.atlas-suggest-item,.atlas-search-close,#atlasSort){
+ color:#e3f0ff;background:#1b3753;border-color:#59748b;
+}
+:root[data-aq-theme="eye"] .search-body :is(.atlas-cat,.atlas-cat.selected,.atlas-chip,.atlas-result-icon,.atlas-more,.atlas-tab,.atlas-category-count button,.atlas-external-actions button,.atlas-suggest-item,.atlas-search-close,#atlasSort){
+ color:#4f442f;background:#f2e9d4;border-color:#b6a37f;
+}
+:root[data-aq-theme="dark"] .search-body :is(.atlas-result-title,.atlas-random,.atlas-review-ok){
+ color:#8acbff;
+}
+:root[data-aq-theme="eye"] .search-body :is(.atlas-result-title,.atlas-random,.atlas-review-ok){
+ color:#67502c;
+}
+:root[data-aq-theme="dark"] .search-body :is(.atlas-result,.atlas-footer-inner,.atlas-tabs){
+ border-color:#47617b;
+}
+:root[data-aq-theme="eye"] .search-body :is(.atlas-result,.atlas-footer-inner,.atlas-tabs){
+ border-color:#bba987;
+}
+:root[data-aq-theme="dark"] .search-body #atlasQuery{color:#eaf4ff!important}
+:root[data-aq-theme="eye"] .search-body #atlasQuery{color:#443b2b!important}
