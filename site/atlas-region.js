@@ -12,8 +12,7 @@
   'Europe/Paris':'FR','Asia/Seoul':'KR','Asia/Kolkata':'IN',
   'Europe/Madrid':'ES','Australia/Sydney':'AU','Australia/Melbourne':'AU',
   'America/Los_Angeles':'US','America/Chicago':'US',
-  'America/Toronto':'CA','America/Vancouver':'CA'
-,
+  'America/Toronto':'CA','America/Vancouver':'CA',
   'Asia/Taipei':'TW',
   'Asia/Hong_Kong':'HK',
   'Asia/Macau':'MO',
