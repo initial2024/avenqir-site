@@ -34,7 +34,13 @@ jobs:
           python3 scripts/verify_site.py
           python3 scripts/audit_public.py
       - name: Simulate FTPS create, overwrite and rollback
-        run: python3 -m unittest discover -s tests -v
+        run: |
+          python3 -m unittest discover -s tests -v
+          node tests/test_site_features.cjs
+          node tests/test_bookmark_interop.cjs
+          node tests/test_directory_gate.cjs
+          node tests/test_link_remember.cjs
+          node tests/test_atlas_paths.cjs
       - name: Check PHP and JavaScript syntax
         shell: bash
         run: |
