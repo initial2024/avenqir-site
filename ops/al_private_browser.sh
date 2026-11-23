@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Private OWNER-ONLY graphical browser for an existing Altare Sandbox.
-# Commands: check | install | password | password-auto | password-reveal | start | stop | status | diagnose | uid-check
+# Commands: check | install | password | password-auto | password-reveal | start | stop | status | diagnose | uid-check | uid-probe
 # Never makes any VNC port public; Cloudflare Access/Tunnel configured separately.
 set -euo pipefail
 umask 077
@@ -101,6 +101,30 @@ uid_mapping_guard(){
     fail "UID mapping: cannot execute as the isolated albrowser account"
   [ "$observed" = "$expected" ] ||
     fail "UID mapping: runuser executed as UID $observed, expected $expected; no more displays will be spawned"
+  # Altare real-machine evidence: runuser -- id -u == 998, but
+  # a background sleep 3 & runs as UID 999 (the existing container account).
+  # Test the same child execution pattern BEFORE allocating another X display.
+  # A successful foreground runuser does not prove safe background identity.
+  # The child exits promptly and no lasting service is created.
+  local background_uid
+  background_uid="$(runuser -u "$U" -- sh -c '
+    sleep 2 >/dev/null 2>&1 &
+    child=$!
+    sleep 0.25
+    comm="$(ps -o comm= -p "$child" | tr -d "[:space:]")"
+    if [ "$comm" != sleep ]; then
+      wait "$child" || true
+      echo UNVERIFIED
+      exit 2
+    fi
+    ps -o uid= -p "$child" | tr -d "[:space:]"
+    wait "$child"
+  ')" || fail "UID mapping: background child UID cannot be verified; refusing to create another Xvfb"
+  echo "AL_UID_BACKGROUND=$background_uid"
+  [[ "$background_uid" =~ ^[0-9]+$ ]] ||
+    fail "UID mapping: invalid background UID proof; no display will be spawned"
+  [ "$background_uid" = "$expected" ] ||
+    fail "UID mapping: background child runs as UID $background_uid (expected $expected); refusing to spawn another display"
   for n in {89..99}; do
     marker="$PROFILE/.al-xvfb.${n}.pid"
     [ -s "$marker" ] || continue
@@ -354,5 +378,5 @@ case "${1:-}" in
   uid-check) need_root; uid_mapping_diagnostic ;;
   uid-probe) uid_child_probe ;;
   stop) stop_browser ;;
-  *) echo "Usage: bash al_private_browser.sh check|install|password|password-auto|password-reveal|start|status|stop"; exit 2 ;;
+  *) echo "Usage: bash al_private_browser.sh check|install|password|password-auto|password-reveal|start|status|stop|diagnose|uid-check|uid-probe"; exit 2 ;;
 esac
