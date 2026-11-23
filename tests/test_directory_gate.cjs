@@ -26,7 +26,7 @@ const code=fs.readFileSync(path.resolve(__dirname,'../site/directory.js'),'utf8'
 const extras=code.match(/const extraData=(\[[^;]+\]);/);
 assert.ok(extras,'extraData must remain static and parseable');
 const records=JSON.parse(extras[1]);
-assert.equal(records.length,24);
+assert.equal(records.length,64);
 assert.equal(new Set(records.map(r=>r.url)).size,records.length);
 for(const r of records){
   assert.ok(r.name&&r.category&&r.description&&r.url);
@@ -35,9 +35,9 @@ for(const r of records){
 assert.ok(!code.includes('window.open('),'avoid popup blockers on mobile');
 assert.ok(code.includes('window.location.assign('),'use same-tab direct navigation');
 assert.ok(code.includes('showExternal(url,x.name)'),'warn for unreviewed links');
-assert.ok(code.includes("a.href=reviewed?url:'leave.html?url='"),'unreviewed context-menu clicks must use a local warning page');
+assert.ok(code.includes("a.href=permitted?url:'leave.html?url='"),'unreviewed context-menu clicks must use a local warning page');
 assert.ok(code.includes("const reviewed=!!linkGate?.officialSourceReviewed(url)"));
-assert.ok(code.includes('combine(sanitize(data.items),extraData)'),'curated extras must survive server override');
+assert.ok(code.includes('combine(combine(sanitize(data.items),initialData),extraData)'),'curated extras must survive server override');
 const page=fs.readFileSync(path.resolve(__dirname,'../site/directory.html'),'utf8');
 for(const id of ['atlasExternalDialog','atlasExternalName','atlasExternalHost','atlasExternalUrl','atlasExternalCancel','atlasExternalGo']){
  assert.ok(page.includes('id="'+id+'"'),id);
@@ -50,4 +50,4 @@ assert.ok(leave.includes('noindex,nofollow'));
 assert.ok(script.includes('go.disabled=false'));
 assert.ok(!script.includes('window.open('));
 assert.ok(!script.includes('setTimeout('));
-console.log('PASS: reviewed-only bypass, unknown/suspicious confirmation, same-tab search engines, 24 curated sites and warning dialog');
+console.log('PASS: reviewed-only bypass, unknown/suspicious confirmation, same-tab search engines, 64 curated extras and warning dialog');
