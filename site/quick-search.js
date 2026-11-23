@@ -3,6 +3,7 @@
 (() => {
   const entries = [
     ['公开网址搜索','目录 搜索 分类 推荐 网站','directory.html'],
+    ['Orbit Hub 邮箱协作','temporary email verification otp orbit hub 临时邮箱 本机提取验证码','orbit-bridge.html'],
     ['任务路径探索','按任务找网址 研究 材料 网站排错 隐私 图片 本地AI','directory.html#atlasFlowsTitle'],
     ['我的私人书签','收藏 网址 标签 待读 search bookmarks','bookmarks.html#library'],
     ['浏览器书签 HTML 互通','netscape chrome firefox 导入 导出 html 书签 迁移','bookmarks.html#transfer'],
@@ -72,7 +73,9 @@
       (window.AVENQIR_ATLAS_FIND?.matches(term,[x.name,x.category||''])||false)
     )).slice(0,4).map(x=>({title:x.name,keywords:'私人书签 · 仅本机检索',url:'bookmarks.html#library',kind:'private',query:x.name}));
   }
-  const attach=()=>{
+  const L=(cn,en)=>rootLocale()?.startsWith('zh-')?cn:en;
+ const rootLocale=()=>window.AVENQIR_I18N?.locale||'en';
+ const attach=()=>{
     const bar=document.querySelector('.head-inner');
     if(!bar || document.getElementById('aqQuickSearch'))return;
     const button=document.createElement('button');
