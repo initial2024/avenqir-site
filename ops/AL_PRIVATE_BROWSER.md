@@ -130,6 +130,32 @@ installs Xvfb/x11vnc/openbox and runtime packages from Ubuntu/Debian apt
 repositories; it is neither lightweight nor no-risk. It stops early if memory
 is below 2 GiB or the cgroup memory limit cannot be proven.
 
+### Altare console does not support password prompts (observed)
+
+If `bash /opt/avenqir/al_private_browser.sh password` or direct
+`x11vnc -storepasswd /var/lib/albrowser/.vnc/passwd` returns immediately
+to `root@sandbox:~#` **without a prompt**, do not keep entering your
+chosen password into the command field. A web-command console may
+lack a persistent interactive TTY. Instead run:
+
+```bash
+bash /opt/avenqir/al_private_browser.sh password-auto
+```
+
+This command uses Python's cryptographic random generator **inside the
+existing AL Sandbox** to generate an 8-character VNC password, stores
+the obfuscated VNC authentication file with owner `albrowser` and mode
+0600, then prints the password **exactly once** in the AL console.
+Save it privately before clearing the console; **do not send a screenshot
+of this output or the password to ChatGPT**. The implementation briefly
+passes the secret to a local `x11vnc -storepasswd pass file` subprocess;
+process-inspection by another local privileged user can see it during
+creation. The sandbox must be owner-only, VNC localhost-only, and
+Cloudflare Access must authenticate the owner before any remote
+connection. `password-auto` does not rotate an already existing
+nonempty password file, so it cannot silently break an established
+desktop session.
+
 Do **not** send the VNC password in ChatGPT. Its protocol effectively uses
 an 8-character password; use an unrelated random password and require a
 Cloudflare Access identity gate in front. In the shared Sandbox all browser
