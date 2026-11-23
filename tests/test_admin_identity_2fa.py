@@ -24,7 +24,7 @@ class AdminIdentityAndALShortcut(unittest.TestCase):
         self.assertIn("$act==='setup' && $auth===null",ADMIN)
         self.assertIn("private-settings.php",ADMIN)
         self.assertIn("security_rev",ADMIN)
-        self.assertIn("legacy",SECURITY)
+        self.assertIn("rev===''?$base",SECURITY)
     def test_totp_only_after_explicit_confirmation(self):
         for text in ("aq_secret_create","aq_totp_matching_step","$step===null",
                      "aq_recovery_create","mfa_recovery_once","aq_mfa_enabled",
