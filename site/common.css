@@ -83,3 +83,15 @@ body{overflow-x:hidden;background:radial-gradient(circle at 70% 0%,#17405844,tra
 .aq-markdown-preview pre{background:#061421;padding:12px;border-radius:9px;white-space:pre-wrap;overflow-wrap:anywhere}
 .aq-markdown-preview code{background:#143b4e;color:#b8f3ff;border-radius:4px;padding:1px 4px;font-family:ui-monospace,monospace}
 .aq-markdown-preview .aq-note-bullet{padding-left:10px}
+
+
+/* v8.2 homepage: keep core actions visible without a huge first-screen catalog. */
+.aq-primary-links{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin:18px 0}
+.aq-primary-link{display:flex;flex-direction:column;gap:5px;padding:19px 14px;border-radius:14px;border:1px solid #81b9da66;background:#12344b;color:#eaf8ff;min-width:0}
+.aq-primary-link:hover,.aq-primary-link:focus-visible{border-color:#7de3ff;background:#18435e}
+.aq-primary-link strong{font-size:15px}.aq-primary-link span{color:#aec7da;font-size:12px}
+.aq-all-tools{margin:14px 0 0}
+.aq-all-tools summary{cursor:pointer;color:#bbdef1;border:1px solid #88afd45e;border-radius:12px;padding:13px 15px;background:#0b2338;list-style-position:inside}
+.aq-all-tools[open] summary{margin-bottom:16px}
+@media(max-width:790px){.aq-primary-links{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){.aq-primary-link{padding:13px 11px}.aq-primary-link strong{font-size:13px}.aq-primary-link span{font-size:11px}}
