@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 require __DIR__.'/server-core.php';
+require __DIR__.'/admin-security.php';
 if((($_SERVER['HTTPS']??'')!=='on' && ($_SERVER['HTTPS']??'')!=='1') && (string)($_SERVER['SERVER_PORT']??'')!=='443'){
   http_response_code(403); header('Content-Type: text/plain; charset=utf-8');exit('后台必须使用 HTTPS。请通过 https://avenqir.bg5.net/admin.php 打开。');
 }
@@ -12,7 +13,7 @@ header('Cache-Control: no-store, private, max-age=0');header('X-Content-Type-Opt
 header('Referrer-Policy: no-referrer');header('X-Frame-Options: DENY');
 header("Content-Security-Policy: default-src 'none'; style-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
 if(!isset($_SESSION['csrf']))$_SESSION['csrf']=bin2hex(random_bytes(24));
-$auth=stored_read('auth');$logged=$auth!==null && !empty($_SESSION['logged']) && ($_SESSION['until']??0)>time() && isset($_SESSION['auth_tag']) && hash_equals((string)$_SESSION['auth_tag'],hash('sha256',(string)($auth['password_hash']??'')));
+$auth=stored_read('auth');$logged=$auth!==null && !empty($_SESSION['logged']) && ($_SESSION['until']??0)>time() && isset($_SESSION['auth_tag']) && hash_equals((string)$_SESSION['auth_tag'],aq_auth_tag($auth));
 if($logged)$_SESSION['until']=time()+1800;
 $notice='';$failure=false;
 function post_action(): string {return is_string($_POST['action']??null)?$_POST['action']:'';}
@@ -25,14 +26,32 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     $pwd=(string)($_POST['password']??'');$pwd2=(string)($_POST['password_confirm']??'');
     if(!is_string($expected)||!hash_equals($expected,$code)){$failure=true;$notice='激活码错误。';}
     elseif(strlen($pwd)<14||strlen($pwd)>128||$pwd!==$pwd2){$failure=true;$notice='管理员密码需要至少14个字符、两次一致。';}
-    elseif(!stored_write('auth',['password_hash'=>password_hash($pwd,PASSWORD_DEFAULT),'created'=>gmdate('c')])){$failure=true;$notice='保存管理员凭据失败：'.store_failure_reason().' 不要修改目录为 777，也不要重新上传激活码文件。';}
-    else{session_regenerate_id(true);$_SESSION['logged']=true;$_SESSION['auth_tag']=hash('sha256',(string)(stored_read('auth')['password_hash']??''));$_SESSION['until']=time()+1800;go_admin('后台设置成功；初始化入口已关闭。');}
+    elseif(!stored_write('auth',['username'=>AQ_ADMIN_NAME,'password_hash'=>password_hash($pwd,PASSWORD_DEFAULT),'created'=>gmdate('c')])){$failure=true;$notice='保存管理员凭据失败：'.store_failure_reason().' 不要修改目录为 777，也不要重新上传激活码文件。';}
+    else{session_regenerate_id(true);$_SESSION['logged']=true;$_SESSION['auth_tag']=aq_auth_tag((array)stored_read('auth'));$_SESSION['until']=time()+1800;go_admin('后台设置成功；初始化入口已关闭。');}
   }elseif($act==='login' && $auth!==null){
+    $username=(string)($_POST['username']??'');
     $pwd=(string)($_POST['password']??'');
+    $factor=(string)($_POST['mfa_code']??'');
     $fails=(int)($_SESSION['fails']??0);$until=(int)($_SESSION['lock_until']??0);
     if($until>time()){$failure=true;$notice='尝试过多，请稍后重试。';}
-    elseif(password_verify($pwd,(string)($auth['password_hash']??''))){session_regenerate_id(true);$_SESSION['logged']=true;$_SESSION['auth_tag']=hash('sha256',(string)$auth['password_hash']);$_SESSION['until']=time()+1800;$_SESSION['fails']=0;go_admin('登录成功。');}
-    else{$_SESSION['fails']=$fails+1;if($_SESSION['fails']>=5)$_SESSION['lock_until']=time()+300;$failure=true;$notice='密码错误。请勿使用浏览器自动填充的其他网站密码。';}
+    elseif(!hash_equals(AQ_ADMIN_NAME,$username)||!password_verify($pwd,(string)($auth['password_hash']??''))){
+      $_SESSION['fails']=$fails+1;
+      if($_SESSION['fails']>=5)$_SESSION['lock_until']=time()+300;
+      $failure=true;$notice='管理员账号或密码不正确。';
+    }else{
+      $verified=$auth;
+      if(aq_mfa_enabled($auth))$verified=aq_mfa_consume_login($pwd,$factor);
+      if($verified===null){
+        $_SESSION['fails']=$fails+1;
+        if($_SESSION['fails']>=5)$_SESSION['lock_until']=time()+300;
+        $failure=true;$notice='动态验证码或恢复码不正确，或已使用。';
+      }else{
+        session_regenerate_id(true);
+        $_SESSION['logged']=true;$_SESSION['auth_tag']=aq_auth_tag($verified);
+        $_SESSION['until']=time()+1800;$_SESSION['fails']=0;$_SESSION['lock_until']=0;
+        go_admin('登录成功 · adm。');
+      }
+    }
   }elseif($act==='logout' && $logged){$_SESSION=[];session_destroy();header('Location: admin.php',true,303);exit;}
   elseif($logged){
     $links=public_links();
@@ -92,17 +111,81 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
           else{$failure=true;$notice='恢复写入失败：'.store_failure_reason();}
         }
       }
+    }elseif($act==='mfa_begin'){
+      $pwd=(string)($_POST['current_password']??'');
+      if(aq_mfa_enabled($auth)){$failure=true;$notice='已开启双重验证，不能重复绑定。';}
+      elseif(!password_verify($pwd,(string)($auth['password_hash']??''))){$failure=true;$notice='密码错误，未开始双重验证绑定。';}
+      else{
+        $_SESSION['mfa_pending']=aq_secret_create();
+        $_SESSION['mfa_pending_at']=time();
+        go_admin('请在验证器中添加当前密钥，再输入一次6位动态码确认绑定。');
+      }
+    }elseif($act==='mfa_confirm'){
+      $pending=(string)($_SESSION['mfa_pending']??'');
+      $since=(int)($_SESSION['mfa_pending_at']??0);
+      $pwd=(string)($_POST['current_password']??'');
+      $otp=(string)($_POST['mfa_code']??'');
+      if(aq_mfa_enabled($auth)){$failure=true;$notice='双重验证已经启用。';}
+      elseif($since<time()-600||$since>time()||aq_secret_decode($pending)===null){$failure=true;$notice='绑定窗口已过期，重新开始。';unset($_SESSION['mfa_pending'],$_SESSION['mfa_pending_at']);}
+      elseif(!password_verify($pwd,(string)($auth['password_hash']??''))){$failure=true;$notice='当前密码错误，未启用双重验证。';}
+      else{
+        $step=aq_totp_matching_step($pending,$otp);
+        if($step===null){$failure=true;$notice='验证码错误，未启用双重验证。';}
+        else{
+          [$codes,$hashes]=aq_recovery_create();
+          $newAuth=$auth;$newAuth['username']=AQ_ADMIN_NAME;
+          $newAuth['totp_secret']=$pending;$newAuth['totp_last_step']=$step;
+          $newAuth['recovery_hashes']=$hashes;$newAuth['security_rev']=bin2hex(random_bytes(18));
+          if(stored_write('auth',$newAuth)){
+            unset($_SESSION['mfa_pending'],$_SESSION['mfa_pending_at']);
+            $_SESSION['mfa_recovery_once']=$codes;
+            $_SESSION['logged']=false;$_SESSION['auth_tag']='';
+            go_admin('2FA 已启用。请先离线保存下面仅显示一次的十组恢复码，再重新登录 adm。');
+          }
+          $failure=true;$notice='保存 MFA 凭据失败：'.store_failure_reason().'；未启用，请勿删除验证器配置。';
+        }
+      }
+    }elseif($act==='mfa_disable'){
+      $pwd=(string)($_POST['current_password']??'');
+      $otp=(string)($_POST['mfa_code']??'');
+      $newAuth=aq_mfa_consume_login($pwd,$otp);
+      if($newAuth===null){$failure=true;$notice='密码和动态验证码或恢复码校验未通过，MFA 保持启用。';}
+      else{
+        unset($newAuth['totp_secret'],$newAuth['totp_last_step'],$newAuth['recovery_hashes']);
+        $newAuth['security_rev']=bin2hex(random_bytes(18));
+        if(stored_write('auth',$newAuth)){
+          $_SESSION['logged']=false;$_SESSION['auth_tag']='';
+          go_admin('双重验证已关闭；所有旧会话失效。请重新登录。');
+        }
+        $failure=true;$notice='写入失败，双重验证状态未确认：'.store_failure_reason();
+      }
     }elseif($act==='change_password'){
       $old=(string)($_POST['old_password']??'');$new=(string)($_POST['new_password']??'');$confirm=(string)($_POST['new_confirm']??'');
       if(!password_verify($old,(string)($auth['password_hash']??''))){$failure=true;$notice='原密码错误，未修改。';}
       elseif(strlen($new)<14||strlen($new)>128||$new!==$confirm){$failure=true;$notice='新密码需至少14字符，且两次输入一致。';}
-      elseif(stored_write('auth',['password_hash'=>password_hash($new,PASSWORD_DEFAULT),'changed'=>gmdate('c')])){
-        $_SESSION=[];session_destroy();header('Location: admin.php',true,303);exit;
-      }else{$failure=true;$notice='密码修改失败：'.store_failure_reason();}
+      else{
+        $updated=$auth;
+        if(aq_mfa_enabled($auth)){
+          $updated=aq_mfa_consume_login($old,(string)($_POST['mfa_code']??''));
+          if($updated===null){$failure=true;$notice='修改密码还需有效的动态验证码或恢复码。';}
+        }
+        if(!$failure){
+          $updated['username']=AQ_ADMIN_NAME;
+          $updated['password_hash']=password_hash($new,PASSWORD_DEFAULT);
+          $updated['security_rev']=bin2hex(random_bytes(18));
+          $updated['changed']=gmdate('c');
+          if(stored_write('auth',$updated)){
+            $_SESSION=[];session_destroy();header('Location: admin.php',true,303);exit;
+          }
+          $failure=true;$notice='密码修改失败：'.store_failure_reason();
+        }
+      }
     }else{$failure=true;$notice='不支持的操作。';}
   }else{$failure=true;$notice='尚未登录或会话已过期，请重新登录。';}
 }
-$auth=stored_read('auth');$logged=$auth!==null && !empty($_SESSION['logged'])&&($_SESSION['until']??0)>time() && isset($_SESSION['auth_tag']) && hash_equals((string)$_SESSION['auth_tag'],hash('sha256',(string)($auth['password_hash']??'')));
+$auth=stored_read('auth');$logged=$auth!==null && !empty($_SESSION['logged'])&&($_SESSION['until']??0)>time() && isset($_SESSION['auth_tag']) && hash_equals((string)$_SESSION['auth_tag'],aq_auth_tag($auth));
+$recovery_once=$_SESSION['mfa_recovery_once']??null;
+unset($_SESSION['mfa_recovery_once']);
 if($logged && isset($_GET['export'])){
   header('Content-Type: application/json; charset=utf-8');header('Content-Disposition: attachment; filename="avenqir-public-directory-backup.json"');
   echo json_encode(['format'=>'avenqir-public-v7','exported'=>gmdate('c'),'items'=>public_links()],JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);exit;
