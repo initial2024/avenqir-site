@@ -28,6 +28,8 @@ class FeedbackAdminBridgeAndAlRecoveryTest(unittest.TestCase):
         self.assertIn("AL_NEXT_COMMAND=bash",SCRIPT)
         self.assertNotIn("eval(",SCRIPT)
         self.assertNotIn("curl -k",SCRIPT)
+        self.assertIn("AL_CA_TRUST=DENY",SCRIPT)
+        self.assertIn("ca-certificates.crt",SCRIPT)
         self.assertNotIn("AL_BROWSER_PACKAGES_INSTALLED=YES",SCRIPT)
         self.assertNotIn("cloudflared tunnel create",SCRIPT)
         self.assertNotIn("ORBIT_RELEASE_",SCRIPT)

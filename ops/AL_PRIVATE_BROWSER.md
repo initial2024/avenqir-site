@@ -24,6 +24,51 @@ with the target site's terms. If Altare considers your traffic non-compliant,
 stop immediately. Do not attempt to defeat bans, verification or rate limits.
 See https://altare.gg/en/terms .
 
+## AL Console: curl (77) / missing root CA certificates
+
+A **real device screenshot** showed:
+`curl: (77) error setting certificate file: /etc/ssl/certs/ca-certificates.crt`
+followed by `bash: /tmp/als: No such file or directory`.
+The download did not happen; neither error proves the private browser is
+installed or running. Never run a non-existent script or use `curl -k`
+to suppress TLS certificate verification.
+
+On the same AL Sandbox console, as `root`, run commands individually:
+
+```bash
+unset CURL_CA_BUNDLE SSL_CERT_FILE REQUESTS_CA_BUNDLE
+export DEBIAN_FRONTEND=noninteractive
+dpkg --configure -a
+apt-get update
+apt-get install -y --reinstall ca-certificates
+update-ca-certificates
+ls -lh /etc/ssl/certs/ca-certificates.crt
+curl -fsSI https://raw.githubusercontent.com
+```
+
+Stop if `apt-get` or `update-ca-certificates` fails. The noninteractive
+environment prevents a pending `tzdata` or `Geographic area:` prompt from
+consuming subsequently pasted shell commands. Do not use `--insecure`,
+`Acquire::https::Verify-Peer false`, a third-party CA bundle or copied
+private key. If the CA file exists and curl still returns (77), check
+`env | grep -E 'CURL_CA_BUNDLE|SSL_CERT_FILE|REQUESTS_CA_BUNDLE'` and
+`ls -l /etc/ssl/certs/ca-certificates.crt` for an invalid override or
+broken symlink; do not blindly install browsers in that state.
+
+Only after TLS verification passes, download the installer and verify its
+shebang before invoking:
+
+```bash
+curl -fsSLo /tmp/als https://raw.githubusercontent.com/initial2024/avenqir-site/main/site/al-setup.txt
+test "$(head -n 1 /tmp/als)" = '#!/usr/bin/env bash'
+bash /tmp/als
+```
+
+`AL_SCRIPTS_INSTALLED=YES` confirms the two scripts were put under
+`/opt/avenqir`; it does **not** mean Chrome, VNC, Tunnel or Access is
+configured. If cgroup RAM is below 2048 MiB, stop, adjust the owner-managed
+Sandbox Resources in Altare, then rerun the read-only preflight.
+
 ## Preflight before installation
 
 On the original AL Sandbox **Console** (`root@sandbox`), one line at a time:

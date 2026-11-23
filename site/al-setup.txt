@@ -8,6 +8,12 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 2
 fi
 command -v curl >/dev/null || { echo "AL_SETUP_DENY=CURL_REQUIRED"; exit 2; }
+# Fail early if the default Ubuntu CA bundle is missing. Never bypass TLS.
+if [ ! -s /etc/ssl/certs/ca-certificates.crt ]; then
+  echo "AL_CA_TRUST=DENY: /etc/ssl/certs/ca-certificates.crt missing or empty" >&2
+  echo "Repair first: DEBIAN_FRONTEND=noninteractive apt-get install -y --reinstall ca-certificates" >&2
+  exit 77
+fi
 install -d -m 0755 /opt/avenqir
 BASE="https://raw.githubusercontent.com/initial2024/avenqir-site/main/ops"
 fetch_script(){
