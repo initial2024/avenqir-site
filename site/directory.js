@@ -56,10 +56,12 @@
  const guides=window.AVENQIR_ATLAS_GUIDES;
  const guideProgress=new Map();
  const taxonomy=window.AVENQIR_ATLAS_TAXONOMY||{groups:[],categoriesFor:()=>[],groupFor:()=>null};
+ let quickQuery='';
+ try{quickQuery=sessionStorage.getItem('avenqir.atlas.quick-query.v90')||'';sessionStorage.removeItem('avenqir.atlas.quick-query.v90');}catch{}
  const params=new URLSearchParams(location.search);
  const input=$('atlasQuery'),results=$('atlasResults'),cats=$('atlasCategories'),summary=$('atlasSummary'),source=$('atlasSource'),suggest=$('atlasSuggestions');
  const combine=catalog.combine;
- let records=catalog.catalog(), query=(params.get('q')||'').slice(0,140),category='',mode='all',limit=24,loaded=false,selectedFlow='',reviewedOnly=false,groupId='',expandedCategories=false;
+ let records=catalog.catalog(), query=(params.get('q')||quickQuery||'').slice(0,140),category='',mode='all',limit=24,loaded=false,selectedFlow='',reviewedOnly=false,groupId='',expandedCategories=false;
  const key='avenqir.link-atlas.favorites.v8';let favorites=[],compareUrls=[];let pendingNoMatchQuery='';
  const multiCategories=new Set();
  const recentKey='avenqir.atlas.session-opens.v90';
