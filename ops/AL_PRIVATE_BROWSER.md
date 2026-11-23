@@ -8,7 +8,7 @@ that machine without an authorized Altare console or API connection.
 
 On the *existing* Ubuntu/Debian amd64 Altare Sandbox:
 - Runs official Google Chrome as a dedicated unprivileged Linux user `albrowser`.
-- Runs Xvfb `:88` and openbox, no Docker/systemd.
+- Uses an isolated Xvfb display automatically selected from `:89` to `:99`, reusing only its own `albrowser` Xvfb process. It does **not** take or clear a different project's `:88` display; runs openbox without Docker/systemd.
 - Serves VNC on **127.0.0.1:5901 only**, guarded by a VNC password.
 - Optional Cloudflare Tunnel + **private Cloudflare Access allow policy**
   renders the VNC session in your phone's browser on a separate HTTPS hostname.
@@ -23,6 +23,38 @@ free-credit farming. Use only for your own authorized browsing and comply
 with the target site's terms. If Altare considers your traffic non-compliant,
 stop immediately. Do not attempt to defeat bans, verification or rate limits.
 See https://altare.gg/en/terms .
+
+## Existing Xvfb display :88 belongs to another running process
+
+The owner's Altare console showed `/tmp/.X88-lock` PID **7375** and
+`ps -ef` confirmed a running `Xvfb :88` process. The earlier
+`AL_BROWSER_DENY: Virtual display failed` was therefore a **real
+display conflict**, not proof of a stale lock. Its ownership by a
+particular earlier project is **not confirmed**.
+
+Never run `rm /tmp/.X88-lock`, delete `/tmp/.X11-unix/X88`, or kill
+PID 7375 without separately establishing ownership. **No reboot,
+reinstall, process termination, or VNC-password regeneration is needed.**
+
+The script now picks the first free screen between `:89` and `:99`
+(after attempting to reuse its own running screen). It checks the
+candidate lock and Unix socket without deleting them. It passes that
+same display to Xvfb, Openbox, Chrome and localhost-only x11vnc. If
+none is available, it fails rather than trespassing on another service.
+
+After downloading the updated script with normal HTTPS certificate
+verification, run:
+```bash
+bash -n /opt/avenqir/al_private_browser.sh
+bash /opt/avenqir/al_private_browser.sh start
+bash /opt/avenqir/al_private_browser.sh status
+```
+
+Successful launch reports `AL_SELECTED_DISPLAY=:89` (or another free
+candidate), `AL_PRIVATE_VNC_LOCAL_ONLY=YES`, and status shows
+`AL_XVFB_DISPLAY=:89` plus running Chrome/VNC. This feature still
+needs real AL machine acceptance. Do not expose port 5901 publicly
+or use Chrome `--no-sandbox`.
 
 ## AL Console: curl (77) / missing root CA certificates
 
