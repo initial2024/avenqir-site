@@ -11,10 +11,27 @@ U="albrowser"
 D=""
 VNC_PORT=5901
 managed_xvfb(){
-  local display="$1"
-  # Dedicated albrowser account AND exact Xvfb display; never treat a foreign
-  # Xvfb process or a stale PID as our own managed server.
-  pgrep -u "$U" -f "^Xvfb ${display}([[:space:]]|$)" >/dev/null 2>&1
+  local display="$1" number="${1#:}" pid expected_uid actual_uid
+  local -a argv=()
+  [[ "$number" =~ ^(89|9[0-9])$ ]] || return 1
+  # Explicit marker written by OUR launcher. Never adopt another project's
+  # Xvfb just because it happens to use the same display number.
+  [ -s "$PROFILE/.al-xvfb.${number}.pid" ] || return 1
+  IFS= read -r pid < "$PROFILE/.al-xvfb.${number}.pid" || return 1
+  [[ "$pid" =~ ^[0-9]+$ ]] || return 1
+  [ -r "/proc/$pid/cmdline" ] && [ -r "/proc/$pid/status" ] || return 1
+  mapfile -d '' -t argv < "/proc/$pid/cmdline" || return 1
+  [ "${argv[0]##*/}" = Xvfb ] && [ "${argv[1]:-}" = "$display" ] ||
+    return 1
+  [ "${argv[2]:-}" = -screen ] && [ "${argv[3]:-}" = 0 ] &&
+    [ "${argv[4]:-}" = 1280x720x24 ] &&
+    [ "${argv[5]:-}" = -nolisten ] && [ "${argv[6]:-}" = tcp ] || return 1
+  # In this container the displayed username can be truncated ('contain+').
+  # Compare numeric UIDs from /proc rather than process table label strings.
+  expected_uid="$(id -u "$U")" || return 1
+  actual_uid="$(awk '/^Uid:/ {print $2; exit}' "/proc/$pid/status")" || return 1
+  [ "$expected_uid" = "$actual_uid" ] || return 1
+  [ -S "/tmp/.X11-unix/X${number}" ] || return 1
 }
 select_browser_display(){
   local n candidate
@@ -146,10 +163,17 @@ start_browser(){
   select_browser_display
   echo "AL_SELECTED_DISPLAY=$D"
   if ! managed_xvfb "$D"; then
-    runuser -u "$U" -- sh -c 'nohup Xvfb "$1" -screen 0 1280x720x24 -nolisten tcp > "$HOME/xvfb.log" 2>&1 </dev/null &' sh "$D"
+    # Capture the exact child PID in a private marker BEFORE the launch shell
+    # returns. A broad pgrep-by-user was a false negative on Altare.
+    runuser -u "$U" -- sh -c '
+      nohup Xvfb "$1" -screen 0 1280x720x24 -nolisten tcp > "$HOME/xvfb.log" 2>&1 </dev/null &
+      xpid=$!
+      printf "%s\\n" "$xpid" > "$HOME/.al-xvfb.${1#:}.pid"
+      chmod 0600 "$HOME/.al-xvfb.${1#:}.pid"
+    ' sh "$D"
     sleep 2
   fi
-  managed_xvfb "$D" || fail "Virtual display $D failed; inspect $PROFILE/xvfb.log; do not delete external X locks"
+  managed_xvfb "$D" || fail "Xvfb $D failed ownership/PID/socket verification; inspect $PROFILE/xvfb.log and id -u albrowser; do not delete external X locks"
   if ! pgrep -u "$U" -x openbox >/dev/null; then
     runuser -u "$U" -- sh -c 'DISPLAY="$1" nohup openbox-session > "$HOME/openbox.log" 2>&1 </dev/null &' sh "$D"
   fi
@@ -199,10 +223,18 @@ diagnose_browser(){
 stop_browser(){
   need_root
   if id "$U" >/dev/null 2>&1; then
-    for proc in x11vnc openbox chrome Xvfb; do
+    for proc in x11vnc openbox chrome; do
       pkill -u "$U" -x "$proc" 2>/dev/null || true
     done
     pkill -u "$U" -f '/opt/google/chrome/chrome' 2>/dev/null || true
+    # Do not terminate somebody else's :88 or the existing unmarked :89.
+    local n pid
+    for n in {89..99}; do
+      if managed_xvfb ":$n"; then
+        IFS= read -r pid < "$PROFILE/.al-xvfb.${n}.pid"
+        kill "$pid" 2>/dev/null || true
+      fi
+    done
   fi
   echo "AL_PRIVATE_BROWSER_STOP_REQUESTED"
 }
