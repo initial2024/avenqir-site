@@ -51,9 +51,13 @@ install_browser(){
   echo "NOTICE: The app disk quota cannot be proven using df inside a Sandbox."
   export DEBIAN_FRONTEND=noninteractive
   apt-get update
+  local alsa="libasound2t64"
+  if ! apt-cache show "$alsa" >/dev/null 2>&1; then
+    alsa="libasound2"
+  fi
   apt-get install -y --no-install-recommends \
     ca-certificates curl xvfb x11vnc openbox dbus-x11 fonts-liberation \
-    libnss3 libgbm1 libasound2t64 procps xauth
+    libnss3 libgbm1 "$alsa" procps xauth iproute2
   local tmp
   tmp="$(mktemp --suffix=.deb)"
   trap 'rm -f "$tmp"' EXIT
