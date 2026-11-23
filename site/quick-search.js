@@ -10,7 +10,7 @@
     ['文本差异比较','diff 对比 比较 修改 内容','notes.html#textCompare'],
     ['时间戳转换','unix 毫秒 秒 时间 日期 相对时间 timestamp','notes.html#timestamp'],
     ['笔记单独备份','笔记 json 备份','notes.html#notesBackup'],
-    ['统一数据迁移','换手机 备份 恢复 导出 导入 书签 笔记 游戏','backup.html'],
+    ['统一数据迁移','换手机 备份 恢复 导出 导入 书签 笔记 游戏','transfer.html'],
     ['专注计时器','番茄钟 倒计时 focus timer','daily.html#focus'],
     ['今天的三件小事','任务 清单 待办','daily.html#tasks'],
     ['随机决定','选择 抽签 随机','daily.html#decide'],
