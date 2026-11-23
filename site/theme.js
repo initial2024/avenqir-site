@@ -8,6 +8,9 @@
   const resolve=(choice,systemLight)=>choice==='system'?(systemLight?'light':'dark'):valid(choice);
   if(typeof module==='object'&&module.exports) module.exports={valid,resolve};
   if(typeof document==='undefined')return;
+  if(!document.querySelector('link[data-aq-theme-css]')){
+    const css=document.createElement('link');css.rel='stylesheet';css.href='./theme.css?v=1';css.dataset.aqThemeCss='1';document.head.append(css);
+  }
   let preference='system';
   try{preference=valid(localStorage.getItem(KEY));}catch{}
   const media=typeof matchMedia==='function'?matchMedia('(prefers-color-scheme: light)'):null;
