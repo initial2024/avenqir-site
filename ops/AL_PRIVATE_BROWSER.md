@@ -49,6 +49,25 @@ under-provisioned Sandbox, do not install or enable a graphical browser.
 Also confirm the project is amd64 Ubuntu/Debian; Firefox snap from Ubuntu
 cannot simply substitute for Chrome inside this container.
 
+### Short mobile check, no installation
+
+After the AVENQIR site deploy is complete, use these two short commands
+in the **same existing** Altare Sandbox console:
+
+```sh
+curl -fsSLo /tmp/als https://avenqir.bg5.net/al-check.txt
+bash /tmp/als
+```
+
+The first command only downloads a public diagnostics script; the second
+performs **read-only local checks**. Inspect the script first if unsure:
+https://github.com/initial2024/avenqir-site/blob/main/site/al-check.txt
+
+If `audit_installed` is false, the earlier collector hasn't been verified
+as installed even if the shell returned without an error. If it is true and
+`audit_last_result` has a date, that proves a prior run wrote a report.
+This does **not** prove the private Chrome or Cloudflare Access is installed.
+
 ## Optional browser installation (explicit action)
 
 After checking the scripts in GitHub, on the AL Console:
