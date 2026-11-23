@@ -101,14 +101,80 @@ function text_limit($x, int $max): string {
   $x = trim(strip_tags($x));
   return function_exists('mb_substr') ? mb_substr($x, 0, $max, 'UTF-8') : substr($x, 0, $max);
 }
-function valid_link($name, $url, $cat, $desc, $id=''): ?array {
+/* Deterministic high-confidence server hints; never infer site trust, IP country or language from TLD. */
+function infer_link_category(string $name,string $url,string $desc): string {
+  $host=(string)(parse_url($url,PHP_URL_HOST)?:'');
+  $host=strtolower($host);
+  $known=[
+    'github.com'=>'开源项目','gitlab.com'=>'开源项目','codeberg.org'=>'开源项目',
+    'developer.mozilla.org'=>'前端开发','w3.org'=>'前端开发','npmjs.com'=>'开发','pypi.org'=>'开发',
+    'arxiv.org'=>'学术','scholar.google.com'=>'学术','pubmed.ncbi.nlm.nih.gov'=>'学术',
+    'materialsproject.org'=>'材料','webbook.nist.gov'=>'化学',
+    'desmos.com'=>'数学','geogebra.org'=>'数学','openstreetmap.org'=>'地图',
+    'amap.com'=>'地图','map.baidu.com'=>'地图','huggingface.co'=>'AI官网',
+    'openai.com'=>'AI官网','anthropic.com'=>'AI官网','midjourney.com'=>'AI绘图',
+    'runwayml.com'=>'AI视频','cursor.com'=>'AI编程'
+  ];
+  foreach($known as $domain=>$category){
+    if($host===$domain || str_ends_with($host,'.'.$domain))return $category;
+  }
+  $context=mb_strtolower($name.' '.$desc,'UTF-8');
+  $terms=[
+    '材料'=>['材料科学','晶体结构','材料性能','materials science'],
+    '数学'=>['数学计算','函数绘图','mathematics','graphing calculator'],
+    '学术'=>['学术论文','论文检索','学术搜索','academic papers','preprint'],
+    '网络'=>['网络诊断','域名解析','traceroute','ipv6'],
+    '地图'=>['地图导航','地图数据','geospatial'],
+    'AI绘图'=>['图像生成','文生图','image generation'],
+    'AI视频'=>['视频生成','文生视频','video generation'],
+    'AI语音'=>['语音合成','配音生成','speech synthesis'],
+    'AI编程'=>['代码助手','智能编程','ai coding'],
+    '安全'=>['网络安全','漏洞检测','security audit'],
+    '旅游出行'=>['铁路客运','火车时刻','public transit'],
+    '化学'=>['化学物性','分子结构','chemical database']
+  ];
+  $hits=[];
+  foreach($terms as $category=>$phrases)foreach($phrases as $phrase){
+    if(str_contains($context,$phrase)){$hits[$category]=true;break;}
+  }
+  return count($hits)===1?array_key_first($hits):'待分类';
+}
+function normalize_link_language($lang): ?string {
+  if(!is_string($lang))return null;
+  $tag=strtolower(str_replace('_','-',trim($lang)));
+  if(preg_match('/^zh-(?:hant|tw|hk|mo)(?:-|$)/',$tag))return 'zh-Hant';
+  if($tag==='zh'||preg_match('/^zh-(?:hans|cn|sg)(?:-|$)/',$tag))return 'zh-Hans';
+  $base=explode('-',$tag)[0];
+  if($base==='nb'||$base==='nn')$base='no';
+  if($base==='tl')$base='fil';
+  $supported=explode(' ','en ja ko fr de es pt it nl sv no da fi pl cs sk hu ro bg hr sr sl el ru uk tr ar he fa hi bn ur th vi id ms fil af');
+  return in_array($base,$supported,true)?$base:null;
+}
+function valid_link_languages($value): ?array {
+  if($value===null||$value==='')return [];
+  $list=is_array($value)?$value:(is_string($value)?explode(',',$value):null);
+  if(!is_array($list)||count($list)>8)return null;
+  $langs=[];
+  foreach($list as $raw){
+    $code=normalize_link_language($raw);
+    if($code===null)return null;
+    if(!in_array($code,$langs,true))$langs[]=$code;
+  }
+  return $langs;
+}
+function valid_link($name, $url, $cat, $desc, $id='', $languages=''): ?array {
   $name=text_limit($name,90);$url=text_limit($url,1800);
   $cat=text_limit($cat,40);$desc=text_limit($desc,320);
-  if($name===''||$cat===''||strlen($url)>1800)return null;
+  if($name===''||strlen($url)>1800)return null;
   $p=@parse_url($url);
   if(!is_array($p)||!isset($p['scheme'],$p['host'])||!in_array(strtolower($p['scheme']),['http','https'],true))return null;
   if(isset($p['user'])||isset($p['pass'])||preg_match('/[\s\x00-\x1f]/',$url))return null;
   if(!filter_var($url,FILTER_VALIDATE_URL))return null;
-  return ['id'=>$id!==''?$id:bin2hex(random_bytes(10)),'name'=>$name,'url'=>$url,'category'=>$cat,'description'=>$desc];
+  if($cat==='')$cat=infer_link_category($name,$url,$desc);
+  $langs=valid_link_languages($languages);
+  if($langs===null)return null;
+  $row=['id'=>$id!==''?$id:bin2hex(random_bytes(10)),'name'=>$name,'url'=>$url,'category'=>$cat,'description'=>$desc];
+  if($langs)$row['languages']=$langs;
+  return $row;
 }
 function e($s): string {return htmlspecialchars((string)$s,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8');}
