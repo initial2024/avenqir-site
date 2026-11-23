@@ -55,7 +55,7 @@
     'https://openverse.org/'
   ];
   function sanitize(raw){
-    if(typeof raw!=='string'||raw.length>1800)return null;
+    if(typeof raw!=='string'||raw.length>1800||/[\u0000-\u0020\u007f\\]/.test(raw))return null;
     try{
       const url = new URL(raw);
       if(!['https:','http:'].includes(url.protocol)||!url.hostname||url.username||url.password)return null;
@@ -86,24 +86,51 @@
   const APPROVAL_KEY='avenqir-external-approvals-v1';
   const APPROVAL_LIFETIME=30*24*60*60*1000;
   const APPROVAL_LIMIT=100;
+  // Deterministic URL structure screening; not a malware, reputation or TLS certificate scan.
+  const OPAQUE_REDIRECTORS=new Set(['bit.ly','tinyurl.com','t.co','is.gd','cutt.ly','rb.gy','shorturl.at']);
+  const BLOCKED_NAME_SUFFIX=['.localhost','.local','.internal','.test','.invalid','.example'];
+  function nonPublicIpv4(a){
+    return a[0]===0||a[0]===10||a[0]===127||a[0]>=224||
+      (a[0]===100&&a[1]>=64&&a[1]<=127)||
+      (a[0]===169&&a[1]===254)||
+      (a[0]===172&&a[1]>=16&&a[1]<=31)||
+      (a[0]===192&&(a[1]===0||a[1]===168||a[1]===88&&a[2]===99))||
+      (a[0]===198&&(a[1]===18||a[1]===19||a[1]===51&&a[2]===100))||
+      (a[0]===203&&a[1]===0&&a[2]===113);
+  }
+  function nonPublicIpv6(v){
+    const addr=v.toLowerCase();
+    const prefix=addr.slice(0,3);
+    return addr==='::'||addr==='::1'||addr.startsWith('::ffff:')||
+      addr.startsWith('fc')||addr.startsWith('fd')||
+      ['fe8','fe9','fea','feb'].includes(prefix)||
+      addr.startsWith('ff')||addr.startsWith('2001:db8:')||
+      addr==='2001:db8::';
+  }
   function urlRisk(raw){
     const u=sanitize(raw);
-    if(!u)return {blocked:true,forcePrompt:true,rememberable:false,reason:'危险协议、无效地址或网址含账号密码'};
+    if(!u)return {blocked:true,forcePrompt:true,rememberable:false,reason:'危险协议、无效地址、空白反斜杠或网址含账号密码'};
     const host=u.hostname.toLowerCase();
-    if(host==='localhost'||host.endsWith('.localhost')||host.endsWith('.local')||
-       host.endsWith('.internal')||host.endsWith('.test')||
-       host==='0.0.0.0'||host==='127.0.0.1'||host==='[::1]'||
-       host==='169.254.169.254')return {blocked:true,forcePrompt:true,rememberable:false,reason:'本地或内部网络地址已拒绝'};
-    const ipv4=host.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
+    const naked=host.endsWith('.')?host.slice(0,-1):host;
+    if(naked==='localhost'||naked==='localhost.localdomain'||naked==='0.0.0.0'||
+       BLOCKED_NAME_SUFFIX.some(x=>naked.endsWith(x))||
+       naked==='169.254.169.254'||!naked.includes('.')) {
+      // IPv6 literals are treated separately (their bracket form contains colons).
+      if(!naked.startsWith('['))return {blocked:true,forcePrompt:true,rememberable:false,reason:'本地、内部或保留的网络主机已拒绝'};
+    }
+    const ipv4=naked.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
     if(ipv4){
       const a=ipv4.slice(1).map(Number);
-      if(a.some(x=>x>255)||a[0]===10||a[0]===127||a[0]===0||
-         (a[0]===172&&a[1]>=16&&a[1]<=31)||
-         (a[0]===192&&a[1]===168)||(a[0]===169&&a[1]===254))return {blocked:true,forcePrompt:true,rememberable:false,reason:'私有或不可路由地址已拒绝'};
+      if(a.some(v=>v>255)||nonPublicIpv4(a))return {blocked:true,forcePrompt:true,rememberable:false,reason:'私有、共享、文档测试或其他非公网 IPv4 地址已拒绝'};
     }
-    const highRisk=u.protocol!=='https:'||host.includes('xn--')||!!ipv4||
+    const ipv6=naked.startsWith('[')&&naked.endsWith(']');
+    if(ipv6&&nonPublicIpv6(naked.slice(1,-1)))return {blocked:true,forcePrompt:true,rememberable:false,reason:'本地、映射或非公网 IPv6 地址已拒绝'};
+    const redirector=OPAQUE_REDIRECTORS.has(naked);
+    const highRisk=u.protocol!=='https:'||naked.includes('xn--')||!!ipv4||ipv6||
+      redirector||naked.endsWith('.zip')||naked.endsWith('.mov')||
       (u.port&&u.port!=='443')||!!u.search||!!u.hash||u.href.length>1024;
-    return {blocked:false,forcePrompt:highRisk,rememberable:!highRisk,reason:highRisk?'此地址不支持记住跳转确认':''};
+    return {blocked:false,forcePrompt:highRisk,rememberable:!highRisk,reason:highRisk?
+      '需要额外核对：短链接、IP 字面地址、特殊域名、HTTP、端口或参数不支持记住跳转':'来源需另行核对；结构检查不等于安全认证'};
   }
   function readApprovals(storage){
     try{
