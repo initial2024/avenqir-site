@@ -184,7 +184,7 @@
    const knownCats=new Set(knownGroups.flatMap(g=>g.categories));
    const otherCategories=categories.filter(([name])=>!knownCats.has(name)).map(([name])=>name);
    const groups=[...knownGroups];
-   if(otherCategories.length)groups.push({id:'other',title:'其他收录',icon:'🗃️',description:'来自站点后台的新增分类',categories:otherCategories});
+   if(otherCategories.length)groups.push({id:'other',title:T('其他收录','Other categories'),icon:'🗃️',description:T('来自站点后台的新增分类','New categories from the public backend'),categories:otherCategories});
    const bar=$('atlasGroupBar');
    if(bar){
      bar.replaceChildren();
@@ -323,7 +323,7 @@
        else trackOpen(url);
      });data.append(a);
      const riskCopy=english()?({blocked:'Blocked by URL rules',caution:'Extra caution required',reviewed:'Exact source checked · NOT safety-certified',pending:'Source unverified · confirm before leaving'}[rating?.type]||'Source unverified'):rating?.label;
-     data.append(el('small',reviewed?'atlas-review-ok':'atlas-review-unknown',riskCopy||(reviewed?'官方来源已核对 · 非安全认证':permitted?'本机已记住（来源未核对）':'第三方来源待核对 · 点击后确认')));
+     data.append(el('small',reviewed?'atlas-review-ok':'atlas-review-unknown',riskCopy||(reviewed?T('官方来源已核对 · 非安全认证','Exact source checked · not safety-certified'):permitted?T('本机已记住（来源未核对）','Remembered on this device (source unverified)'):T('第三方来源待核对 · 点击后确认','Unverified third-party source · confirm before leaving'))));
      if(english()&&/[\u3400-\u9fff]/.test(x.description||'')){
        const detail=el('details','atlas-original-desc'),caption=el('summary','',T('查看原始简介','Original description (Chinese) · expand'));
        detail.append(caption,el('p','atlas-result-desc',x.description));data.append(detail);
@@ -343,7 +343,7 @@
        const check=el('a','atlas-security-lookup',T('查外部风险 ↗','Check external risk ↗'));
        check.href=externalCheck;check.target='_blank';check.rel='noopener noreferrer';check.referrerPolicy='no-referrer';
        check.title=T('仅点击后才会把此公开网址交给 Google Safe Browsing 查询；检测结果可能滞后或缺失，不能证明绝对安全','Only your click shares this public URL with Google; absence of a warning does not guarantee safety.');
-       check.setAttribute('aria-label','向 Google Safe Browsing 主动查询 '+x.name+' 的风险状态');
+       check.setAttribute('aria-label',T('向 Google Safe Browsing 主动查询 '+x.name+' 的风险状态','Check '+x.name+' with Google Safe Browsing'));
        cardActions.append(check);
      }
      data.append(cardActions);
@@ -361,7 +361,7 @@
    for(const url of compareUrls){
      const item=records.find(x=>x.url===url);if(!item)continue;
      const card=el('div','atlas-compare-item');card.append(el('strong','',item.name),
-       el('small','',item.category+' · '+new URL(item.url).hostname),
+       el('small','',trCategory(item.category)+' · '+new URL(item.url).hostname),
        el('p','',item.description));
      const proven=!!linkGate?.officialSourceReviewed(item.url);
      card.append(el('small','',proven?T('已核对官方来源（非安全认证）','Exact source checked (not certified)'):T('来源未核对（需跳转确认）','Unverified source (confirmation required)')));
@@ -374,8 +374,8 @@
  $('atlasCompareCopy')?.addEventListener('click',async()=>{
    const status=$('atlasCompareStatus');
    const lines=compareUrls.map(url=>records.find(x=>x.url===url)).filter(Boolean).map(x=>
-      x.name+' | '+x.category+' | '+x.url+'\n'+x.description+'\n'+
-      (linkGate?.officialSourceReviewed(x.url)?'来源已核对':'来源未核对'));
+      x.name+' | '+trCategory(x.category)+' | '+x.url+'\n'+x.description+'\n'+
+      (linkGate?.officialSourceReviewed(x.url)?T('来源已核对','Source reviewed'):T('来源未核对','Source unverified')));
    const text=lines.join('\n\n');
    if(!text){if(status)status.textContent=T('请先选择要对比的网址','Select sites to compare first.');return;}
    try{await navigator.clipboard.writeText(text);if(status)status.textContent=T('已复制 '+lines.length+' 条对比摘要。','Copied '+lines.length+' comparison entries.');}
