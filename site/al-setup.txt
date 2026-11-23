@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Readable phone-console AL setup: fetch only first, then preflight.
+# Owner explicitly controls any later apt install and credential setup.
+set -euo pipefail
+umask 077
+if [ "$(id -u)" -ne 0 ]; then
+  echo "AL_SETUP_DENY=ROOT_REQUIRED"
+  exit 2
+fi
+command -v curl >/dev/null || { echo "AL_SETUP_DENY=CURL_REQUIRED"; exit 2; }
+install -d -m 0755 /opt/avenqir
+BASE="https://raw.githubusercontent.com/initial2024/avenqir-site/main/ops"
+fetch_script(){
+  local name="$1" first="$2" tmp
+  tmp="$(mktemp)"
+  if ! curl --proto '=https' --tlsv1.2 -fsSL --retry 2 --connect-timeout 12 --max-time 45 "$BASE/$name" -o "$tmp"; then
+    rm -f "$tmp"; echo "AL_DOWNLOAD_FAILED=$name"; return 1
+  fi
+  test "$(head -n 1 "$tmp")" = "$first" || {
+    rm -f "$tmp"; echo "AL_INVALID_SOURCE=$name"; return 1
+  }
+  case "$name" in
+    *.sh) bash -n "$tmp" ;;
+    *.py) python3 -c 'import ast,sys;ast.parse(open(sys.argv[1]).read())' "$tmp" ;;
+  esac
+  install -m 0700 "$tmp" "/opt/avenqir/$name"
+  rm -f "$tmp"
+  echo "AL_SCRIPT_DOWNLOADED=$name"
+}
+fetch_script al_browser_preflight.py '#!/usr/bin/env python3'
+fetch_script al_private_browser.sh '#!/usr/bin/env bash'
+echo "AL_SCRIPTS_INSTALLED=YES"
+python3 /opt/avenqir/al_browser_preflight.py
+echo "AL_SETUP_NOTE=No Chrome/VNC packages or keys were installed by this bootstrap."
+echo "AL_NEXT_STEP=Confirm >=2048 MiB assigned RAM and >=3 GiB Sandbox disk quota in Altare Resources."
+echo "AL_NEXT_COMMAND=bash /opt/avenqir/al_private_browser.sh install"
+echo "AL_THEN=bash /opt/avenqir/al_private_browser.sh password"
+echo "AL_THEN=bash /opt/avenqir/al_private_browser.sh start"
+echo "AL_THEN=bash /opt/avenqir/al_private_browser.sh status"
