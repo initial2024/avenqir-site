@@ -401,3 +401,8 @@
 .search-body .atlas-language-indicator,.search-body .atlas-auto-category{font-size:10px;color:var(--ui-sub,#60748d);border:1px solid var(--ui-line,#cddce9);padding:3px 6px;border-radius:6px;max-width:100%;overflow-wrap:anywhere}
 .search-body .atlas-auto-category{color:var(--ui-link,#2969bb)}
 @media(max-width:680px){.search-body .atlas-site-language{width:100%;justify-content:flex-start}.search-body #atlasSiteLanguageMode{flex:1;min-width:140px}}
+
+/* The language menu explicitly discloses legacy untranslated source text. */
+.aq-lang-notice:not([hidden]){max-width:1100px;margin:8px auto;padding:6px 12px;color:var(--ui-sub,#60758b);background:var(--ui-alt,#eef5fb);border:1px solid var(--ui-line,#dce4ee);border-radius:10px;font-size:11px;line-height:1.5}
+.aq-lang-notice[hidden]{display:none}
+@media(max-width:600px){.aq-lang-notice:not([hidden]){margin:6px 10px;padding:5px 9px;font-size:10px}}
