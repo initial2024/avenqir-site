@@ -64,6 +64,21 @@ class DeployTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError,'old file restored'):
             d.upload(self.ftp,self.base/'index.html',self.commit,self.target,self.base)
         self.assertEqual(self.ftp.files[self.target+'/index.html'],b'OLD')
+    def test_existing_custom_image_is_preserved(self):
+        asset=self.base/'hero-lake.webp'
+        asset.write_bytes(b'GITHUB_IMAGE')
+        self.ftp.files[self.target+'/hero-lake.webp']=b'OWNER_CUSTOM_IMAGE'
+        d.upload(self.ftp,asset,self.commit,self.target,self.base)
+        self.assertEqual(self.ftp.files[self.target+'/hero-lake.webp'],b'OWNER_CUSTOM_IMAGE')
+        self.assertEqual(self.ftp.deleted,[])
+        self.assertEqual(len(self.ftp.files),1)
+
+    def test_new_image_can_be_added_without_existing_overwrite(self):
+        asset=self.base/'new-image.webp'
+        asset.write_bytes(b'NEW_IMAGE')
+        d.upload(self.ftp,asset,self.commit,self.target,self.base)
+        self.assertEqual(self.ftp.files[self.target+'/new-image.webp'],b'NEW_IMAGE')
+
     def test_no_private_data_in_release(self):
         self.assertTrue(len(validate())>35)
         self.assertFalse(any('_private' in str(x) or '_store' in str(x) for x in validate()))
