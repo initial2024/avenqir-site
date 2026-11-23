@@ -37,7 +37,7 @@ assert.ok(code.includes('window.location.assign('),'use same-tab direct navigati
 assert.ok(code.includes('showExternal(url,x.name)'),'warn for unreviewed links');
 assert.ok(code.includes("a.href=permitted?url:'leave.html?url='"),'unreviewed context-menu clicks must use a local warning page');
 assert.ok(code.includes("const reviewed=!!linkGate?.officialSourceReviewed(url)"));
-assert.ok(code.includes('combine(combine(sanitize(data.items),initialData),extraData)'),'curated extras must survive server override');
+assert.ok(code.includes('combine(combine(combine(sanitize(data.items),initialData),extraData),paths.links)'),'curated extras and paths must survive server override');
 const page=fs.readFileSync(path.resolve(__dirname,'../site/directory.html'),'utf8');
 for(const id of ['atlasExternalDialog','atlasExternalName','atlasExternalHost','atlasExternalUrl','atlasExternalCancel','atlasExternalGo']){
  assert.ok(page.includes('id="'+id+'"'),id);
@@ -50,4 +50,4 @@ assert.ok(leave.includes('noindex,nofollow'));
 assert.ok(script.includes('go.disabled=false'));
 assert.ok(!script.includes('window.open('));
 assert.ok(!script.includes('setTimeout('));
-console.log('PASS: reviewed-only bypass, unknown/suspicious confirmation, same-tab search engines, 64 curated extras and warning dialog');
+console.log('PASS: reviewed-only bypass, unknown/suspicious confirmation, same-tab search engines, 64 legacy extras plus add-on catalog and warning dialog');
