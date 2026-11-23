@@ -38,6 +38,20 @@
     'https://www.blender.org/',
     'https://www.gimp.org/',
     'https://inkscape.org/',
+    'https://jupyter.org/try',
+    'https://zenodo.org/',
+    'https://squoosh.app/',
+    'https://lookup.icann.org/',
+    'https://www.iana.org/',
+    'https://www.rfc-editor.org/',
+    'https://www.w3.org/',
+    'https://dns.google/',
+    'https://obsproject.com/',
+    'https://www.libreoffice.org/',
+    'https://standardebooks.org/',
+    'https://creativecommons.org/',
+    'https://docs.github.com/',
+    'https://owasp.org/',
     'https://openverse.org/'
   ];
   function sanitize(raw){

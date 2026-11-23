@@ -3,7 +3,7 @@
 (function (root) {
   const FORMAT = 'avenqir-device-transfer-v1';
   const GROUPS = Object.freeze({
-    bookmarks: { label: '私人书签', keys: ['avenqir_v6_bookmarks'] },
+    bookmarks: { label: '私人书签 / 公开网址收藏', keys: ['avenqir_v6_bookmarks','avenqir.link-atlas.favorites.v8'] },
     notes: { label: '本地笔记', keys: ['avenqir_v6_notes'] },
     daily: { label: '计时、任务与游戏记录',
       keys: ['avenqir_v5_timer','avenqir_v5_tasks','avenqir_v5_2048',
@@ -56,6 +56,8 @@
   function validate(key, value) {
     switch (key) {
       case 'avenqir_v6_bookmarks': return validateBookmarks(value);
+      case 'avenqir.link-atlas.favorites.v8':
+        return Array.isArray(value) && value.length <= 500 && value.every(x => typeof x === 'string' && safeURL(x)) && new Set(value).size === value.length;
       case 'avenqir_v6_notes': return validateNotes(value);
       case 'avenqir_v5_tasks':
         return isObj(value) && typeof value.day === 'string' &&

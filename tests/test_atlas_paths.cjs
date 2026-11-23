@@ -1,0 +1,71 @@
+"use strict";
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const base=path.resolve(__dirname,'../site');
+const atlas=require(path.join(base,'atlas-paths.js'));
+const gate=require(path.join(base,'link-gate.js'));
+require(path.join(base,'transfer-schema.js'));
+const transfer=globalThis.AVENQIR_TRANSFER;
+const core=fs.readFileSync(path.join(base,'directory.js'),'utf8');
+const a=core.match(/const initialData=(\[[^;]+\]);/);
+const b=core.match(/const extraData=(\[[^;]+\]);/);
+assert.ok(a&&b,'static catalog remains parseable');
+const legacy=[...JSON.parse(a[1]),...JSON.parse(b[1])];
+assert.equal(atlas.links.length,32);
+assert.equal(atlas.flows.length,7);
+const urls=new Set();
+for(const x of [...legacy,...atlas.links]){
+  assert.ok(x.name&&x.category&&x.description,'missing description for '+x.id);
+  const u=new URL(x.url);
+  assert.equal(u.protocol,'https:','HTTPS-only public catalog entry');
+  assert.equal(u.username,'');assert.equal(u.password,'');
+  assert.ok(!urls.has(u.href),'duplicate destination '+u.href);
+  assert.equal(gate.urlRisk(u.href).blocked,false,'blocked destination '+u.href);
+  urls.add(u.href);
+}
+assert.equal(urls.size,126);
+for(const flow of atlas.flows){
+ assert.ok(flow.id&&flow.title&&flow.note);
+ assert.ok(flow.urls.length>=4 && flow.urls.length<=5);
+ assert.equal(new Set(flow.urls).size,flow.urls.length,'no duplicate task steps');
+ for(const u of flow.urls)assert.ok(urls.has(u),'unknown flow URL: '+u);
+ const list=atlas.itemsForFlow(flow.id,[...legacy,...atlas.links]);
+ assert.deepEqual(list.map(x=>x.url),flow.urls,'preserve ordered task trail');
+}
+assert.deepEqual(atlas.itemsForFlow('__unknown__',[...legacy,...atlas.links]),[]);
+assert.equal(gate.officialSourceReviewed('https://jupyter.org/try'),true);
+assert.equal(gate.officialSourceReviewed('https://lookup.icann.org/'),true);
+assert.equal(gate.officialSourceReviewed('https://zenodo.org/'),true);
+assert.equal(gate.officialSourceReviewed('https://lookup.icann.org.evil.example/'),false);
+assert.equal(gate.officialSourceReviewed('https://zenodo.org/?next=https://evil.example'),false);
+assert.equal(gate.officialSourceReviewed('http://squoosh.app/'),false);
+assert.equal(gate.officialSourceReviewed('https://lmstudio.ai/'),false,'unreviewed resource must prompt');
+const html=fs.readFileSync(path.join(base,'directory.html'),'utf8');
+for(const name of ['atlasFlowGrid','atlasFlowStatus','atlasResetFlow','atlasReviewedOnly','atlasExportFavorites','atlasExportStatus']){
+ assert.ok(html.includes('id="'+name+'"'),'missing interface element '+name);
+}
+assert.ok(html.indexOf('atlas-paths.js?v=14')<html.indexOf('directory.js?v=14'));
+const sw=fs.readFileSync(path.join(base,'sw.js'),'utf8');
+assert.ok(sw.includes("'./atlas-paths.js'"),'offline addon missing');
+assert.ok(core.includes('paths.flows.find('));
+assert.ok(core.includes('atlasExportFavorites'));
+assert.ok(core.includes('reviewedOnly'));
+assert.ok(!core.includes('window.open('),'never require pop-up windows');
+const favKey='avenqir.link-atlas.favorites.v8';
+const favs=['https://jupyter.org/try','https://zenodo.org/'];
+assert.equal(transfer.validate(favKey,favs),true);
+assert.equal(transfer.validate(favKey,[...favs,favs[0]]),false);
+assert.equal(transfer.validate(favKey,['javascript:alert(1)']),false);
+assert.equal(transfer.validate(favKey,['https://person:password@example.org/']),false);
+const fakeStorage=new Map([[favKey,JSON.stringify(favs)]]);
+const storage={getItem:k=>fakeStorage.has(k)?fakeStorage.get(k):null,setItem:(k,v)=>fakeStorage.set(k,v),removeItem:k=>fakeStorage.delete(k)};
+const archive=transfer.makeExport(storage,['bookmarks']).archive;
+assert.deepEqual(archive.data[favKey],favs,'favorites included in offline transfer');
+const imported=transfer.readArchive(archive);
+assert.deepEqual(transfer.selectedKeys(imported,['bookmarks']),[favKey]);
+const dst=new Map();
+const storage2={getItem:k=>dst.has(k)?dst.get(k):null,setItem:(k,v)=>dst.set(k,v),removeItem:k=>dst.delete(k)};
+assert.equal(transfer.importInto(storage2,imported,[favKey]),1);
+assert.deepEqual(JSON.parse(dst.get(favKey)),favs);
+console.log('PASS: 126 unique HTTPS catalog entries, 7 useful trails, reviewed-only security and offline favorites restore');
