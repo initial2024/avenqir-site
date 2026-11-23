@@ -2,6 +2,9 @@
 /* UI only; recommender has no fetch, beacon, third-party scripts or backend endpoint. */
 (function(root){
  const engine=root.AVENQIR_LOCAL_RECOMMEND;
+ const E=()=>!!root.AVENQIR_I18N&&!root.AVENQIR_I18N.locale.startsWith('zh-');
+ const T=(zh,en)=>E()?en:zh;
+ const category=name=>root.AVENQIR_I18N?.category(name)||name;
  function mount({items,favorites,open,reviewed}){
   if(!engine||typeof document==='undefined')return null;
   const $=id=>document.getElementById(id);
@@ -14,35 +17,35 @@
    const state=model.read();toggle.checked=state.enabled;body.hidden=!state.enabled;
    toggle.setAttribute('aria-checked',String(state.enabled));
    if(!state.enabled){
-     status.textContent='目前关闭。只有你主动开启后才记录站内目录的分类操作。';
+     status.textContent=T('目前关闭。只有你主动开启后才记录站内目录的分类操作。','Disabled. No category activity is recorded unless you opt in.');
      return;
    }
-   status.textContent='仅本机 · 使用记录按分类汇总，60 天自动过期 · 关闭即清除';
+   status.textContent=T('仅本机 · 使用记录按分类汇总，60 天自动过期 · 关闭即清除','On device only · category counts expire after 60 days · disabling erases them');
    const available=Array.from(new Set(items().map(x=>x.category))).filter(engine.category).sort((a,b)=>a.localeCompare(b,'zh-CN'));
    categories.replaceChildren();
    for(const c of available){
      const selected=state.interests.includes(c);
-     const b=el('button','atlas-local-interest'+(selected?' selected':''),(selected?'✓ ':'＋ ')+c);
-     b.type='button';b.setAttribute('aria-pressed',String(selected));b.title=selected?'取消这个兴趣':'将此分类加入兴趣';
+     const b=el('button','atlas-local-interest'+(selected?' selected':''),(selected?'✓ ':'＋ ')+category(c));
+     b.type='button';b.setAttribute('aria-pressed',String(selected));b.title=selected?T('取消这个兴趣','Remove this interest'):T('将此分类加入兴趣','Add this interest');
      b.addEventListener('click',()=>{
-       if(!selected&&state.interests.length>=12){status.textContent='最多选择 12 个兴趣分类。';return;}
+       if(!selected&&state.interests.length>=12){status.textContent=T('最多选择 12 个兴趣分类。','You can choose up to 12 interests.');return;}
        if(model.setInterest(c,!selected))render();
-       else status.textContent='本机存储不可用；无法保存偏好。';
+       else status.textContent=T('本机存储不可用；无法保存偏好。','Browser storage unavailable; preference not saved.');
      });
      categories.append(b);
    }
    cards.replaceChildren();
    const picks=model.recommend(items(),favorites(),6);
    if(!picks.length){
-     const box=el('p','atlas-local-empty','还没有足够的本地偏好。请选择感兴趣的分类，或在开启后访问、收藏公开网址。');
+     const box=el('p','atlas-local-empty',T('还没有足够的本地偏好。请选择感兴趣的分类，或在开启后访问、收藏公开网址。','Not enough local preferences yet. Choose interests or open/save public websites after enabling this feature.'));
      cards.append(box);return;
    }
    for(const {item,reason} of picks){
      const box=el('article','atlas-local-card');
      const top=el('div','atlas-local-card-head');
-     const category=el('span','atlas-local-category',item.category);
-     const reasonEl=el('small','atlas-local-reason',reason);
-     top.append(category,reasonEl);
+     const cat=el('span','atlas-local-category',category(item.category));
+     const reasonEl=el('small','atlas-local-reason',E()?'Recommended from your chosen or recent categories':reason);
+     top.append(cat,reasonEl);
      const a=el('a','atlas-local-link',item.name+' ↗');
      a.href=reviewed(item.url)?item.url:'leave.html?url='+encodeURIComponent(item.url)+'&name='+encodeURIComponent(item.name);
      a.rel='noopener noreferrer';a.referrerPolicy='no-referrer';
@@ -50,15 +53,15 @@
        if(e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
        e.preventDefault();open(item.url,item.name);
      });
-     const desc=el('p','atlas-local-description',item.description);
-     const trust=el('small','atlas-local-trust',reviewed(item.url)?'来源已核对（非安全认证）':'第三方来源未核对 · 跳转前确认');
+     const desc=el('p','atlas-local-description',E()&&/[\u3400-\u9fff]/.test(item.description||'')?'Source description is available in Chinese. Open the site for original details.':item.description);
+     const trust=el('small','atlas-local-trust',reviewed(item.url)?T('来源已核对（非安全认证）','Exact source checked (not a security certificate)'):T('第三方来源未核对 · 跳转前确认','Unverified external source · confirm before leaving'));
      box.append(top,a,desc,trust);cards.append(box);
    }
   }
   toggle.addEventListener('change',()=>{
     if(toggle.checked){
       if(!model.setEnabled(true)){
-        toggle.checked=false;status.textContent='本机存储不可用，已保持关闭，不会记录。';
+        toggle.checked=false;status.textContent=T('本机存储不可用，已保持关闭，不会记录。','Browser storage unavailable. Recommendations remain disabled.');
       }else render();
     }else{
       // Turning off is a privacy action; erase the model automatically.
@@ -67,8 +70,9 @@
   });
   clear.addEventListener('click',()=>{
     model.setEnabled(false);render();
-    status.textContent='已清除本机推荐分类记录并关闭；其他收藏和私人数据不变。';
+    status.textContent=T('已清除本机推荐分类记录并关闭；其他收藏和私人数据不变。','Recommendation history erased and disabled; private bookmarks remain unchanged.');
   });
+  root.addEventListener?.('aq:language-change',render);
   render();
   return Object.freeze({render,recordOpen:(c)=>{if(model.record(c,'open'))render();},recordSave:(c)=>{if(model.record(c,'save'))render();}});
  }
