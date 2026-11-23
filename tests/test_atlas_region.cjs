@@ -128,7 +128,7 @@ for(const code of interfaceLocales){
  const uiPack=localePacks.localeCodes.includes(code);
  assert.equal(uiPack,true,'Missing regional UI locale '+code);
 }
-assert.equal(localePacks.regionGroup('东亚'),'East Asia','unsupported runtime locale should fall back to English');
+assert.ok(/^(?:East|Eastern) Asia$/.test(localePacks.regionGroup('东亚')),'runtime ICU can render the English M49 region name as East or Eastern Asia');
 assert.equal(localePacks.PACK_KEYS.length,8,'regional labels must cover eight recurring UI roles');
 const previousTestDocument=globalThis.document;
 try {
