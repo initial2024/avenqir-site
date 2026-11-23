@@ -18,6 +18,7 @@
    if(!href)return;
    if(dangerous(href))return;
    if(isAllowed(href)){
+     trackOpen(href);
      window.location.assign(href);
      return;
    }
@@ -31,7 +32,7 @@
      externalDialog.showModal();
      $('atlasExternalCancel').focus();
    }else{
-     if(confirm('即将前往未核验第三方域名 '+u.hostname+'。本站不保证该网站安全，确认继续访问？'))window.location.assign(href);
+     if(confirm('即将前往未核验第三方域名 '+u.hostname+'。本站不保证该网站安全，确认继续访问？')){trackOpen(href);window.location.assign(href);}
      awaitingExternal=null;
    }
  }
@@ -40,7 +41,7 @@
    if(href&&rememberBox?.checked)linkGate?.remember(href,storage);
    awaitingExternal=null;
    if(externalDialog?.open)externalDialog.close();
-   if(href&&!dangerous(href)&&safeUrl(href))window.location.assign(href);
+   if(href&&!dangerous(href)&&safeUrl(href)){trackOpen(href);window.location.assign(href);}
  });
  externalDialog?.addEventListener('close',()=>{awaitingExternal=null;});
  const catalog=window.AVENQIR_ATLAS_CATALOG;
@@ -51,6 +52,11 @@
  const combine=catalog.combine;
  let records=catalog.catalog(), query=(params.get('q')||'').slice(0,140),category='',mode='all',limit=24,loaded=false,selectedFlow='',reviewedOnly=false;
  const key='avenqir.link-atlas.favorites.v8';let favorites=[],compareUrls=[];let pendingNoMatchQuery='';
+ let localRecommendations=null;
+ function trackOpen(url){
+   const item=records.find(x=>x.url===url);
+   if(item)localRecommendations?.recordOpen(item.category);
+ }
  try{const v=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(v))favorites=v.filter(x=>typeof x==='string').slice(0,500)}catch{}
  input.value=query;
  const normalize=x=>String(x||'').toLocaleLowerCase().normalize('NFKC').trim();
@@ -122,7 +128,11 @@
    for(const x of shown){const url=safeUrl(x.url);if(!url)continue;const host=new URL(url).hostname;
      const card=el('article','atlas-result');const icon=el('div','atlas-result-icon',x.name.slice(0,1).toLocaleUpperCase());icon.setAttribute('aria-hidden','true');
      const data=el('div','atlas-result-info');const hostrow=el('div','atlas-hostline');hostrow.append(el('span','atlas-host',host),el('span','atlas-chip',x.category||'其他'));data.append(hostrow);
-     const a=el('a','atlas-result-title',x.name+' ↗');const reviewed=!!linkGate?.officialSourceReviewed(url);const permitted=isAllowed(url);a.href=permitted?url:'leave.html?url='+encodeURIComponent(url)+'&name='+encodeURIComponent(x.name);a.rel='noopener noreferrer';a.referrerPolicy='no-referrer';a.addEventListener('click',e=>{if(!permitted){e.preventDefault();showExternal(url,x.name);}});data.append(a);data.append(el('small',permitted?'atlas-review-ok':'atlas-review-unknown',reviewed?'官方来源已核对 · 直接访问':permitted?'本机已记住 · 直接访问':'第三方来源未核验 · 点击后确认'));
+     const a=el('a','atlas-result-title',x.name+' ↗');const reviewed=!!linkGate?.officialSourceReviewed(url);const permitted=isAllowed(url);a.href=permitted?url:'leave.html?url='+encodeURIComponent(url)+'&name='+encodeURIComponent(x.name);a.rel='noopener noreferrer';a.referrerPolicy='no-referrer';a.addEventListener('click',e=>{
+       if(e.button!==0||e.ctrlKey||e.metaKey||e.altKey||e.shiftKey)return;
+       if(!permitted){e.preventDefault();showExternal(url,x.name);}
+       else trackOpen(url);
+     });data.append(a);data.append(el('small',permitted?'atlas-review-ok':'atlas-review-unknown',reviewed?'官方来源已核对 · 直接访问':permitted?'本机已记住 · 直接访问':'第三方来源未核验 · 点击后确认'));
      data.append(el('p','atlas-result-desc',x.description||'访问网站'));
      const report=el('a','atlas-report-link','报告失效 ↗');report.href='feedback.php?type=broken&url='+encodeURIComponent(url);report.setAttribute('aria-label','报告 '+x.name+' 链接失效');
      const cmp=el('button','atlas-compare-add',compareUrls.includes(url)?'✓ 已加入对比':'＋ 对比');
@@ -134,7 +144,7 @@
        draw();
      });
      const cardActions=el('div','atlas-card-actions');cardActions.append(report,cmp);data.append(cardActions);
-     const star=el('button','atlas-star'+(favorites.includes(x.url)?' saved':''),favorites.includes(x.url)?'★':'☆');star.type='button';star.title=favorites.includes(x.url)?'取消收藏':'收藏到本机';star.setAttribute('aria-label',star.title);star.addEventListener('click',()=>{if(favorites.includes(x.url))favorites=favorites.filter(u=>u!==x.url);else favorites.push(x.url);storeFavorites();draw()});
+     const star=el('button','atlas-star'+(favorites.includes(x.url)?' saved':''),favorites.includes(x.url)?'★':'☆');star.type='button';star.title=favorites.includes(x.url)?'取消收藏':'收藏到本机';star.setAttribute('aria-label',star.title);star.addEventListener('click',()=>{if(favorites.includes(x.url))favorites=favorites.filter(u=>u!==x.url);else {favorites.push(x.url);localRecommendations?.recordSave(x.category);}storeFavorites();draw();localRecommendations?.render()});
      card.append(icon,data,star);results.append(card);
    }
    $('atlasMore').hidden=list.length<=shown.length;
@@ -199,11 +209,15 @@
  refreshEngines();
  document.addEventListener('keydown',e=>{const t=e.target;const typing=t&&(t.matches('input,textarea,select')||t.isContentEditable);if((e.key==='/'&&!typing)||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k')){e.preventDefault();input.focus();input.select()}});
  document.addEventListener('click',e=>{if(!e.target.closest('.atlas-search-form'))suggestClose()});
+ localRecommendations=window.AVENQIR_LOCAL_RECOMMEND_UI?.mount({
+   items:()=>records,favorites:()=>favorites,open:showExternal,
+   reviewed:url=>!!linkGate?.officialSourceReviewed(url)
+ })||null;
  updateApprovals();drawPaths();choiceBar();draw();
  catalog.load().then(data=>{
   records=data.items;
   source.textContent=data.remote?'在线目录 + 本地精选':'内置精选目录（后台不可用）';
-  loaded=true;choiceBar();draw();
+  loaded=true;choiceBar();draw();localRecommendations?.render();
   if(pendingNoMatchQuery)openNoMatch();
  });
 })();
