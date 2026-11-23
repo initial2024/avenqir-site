@@ -8,7 +8,8 @@
  if(!catalog||!paths){for(const n of nodes)n.textContent='公开网址 · 点击查看目录';return;}
  function apply(info){
   const total=info.items.length;
-  const text=total+' 个精选网址 · '+paths.flows.length+' 条任务路径';
+  const count=new Set(info.items.map(x=>x.category)).size;
+  const text=total+' 个精选网址 · '+count+' 个分类 · '+paths.flows.length+' 条任务路径';
   nodes.forEach(node=>{node.textContent=text;node.title=info.remote?'含服务器公开数据，按实际去重计数':'当前内置精选目录，后台数据暂不可用';});
  }
  apply({items:catalog.catalog(),remote:false});
