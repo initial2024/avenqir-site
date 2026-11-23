@@ -5,7 +5,7 @@
   const API = window.AVENQIR_TRANSFER;
   if (!API) { $('transferStatus').textContent = '本地校验模块未加载，请刷新页面。'; return; }
   const categories = [
-    ['bookmarks','书签','已添加和编辑的网址及收藏标记'],
+    ['bookmarks','书签与公开收藏','私人书签、公开目录的星标收藏'],
     ['notes','笔记','当前浏览器保存的全部随手笔记'],
     ['daily','日常 / 游戏','计时、三件小事、2048、翻牌与泡泡记录']
   ];
@@ -32,6 +32,11 @@
   function countFor(data, group) {
     const ks=API.GROUPS[group].keys.filter(k=>Object.prototype.hasOwnProperty.call(data,k));
     const main=group==='bookmarks'?'avenqir_v6_bookmarks':group==='notes'?'avenqir_v6_notes':null;
+    if(group==='bookmarks'){
+      const personal=Array.isArray(data.avenqir_v6_bookmarks)?data.avenqir_v6_bookmarks.length:0;
+      const atlas=Array.isArray(data['avenqir.link-atlas.favorites.v8'])?data['avenqir.link-atlas.favorites.v8'].length:0;
+      return ks.length?personal+' 条私人书签 / '+atlas+' 条公开收藏':'无记录';
+    }
     if(main) return ks.length ? data[main].length+' 条' : '无记录';
     return ks.length+' 组记录';
   }
