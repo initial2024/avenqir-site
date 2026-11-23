@@ -51,7 +51,7 @@ class Features(unittest.TestCase):
             if '<header' not in html:continue
             self.assertIn('data-aq-theme-link',html,f.name+' missing static mode link')
             self.assertIn('src="theme.js?v=15"',html,f.name+' missing explicit theme')
-            self.assertRegex(html,r'href="theme\\.css\\?v=(?:15|16)"',f.name+' missing recent theme css')
+            self.assertRegex(html,r'href="theme\.css\?v=(?:15|16)"',f.name+' missing recent theme css')
 
     def test_service_worker_entries(self):
         s=(SITE/'sw.js').read_text('utf-8')
