@@ -131,6 +131,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
       else{
         $step=aq_totp_matching_step($pending,$otp);
         if($step===null){$failure=true;$notice='验证码错误，未启用双重验证。';}
+        elseif(!aq_mfa_lock_ready()){$failure=true;$notice='服务器不支持可靠的 MFA 锁文件：为避免锁定管理员，暂不启用双重验证。';}
         else{
           [$codes,$hashes]=aq_recovery_create();
           $newAuth=$auth;$newAuth['username']=AQ_ADMIN_NAME;
