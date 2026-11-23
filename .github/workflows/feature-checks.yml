@@ -1,7 +1,7 @@
 name: AVENQIR / feature checks (no deployment)
 on:
   push:
-    branches: ['feature/quick-search-local-transfer-20261123', 'feature/netscape-bookmarks-themes-20261123']
+    branches: ['feature/quick-search-local-transfer-20261123', 'feature/netscape-bookmarks-themes-20261123', 'fix/theme-navigation-cache-20261123']
   pull_request:
     branches: [main]
 
@@ -26,6 +26,7 @@ jobs:
           node tests/test_site_features.cjs
           node tests/test_bookmark_interop.cjs
           node tests/test_directory_gate.cjs
+          node tests/test_link_remember.cjs
       - name: Validate JavaScript and PHP syntax
         shell: bash
         run: |

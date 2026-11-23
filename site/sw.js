@@ -1,8 +1,8 @@
 "use strict";
 /* AVENQIR v8.3 offline shell. No private documents, PHP, or API records cached. */
-const CACHE = 'avenqir-v83-static-20261123b';
+const CACHE = 'avenqir-v831-static-20261123c';
 const ASSETS = [
-  './index.html','./directory.html','./directory.js','./directory-search.css','./directory-seed.json','./leave.html','./leave.js',
+  './index.html','./appearance.html','./directory.html','./directory.js','./directory-search.css','./directory-seed.json','./leave.html','./leave.js',
   './module-switcher.js','./quick-search.js','./site.js','./common.css','./theme.js','./theme.css','./link-gate.js',
   './bookmarks.html','./bookmarks.js','./netscape-format.js','./notes.html','./notes.js','./notes-enhance.js',
   './transfer.html','./transfer-schema.js','./device-transfer.js',
@@ -18,10 +18,12 @@ function isChallenge(text) {
 async function safeCache(cache, request, response) {
   if(!response.ok || response.type === 'opaque')return;
   const path=new URL(request.url).pathname;
-  const isHTML=path.endsWith('.html');
-  if(isHTML){
+  const isHTML=path.endsWith('.html')||path.endsWith('/');
+  const isScriptOrStyle=/\.(?:js|css)$/.test(path);
+  if(isHTML||isScriptOrStyle){
     const text=await response.clone().text();
     if(isChallenge(text))return;
+    if(isScriptOrStyle&&/^\s*<(?:!doctype\s+html|html|head|body)\b/i.test(text))return;
   }
   await cache.put(request,response.clone());
 }
@@ -55,11 +57,25 @@ self.addEventListener('fetch',event=>{
   const html=req.mode==='navigate'||u.pathname.endsWith('.html')||u.pathname.endsWith('/');
   const asset=/\.(?:js|css|svg|webp|webmanifest|json)$/.test(u.pathname);
   if(!html&&!asset)return;
-  event.respondWith(fetch(req).then(response=>{
-    if(response.ok){
-      const copy=response.clone();
-      event.waitUntil(caches.open(CACHE).then(c=>safeCache(c,req,copy)).catch(()=>{}));
-    }
-    return response;
-  }).catch(()=>caches.match(req).then(hit=>hit||Response.error())));
+  const offline=async()=>{
+    const cache=await caches.open(CACHE);
+    const plain=new URL(req.url);plain.search='';
+    return (await cache.match(req))||(await cache.match(plain.href))||Response.error();
+  };
+  event.respondWith((async()=>{
+    try {
+      const response=await fetch(new Request(req,{cache:'no-cache'}));
+      const scriptOrStyle=/\.(?:js|css)$/.test(u.pathname);
+      if(response.ok&&(html||scriptOrStyle)){
+        const text=await response.clone().text();
+        const challenge=isChallenge(text)||(scriptOrStyle&&/^\s*<(?:!doctype\s+html|html|head|body)\b/i.test(text));
+        if(challenge)return offline();
+      }
+      if(response.ok){
+        const copy=response.clone();
+        event.waitUntil(caches.open(CACHE).then(c=>safeCache(c,req,copy)).catch(()=>{}));
+      }
+      return response;
+    }catch{return offline();}
+  })());
 });
