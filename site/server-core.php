@@ -118,7 +118,7 @@ function infer_link_category(string $name,string $url,string $desc): string {
   foreach($known as $domain=>$category){
     if($host===$domain || str_ends_with($host,'.'.$domain))return $category;
   }
-  $context=mb_strtolower($name.' '.$desc,'UTF-8');
+  $context=function_exists('mb_strtolower')?mb_strtolower($name.' '.$desc,'UTF-8'):strtolower($name.' '.$desc);
   $terms=[
     '材料'=>['材料科学','晶体结构','材料性能','materials science'],
     '数学'=>['数学计算','函数绘图','mathematics','graphing calculator'],
