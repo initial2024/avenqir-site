@@ -2,7 +2,11 @@
 /* UI only; recommender has no fetch, beacon, third-party scripts or backend endpoint. */
 (function(root){
  const engine=root.AVENQIR_LOCAL_RECOMMEND;
- const E=()=>!!root.AVENQIR_I18N&&!root.AVENQIR_I18N.locale.startsWith('zh-');
+ const E=()=>{
+  const page=String(root.document?.documentElement?.lang||'').trim();
+  const setting=String(root.AVENQIR_I18N?.locale||'').trim();
+  return !/^zh(?:-|$)/i.test(page&&!/^zh(?:-|$)/i.test(page)?page:setting||page||'en');
+ };
  const T=(zh,en)=>E()?en:zh;
  const category=name=>root.AVENQIR_I18N?.category(name)||name;
  function mount({items,favorites,open,reviewed}){
