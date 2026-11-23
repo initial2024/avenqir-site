@@ -3,12 +3,7 @@
  * Browser time zone is not the same as public network country or real residence. */
 (function(root){
  const KEY='avenqir.atlas.region.v1';
- const regions=Object.freeze([
-  {code:'JP',label:'日本'}, {code:'CN',label:'中国大陆'}, {code:'SG',label:'新加坡'},
-  {code:'US',label:'美国'}, {code:'GB',label:'英国'}, {code:'DE',label:'德国'},
-  {code:'FR',label:'法国'}, {code:'KR',label:'韩国'}, {code:'CA',label:'加拿大'},
-  {code:'AU',label:'澳大利亚'}, {code:'IN',label:'印度'}, {code:'ES',label:'西班牙'}
- ]);
+ const regions=Object.freeze([{"code":"JP","label":"日本","area":"东亚"},{"code":"CN","label":"中国大陆","area":"东亚"},{"code":"TW","label":"台湾","area":"东亚"},{"code":"HK","label":"香港","area":"东亚"},{"code":"MO","label":"澳门","area":"东亚"},{"code":"KR","label":"韩国","area":"东亚"},{"code":"SG","label":"新加坡","area":"东南亚"},{"code":"TH","label":"泰国","area":"东南亚"},{"code":"MY","label":"马来西亚","area":"东南亚"},{"code":"ID","label":"印度尼西亚","area":"东南亚"},{"code":"VN","label":"越南","area":"东南亚"},{"code":"PH","label":"菲律宾","area":"东南亚"},{"code":"IN","label":"印度","area":"南亚"},{"code":"AE","label":"阿联酋","area":"中东"},{"code":"SA","label":"沙特阿拉伯","area":"中东"},{"code":"TR","label":"土耳其","area":"中东"},{"code":"GB","label":"英国","area":"欧洲"},{"code":"DE","label":"德国","area":"欧洲"},{"code":"FR","label":"法国","area":"欧洲"},{"code":"ES","label":"西班牙","area":"欧洲"},{"code":"IT","label":"意大利","area":"欧洲"},{"code":"NL","label":"荷兰","area":"欧洲"},{"code":"CH","label":"瑞士","area":"欧洲"},{"code":"SE","label":"瑞典","area":"欧洲"},{"code":"NO","label":"挪威","area":"欧洲"},{"code":"DK","label":"丹麦","area":"欧洲"},{"code":"FI","label":"芬兰","area":"欧洲"},{"code":"BE","label":"比利时","area":"欧洲"},{"code":"IE","label":"爱尔兰","area":"欧洲"},{"code":"PL","label":"波兰","area":"欧洲"},{"code":"PT","label":"葡萄牙","area":"欧洲"},{"code":"US","label":"美国","area":"美洲"},{"code":"CA","label":"加拿大","area":"美洲"},{"code":"BR","label":"巴西","area":"美洲"},{"code":"MX","label":"墨西哥","area":"美洲"},{"code":"AR","label":"阿根廷","area":"美洲"},{"code":"AU","label":"澳大利亚","area":"大洋洲"},{"code":"NZ","label":"新西兰","area":"大洋洲"},{"code":"ZA","label":"南非","area":"非洲"},{"code":"EG","label":"埃及","area":"非洲"}]);
  const codes=new Set(regions.map(x=>x.code));
  // A deliberately conservative, non-exhaustive *hint*. Time zone ≠ IP geolocation.
  const zones=Object.freeze({
@@ -18,7 +13,35 @@
   'Europe/Madrid':'ES','Australia/Sydney':'AU','Australia/Melbourne':'AU',
   'America/Los_Angeles':'US','America/Chicago':'US',
   'America/Toronto':'CA','America/Vancouver':'CA'
- });
+,
+  'Asia/Taipei':'TW',
+  'Asia/Hong_Kong':'HK',
+  'Asia/Macau':'MO',
+  'Pacific/Auckland':'NZ',
+  'Europe/Rome':'IT',
+  'Europe/Amsterdam':'NL',
+  'Europe/Zurich':'CH',
+  'Europe/Stockholm':'SE',
+  'Europe/Oslo':'NO',
+  'Europe/Copenhagen':'DK',
+  'Europe/Helsinki':'FI',
+  'Europe/Brussels':'BE',
+  'Europe/Dublin':'IE',
+  'Europe/Warsaw':'PL',
+  'Europe/Lisbon':'PT',
+  'America/Sao_Paulo':'BR',
+  'America/Mexico_City':'MX',
+  'America/Argentina/Buenos_Aires':'AR',
+  'Asia/Dubai':'AE',
+  'Asia/Bangkok':'TH',
+  'Asia/Kuala_Lumpur':'MY',
+  'Asia/Jakarta':'ID',
+  'Asia/Ho_Chi_Minh':'VN',
+  'Asia/Manila':'PH',
+  'Europe/Istanbul':'TR',
+  'Africa/Johannesburg':'ZA',
+  'Asia/Riyadh':'SA',
+  'Africa/Cairo':'EG' });
  function hint(timeZone){
   return typeof timeZone==='string'&&Object.prototype.hasOwnProperty.call(zones,timeZone)?zones[timeZone]:null;
  }
