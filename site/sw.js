@@ -1,8 +1,8 @@
 "use strict";
-/* AVENQIR v8.7 offline shell. No private documents, PHP, or API records cached. */
-const CACHE = 'avenqir-v87-static-20261123a';
+/* AVENQIR v8.8 offline shell. No private documents, PHP, or API records cached. */
+const CACHE = 'avenqir-v88-static-20261123a';
 const ASSETS = [
-  './index.html','./appearance.html','./directory.html','./directory.js','./atlas-paths.js','./atlas-expansion.js','./atlas-specialist.js','./atlas-depth-a.js','./atlas-depth-b.js','./atlas-depth-c.js','./atlas-depth-d.js','./atlas-taxonomy.js','./atlas-catalog-core.js','./atlas-summary.js','./atlas-personalize.js','./atlas-personalize-ui.js','./directory-search.css','./directory-seed.json','./leave.html','./leave.js',
+  './index.html','./appearance.html','./directory.html','./directory.js','./atlas-paths.js','./atlas-expansion.js','./atlas-specialist.js','./atlas-depth-a.js','./atlas-depth-b.js','./atlas-depth-c.js','./atlas-depth-d.js','./atlas-ai.js','./atlas-regional.js','./atlas-everyday.js','./atlas-taxonomy.js','./atlas-region.js','./atlas-region-ui.js','./atlas-catalog-core.js','./atlas-summary.js','./atlas-personalize.js','./atlas-personalize-ui.js','./directory-search.css','./directory-seed.json','./leave.html','./leave.js',
   './module-switcher.js','./quick-search.js','./site.js','./common.css','./theme.js','./theme.css','./link-gate.js',
   './bookmarks.html','./bookmarks.js','./netscape-format.js','./notes.html','./notes.js','./notes-enhance.js',
   './transfer.html','./transfer-schema.js','./device-transfer.js','./feedback-pref.js',
