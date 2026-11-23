@@ -9,13 +9,16 @@ class RemoteWorkspaceGuardTest(unittest.TestCase):
     def test_no_credential_or_proxy_capture(self):
         data=HTML.read_text(encoding="utf8")
         self.assertIn('href="https://console.altare.gg/"',data)
-        self.assertIn("https://docs.altare.gg/workstations/beta",data)
+        self.assertIn("AL_PRIVATE_BROWSER.md",data)
+        self.assertIn("https://developers.cloudflare.com/cloudflare-one/",data)
+        self.assertNotIn("https://docs.altare.gg/workstations/beta",data)
         self.assertIn('rel="noopener noreferrer"',data)
         self.assertIn('meta name="referrer" content="no-referrer"',data)
         for token in ('<iframe', 'type="password"', 'contenteditable', 'window.fetch(', 'XMLHttpRequest(', 'Proxy-Authorization',
                       '/api/proxy', 'location.href =', 'document.cookie'):
             self.assertNotIn(token,data)
-        self.assertIn('No proxy, passwords or shared sessions.',data)
+        self.assertIn('without Workstations beta',data)
+        self.assertIn('NOT LIVE YET:',data)
     def test_home_entry_and_deploy_whitelist(self):
         index=(ROOT/"site/index.html").read_text(encoding="utf8")
         self.assertIn('href="remote-workspace.html"',index)
@@ -27,7 +30,7 @@ class RemoteWorkspaceGuardTest(unittest.TestCase):
         data=HTML.read_text(encoding="utf8")
         for locale in ('zh-Hans','zh-Hant','ja','en'):
             self.assertIn(locale,data)
-        self.assertIn('var strings = tr[key] || {}',data)
+        self.assertIn('var v=map[k]||{}',data)
         self.assertIn('avenqir.locale.v1',data)
 
 if __name__=="__main__":
