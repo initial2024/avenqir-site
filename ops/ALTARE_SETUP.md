@@ -96,31 +96,81 @@ Check that the result ends with `PUBLISH: https://github.com/...`.
 ChatGPT or any Issue. If `PUBLISH: GITHUB_PUBLISH_FAILED_...` appears,
 the report was saved locally but not posted.
 
-## Step 3. One-time scheduling
+## Step 3. One-time native Altare schedule (NOT done by bootstrap)
 
-Altare **Sandbox has no systemd**; don't install or enable a systemd timer.
-Use its **own Schedules/Jobs UI** (as available for your Sandbox) to run:
+The Sandbox is a **template-based server**. Altare documents native
+`Schedules` for template-based sandboxes, with a time-based trigger and a
+`Send command` task; these are **not** the separate `Jobs` for
+GitHub-deployed apps. See https://docs.altare.gg/api/schedules and
+https://altare.gg/en/help/getting-started/schedules-automatic-restarts .
 
-```sh
-bash -lc 'python3 /opt/avenqir/altare_cross_region_report.py --sample 20'
+After a bootstrap update, run **one manual check** via the existing
+sandbox Termius SSH session (this changes only local public-monitor state):
+
+```bash
+bash /opt/avenqir/altare_scheduled_check.sh
+cat /opt/avenqir/state/latest-scheduled.status
 ```
 
-Recommended cadence: **once per day**, preferably at a fixed UTC time.
-The collector queries four AVENQIR public assets, the public Orbit homepage,
-and at most 20 sampled HTTPS catalog links. It does not follow redirects,
-delete links, modify categories, log in, or send requests to administrator
-endpoints. Each HTTP operation is bounded by a timeout.
+Expect `AL_LAST_CHECK_RESULT=COMPLETE` and `AL_LAST_EXIT_CODE=0`.
+This manual success proves installation and actual local execution,
+**not** automatic scheduling.
 
-Scheduling does not revive a suspended sandbox unless Altare explicitly
-documents or enables that behavior. Turn off the optional **Pause when idle**
-setting if you expect continuous schedules, and confirm a first scheduled run
-in the Altare dashboard.
+Now open https://console.altare.gg/ → `utility-server` → `Schedules`.
+Create one schedule, named `AVENQIR public audit AL`, enabled with:
 
-When the audit status changes or one week has passed, the second-vantage
-monitor posts an Issue comment; otherwise it prints `UNCHANGED_NO_SPAM`.
-GitHub Actions continues independently every Monday and edits the main body
-of the same Issue. The last 28 local JSON reports are retained under
-`/opt/avenqir/reports`.
+| Time field (UTC) | Value |
+| --- | --- |
+| Minute | `10` |
+| Hour | `3` |
+| Day of month | `*` |
+| Month | `*` |
+| Day of week | `*` |
+
+Under its task list add exactly one **Send command** task, with zero delay:
+
+```sh
+bash /opt/avenqir/altare_scheduled_check.sh
+```
+
+This script executes the original Python collector with `--local-only`,
+uses an exclusive lock against concurrent runs, and writes one restricted
+log and one atomic status file. It does **not** read a PAT even if one is
+present, create VNC/Xvfb/Chrome processes, expose ports or restart
+the sandbox.
+
+After the first **scheduled** execution, check both:
+- `Schedules` UI → task's actual run result and timestamp; and
+- `cat /opt/avenqir/state/latest-scheduled.status`: the
+  `AL_LAST_CHECK_ENDED_UTC` timestamp must be **later** than your last
+  manual run. For details use
+  `tail -n 25 /opt/avenqir/reports/latest-scheduled.log`.
+
+The schedule's creation alone does not prove success. If you cannot find
+`Schedules` for this exact utility-server, do not replace it with the
+game-specific restart command or a Workstation timer. Share a screenshot
+of the app's navigation and the run mode to confirm what is available.
+
+**Pause when idle**: Settings → General can suspend the Sandbox after
+inactivity; do not assume the schedule wakes it. If continuous daily
+checks are essential, disable this optional pause and verify the
+machine's own resource policy allows it. No systemd, extra machine,
+remote SSH secret, GitHub PAT or publicly exposed proxy port is
+required for local scheduled reports.
+
+## GitHub-side audit schedule
+
+Independently from AL, the repo's
+[`.github/workflows/weekly-public-readonly-audit.yml`](../.github/workflows/weekly-public-readonly-audit.yml)
+now runs **daily at 02:23 UTC**, updates the same
+[Issue #21](https://github.com/initial2024/avenqir-site/issues/21)
+and saves 30-day JSON artifacts. The workflow file retains its historical
+filename to preserve links, but the **actual schedule is daily**.
+
+Until an owner explicitly enables the optional Issues-only PAT reporting
+described in Step 2, AL reports remain only on AL, and Issue #21 shows
+**GitHub's independent vantage**, not AL's IP. Never label a GitHub runner
+check as an AL machine check.
 
 ## Troubleshooting / rollback
 
