@@ -35,6 +35,7 @@ fetch_script(){
 }
 fetch_script al_browser_preflight.py '#!/usr/bin/env python3'
 fetch_script al_private_browser.sh '#!/usr/bin/env bash'
+fetch_script al_vnc_password_auto.py '#!/usr/bin/env python3'
 echo "AL_SCRIPTS_INSTALLED=YES"
 python3 /opt/avenqir/al_browser_preflight.py
 echo "AL_SETUP_NOTE=No Chrome/VNC packages or keys were installed by this bootstrap."
