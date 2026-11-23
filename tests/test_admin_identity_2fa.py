@@ -33,6 +33,9 @@ class AdminIdentityAndALShortcut(unittest.TestCase):
             else: self.assertIn(text,ADMIN+SECURITY)
         self.assertIn("aq_mfa_verify_and_consume",SECURITY)
         self.assertIn("flock($handle,LOCK_EX)",SECURITY)
+        self.assertIn("function aq_mfa_lock_ready()",SECURITY)
+        self.assertIn("elseif(!aq_mfa_lock_ready())",ADMIN)
+        self.assertIn("LOCK_EX|LOCK_NB",SECURITY)
         self.assertIn("return null",SECURITY)
         self.assertNotIn("eval(",ADMIN+SECURITY)
     def test_private_link_only_in_login_page_and_never_proxy(self):
