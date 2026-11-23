@@ -117,7 +117,7 @@ start_browser(){
     fi
   fi
   if ! pgrep -u "$U" -f '/opt/google/chrome/chrome.*--user-data-dir=' >/dev/null; then
-    fail "Chrome is not running; inspect $PROFILE/browser.log; do not use --no-sandbox"
+    fail "Chrome is not running; inspect $PROFILE/browser.log; do not disable Chrome sandbox"
   fi
   echo "AL_PRIVATE_VNC_LOCAL_ONLY=YES"
   echo "Open Chrome via Cloudflare Tunnel TCP localhost:5901 + Access VNC browser rendering."
