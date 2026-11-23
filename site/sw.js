@@ -1,13 +1,65 @@
-/* AVENQIR v7: best effort offline, do not cache admin, API, config or data. */
-const CACHE='avenqir-v81-static-20261123';
-const ASSETS=['./','./index.html','./directory.html','./directory.js','./directory-search.css','./module-switcher.js','./bookmarks.html','./bookmarks.js','./notes.html','./notes.js','./fun.html','./fun.js','./daily.html','./daily.js','./check.html','./check.js','./tools.html','./tools.js','./projects.html','./projects.js','./domains.html','./domains.js','./logs.html','./logs.js','./health.html','./health.js','./disclaimer.html','./privacy.html','./common.css','./site.js','./hero-lake.webp','./icon.svg','./manifest.webmanifest','./feedback.css','./feedback-admin.js'];
-self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
-self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('avenqir-v')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
-self.addEventListener('fetch',e=>{
- const r=e.request, u=new URL(r.url);
- if(r.method!=='GET'||u.origin!==self.location.origin||u.pathname.endsWith('.php')||u.pathname.includes('/_store/')||u.pathname.includes('/admin')||u.pathname.endsWith('/probe.txt')||u.searchParams.has('check'))return;
- const html=r.mode==='navigate'||u.pathname.endsWith('.html')||u.pathname.endsWith('/');
- const asset=/\.(?:js|css|svg|webp|webmanifest)$/.test(u.pathname);
- if(!html&&!asset)return;
- e.respondWith(fetch(r).then(resp=>{if(resp.ok){const copy=resp.clone();caches.open(CACHE).then(c=>c.put(r,copy)).catch(()=>{});}return resp;}).catch(()=>caches.match(r).then(x=>x||Response.error())));
+"use strict";
+/* AVENQIR v8.2 offline shell. No private documents, PHP, or API records cached. */
+const CACHE = 'avenqir-v82-static-20261123';
+const ASSETS = [
+  './index.html','./directory.html','./directory.js','./directory-search.css','./directory-seed.json',
+  './module-switcher.js','./quick-search.js','./site.js','./common.css',
+  './bookmarks.html','./bookmarks.js','./notes.html','./notes.js','./notes-enhance.js',
+  './backup.html','./backup-schema.js','./backup.js',
+  './fun.html','./fun.js','./daily.html','./daily.js','./check.html','./check.js',
+  './tools.html','./tools.js','./tool-addons.js',
+  './projects.html','./projects.js','./domains.html','./domains.js','./logs.html','./logs.js',
+  './health.html','./health.js','./disclaimer.html','./privacy.html',
+  './hero-lake.webp','./icon.svg','./manifest.webmanifest'
+];
+function isChallenge(text) {
+  return text.includes('slowAES.decrypt') && text.includes('/aes.js');
+}
+async function safeCache(cache, request, response) {
+  if(!response.ok || response.type === 'opaque')return;
+  const path=new URL(request.url).pathname;
+  const isHTML=path.endsWith('.html');
+  if(isHTML){
+    const text=await response.clone().text();
+    if(isChallenge(text))return;
+  }
+  await cache.put(request,response.clone());
+}
+self.addEventListener('install', event => {
+  event.waitUntil((async()=>{
+    const cache=await caches.open(CACHE);
+    // One failed resource should not erase all other cached tools.
+    await Promise.allSettled(ASSETS.map(async path=>{
+      try{
+        const request=new Request(new URL(path,self.registration.scope),{cache:'reload'});
+        const response=await fetch(request);
+        await safeCache(cache,request,response);
+      }catch{}
+    }));
+    await self.skipWaiting();
+  })());
+});
+self.addEventListener('activate',event=>{
+  event.waitUntil((async()=>{
+    const keys=await caches.keys();
+    await Promise.all(keys.filter(k=>k.startsWith('avenqir-v')&&k!==CACHE).map(k=>caches.delete(k)));
+    await self.clients.claim();
+  })());
+});
+self.addEventListener('fetch',event=>{
+  const req=event.request, u=new URL(req.url);
+  if(req.method!=='GET' || u.origin!==self.location.origin ||
+     u.pathname.endsWith('.php') || u.pathname.includes('/_private/') ||
+     u.pathname.includes('/_store/') || u.pathname.includes('/admin') ||
+     u.pathname.endsWith('/probe.txt') || u.searchParams.has('check'))return;
+  const html=req.mode==='navigate'||u.pathname.endsWith('.html')||u.pathname.endsWith('/');
+  const asset=/\.(?:js|css|svg|webp|webmanifest|json)$/.test(u.pathname);
+  if(!html&&!asset)return;
+  event.respondWith(fetch(req).then(response=>{
+    if(response.ok){
+      const copy=response.clone();
+      event.waitUntil(caches.open(CACHE).then(c=>safeCache(c,req,copy)).catch(()=>{}));
+    }
+    return response;
+  }).catch(()=>caches.match(req).then(hit=>hit||Response.error())));
 });
