@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# AVENQIR AL read-only audit: mobile-friendly bootstrap; owner runs manually.
+# No credentials, service modification, or inbound ports.
+set -euo pipefail
+umask 077
+if [ "${EUID:-$(id -u)}" -ne 0 ]; then
+  echo "AL_BOOTSTRAP_REQUIRES_ROOT"
+  exit 2
+fi
+command -v curl >/dev/null || { echo "CURL_MISSING"; exit 2; }
+temp="$(mktemp)"
+trap 'rm -f "$temp"' EXIT
+if ! curl --proto '=https' --tlsv1.2 -fsSL --retry 2 --max-time 40 \
+  https://raw.githubusercontent.com/initial2024/avenqir-site/main/ops/altare_bootstrap.sh \
+  -o "$temp"; then
+  echo "AL_BOOTSTRAP_DOWNLOAD_FAILED"
+  exit 3
+fi
+if ! head -n 1 "$temp" | grep -Fxq '#!/usr/bin/env bash'; then
+  echo "AL_BOOTSTRAP_INVALID_SOURCE"
+  exit 3
+fi
+bash "$temp"
