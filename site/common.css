@@ -73,3 +73,13 @@ body{overflow-x:hidden;background:radial-gradient(circle at 70% 0%,#17405844,tra
 .aq-search-hint{color:#a9c2d5;font-size:12px;margin:0;padding:10px 20px 17px}
 @media(max-width:850px){.aq-quick-search{margin-left:auto;padding:8px 10px;font-size:12px}.aq-quick-search kbd{display:none}}
 @media(max-width:410px){.aq-quick-search{font-size:11px;gap:4px;padding:8px 9px}.aq-search-top{padding:12px}.aq-search-dialog{inset:8vh 8px auto;width:calc(100% - 16px)}}
+
+
+/* v8.2 Markdown preview. All user content is created with textContent, never raw HTML. */
+.aq-markdown-preview{max-height:380px;overflow:auto;padding:18px;margin:10px 0;border:1px solid #80b2d35a;border-radius:14px;background:#0a1d2e;color:#ebf4ff;overflow-wrap:anywhere}
+.aq-markdown-preview h1,.aq-markdown-preview h2,.aq-markdown-preview h3{margin:16px 0 9px;font-weight:750}
+.aq-markdown-preview h1{font-size:21px}.aq-markdown-preview h2{font-size:18px}.aq-markdown-preview h3{font-size:16px}
+.aq-markdown-preview p{margin:6px 0}.aq-markdown-preview blockquote{border-left:3px solid #79cefb;padding:6px 12px;color:#bfe2f7;background:#0b3045;margin:7px 0}
+.aq-markdown-preview pre{background:#061421;padding:12px;border-radius:9px;white-space:pre-wrap;overflow-wrap:anywhere}
+.aq-markdown-preview code{background:#143b4e;color:#b8f3ff;border-radius:4px;padding:1px 4px;font-family:ui-monospace,monospace}
+.aq-markdown-preview .aq-note-bullet{padding-left:10px}
