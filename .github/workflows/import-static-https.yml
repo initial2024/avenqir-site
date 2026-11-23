@@ -1,0 +1,73 @@
+name: AVENQIR - import public static frontend over HTTPS
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/import-static-https.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import-static:
+    if: github.repository == 'initial2024/avenqir-site' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Collect public static site (no FTP secrets, no PHP or private files)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, pathlib, urllib.request, urllib.error, urllib.parse, sys
+          names="""
+          index.html directory.html directory.js directory-search.css directory-seed.json
+          common.css site.js check.html check.js tools.html tools.js projects.html projects.js
+          domains.html domains.js logs.html logs.js fun.html fun.js daily.html daily.js
+          bookmarks.html bookmarks.js notes.html notes.js health.html health.js
+          disclaimer.html privacy.html feedback.css feedback-admin.js
+          sw.js icon.svg manifest.webmanifest hero-lake.webp module-switcher.js
+          """.split()
+          required={'index.html','directory.html','fun.html','tools.html'}
+          dest=pathlib.Path('site');dest.mkdir(exist_ok=True)
+          found=[];missing=[]
+          for name in names:
+              url='https://avenqir.bg5.net/'+name
+              req=urllib.request.Request(url,headers={'User-Agent':'AVENQIR-Source-Importer/1.0'})
+              try:
+                  with urllib.request.urlopen(req,timeout=18) as r:
+                      if urllib.parse.urlsplit(r.url).hostname!='avenqir.bg5.net':
+                          missing.append(name);continue
+                      data=r.read(3000001)
+              except (urllib.error.URLError,TimeoutError,ValueError):
+                  missing.append(name);continue
+              if not data or len(data)>3000000:
+                  missing.append(name);continue
+              if name.endswith('.html') and (b'AVENQIR' not in data.upper() or b'<html' not in data.lower()):
+                  missing.append(name);continue
+              if name.endswith(('.js','.css','.json','.webmanifest','.svg')):
+                  if b'<html' in data[:256].lower() or b'<!doctype' in data[:256].lower():
+                      missing.append(name);continue
+                  try: data.decode('utf-8')
+                  except UnicodeDecodeError:
+                      missing.append(name);continue
+              if name.endswith(('.json','.webmanifest')):
+                  try: json.loads(data)
+                  except ValueError:missing.append(name);continue
+              if name.endswith('.webp') and (data[:4]!=b'RIFF' or data[8:12]!=b'WEBP'):
+                  missing.append(name);continue
+              (dest/name).write_bytes(data);found.append(name)
+          if required.intersection(missing) or len(found)<18:
+              sys.exit('BLOCK: incomplete static site; obtained '+str(len(found))+'; missing essential: '+','.join(sorted(required.intersection(missing))))
+          print('PASS: downloaded '+str(len(found))+' publicly visible static files over HTTPS. No PHP, secrets, or private data imported. Missing optional files: '+str(len(missing)))
+          PY
+      - name: Commit frontend only, do not publish
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add site
+          if git diff --cached --quiet; then echo 'No changed public frontend'; exit 0; fi
+          git commit -m 'Import public static AVENQIR frontend from existing site'
+          git push origin HEAD:main
