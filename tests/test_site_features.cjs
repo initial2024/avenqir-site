@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict');
 const path=require('node:path');
 const dirname=path.resolve(__dirname,'..');
-require(path.join(dirname,'site','backup-schema.js'));
+require(path.join(dirname,'site','transfer-schema.js'));
 const API=globalThis.AVENQIR_TRANSFER;
 assert.ok(API);
 const key={
@@ -65,6 +65,6 @@ global.document={readyState:'loading',addEventListener(){}};
 const palette=require(path.join(dirname,'site','quick-search.js'));
 assert.ok(palette.find('dns').some(x=>x.url==='tools.html#dns'));
 assert.ok(palette.find('2048').some(x=>x.url==='fun.html#game2048'));
-assert.ok(palette.find('备份').some(x=>x.url==='backup.html'));
+assert.ok(palette.find('备份').some(x=>x.url==='transfer.html'));
 assert.equal(palette.find('一个不存在的随机功能标签').length,0);
 console.log('PASS: backup/restore, rollback, hostile input, timer pause and quick-search tests');
