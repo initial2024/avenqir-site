@@ -341,3 +341,7 @@
 .search-body .atlas-region-panel .atlas-local-cards{grid-template-columns:repeat(4,minmax(0,1fr))}
 @media(max-width:900px){.search-body .atlas-region-panel .atlas-local-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:540px){.search-body .atlas-region-panel .atlas-local-cards{grid-template-columns:minmax(0,1fr)}.search-body #atlasRegionSelect{width:100%}}
+
+/* Region select uses native optgroups to keep a 40-region mobile picker scannable. */
+.search-body #atlasRegionSelect optgroup{font-weight:700;color:var(--ui-ink,#243f59)}
+.search-body #atlasRegionSelect option{font-weight:400;color:var(--ui-ink,#243f59)}
