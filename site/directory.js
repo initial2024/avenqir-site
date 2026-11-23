@@ -5,6 +5,7 @@
  const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=String(text);return n};
  const linkGate=window.AVENQIR_LINK_GATE;
  const safety=window.AVENQIR_ATLAS_SAFETY;
+ const finder=window.AVENQIR_ATLAS_FIND;
  const externalDialog=$('atlasExternalDialog');
  const externalGo=$('atlasExternalGo');
  const rememberBox=$('atlasRemember');
@@ -56,18 +57,27 @@
  const combine=catalog.combine;
  let records=catalog.catalog(), query=(params.get('q')||'').slice(0,140),category='',mode='all',limit=24,loaded=false,selectedFlow='',reviewedOnly=false,groupId='',expandedCategories=false;
  const key='avenqir.link-atlas.favorites.v8';let favorites=[],compareUrls=[];let pendingNoMatchQuery='';
+ const multiCategories=new Set();
+ const recentKey='avenqir.atlas.session-opens.v90';
+ let sessionOpens=[];
+ try{const raw=JSON.parse(sessionStorage.getItem(recentKey)||'[]');if(Array.isArray(raw))sessionOpens=raw.filter(x=>typeof x==='string').slice(0,100);}catch{}
+ const multiOn=()=>!!$('atlasMultiCategory')?.checked;
  let localRecommendations=null;
  let regionRecommendations=null;
  function trackOpen(url){
    const item=records.find(x=>x.url===url);
    if(item)localRecommendations?.recordOpen(item.category);
+   if($('atlasSort')?.value==='recent'){
+     sessionOpens=[url,...sessionOpens.filter(x=>x!==url)].slice(0,100);
+     try{sessionStorage.setItem(recentKey,JSON.stringify(sessionOpens));}catch{}
+   }
  }
  try{const v=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(v))favorites=v.filter(x=>typeof x==='string').slice(0,500)}catch{}
  input.value=query;
  const normalize=x=>String(x||'').toLocaleLowerCase().normalize('NFKC').trim();
  const meaningful=x=>[x.name,x.url,x.category,x.description].map(normalize);
  function score(x){if(!query)return 1;const terms=normalize(query).split(/\s+/).filter(Boolean);const fields=meaningful(x);
-   if(!terms.every(w=>fields.some(v=>v.includes(w))))return -1;
+   if(!terms.every(w=>fields.some(v=>v.includes(w))||(/^[a-z]{2,20}$/.test(w)&&finder?.matches(w,[x.name,x.category]))))return -1;
    return terms.reduce((acc,t)=>acc+(fields[0]===t?12:fields[0].startsWith(t)?8:fields[0].includes(t)?6:0)+(fields[1].includes(t)?4:0)+(fields[2].includes(t)?3:0)+(fields[3].includes(t)?1:0),0);
  }
  function matchingGroup(x){
@@ -76,8 +86,12 @@
    return taxonomy.groupFor(x.category)===groupId;
  }
  function filtered(){const flow=paths.flows.find(f=>f.id===selectedFlow);const selectedUrls=flow?new Set(flow.urls):null;
-   let r=records.map(x=>({x,rank:score(x)})).filter(({x,rank})=>rank>=0&&matchingGroup(x)&&(!category||x.category===category)&&(mode!=='saved'||favorites.includes(x.url))&&(!selectedUrls||selectedUrls.has(x.url))&&(!reviewedOnly||!!linkGate?.officialSourceReviewed(x.url)));
-   if($('atlasSort').value==='name')r.sort((a,b)=>a.x.name.localeCompare(b.x.name,'zh-CN'));
+   let r=records.map(x=>({x,rank:score(x)})).filter(({x,rank})=>rank>=0&&matchingGroup(x)&&(multiOn()?(!multiCategories.size||multiCategories.has(x.category)):(!category||x.category===category))&&(mode!=='saved'||favorites.includes(x.url))&&(!selectedUrls||selectedUrls.has(x.url))&&(!reviewedOnly||!!linkGate?.officialSourceReviewed(x.url)));
+   if($('atlasSort').value==='recent')r.sort((a,b)=>{
+     const ai=sessionOpens.indexOf(a.x.url),bi=sessionOpens.indexOf(b.x.url);
+     return (ai<0?Number.MAX_SAFE_INTEGER:ai)-(bi<0?Number.MAX_SAFE_INTEGER:bi)||(b.rank-a.rank);
+   });
+   else if($('atlasSort').value==='name')r.sort((a,b)=>a.x.name.localeCompare(b.x.name,'zh-CN'));
    else if(query)r.sort((a,b)=>b.rank-a.rank||a.x.name.localeCompare(b.x.name,'zh-CN'));
    else if(selectedUrls)r.sort((a,b)=>flow.urls.indexOf(a.x.url)-flow.urls.indexOf(b.x.url));
    return r.map(y=>y.x);
@@ -124,7 +138,7 @@
      b.append(el('span','atlas-flow-icon',f.icon),el('strong','',f.title),el('small','',f.subtitle));
      const note=el('span','atlas-flow-note',f.note);b.append(note);
      b.addEventListener('click',()=>{
-       selectedFlow=selectedFlow===f.id?'':f.id;category='';groupId='';mode='all';query='';input.value='';limit=24;
+       selectedFlow=selectedFlow===f.id?'':f.id;category='';multiCategories.clear();groupId='';mode='all';query='';input.value='';limit=24;
        const u=new URL(location.href);u.searchParams.delete('q');history.replaceState(null,'',u.pathname+u.search+u.hash);
        document.querySelectorAll('[data-tab]').forEach(t=>{const active=t.dataset.tab==='all';t.classList.toggle('active',active);t.setAttribute('aria-pressed',String(active));});
        refreshEngines();suggestClose();drawPaths();choiceBar();draw();
@@ -170,7 +184,7 @@
        button.setAttribute('aria-pressed',String(groupId===id));
        button.append(el('span','atlas-group-icon',iconText),el('strong','',label+' · '+count),el('small','',desc));
        button.addEventListener('click',()=>{
-         groupId=id;category='';selectedFlow='';limit=24;
+         groupId=id;category='';multiCategories.clear();selectedFlow='';limit=24;
          if($('atlasCategorySearch'))$('atlasCategorySearch').value='';
          expandedCategories=false;choiceBar();drawPaths();draw();
          $('atlasResults').scrollIntoView({behavior:'smooth',block:'start'});
@@ -195,9 +209,17 @@
    cats.replaceChildren();
    const add=(name,count)=>{
      const title=name?name+' · '+count:'全部 · '+totalInGroup;
-     const button=el('button','atlas-cat'+(category===name?' selected':''),title);
-     button.type='button';button.setAttribute('aria-pressed',String(category===name));
-     button.addEventListener('click',()=>{category=name;limit=24;choiceBar();draw();$('atlasResults').scrollIntoView({behavior:'smooth',block:'start'});});
+     const active=name?(multiOn()?multiCategories.has(name):category===name):multiOn()?multiCategories.size===0:category==='';
+     const button=el('button','atlas-cat'+(active?' selected':''),title);
+     button.type='button';button.setAttribute('aria-pressed',String(active));
+     button.addEventListener('click',()=>{
+       if(multiOn()){
+         if(!name)multiCategories.clear();
+         else if(multiCategories.has(name))multiCategories.delete(name);
+         else multiCategories.add(name);
+       }else{category=name;multiCategories.clear();}
+       selectedFlow='';limit=24;choiceBar();draw();$('atlasResults').scrollIntoView({behavior:'smooth',block:'start'});
+     });
      cats.append(button);
    };
    if(!needle)add('',totalInGroup);
@@ -215,7 +237,7 @@
      categories.slice(0,16).forEach(([name,count])=>{
        let button=el('button','',name+' · '+count);button.type='button';
        button.addEventListener('click',()=>{
-         groupId=taxonomy.groupFor(name)||'other';category=name;expandedCategories=true;limit=24;
+         groupId=taxonomy.groupFor(name)||'other';category=name;multiCategories.clear();if($('atlasMultiCategory'))$('atlasMultiCategory').checked=false;expandedCategories=true;limit=24;
          if(inputCategory)inputCategory.value='';
          choiceBar();draw();
          window.scrollTo({top:Math.max(0,$('atlasResults').getBoundingClientRect().top+window.scrollY-150),behavior:'smooth'});
@@ -224,11 +246,17 @@
      });
    }
  }
+ $('atlasMultiCategory')?.addEventListener('change',()=>{
+   if(multiOn()&&category)multiCategories.add(category);
+   else if(!multiOn()&&multiCategories.size){category=[...multiCategories][0];multiCategories.clear();}
+   else if(!multiOn())multiCategories.clear();
+   limit=24;choiceBar();draw();
+ });
  $('atlasExpandCategories')?.addEventListener('click',()=>{
    expandedCategories=!expandedCategories;choiceBar();
  });
  $('atlasCategorySearch')?.addEventListener('input',()=>{
-   groupId='';category='';selectedFlow='';expandedCategories=true;limit=24;
+   groupId='';category='';multiCategories.clear();selectedFlow='';expandedCategories=true;limit=24;
    choiceBar();drawPaths();draw();
  });
  function replaceQuery(v){query=v.slice(0,140);input.value=query;limit=24;draw();const u=new URL(location.href);query?u.searchParams.set('q',query):u.searchParams.delete('q');history.replaceState(null,'',u.pathname+u.search+u.hash)}
@@ -257,7 +285,7 @@
  function draw(){const list=filtered(), shown=list.slice(0,limit);results.replaceChildren();$('atlasEmpty').hidden=list.length!==0;
    renderSafetyAudit();
    $('resultsTitle').textContent=mode==='saved'?'我的收藏':selectedFlow?paths.flows.find(f=>f.id===selectedFlow).title:query?'搜索结果':category?category+' · 网站':groupId?((taxonomy.groups||[]).find(g=>g.id===groupId)?.title||'其他收录'):'精选网站';
-   summary.textContent=(query?'匹配':'目录')+' '+list.length+' 个网站 · 显示 '+shown.length+' 条 / 总目录 '+records.length+' 条'+(category?' · 分类：'+category:'')+(groupId?' · 当前主题分组已筛选':'');
+   summary.textContent=(query?'匹配':'目录')+' '+list.length+' 个网站 · 显示 '+shown.length+' 条 / 总目录 '+records.length+' 条'+(multiOn()&&multiCategories.size?' · 多选分类：'+[...multiCategories].join('、'):category?' · 分类：'+category:'')+(groupId?' · 当前主题分组已筛选':'');
    const counter=$('atlasLiveCount');if(counter)counter.textContent='已整理 '+records.length+' 个独立网址 · '+paths.flows.length+' 条任务路径 · '+new Set(records.map(x=>x.category)).size+' 个分类';
    const more=$('atlasMore'),all=$('atlasShowAll');more.textContent='再显示 '+Math.min(24,Math.max(0,list.length-limit))+' 条 ↓';
    if(all){all.hidden=list.length<=shown.length;all.textContent='一次显示全部 '+list.length+' 条';}
