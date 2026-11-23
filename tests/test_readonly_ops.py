@@ -88,6 +88,18 @@ class ReportTests(unittest.TestCase):
                     "https://example.org:8443/", "https://user@example.org"):
             self.assertFalse(audit.safe_public_https(bad), bad)
 
+    def test_audit_rows_are_json_serializable_when_get_uses_bytes(self):
+        # Regression: request() carries b'' even for HEAD, which caused the
+        # GitHub workflow to fail at json.dumps before the Issue could update.
+        with patch.object(audit, "request", return_value={
+                "status": "OK", "code": 200, "ms": 11,
+                "body": b"\\x00private-not-for-evidence"}) as mocked:
+            row = audit.public_status_row("https://avenqir.bg5.net/")
+        self.assertEqual(row["status"], "OK")
+        self.assertNotIn("body", row)
+        mocked.assert_called_once_with("https://avenqir.bg5.net/", "HEAD")
+        self.assertIn('"status": "OK"', __import__("json").dumps(row))
+
     def test_collector_never_follows_redirects(self):
         self.assertIsNone(audit.NoRedirect().redirect_request(
             None, None, 302, "redirect", {}, "https://other.example/"))
