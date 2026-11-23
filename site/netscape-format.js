@@ -50,9 +50,9 @@
         if(count>LIMIT)throw Error('文件包含超过 '+LIMIT+' 个网址，请分批导入');
         const record=createRecord(value,attribute(capture.attrs,'href'),capture.category,
           Number(attribute(capture.attrs,'add_date'))*1000);
-        if(!record){bad++;return;}
-        if(urls.has(record.url)){duplicates++;return;}
-        urls.add(record.url);found.push(record);
+        if(!record)bad++;
+        else if(urls.has(record.url))duplicates++;
+        else {urls.add(record.url);found.push(record);}
       }
       capture=null;
     };
