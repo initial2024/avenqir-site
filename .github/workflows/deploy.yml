@@ -46,6 +46,7 @@ jobs:
   deploy:
     needs: verify
     if: >-
+      vars.AVENQIR_DEPLOY_PAUSED != 'true' &&
       github.repository == 'initial2024/avenqir-site' &&
       github.ref == 'refs/heads/main' &&
       (github.event_name == 'push' || inputs.do_deploy == true)
