@@ -114,11 +114,11 @@ for(const source of ['atlas-ai.js','atlas-regional.js','atlas-everyday.js','atla
 for(const tag of ['atlasRegionToggle','atlasRegionStatus','atlasRegionBody','atlasRegionSelect','atlasRegionCards','atlasRegionClear']){
  assert.ok(html.includes('id="'+tag+'"'),'missing local region control '+tag);
 }
-assert.ok(html.indexOf('atlas-region.js?v=18')<html.indexOf('atlas-region-ui.js?v=29'));
-assert.ok(html.indexOf('atlas-region-ui.js?v=29')<html.indexOf('directory.js?v=25'));
+assert.ok(html.indexOf('atlas-region.js?v=18')<html.indexOf('atlas-region-ui.js?v=30'));
+assert.ok(html.indexOf('atlas-region-ui.js?v=30')<html.indexOf('directory.js?v=25'));
 assert.ok(ui.includes('optgroup'),'40-region selector needs grouping');
 assert.ok(ui.includes("root.document?.documentElement?.lang"),'region UI must match visible document language');
-assert.ok(ui.includes("Original source description (Chinese)"),'original source remains accessible on demand');
+assert.ok(ui.includes("C('source')"),'original source remains accessible on demand');
 assert.ok(ui.includes("new Intl.DisplayNames"),'country names should follow chosen display language');
 assert.ok(ui.includes('englishDescription(item,label)'),'English regional cards need a readable summary');
 const regionUi=require(path.join(dir,'atlas-region-ui.js'));
@@ -127,8 +127,18 @@ assert.equal(regionUi.englishDescription({id:'every011',category:'旅游出行',
 assert.equal(regionUi.englishDescription({id:'every014',category:'实用',description:'新加坡邮政和包裹查询'},'Singapore'),
  'Singapore postal services and parcel tracking');
 const genericDescription=regionUi.englishDescription({id:'unknown',category:'Utilities',description:'第三方网站'},'Japan');
-assert.ok(!/[\\u3400-\\u9fff]/.test(genericDescription),'English fallback should not leak Chinese text');
+assert.ok(!/[\u3400-\u9fff]/.test(genericDescription),'English fallback should not leak Chinese text');
 assert.ok(genericDescription.includes('Japan'));
+const localePack=regionUi.regionalCopy;
+const advertised=require(path.join(dir,'aq-i18n.js')).LOCALES.map(x=>x.code);
+assert.equal(advertised.length,40,'all advertised locales must be kept');
+for(const code of advertised){
+ assert.ok(localePack[code]&&localePack[code].auto&&localePack[code].reviewed,
+   'region selector and trust label missing '+code);
+}
+assert.equal(localePack.ja.auto,'ブラウザーのタイムゾーンを使用（IP検索なし）');
+assert.equal(localePack.fr.everyday,'Services du quotidien');
+assert.equal(localePack['zh-Hant'].unverified,'第三方網站 · 跳轉前確認');
 assert.ok(wiring.includes('regionRecommendations?.render()'),'new catalog must re-render local regions');
 for(const source of [ui,model]){
  for(const forbidden of ['fetch(', 'XMLHttpRequest', 'sendBeacon(', 'navigator.geolocation', 'getCurrentPosition(', 'RTCPeerConnection','document.cookie']){
