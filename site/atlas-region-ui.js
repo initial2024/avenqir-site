@@ -12,7 +12,13 @@
   const el=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;};
   select.replaceChildren();
   const auto=el('option','','根据浏览器时区建议（不读取 IP）');auto.value='auto';select.append(auto);
-  for(const r of api.regions){const option=el('option','',r.label);option.value=r.code;select.append(option);}
+  const areaGroups=new Map();
+  for(const r of api.regions){
+   const label=r.area||'其他地区';
+   let group=areaGroups.get(label);
+   if(!group){group=el('optgroup');group.label=label;areaGroups.set(label,group);select.append(group);}
+   const option=el('option','',r.label);option.value=r.code;group.append(option);
+  }
   function render(){
    const state=model.read(),selected=model.selection();
    toggle.checked=state.enabled;toggle.setAttribute('aria-checked',String(state.enabled));body.hidden=!state.enabled;
