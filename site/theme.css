@@ -329,3 +329,15 @@
 
 /* v8.7: category-search empty feedback. */
 .search-body .atlas-taxonomy-no-match{margin:5px 0;padding:12px;color:var(--ui-sub,#647991);font-size:12px;background:var(--ui-alt,#eef4fa);border-radius:9px}
+
+/* v8.8: compact local regional recommendation, consistent with the opt-in interest panel. */
+.search-body .atlas-region-panel{margin-top:20px}
+.search-body .atlas-region-choice{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:6px 0 16px}
+.search-body .atlas-region-choice label{display:flex;flex-direction:column;gap:4px;color:var(--ui-ink,#233a52)}
+.search-body .atlas-region-choice label strong{font-size:13px}
+.search-body .atlas-region-choice label small{font-size:11px;color:var(--ui-sub,#6a7c91)}
+.search-body #atlasRegionSelect{font:inherit;font-size:12px;min-height:42px;max-width:100%;min-width:200px;padding:9px 12px;background:var(--ui-alt,#edf4fa);border:1px solid var(--ui-line,#ccd7e7);color:var(--ui-ink,#183450);border-radius:10px}
+.search-body #atlasRegionSelect:focus-visible{outline:2px solid var(--ui-link,#3674d6);outline-offset:2px}
+.search-body .atlas-region-panel .atlas-local-cards{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:900px){.search-body .atlas-region-panel .atlas-local-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:540px){.search-body .atlas-region-panel .atlas-local-cards{grid-template-columns:minmax(0,1fr)}.search-body #atlasRegionSelect{width:100%}}
