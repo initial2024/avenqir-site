@@ -40,6 +40,7 @@ jobs:
           node tests/test_orbit_bridge.cjs
           node tests/test_i18n_v91.cjs
           php tests/test_server_url_classification.php
+          php tests/test_admin_security.php
       - name: Validate JavaScript and PHP syntax
         shell: bash
         run: |
