@@ -137,6 +137,34 @@ privilege isolation model, then propose a supported design. No Cloudflare
 Tunnel should expose the remote desktop while its process ownership is
 unverified.
 
+## Transient background child UID test (no new Xvfb)
+
+Owner's latest real AL outputs:
+`runuser -u albrowser -- id -u` prints **998**, and
+`getent passwd 999` identifies `container:x:999:989:Altare container:/root:/bin/sh`.
+This disproves the proposed direct `runuser` UID remapping (at least for
+a foreground `id`). All observed Xvfb screens `:88` through `:91`
+were UID **999**, however; their background creation provenance is not
+yet proven. Do not transfer ownership based solely on PID markers.
+
+Use the new **non-destructive**, three-second child test to compare the
+foreground `runuser` shell and a real background subprocess:
+
+```bash
+bash /opt/avenqir/al_private_browser.sh uid-probe
+```
+
+This prints `AL_PROBE_EXPECTED_UID`, the mode/owner of the local Xvfb
+executable, `AL_PROBE_SHELL_UID`, `AL_PROBE_CHILD_UID` and finally
+`AL_PROBE_COMPLETE=YES`. It launches only a temporary `sleep 3`
+under `albrowser`, waits for it to exit, and creates **no** display,
+browser profile, VNC listener, or login token. If both shell and child
+stay at 998, the mismatch is specific to Xvfb executable/process
+provenance and must not be papered over by UID-relaxed validation.
+If child shows 999, investigate background process policy with Altare.
+Do not run `start` or open Cloudflare Tunnel until the ownership
+boundary is understood.
+
 ## AL Console: curl (77) / missing root CA certificates
 
 A **real device screenshot** showed:
