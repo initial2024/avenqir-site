@@ -150,7 +150,7 @@
     button.addEventListener('click',open);close.addEventListener('click',hide);
     input.addEventListener('input',update);
     input.addEventListener('keydown',e=>{
-      if(e.key==='Enter'){const first=results.querySelector('a');if(first){e.preventDefault();first.click();location.assign(first.href);}}
+      if(e.key==='Enter'){const first=results.querySelector('a');if(first){e.preventDefault();first.click();}}
     });
     dialog.addEventListener('click',e=>{if(e.target===dialog)hide();});
     dialog.addEventListener('close',()=>{button.setAttribute('aria-expanded','false');});
