@@ -55,6 +55,21 @@ class ALPrivateBrowserSecurity(unittest.TestCase):
 
         self.assertIn("AL_PRIVATE_VNC_LOCAL_ONLY=YES", source)
 
+    def test_altare_user_namespace_uid_mismatch_blocks_new_displays(self):
+        source = SETUP.read_text()
+        start = source[source.index("start_browser(){"):source.index("diagnose_browser(){")]
+        # Preflight must run before selecting/spawning a new Xvfb.
+        self.assertLess(start.index("uid_mapping_guard"), start.index("select_browser_display"))
+        self.assertIn('runuser -u "$U" -- id -u', source)
+        self.assertIn('expected="$(id -u "$U")"', source)
+        self.assertIn('AL_UID_EXPECTED=$expected', source)
+        self.assertIn('AL_UID_RUNUSER=$observed', source)
+        self.assertIn('uid-check) need_root; uid_mapping_diagnostic ;;', source)
+        self.assertIn('recorded Xvfb :$n PID $pid runs as UID $uid', source)
+        self.assertIn('refusing to spawn another display', source)
+        self.assertNotIn('kill 7537', source)
+        self.assertNotIn('rm /tmp/.X91-lock', source)
+
     def test_auto_uses_pipe_not_process_arguments(self):
         shell=SETUP.read_text()
         helper=(ROOT/"ops/al_vnc_password_auto.py").read_text()
