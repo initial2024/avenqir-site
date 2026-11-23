@@ -24,7 +24,7 @@
   }
   function validateBookmarks(value) {
     if (!Array.isArray(value) || value.length > 200) return false;
-    const ids = new Set(), urls = new Set();
+    const ids = new Set();
     for (const x of value) {
       if (!isObj(x) || typeof x.id !== 'string' || !x.id || x.id.length > 80 ||
           typeof x.name !== 'string' || !x.name.trim() || x.name.length > 80 ||
@@ -33,8 +33,8 @@
           !safeURL(x.url) || !validNum(x.at, 1, 1e15) ||
           typeof x.fav !== 'boolean' || typeof x.todo !== 'boolean' ||
           typeof x.custom !== 'boolean') return false;
-      if (ids.has(x.id) || urls.has(x.url)) return false;
-      ids.add(x.id); urls.add(x.url);
+      if (ids.has(x.id)) return false;
+      ids.add(x.id);
     }
     return true;
   }
