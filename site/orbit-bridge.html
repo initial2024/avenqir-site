@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="referrer" content="no-referrer"><meta name="theme-color" content="#101c31">
+<meta name="description" content="Orbit Hub × AVENQIR: local-only verification-email assistant and a clear, separate entry point to Orbit temporary mail.">
+<title>Orbit Hub × AVENQIR | Private Companion</title><link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="common.css?v=12"><link rel="stylesheet" href="theme.css?v=25"><link rel="manifest" href="manifest.webmanifest"></head>
+<body><header class="headbar"><div class="wrap head-inner"><a class="logo" href="index.html"><span class="logoicon">⬡</span> AVENQIR</a>
+<a class="aq-theme-link" data-aq-theme-link="1" aria-label="Change appearance" href="appearance.html">◐ <span class="aq-theme-link-label">Appearance</span></a>
+<button type="button" class="menu-toggle" aria-controls="global-nav" aria-expanded="false" aria-label="Open navigation">☰ <span>Menu</span></button>
+<nav id="global-nav" class="main-nav" aria-label="Site navigation"><a href="index.html">Home</a><a href="directory.html">Websites</a><a href="bookmarks.html">Bookmarks</a><a href="tools.html">Tools</a><a href="transfer.html">Transfer</a><a class="active" aria-current="page" href="orbit-bridge.html">Orbit Hub</a></nav>
+<span class="microbadge">v9.1</span></div></header>
+<main class="wrap">
+<section class="hero scenic-hero compact-hero"><div class="eyebrow">LOCAL FIRST / CROSS-PRODUCT COMPANION</div><h1 id="orbit-heading">Orbit Hub × AVENQIR · Companion workflow</h1>
+<p class="subline" id="orbit-body">A safe bridge between two independent products — not account sync.</p></section>
+<div class="orbit-bridge-wrap">
+<section class="panel orbit-companion-panel" aria-labelledby="orbit-step-title">
+<div class="sectionhead"><div><span class="label">ORBIT HUB / MAIL</span><h2 id="orbit-step-title">A three-step workflow</h2><p id="orbit-principle">Open Orbit Inbox separately. Any invitation, mailbox token, password or administrator session stays in Orbit.</p></div></div>
+<ol class="orbit-guide">
+<li id="orbit-step-1">Open Orbit Inbox and use your own authorized mailbox session.</li>
+<li id="orbit-step-2">For a non-sensitive test message, optionally paste only the code-bearing excerpt below.</li>
+<li id="orbit-step-3">Review candidates locally; copy the one you need yourself. Never trust links merely because they appear in email.</li>
+</ol>
+<a class="btn primary orbit-external" id="orbit-open" href="leave.html?url=https%3A%2F%2Finbox.kango99w.de%2F&amp;name=Orbit%20Inbox" rel="noopener noreferrer" referrerpolicy="no-referrer">Open Orbit Inbox (external website)</a>
+<p class="hint" id="orbit-code-help">Suitable for low-risk registration or development tests. Do not use temporary mail for banking, identity recovery, payment or important accounts.</p>
+</section>
+<section class="panel orbit-companion-panel" aria-labelledby="orbit-tool-title">
+<div class="sectionhead"><div><span class="label">CLIENT-SIDE / NO EMAIL API</span><h2 id="orbit-tool-title">Local-only verification email assistant</h2>
+<p id="orbit-tool-privacy">No mailbox access, API calls, cookies, cloud sync or saved email text. Nothing is analyzed until you press Scan. Refreshing clears this tool.</p></div></div>
+<label for="orbitPaste" id="orbit-paste-label">Paste an excerpt from your own message</label>
+<textarea id="orbitPaste" rows="6" maxlength="32000" autocomplete="off" spellcheck="false" placeholder="Example: Your verification code is 123456"></textarea>
+<div class="btnrow"><button class="btn primary" type="button" id="orbitScan"><span id="orbit-scan">Scan in browser only</span></button>
+<button class="btn ghost" type="button" id="orbitClear"><span id="orbit-clear">Clear all</span></button></div>
+<p role="status" id="orbitStatus" class="hint" aria-live="polite"></p>
+<div class="orbit-output">
+<div><h3 id="orbit-result-codes">Possible verification codes</h3><div id="orbitCodes" class="orbit-results"></div></div>
+<div><h3 id="orbit-result-links">Found HTTPS URLs (unverified)</h3><div id="orbitLinks" class="orbit-results"></div></div>
+</div>
+<p id="orbit-footnote" class="hint">Scanning identifies text patterns, not sender authenticity or phishing. URLs may contain secret tokens; links are displayed by domain only and are never opened automatically.</p>
+</section>
+<section class="panel orbit-companion-panel"><h2>Trust boundaries</h2><p id="orbit-no-backend">Orbit’s production account and mail data are never shared with AVENQIR.</p>
+<a id="orbit-home" class="btn ghost" href="index.html">Back to AVENQIR</a></section>
+</div></main><footer class="wrap footer"><span>© 2026 AVENQIR · LOCAL FIRST</span><span><a href="privacy.html">Privacy</a> · <a href="disclaimer.html">Disclaimer</a></span></footer>
+<script src="link-gate.js?v=20" defer></script><script src="orbit-bridge.js?v=25" defer></script><script src="site.js?v=25" defer></script>
+<script src="theme.js?v=15" defer></script></body></html>
