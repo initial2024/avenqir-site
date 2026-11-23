@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070c16">
+<meta name="description" content="AVENQIR 本地书签、笔记与游戏记录统一备份迁移，数据不上传服务器。">
+<title>本地数据迁移 · AVENQIR</title><link rel="stylesheet" href="common.css?v=9"><link rel="manifest" href="manifest.webmanifest">
+<style>
+.transfer-card{max-width:870px;margin:18px auto 32px;padding:clamp(16px,4vw,28px)}
+.transfer-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.transfer-choice-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.transfer-choice{display:flex;gap:10px;align-items:flex-start;padding:15px;border:1px solid #749cbd66;background:#112b41;border-radius:14px;cursor:pointer}
+.transfer-choice input{width:19px;min-width:19px;height:19px;margin:4px 0 0;accent-color:#79d6ff}
+.transfer-choice strong,.transfer-choice small{display:block}.transfer-choice strong{color:#f1f7ff}.transfer-choice small{font-size:12px;line-height:1.5;color:#a8c4d9;margin-top:3px}
+.transfer-preview-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #ffffff22;margin:0}
+.transfer-preview-row span{color:#a8d8ed}
+.transfer-status{padding:12px 14px;border:1px solid #60b4c566;background:#102b3c;border-radius:11px;overflow-wrap:anywhere}
+.transfer-status.transfer-error{color:#ffcfcf;border-color:#ed9494aa;background:#3c202b}
+.transfer-file{width:100%;max-width:100%;margin:8px 0 12px}
+.transfer-warning{border-left:3px solid #e3be77;padding:10px 14px;background:#422f1b66;color:#ffe9c5;border-radius:4px}
+.transfer-desc{color:#bacfe3}
+@media(max-width:690px){.transfer-choice-list{grid-template-columns:1fr}.transfer-choice{padding:12px}.transfer-actions .btn{flex:1 1 140px;text-align:center}}
+</style></head>
+<body>
+<header class="headbar"><div class="wrap head-inner"><a class="logo" href="index.html"><span class="logoicon">⬡</span> AVENQIR</a><button type="button" class="menu-toggle" aria-controls="global-nav" aria-expanded="false" aria-label="打开导航菜单">☰ <span>菜单</span></button><nav id="global-nav" class="main-nav" aria-label="网站导航"><a href="index.html">首页</a><a href="directory.html">公开网址</a><a href="bookmarks.html">私人书签</a><a href="notes.html">笔记</a><a href="daily.html">日常助手</a><a href="tools.html">工具箱</a><a href="health.html">站点状态</a><a href="backup.html" class="active" aria-current="page">数据迁移</a></nav><span class="microbadge">v8.2</span></div></header>
+<main class="wrap">
+<section class="hero scenic-hero compact-hero"><div class="eyebrow">LOCAL FIRST / PORTABLE DATA</div><h1>一个文件，<span class="grad">带走你的本地记录。</span></h1><p class="subline">一次整理私人书签、笔记、专注计时与小游戏存档。整个过程在当前浏览器完成；没有服务器上传，也不要求注册。</p></section>
+<section class="panel transfer-card">
+<h2>选择需要备份或恢复的数据</h2><p class="transfer-desc">所有选择仅影响本次导入导出。不会自动同步到其他浏览器。</p>
+<div id="transferCategories" class="transfer-choice-list" role="group" aria-label="数据类别"></div>
+<div class="divider"></div>
+<h3>① 导出到手机</h3><p class="hint">点击后生成 JSON 备份文件，保存在浏览器下载目录中。没有记录的类别会跳过。</p>
+<div class="transfer-actions"><button type="button" class="btn primary" id="transferExport">导出选中类别的本地备份</button><a class="btn ghost" href="bookmarks.html#transfer">单独管理书签</a></div>
+<hr style="border:0;border-top:1px solid #ffffff22;margin:24px 0">
+<h3>② 从备份恢复</h3><p class="hint">选择此前生成的 JSON，先校验和预览。只会覆盖你勾选且文件中存在的数据类别；不会清空其他类别。</p>
+<label class="smalllabel" for="transferInput">选择备份文件（最大 2 MB）</label>
+<input class="transfer-file" id="transferInput" type="file" accept=".json,application/json">
+<div id="transferPreview" aria-live="polite"></div>
+<div class="transfer-actions"><button type="button" class="btn primary" id="transferRestore" disabled>确认恢复选中数据</button><button type="button" class="btn ghost" id="transferClear">清除预览</button></div>
+<p id="transferStatus" class="transfer-status" role="status" aria-live="polite">正在准备本地校验模块…</p>
+<p class="transfer-warning"><strong>隐私提醒：</strong>导出的 JSON <strong>未加密</strong>，拿到文件的人可以阅读其中的书签和笔记。不要在公共电脑上下载，也不要把文件发到公开仓库、聊天群或网站后台。迁移后建议及时保管或删除临时副本。</p>
+<p class="hint">如果正在其他标签页编辑笔记，请先保存并关闭这些标签页，再执行恢复。导入后刷新相应页面才能看到新内容；当前页面不负责同步远端或保存数据库内容。</p>
+</section>
+</main><footer class="wrap footer"><span>© 2026 AVENQIR · LOCAL FIRST</span><span><a href="privacy.html">隐私说明</a> · <a href="disclaimer.html">免责声明</a> · <a href="index.html">回到首页</a></span></footer>
+<script src="backup-schema.js?v=1" defer></script><script src="backup.js?v=1" defer></script><script src="site.js?v=9" defer></script>
+</body></html>
