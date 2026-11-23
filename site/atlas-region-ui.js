@@ -5,10 +5,11 @@
  // The document language is the language actually shown to the visitor. Use it as
  // the authoritative presentation signal when a long-lived PWA has stale modules.
  const locale=()=>{
+  // The language currently rendered in the DOM wins, including zh-Hant.
+  // A stale translated module must never override the visitor's selection.
   const page=String(root.document?.documentElement?.lang||'').trim();
   const setting=String(root.AVENQIR_I18N?.locale||'').trim();
-  if(page&&!/^zh(?:-|$)/i.test(page))return page;
-  return setting||page||'en';
+  return page||setting||'en';
  };
  const E=()=>!/^zh(?:-Hans|-CN|$)/i.test(locale());
  const T=(zh,en)=>E()?en:zh;
