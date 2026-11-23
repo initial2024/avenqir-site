@@ -1,8 +1,8 @@
 "use strict";
 /* AVENQIR v8.3 offline shell. No private documents, PHP, or API records cached. */
-const CACHE = 'avenqir-v83-static-20261123';
+const CACHE = 'avenqir-v83-static-20261123b';
 const ASSETS = [
-  './index.html','./directory.html','./directory.js','./directory-search.css','./directory-seed.json',
+  './index.html','./directory.html','./directory.js','./directory-search.css','./directory-seed.json','./leave.html','./leave.js',
   './module-switcher.js','./quick-search.js','./site.js','./common.css','./theme.js','./theme.css','./link-gate.js',
   './bookmarks.html','./bookmarks.js','./netscape-format.js','./notes.html','./notes.js','./notes-enhance.js',
   './transfer.html','./transfer-schema.js','./device-transfer.js',
