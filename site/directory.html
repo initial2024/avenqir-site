@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f5f8fd"><meta name="description" content="AVENQIR Link Atlas：独立策展的公开网站目录。搜索网站、按分类发现资源，支持多设备访问。">
+<meta name="theme-color" content="#f5f8fd"><meta name="referrer" content="no-referrer"><meta name="description" content="AVENQIR Link Atlas：独立策展的公开网站目录。搜索网站、按分类发现资源，支持多设备访问。">
 <title>网站搜索 · AVENQIR Link Atlas</title>
 <link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="common.css?v=8"><link rel="stylesheet" href="directory-search.css?v=8"><link rel="manifest" href="manifest.webmanifest"></head>
-<body class="search-body"><header class="headbar"><div class="wrap head-inner"><a class="logo" href="index.html"><span class="logoicon">⬡</span> AVENQIR</a><button type="button" class="menu-toggle" aria-controls="global-nav" aria-expanded="false" aria-label="打开导航菜单">☰ <span>菜单</span></button><nav id="global-nav" class="main-nav" aria-label="网站导航"><a href="index.html">首页</a><a href="directory.html" class="active" aria-current="page">网站搜索</a><a href="bookmarks.html">我的书签</a><a href="notes.html">笔记</a><a href="fun.html">小游戏</a><a href="daily.html">日常</a><a href="check.html">网络检测</a><a href="tools.html">工具箱</a><a href="projects.html">GitHub</a><a href="domains.html">DNS</a><a href="logs.html">日志</a><a href="feedback.php">留言反馈</a></nav><span class="microbadge">ATLAS / v8</span></div></header>
+<body class="search-body"><header class="headbar"><div class="wrap head-inner"><a class="logo" href="index.html"><span class="logoicon">⬡</span> AVENQIR</a><button type="button" class="menu-toggle" aria-controls="global-nav" aria-expanded="false" aria-label="打开导航菜单">☰ <span>菜单</span></button><nav id="global-nav" class="main-nav" aria-label="网站导航"><a href="index.html">首页</a><a href="directory.html" class="active" aria-current="page">网站搜索</a><a href="bookmarks.html">我的书签</a><a href="notes.html">笔记</a><a href="fun.html">小游戏</a><a href="daily.html">日常</a><a href="check.html">网络检测</a><a href="tools.html">工具箱</a><a href="projects.html">GitHub</a><a href="domains.html">DNS</a><a href="logs.html">日志</a><a href="feedback.php">留言反馈</a></nav><span class="microbadge">ATLAS / v8.3</span></div></header>
 <main class="directory-main">
 <section class="search-hero" aria-labelledby="atlasTitle">
  <div class="atlas-icon" aria-hidden="true">✦</div><p class="atlas-kicker">AVENQIR / LINK ATLAS</p>
@@ -13,7 +13,7 @@
   <div class="atlas-search-wrap"><span class="atlas-magnifier" aria-hidden="true">⌕</span><input id="atlasQuery" type="search" enterkeyhint="search" maxlength="140" autocomplete="off" aria-label="搜索网站名称、网址或介绍" placeholder="搜索网站、工具、主题或域名…" autofocus><button type="button" class="atlas-clear" id="atlasClear" aria-label="清除搜索">×</button><button type="submit" class="atlas-submit">搜索</button></div>
   <div id="atlasSuggestions" class="atlas-suggestions" hidden role="listbox" aria-label="搜索建议"></div>
  </form>
- <div class="atlas-search-actions"><span class="kbd-hint">按 <kbd>/</kbd> 快速搜索</span><button type="button" class="atlas-random" id="atlasRandom">↗ 随机发现</button><span class="atlas-privacy">搜索本站目录，无跟踪或自动第三方请求</span></div>
+ <div class="atlas-search-actions"><span class="kbd-hint">按 <kbd>/</kbd> 快速搜索</span><button type="button" class="atlas-random" id="atlasRandom">↗ 随机发现</button><span class="atlas-privacy">搜索本站目录，不自动联系第三方；跳转时按来源核对情况提示</span></div>
 </section>
 <div class="atlas-layout">
 <section class="atlas-content" aria-labelledby="resultsTitle">
@@ -28,4 +28,16 @@
 <aside class="atlas-aside" aria-label="快捷功能"><section class="atlas-side-card"><h2>探索分类</h2><p>从收录的网址中即时生成</p><div id="atlasCategoryCount" class="atlas-category-count"></div></section><section class="atlas-side-card"><h2>随时打开</h2><a href="bookmarks.html">☆ 我的私人书签 <span>↗</span></a><a href="tools.html">⌘ 常用工具箱 <span>↗</span></a><a href="fun.html">◈ 解压小游戏 <span>↗</span></a><a href="check.html">◉ 浏览器诊断 <span>↗</span></a><a href="feedback.php?type=link">✉ 推荐网址 / 提交反馈 <span>↗</span></a></section><section class="atlas-side-card"><h2>关于收录</h2><p>这是人工维护的独立网址目录，并非可爬取全网的搜索引擎。结果只来自本站已收录的内容，不代表质量保证或安全背书。</p><a class="atlas-policy" href="feedback.php?type=broken">报告失效链接 ↗</a><a class="atlas-policy" href="disclaimer.html">免责声明与外部链接提醒 ↗</a></section></aside>
 </div></main>
 <footer class="atlas-footer"><div class="atlas-footer-inner"><span>© 2026 AVENQIR · Link Atlas</span><span><a href="index.html">网站首页</a>　·　<a href="privacy.html">隐私说明</a>　·　<a href="disclaimer.html">免责声明</a></span></div></footer>
-<script src="directory.js?v=8" defer></script><script src="site.js?v=8" defer></script></body></html>
+<dialog id="atlasExternalDialog" class="atlas-external-dialog" aria-labelledby="atlasExternalTitle" aria-describedby="atlasExternalNotice">
+<form method="dialog" class="atlas-external-dialog-inner">
+ <div class="atlas-external-symbol" aria-hidden="true">↗</div>
+ <h2 id="atlasExternalTitle">即将访问第三方网站</h2>
+ <p id="atlasExternalNotice">该网站未经过 AVENQIR 的官方来源核对，本站不能保证其持续可用、安全性、收费方式或隐私政策。</p>
+ <p class="atlas-external-host"><b id="atlasExternalName"></b><span id="atlasExternalHost"></span></p>
+ <p id="atlasExternalUrl" class="atlas-external-url"></p>
+ <p class="atlas-external-warn">⚠️ 请核对浏览器地址栏。不要在不确定的网站输入密码、验证码、API Token 或支付信息。HTTPS 并不代表网站一定安全。</p>
+ <div class="atlas-external-dialog-actions">
+  <button id="atlasExternalCancel" class="btn ghost" type="submit" value="cancel">取消返回</button>
+  <button id="atlasExternalGo" class="btn primary" type="button">我了解风险，继续访问</button>
+ </div>
+</form></dialog><script src="link-gate.js?v=1" defer></script><script src="directory.js?v=9" defer></script><script src="site.js?v=8" defer></script></body></html>
