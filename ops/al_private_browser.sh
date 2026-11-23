@@ -109,11 +109,15 @@ start_browser(){
     runuser -u "$U" -- sh -c 'DISPLAY=:88 nohup x11vnc -display :88 -localhost -rfbport 5901 -rfbauth "$HOME/.vnc/passwd" -forever -shared -quiet > "$HOME/vnc.log" 2>&1 </dev/null &'
   fi
   sleep 2
+  command -v ss >/dev/null || fail "iproute2/ss unavailable; cannot verify loopback-only VNC listener"
   if command -v ss >/dev/null; then
     ss -ltn | grep -Eq '127\.0\.0\.1:5901[[:space:]]' || fail "VNC did not bind 127.0.0.1:5901 (no public fallback)"
     if ss -ltn | grep -Eq '(^|[[:space:]])(0\.0\.0\.0|\*):5901[[:space:]]'; then
       fail "Unexpected publicly reachable VNC interface: STOP and inspect"
     fi
+  fi
+  if ! pgrep -u "$U" -f '/opt/google/chrome/chrome.*--user-data-dir=' >/dev/null; then
+    fail "Chrome is not running; inspect $PROFILE/browser.log; do not disable Chrome sandbox"
   fi
   echo "AL_PRIVATE_VNC_LOCAL_ONLY=YES"
   echo "Open Chrome via Cloudflare Tunnel TCP localhost:5901 + Access VNC browser rendering."
