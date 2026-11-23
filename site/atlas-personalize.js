@@ -24,7 +24,16 @@
    const current=()=>today(clock());
    function read(){
      if(!storage)return blank();
-     try{return clean(JSON.parse(storage.getItem(KEY)||'null'),current());}catch{return blank();}
+     try{
+       const raw=storage.getItem(KEY);
+       if(!raw)return blank();
+       const state=clean(JSON.parse(raw),current());
+       // Expired category aggregates are physically removed on the next local visit.
+       if(state.enabled&&JSON.stringify(state)!==raw){
+         try{storage.setItem(KEY,JSON.stringify(state));}catch{}
+       }
+       return state;
+     }catch{return blank();}
    }
    function save(state){
      if(!storage)return false;
