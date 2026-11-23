@@ -1,7 +1,7 @@
 'use strict';
 /* Register offline shell after page load. Offline is best-effort only. */
 if('serviceWorker' in navigator && location.protocol==='https:') {
-  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=15',{updateViaCache:'none'}).catch(()=>{}));
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=16',{updateViaCache:'none'}).catch(()=>{}));
 }
 
 /* v7 responsive navigation, no background network polling. */
