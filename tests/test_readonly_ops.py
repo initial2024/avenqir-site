@@ -97,8 +97,8 @@ class ReportTests(unittest.TestCase):
         fake_response = MagicMock()
         fake_response.status = 200
         fake_response.read.return_value = b""
-        with patch.object(audit, "safe_public_https", return_value=True), \\
-             patch.object(audit.OPENER, "open") as opened:
+        with (patch.object(audit, "safe_public_https", return_value=True),
+              patch.object(audit.OPENER, "open") as opened):
             opened.return_value.__enter__.return_value = fake_response
             result = audit.request("https://example.org/", method="HEAD")
         self.assertNotIn("body", result)
