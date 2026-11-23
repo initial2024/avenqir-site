@@ -3,6 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const base=path.resolve(__dirname,'../site');
+require(path.join(base,'atlas-expansion.js'));
 const specialist=require(path.join(base,'atlas-specialist.js'));
 const paths=require(path.join(base,'atlas-paths.js'));
 const gate=require(path.join(base,'link-gate.js'));
