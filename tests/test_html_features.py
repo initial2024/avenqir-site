@@ -30,8 +30,9 @@ class Features(unittest.TestCase):
           'tools.html':['codec','codecInput','codecB64Encode','codecB64Decode','codecUrlEncode','codecUrlDecode','color','colorHex','colorPicker'],
           'notes.html':['notePreviewToggle','noteMarkdownPreview','diffTrim','diffCase','timeOutput'],
           'bookmarks.html':['exportNetscape','importNetscape','netscapeMode','netscapePreview','confirmNetscape'],
-          'directory.html':['atlasExternalDialog','atlasExternalGo','atlasExternalCancel','atlasExternalHost'],
-          'leave.html':['leaveContinue','leaveFullUrl'],
+          'directory.html':['atlasExternalDialog','atlasExternalGo','atlasExternalCancel','atlasExternalHost','atlasRemember','atlasClearApprovals'],
+          'appearance.html':['aqThemeStatus'],
+          'leave.html':['leaveContinue','leaveFullUrl','leaveRemember'],
           'index.html':[]
         }
         for file,required in expected.items():
@@ -43,13 +44,22 @@ class Features(unittest.TestCase):
             for target in p.internal_hrefs:
                 if target and ('.' in target or target.endswith('/')):
                     self.assertTrue((SITE/target).is_file(),file+' broken page link '+target)
+    def test_visible_mode_on_all_pages(self):
+        for f in SITE.glob('*.html'):
+            if f.name=='deploy-status.html':continue
+            html=f.read_text('utf-8')
+            if '<header' not in html:continue
+            self.assertIn('data-aq-theme-link',html,f.name+' missing static mode link')
+            self.assertIn('src="theme.js?v=12"',html,f.name+' missing explicit theme')
+            self.assertIn('href="theme.css?v=12"',html,f.name+' missing theme css')
+
     def test_service_worker_entries(self):
         s=(SITE/'sw.js').read_text('utf-8')
         entries=re.findall(r"'\./([^']+)'",s.split('function isChallenge',1)[0])
         self.assertGreaterEqual(len(entries),35)
         self.assertEqual(len(entries),len(set(entries)))
         for entry in entries:self.assertTrue((SITE/entry).is_file(),entry)
-        for asset in ('quick-search.js','device-transfer.js','transfer-schema.js','transfer.html','notes-enhance.js','tool-addons.js','netscape-format.js','theme.js','theme.css','link-gate.js','leave.html','leave.js'):
+        for asset in ('quick-search.js','device-transfer.js','transfer-schema.js','transfer.html','notes-enhance.js','tool-addons.js','netscape-format.js','theme.js','theme.css','link-gate.js','leave.html','leave.js','appearance.html'):
             self.assertIn(asset,entries)
         self.assertIn('slowAES.decrypt',s)
         self.assertIn('/_private/',s)
