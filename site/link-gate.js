@@ -44,7 +44,7 @@
     if(typeof raw!=='string'||raw.length>1800)return null;
     try{
       const url = new URL(raw);
-      if(!['https:','http:'].includes(url.protocol)||!url.hostname||url.username||url.password||url.hash)return null;
+      if(!['https:','http:'].includes(url.protocol)||!url.hostname||url.username||url.password)return null;
       return url;
     }catch{return null;}
   }
