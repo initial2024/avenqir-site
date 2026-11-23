@@ -6,6 +6,9 @@
  const linkGate=window.AVENQIR_LINK_GATE;
  const safety=window.AVENQIR_ATLAS_SAFETY;
  const finder=window.AVENQIR_ATLAS_FIND;
+ const locale=()=>window.AVENQIR_I18N;
+ const trCategory=name=>locale()?.category(name)||name;
+ const english=()=>!!locale()&&!locale().locale.startsWith('zh-');
  const externalDialog=$('atlasExternalDialog');
  const externalGo=$('atlasExternalGo');
  const rememberBox=$('atlasRemember');
@@ -67,10 +70,8 @@
  function trackOpen(url){
    const item=records.find(x=>x.url===url);
    if(item)localRecommendations?.recordOpen(item.category);
-   if($('atlasSort')?.value==='recent'){
-     sessionOpens=[url,...sessionOpens.filter(x=>x!==url)].slice(0,100);
-     try{sessionStorage.setItem(recentKey,JSON.stringify(sessionOpens));}catch{}
-   }
+   sessionOpens=[url,...sessionOpens.filter(x=>x!==url)].slice(0,100);
+   try{sessionStorage.setItem(recentKey,JSON.stringify(sessionOpens));}catch{}
  }
  try{const v=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(v))favorites=v.filter(x=>typeof x==='string').slice(0,500)}catch{}
  input.value=query;
@@ -99,14 +100,14 @@
  function storeFavorites(){try{localStorage.setItem(key,JSON.stringify(favorites))}catch{}}
  function drawGuide(){
    const box=$('atlasGuide'),flow=paths.flows.find(f=>f.id===selectedFlow);
-   const guide=guides?.forFlow(flow);if(!box)return;
+   const guide=guides?.forFlow(flow,locale()?.locale);if(!box)return;
    box.hidden=!guide;if(!guide)return;
-   $('atlasGuideTitle').textContent='操作引导 · '+flow.title;
+   $('atlasGuideTitle').textContent=(english()?'Guided steps · ':'操作引导 · ')+guide.title;
    $('atlasGuideOutcome').textContent=guide.outcome;
    $('atlasGuideCheck').textContent=guide.check;
    const steps=$('atlasGuideSteps');steps.replaceChildren();
    const marked=guideProgress.get(flow.id)||new Set();
-   function progress(){const n=marked.size;$('atlasGuideProgress').textContent='已确认 '+n+' / '+guide.steps.length+' 步（仅本页）';}
+   function progress(){const n=marked.size;$('atlasGuideProgress').textContent=english()?'Completed '+n+' / '+guide.steps.length+' (this page only)':'已确认 '+n+' / '+guide.steps.length+' 步（仅本页）';}
    for(const step of guide.steps){
      const li=el('li','atlas-guide-step');const top=el('div','atlas-guide-step-head');
      const label=el('label','atlas-guide-check-label');const check=el('input');check.type='checkbox';check.checked=marked.has(step.number);
@@ -135,8 +136,9 @@
    for(const f of paths.flows){
      const b=el('button','atlas-flow-card'+(selectedFlow===f.id?' selected':''));b.type='button';
      b.setAttribute('aria-pressed',String(selectedFlow===f.id));
-     b.append(el('span','atlas-flow-icon',f.icon),el('strong','',f.title),el('small','',f.subtitle));
-     const note=el('span','atlas-flow-note',f.note);b.append(note);
+     const localized=guides?.forFlow(f,locale()?.locale);
+     b.append(el('span','atlas-flow-icon',f.icon),el('strong','',localized?.title||f.title),el('small','',localized?.subtitle||f.subtitle));
+     const note=el('span','atlas-flow-note',english()?'Follow each step; check external sources before using them.':f.note);b.append(note);
      b.addEventListener('click',()=>{
        selectedFlow=selectedFlow===f.id?'':f.id;category='';multiCategories.clear();groupId='';mode='all';query='';input.value='';limit=24;
        const u=new URL(location.href);u.searchParams.delete('q');history.replaceState(null,'',u.pathname+u.search+u.hash);
@@ -147,7 +149,7 @@
      wrap.append(b);
    }
    const reset=$('atlasResetFlow');if(reset)reset.hidden=!selectedFlow;
-   const info=$('atlasFlowStatus');if(info)info.textContent=selectedFlow?'已选择：'+paths.flows.find(f=>f.id===selectedFlow).title+' · 按推荐步骤排列':'选择一个任务场景，直接查看对应资源和使用顺序';
+   const info=$('atlasFlowStatus');if(info)info.textContent=selectedFlow?(english()?'Selected: '+(guides?.forFlow(paths.flows.find(f=>f.id===selectedFlow),locale()?.locale)?.title||selectedFlow)+' · ordered steps':'已选择：'+paths.flows.find(f=>f.id===selectedFlow).title+' · 按推荐步骤排列'):(english()?'Choose a task to see the recommended steps and tools.':'选择一个任务场景，直接查看对应资源和使用顺序');
    drawGuide();
  }
  $('atlasResetFlow')?.addEventListener('click',()=>{selectedFlow='';drawPaths();draw();});
@@ -182,7 +184,7 @@
      const makeGroup=(id,label,desc,count,iconText)=>{
        const button=el('button','atlas-group'+(groupId===id?' selected':''));button.type='button';
        button.setAttribute('aria-pressed',String(groupId===id));
-       button.append(el('span','atlas-group-icon',iconText),el('strong','',label+' · '+count),el('small','',desc));
+       button.append(el('span','atlas-group-icon',iconText),el('strong','',(locale()?.group(id)||label)+' · '+count),el('small','',locale()?.group(id,'description')||desc));
        button.addEventListener('click',()=>{
          groupId=id;category='';multiCategories.clear();selectedFlow='';limit=24;
          if($('atlasCategorySearch'))$('atlasCategorySearch').value='';
@@ -208,7 +210,7 @@
    if(!expandedCategories&&!needle)entries=entries.slice(0,12);
    cats.replaceChildren();
    const add=(name,count)=>{
-     const title=name?name+' · '+count:'全部 · '+totalInGroup;
+     const title=name?trCategory(name)+' · '+count:(english()?'All · ':'全部 · ')+totalInGroup;
      const active=name?(multiOn()?multiCategories.has(name):category===name):multiOn()?multiCategories.size===0:category==='';
      const button=el('button','atlas-cat'+(active?' selected':''),title);
      button.type='button';button.setAttribute('aria-pressed',String(active));
@@ -235,7 +237,7 @@
    if(side){
      side.replaceChildren();
      categories.slice(0,16).forEach(([name,count])=>{
-       let button=el('button','',name+' · '+count);button.type='button';
+       let button=el('button','',trCategory(name)+' · '+count);button.type='button';
        button.addEventListener('click',()=>{
          groupId=taxonomy.groupFor(name)||'other';category=name;multiCategories.clear();if($('atlasMultiCategory'))$('atlasMultiCategory').checked=false;expandedCategories=true;limit=24;
          if(inputCategory)inputCategory.value='';
@@ -284,14 +286,14 @@
  }
  function draw(){const list=filtered(), shown=list.slice(0,limit);results.replaceChildren();$('atlasEmpty').hidden=list.length!==0;
    renderSafetyAudit();
-   $('resultsTitle').textContent=mode==='saved'?'我的收藏':selectedFlow?paths.flows.find(f=>f.id===selectedFlow).title:query?'搜索结果':category?category+' · 网站':groupId?((taxonomy.groups||[]).find(g=>g.id===groupId)?.title||'其他收录'):'精选网站';
+   $('resultsTitle').textContent=mode==='saved'?'我的收藏':selectedFlow?paths.flows.find(f=>f.id===selectedFlow).title:query?'搜索结果':category?trCategory(category)+(english()?' · Sites':' · 网站'):groupId?(locale()?.group(groupId)||(taxonomy.groups||[]).find(g=>g.id===groupId)?.title||'Other websites'):(english()?'Selected websites':'精选网站');
    summary.textContent=(query?'匹配':'目录')+' '+list.length+' 个网站 · 显示 '+shown.length+' 条 / 总目录 '+records.length+' 条'+(multiOn()&&multiCategories.size?' · 多选分类：'+[...multiCategories].join('、'):category?' · 分类：'+category:'')+(groupId?' · 当前主题分组已筛选':'');
    const counter=$('atlasLiveCount');if(counter)counter.textContent='已整理 '+records.length+' 个独立网址 · '+paths.flows.length+' 条任务路径 · '+new Set(records.map(x=>x.category)).size+' 个分类';
    const more=$('atlasMore'),all=$('atlasShowAll');more.textContent='再显示 '+Math.min(24,Math.max(0,list.length-limit))+' 条 ↓';
    if(all){all.hidden=list.length<=shown.length;all.textContent='一次显示全部 '+list.length+' 条';}
    for(const x of shown){const url=safeUrl(x.url);if(!url)continue;const host=new URL(url).hostname;
      const card=el('article','atlas-result');const icon=el('div','atlas-result-icon',x.name.slice(0,1).toLocaleUpperCase());icon.setAttribute('aria-hidden','true');
-     const data=el('div','atlas-result-info');const hostrow=el('div','atlas-hostline');hostrow.append(el('span','atlas-host',host),el('span','atlas-chip',x.category||'其他'));data.append(hostrow);
+     const data=el('div','atlas-result-info');const hostrow=el('div','atlas-hostline');hostrow.append(el('span','atlas-host',host),el('span','atlas-chip',trCategory(x.category)||'Other'));data.append(hostrow);
      const a=el('a','atlas-result-title',x.name+' ↗');const reviewed=!!linkGate?.officialSourceReviewed(url);const permitted=isAllowed(url);a.href=permitted?url:'leave.html?url='+encodeURIComponent(url)+'&name='+encodeURIComponent(x.name);a.rel='noopener noreferrer';a.referrerPolicy='no-referrer';const rating=safety?.inspect(url);if(rating?.type==='blocked'){a.removeAttribute('href');a.setAttribute('aria-disabled','true');a.classList.add('atlas-result-blocked');}a.addEventListener('click',e=>{if(rating?.type==='blocked'){e.preventDefault();return;}
        if(e.button!==0||e.ctrlKey||e.metaKey||e.altKey||e.shiftKey)return;
        if(!permitted){e.preventDefault();showExternal(url,x.name);}
@@ -390,6 +392,7 @@
   items:()=>records,favorites:()=>favorites,open:showExternal,
   reviewed:url=>!!linkGate?.officialSourceReviewed(url)
  })||null;
+ window.addEventListener('aq:language-change',()=>{drawPaths();choiceBar();draw();});
  updateApprovals();drawPaths();choiceBar();draw();
  catalog.load().then(data=>{
   records=data.items;
