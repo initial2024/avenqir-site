@@ -86,6 +86,57 @@ failed, check the numeric UID of the new PID versus `id -u albrowser`
 before changing anything. Do **not** remove X locks, kill processes,
 rotate the already-saved VNC password, or weaken Chrome's sandbox.
 
+## UID isolation mismatch: live Xvfb belongs to UID 999, not albrowser UID 998
+
+The owner's real Sandbox screenshots show:
+- `cat /var/lib/albrowser/.al-xvfb.91.pid` -> `7537`
+- `id -u albrowser` -> `998`
+- `ps -eo pid,uid,args` -> Xvfb `:88`, `:89`, `:90`, `:91` all running with **UID 999**; `:91` PID `7537`
+- `/tmp/.X11-unix/X91` exists as an active Unix socket
+
+Therefore the prior `ownership/PID/socket verification` refusal is **correct
+for the stated isolated-user security boundary**: `albrowser` is UID 998,
+but those Xvfb processes actually run under UID 999. We have NOT established
+whether Altare remaps `runuser` process credentials, whether UID 999 is an
+existing Sandbox project account, or whether the launched process was
+substituted by the platform. It is **unsafe to delete UID checks or assume
+the UID 999 processes are owned by albrowser**.
+
+**Stop creating additional screens.** This release adds a fail-closed
+`uid_mapping_guard` before allocating any new display. It refuses to start
+if `runuser -u albrowser -- id -u` differs from `id -u albrowser`, or
+when a recorded live Xvfb screen already has a different effective UID.
+
+To distinguish the failure mechanisms safely, run the read-only checks:
+
+```bash
+id -u albrowser
+runuser -u albrowser -- id -u
+getent passwd 999
+ps -o pid,uid,user,args -p 7537
+```
+
+Or after updating the launcher from GitHub, run:
+
+```bash
+bash /opt/avenqir/al_private_browser.sh uid-check
+```
+
+The `uid-check` output prints only numeric UID, the local account name
+for UID 999, and marked Xvfb process ownership; no password, login
+session or browser profile contents. If `RUNUSER` yields 999 instead of
+998, the user namespace or privilege-switch policy needs investigation.
+If `RUNUSER` is correctly 998 while Xvfb is 999, investigate the process
+launch/UID mapping and do not adopt those processes in Chrome. Neither
+case justifies `--no-sandbox` or deleting X locks.
+
+Do NOT kill PIDs `7375`, `7427`, `7477`, `7537`, reboot the Sandbox,
+change permissions on other projects, regenerate the VNC password, or
+expose port 5901. First establish the UID 999 account owner and permitted
+privilege isolation model, then propose a supported design. No Cloudflare
+Tunnel should expose the remote desktop while its process ownership is
+unverified.
+
 ## AL Console: curl (77) / missing root CA certificates
 
 A **real device screenshot** showed:

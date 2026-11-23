@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Private OWNER-ONLY graphical browser for an existing Altare Sandbox.
-# Commands: check | install | password | password-auto | password-reveal | start | stop | status | diagnose
+# Commands: check | install | password | password-auto | password-reveal | start | stop | status | diagnose | uid-check
 # Never makes any VNC port public; Cloudflare Access/Tunnel configured separately.
 set -euo pipefail
 umask 077
@@ -32,6 +32,61 @@ managed_xvfb(){
   actual_uid="$(awk '/^Uid:/ {print $2; exit}' "/proc/$pid/status")" || return 1
   [ "$expected_uid" = "$actual_uid" ] || return 1
   [ -S "/tmp/.X11-unix/X${number}" ] || return 1
+}
+# Altare's observed screen processes are UID 999 while the dedicated
+# albrowser account is UID 998. Refuse to create further screens until the
+# effective runuser mapping and any previously recorded Xvfb are audited.
+uid_mapping_diagnostic(){
+  local expected observed n pid uid marker
+  local -a argv=()
+  expected="$(id -u "$U" 2>/dev/null)" || {
+    echo "AL_UID_EXPECTED=UNKNOWN"; return 1;
+  }
+  echo "AL_UID_EXPECTED=$expected"
+  if observed="$(runuser -u "$U" -- id -u 2>/dev/null)"; then
+    echo "AL_UID_RUNUSER=$observed"
+  else
+    echo "AL_UID_RUNUSER=FAILED"
+    observed=""
+  fi
+  if getent passwd 999 >/dev/null 2>&1; then
+    echo "AL_UID_999_ACCOUNT=$(getent passwd 999 | cut -d: -f1)"
+  else
+    echo "AL_UID_999_ACCOUNT=UNKNOWN"
+  fi
+  for n in {89..99}; do
+    marker="$PROFILE/.al-xvfb.${n}.pid"
+    [ -s "$marker" ] || continue
+    IFS= read -r pid < "$marker" || continue
+    [[ "$pid" =~ ^[0-9]+$ ]] || continue
+    [ -r "/proc/$pid/cmdline" ] && [ -r "/proc/$pid/status" ] || continue
+    mapfile -d '' -t argv < "/proc/$pid/cmdline" || continue
+    [ "${argv[0]##*/}" = Xvfb ] && [ "${argv[1]:-}" = ":$n" ] || continue
+    uid="$(awk '/^Uid:/ {print $2; exit}' "/proc/$pid/status")"
+    echo "AL_MARKED_XVFB_DISPLAY=:$n PID=$pid UID=$uid EXPECTED_UID=$expected"
+  done
+}
+uid_mapping_guard(){
+  local expected observed n pid uid marker
+  local -a argv=()
+  expected="$(id -u "$U")" || fail "UID mapping: albrowser account missing"
+  observed="$(runuser -u "$U" -- id -u 2>/dev/null)" ||
+    fail "UID mapping: cannot execute as the isolated albrowser account"
+  [ "$observed" = "$expected" ] ||
+    fail "UID mapping: runuser executed as UID $observed, expected $expected; no more displays will be spawned"
+  for n in {89..99}; do
+    marker="$PROFILE/.al-xvfb.${n}.pid"
+    [ -s "$marker" ] || continue
+    IFS= read -r pid < "$marker" || continue
+    [[ "$pid" =~ ^[0-9]+$ ]] || continue
+    [ -r "/proc/$pid/cmdline" ] && [ -r "/proc/$pid/status" ] || continue
+    mapfile -d '' -t argv < "/proc/$pid/cmdline" || continue
+    [ "${argv[0]##*/}" = Xvfb ] && [ "${argv[1]:-}" = ":$n" ] || continue
+    uid="$(awk '/^Uid:/ {print $2; exit}' "/proc/$pid/status")"
+    [ "$uid" = "$expected" ] ||
+      fail "UID mapping: recorded Xvfb :$n PID $pid runs as UID $uid, expected $expected; refusing to spawn another display"
+  done
+  echo "AL_UID_MAPPING=PASS"
 }
 select_browser_display(){
   local n candidate
@@ -157,6 +212,7 @@ start_browser(){
   need_root
   require_installed
   [ -s "$PROFILE/.vnc/passwd" ] || fail "First run password; VNC without a password is forbidden"
+  uid_mapping_guard
   install -d -m 0700 -o "$U" -g "$U" "$PROFILE/.config" "$PROFILE/.config/google-chrome"
   # Using a dedicated OS user keeps Chrome isolated from /root, private audit
   # reports and the Cloudflare tunnel credential; never run Chrome as root.
@@ -203,6 +259,7 @@ start_browser(){
 diagnose_browser(){
   need_root
   echo "=== AL PRIVATE BROWSER DIAG ==="
+  uid_mapping_diagnostic || true
   printf 'USER='; id "$U" 2>&1 || true
   printf 'TMP='; ls -ld /tmp 2>&1 || true
   printf 'X11_DIR='; ls -ld /tmp/.X11-unix 2>&1 || true
@@ -267,6 +324,7 @@ case "${1:-}" in
   start) start_browser ;;
   status) status_browser ;;
   diagnose) diagnose_browser ;;
+  uid-check) need_root; uid_mapping_diagnostic ;;
   stop) stop_browser ;;
   *) echo "Usage: bash al_private_browser.sh check|install|password|password-auto|password-reveal|start|status|stop"; exit 2 ;;
 esac
