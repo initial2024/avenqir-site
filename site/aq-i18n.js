@@ -129,6 +129,16 @@
    root.document.documentElement.lang=locale==='zh-Hans'?'zh-CN':locale==='zh-Hant'?'zh-TW':locale;
    root.document.documentElement.dir=rtl.has(locale)?'rtl':'ltr';
    translatedNav();translatedMain();
+   const main=root.document.querySelector('main');
+   if(main){
+     let notice=root.document.getElementById('aqLocaleNotice');
+     if(!notice){notice=root.document.createElement('p');notice.id='aqLocaleNotice';notice.className='aq-lang-notice';main.parentNode?.insertBefore(notice,main);}
+     const partial=locale!=='zh-Hans';
+     notice.hidden=!partial;
+     if(partial)notice.textContent=locale==='zh-Hant'?
+       '語言已切換。部分舊頁面說明仍為簡體中文；未經核對的第三方網站名稱與描述保留原文。':
+       'Language: '+(LOCALES.find(x=>x.code===locale)?.label||'English')+' · Core navigation and actions are localized; some older page descriptions remain in Chinese. External website metadata stays in its original language.';
+   }
    const select=root.document.getElementById('aqLocaleSelect');
    if(select){select.value=manual||'auto';const auto=select.querySelector('option[value="auto"]');if(auto)auto.textContent='🌐 '+translate('lang.auto')+' · '+(LOCALES.find(x=>x.code===browser())?.label||'English');}
    const hint=root.document.getElementById('aqLocaleHint');if(hint)hint.textContent=translate('lang.note');
