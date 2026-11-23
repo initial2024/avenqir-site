@@ -81,7 +81,16 @@ set_password(){
   require_installed
   echo "Set an interactive VNC password in this console. Do not share it here or in GitHub."
   echo "VNC password is limited to the first 8 characters. Cloudflare Access is mandatory as a separate protection."
-  runuser -u "$U" -- x11vnc -storepasswd "$PROFILE/.vnc/passwd"
+  rm -f "$PROFILE/.vnc/passwd"
+  if [ -r /dev/tty ] && [ -w /dev/tty ]; then
+    echo "AL_VNC_PASSWORD_PROMPT=TTY"
+    x11vnc -storepasswd "$PROFILE/.vnc/passwd" </dev/tty >/dev/tty 2>&1 || fail "Interactive VNC password prompt failed"
+  elif [ -t 0 ]; then
+    echo "AL_VNC_PASSWORD_PROMPT=STDIN"
+    x11vnc -storepasswd "$PROFILE/.vnc/passwd" || fail "Interactive VNC password prompt failed"
+  else
+    fail "No interactive terminal is available for safe password entry"
+  fi
   [ -s "$PROFILE/.vnc/passwd" ] || fail "No VNC password file saved"
   chmod 0600 "$PROFILE/.vnc/passwd"
   chown "$U:$U" "$PROFILE/.vnc/passwd"
