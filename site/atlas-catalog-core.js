@@ -10,7 +10,7 @@
     .map(x=>({name:x.name.slice(0,90),category:x.category.slice(0,40),url:validURL(x.url),description:x.description.slice(0,320)}));
  }
  function combine(...groups){const used=new Set();return groups.flat().filter(x=>{const url=validURL(x?.url);if(!url||used.has(url))return false;used.add(url);return true;});}
- function catalog(serverItems=[]){return combine(serverItems,base,extras,root.AVENQIR_ATLAS_PATHS?.links||[],root.AVENQIR_ATLAS_EXPANSION?.links||[],root.AVENQIR_ATLAS_SPECIALIST?.links||[],root.AVENQIR_ATLAS_DEPTH_A?.links||[],root.AVENQIR_ATLAS_DEPTH_B?.links||[],root.AVENQIR_ATLAS_DEPTH_C?.links||[],root.AVENQIR_ATLAS_DEPTH_D?.links||[]);}
+ function catalog(serverItems=[]){return combine(serverItems,base,extras,root.AVENQIR_ATLAS_PATHS?.links||[],root.AVENQIR_ATLAS_EXPANSION?.links||[],root.AVENQIR_ATLAS_SPECIALIST?.links||[],root.AVENQIR_ATLAS_DEPTH_A?.links||[],root.AVENQIR_ATLAS_DEPTH_B?.links||[],root.AVENQIR_ATLAS_DEPTH_C?.links||[],root.AVENQIR_ATLAS_DEPTH_D?.links||[],root.AVENQIR_ATLAS_AI?.links||[],root.AVENQIR_ATLAS_REGIONAL?.links||[],root.AVENQIR_ATLAS_EVERYDAY?.links||[],root.AVENQIR_ATLAS_REGIONAL_EXT?.links||[],root.AVENQIR_ATLAS_EVERYDAY_EXT?.links||[]);}
  async function load(){
   const fallback=catalog();
   if(typeof fetch!=='function')return {items:fallback,remote:false};

@@ -2,7 +2,7 @@
 <html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f8fd"><meta name="referrer" content="no-referrer"><meta name="description" content="AVENQIR Link Atlas：独立策展的公开网站目录。搜索网站、按分类发现资源，支持多设备访问。">
 <title>网站搜索 · AVENQIR Link Atlas</title>
-<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="common.css?v=12"><link rel="stylesheet" href="directory-search.css?v=17"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="theme.css?v=17"></head>
+<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="common.css?v=12"><link rel="stylesheet" href="directory-search.css?v=17"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="theme.css?v=19"></head>
 <body class="search-body"><header class="headbar"><div class="wrap head-inner"><a class="logo" href="index.html"><span class="logoicon">⬡</span> AVENQIR</a><a class="aq-theme-link" data-aq-theme-link="1" aria-label="切换显示模式" href="appearance.html">◐ <span class="aq-theme-link-label">模式</span></a><button type="button" class="menu-toggle" aria-controls="global-nav" aria-expanded="false" aria-label="打开导航菜单">☰ <span>菜单</span></button><nav id="global-nav" class="main-nav" aria-label="网站导航"><a href="index.html">首页</a><a href="directory.html" class="active" aria-current="page">网站搜索</a><a href="bookmarks.html">我的书签</a><a href="notes.html">笔记</a><a href="fun.html">小游戏</a><a href="daily.html">日常</a><a href="check.html">网络检测</a><a href="tools.html">工具箱</a><a href="projects.html">GitHub</a><a href="domains.html">DNS</a><a href="logs.html">日志</a><a href="feedback.php">留言反馈</a></nav><span class="microbadge">ATLAS / v8.7</span></div></header>
 <main class="directory-main">
 <section class="search-hero" aria-labelledby="atlasTitle">
@@ -46,6 +46,25 @@
     <div class="atlas-local-foot"><span>本地规则推荐 · 显示推荐原因 · 仅 60 天分类汇总 · 不联网同步偏好</span><button id="atlasLocalClear" type="button">清除记录并关闭</button></div>
   </div>
 </section>
+<section class="atlas-local-panel atlas-region-panel" aria-labelledby="atlasRegionTitle">
+ <div class="atlas-local-top">
+  <div><span class="atlas-flows-eyebrow">LOCAL REGION / PRIVATE ON-DEVICE</span>
+   <h2 id="atlasRegionTitle">🗺️ 发现当地常用网站</h2>
+   <p>默认关闭。开启后按<strong>浏览器时区提供地区建议</strong>，也可手动选择国家或地区。<strong>不调用 IP 查询接口</strong>；时区不等于公网 IP 归属地。这里的“常用”是生活服务类型，不是访问量排名。</p>
+  </div>
+  <label class="atlas-local-switch" for="atlasRegionToggle"><input type="checkbox" id="atlasRegionToggle" autocomplete="off"><span>开启地区推荐</span></label>
+ </div>
+ <p id="atlasRegionStatus" class="atlas-local-status" role="status">默认关闭 · 无 IP 请求、无定位授权</p>
+ <div id="atlasRegionBody" class="atlas-local-body" hidden>
+  <div class="atlas-region-choice"><label for="atlasRegionSelect"><strong>选择地区</strong><small>自动模式只参考浏览器时区；手选结果优先，不代表真实居住地或 IP</small></label>
+   <select id="atlasRegionSelect" aria-label="地区来源和手动选择"></select>
+  </div>
+  <div id="atlasRegionCards" class="atlas-local-cards" aria-live="polite"></div>
+  <div class="atlas-local-foot"><span>优先展示交通、地图、邮政、购物及公共服务 · 本地每日轮换 · 不记录访问 IP</span>
+   <button type="button" id="atlasRegionClear">删除地区设置并关闭</button>
+  </div>
+ </div>
+</section>
 <div class="atlas-layout">
 <section class="atlas-content" aria-labelledby="resultsTitle">
  
@@ -74,4 +93,4 @@
   <button id="atlasExternalGo" class="btn primary" type="button">我了解风险，继续访问</button>
   <label class="atlas-remember-choice"><input type="checkbox" id="atlasRemember" autocomplete="off"> <span>记住此网址的确认选择 30 天（仅此浏览器，可随时清除）</span></label>
  </div>
-</form></dialog><script src="link-gate.js?v=12" defer></script><script src="atlas-paths.js?v=16" defer></script><script src="atlas-expansion.js?v=15" defer></script><script src="atlas-specialist.js?v=16" defer></script><script src="atlas-depth-a.js?v=17" defer></script><script src="atlas-depth-b.js?v=17" defer></script><script src="atlas-depth-c.js?v=17" defer></script><script src="atlas-depth-d.js?v=17" defer></script><script src="atlas-taxonomy.js?v=17" defer></script><script src="atlas-catalog-core.js?v=17" defer></script><script src="atlas-personalize.js?v=16" defer></script><script src="atlas-personalize-ui.js?v=16" defer></script><script src="directory.js?v=17" defer></script><script src="site.js?v=17" defer></script><script src="theme.js?v=15" defer></script></body></html>
+</form></dialog><script src="link-gate.js?v=12" defer></script><script src="atlas-paths.js?v=16" defer></script><script src="atlas-expansion.js?v=15" defer></script><script src="atlas-specialist.js?v=16" defer></script><script src="atlas-depth-a.js?v=17" defer></script><script src="atlas-depth-b.js?v=17" defer></script><script src="atlas-depth-c.js?v=17" defer></script><script src="atlas-depth-d.js?v=17" defer></script><script src="atlas-ai.js?v=18" defer></script><script src="atlas-regional.js?v=18" defer></script><script src="atlas-everyday.js?v=18" defer></script><script src="atlas-regional-ext.js?v=18" defer></script><script src="atlas-everyday-ext.js?v=18" defer></script><script src="atlas-taxonomy.js?v=18" defer></script><script src="atlas-catalog-core.js?v=19" defer></script><script src="atlas-personalize.js?v=16" defer></script><script src="atlas-personalize-ui.js?v=16" defer></script><script src="atlas-region.js?v=18" defer></script><script src="atlas-region-ui.js?v=18" defer></script><script src="directory.js?v=18" defer></script><script src="site.js?v=18" defer></script><script src="theme.js?v=15" defer></script></body></html>

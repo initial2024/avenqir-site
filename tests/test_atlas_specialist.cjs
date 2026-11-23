@@ -9,6 +9,11 @@ require(path.join(base,'atlas-depth-a.js'));
 require(path.join(base,'atlas-depth-b.js'));
 require(path.join(base,'atlas-depth-c.js'));
 require(path.join(base,'atlas-depth-d.js'));
+require(path.join(base,'atlas-ai.js'));
+require(path.join(base,'atlas-regional.js'));
+require(path.join(base,'atlas-everyday.js'));
+require(path.join(base,'atlas-regional-ext.js'));
+require(path.join(base,'atlas-everyday-ext.js'));
 const paths=require(path.join(base,'atlas-paths.js'));
 const gate=require(path.join(base,'link-gate.js'));
 const catalog=require(path.join(base,'atlas-catalog-core.js'));
@@ -23,7 +28,7 @@ const supplied=[
 ];
 assert.equal(specialist.links.length,31,'new resources must all be distinct (not double count Desmos/Regex101)');
 assert.equal(new Set(specialist.links.map(x=>x.url)).size,specialist.links.length);
-assert.equal(catalog.catalog().length,559,'all static curated links should now be addressable');
+assert.equal(catalog.catalog().length,1028,'all static curated links should now be addressable');
 for(const url of supplied){
  const x=catalog.catalog().find(r=>r.url===url);
  assert.ok(x,'missing user-requested destination '+url);
@@ -56,8 +61,8 @@ assert.ok(paths.flows.find(x=>x.id==='ipdiagnose').urls.includes('https://ip.net
 assert.ok(paths.flows.find(x=>x.id==='aicheck').note.includes('误报'));
 assert.ok(html.includes('src="atlas-specialist.js?v=16"'));
 assert.ok(home.includes('src="atlas-specialist.js?v=16"'));
-assert.ok(html.indexOf('atlas-specialist.js?v=16')<html.indexOf('atlas-catalog-core.js?v=17'));
-assert.ok(home.indexOf('atlas-specialist.js?v=16')<home.indexOf('atlas-catalog-core.js?v=17'));
+assert.ok(html.indexOf('atlas-specialist.js?v=16')<html.indexOf('atlas-catalog-core.js?v=19'));
+assert.ok(home.indexOf('atlas-specialist.js?v=16')<home.indexOf('atlas-catalog-core.js?v=19'));
 assert.ok(worker.includes("'./atlas-specialist.js'"));
 assert.ok(!worker.includes("'./english.claua.de'"));
 const model=fs.readFileSync(path.join(base,'atlas-personalize.js'),'utf8');
@@ -74,4 +79,4 @@ assert.ok(suggestions.some(x=>x.item.category==='英语阅读'),'new language ca
 assert.ok(suggestions.every(x=>x.reason),'explain every recommendation');
 assert.equal(recommend.setEnabled(false),false);
 assert.equal(fixtureStore.size,0,'turning off recommendations removes local model storage');
-console.log('PASS: 559 deduplicated HTTPS links, 4 submitted sites, 11 usable trails, safety gating and local opt-in');
+console.log('PASS: 1028 deduplicated HTTPS links, 4 submitted sites, 11 usable trails, safety gating and local opt-in');

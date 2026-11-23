@@ -1,7 +1,7 @@
 name: AVENQIR / feature checks (no deployment)
 on:
   push:
-    branches: ['feature/quick-search-local-transfer-20261123', 'feature/netscape-bookmarks-themes-20261123', 'fix/theme-navigation-cache-20261123', 'feature/atlas-v85-mobile-discovery-20261123', 'feature/atlas-v86-optin-local-recommendations-20261123', 'feature/atlas-v87-category-expansion-20261123']
+    branches: ['feature/quick-search-local-transfer-20261123', 'feature/netscape-bookmarks-themes-20261123', 'fix/theme-navigation-cache-20261123', 'feature/atlas-v85-mobile-discovery-20261123', 'feature/atlas-v86-optin-local-recommendations-20261123', 'feature/atlas-v87-category-expansion-20261123', 'feature/atlas-v88-region-optin-deeper-directory-20261123']
   pull_request:
     branches: [main]
 
@@ -32,6 +32,7 @@ jobs:
           node tests/test_atlas_personalize.cjs
           node tests/test_atlas_specialist.cjs
           node tests/test_atlas_taxonomy.cjs
+          node tests/test_atlas_region.cjs
       - name: Validate JavaScript and PHP syntax
         shell: bash
         run: |

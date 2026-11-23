@@ -54,6 +54,7 @@
  let records=catalog.catalog(), query=(params.get('q')||'').slice(0,140),category='',mode='all',limit=24,loaded=false,selectedFlow='',reviewedOnly=false,groupId='',expandedCategories=false;
  const key='avenqir.link-atlas.favorites.v8';let favorites=[],compareUrls=[];let pendingNoMatchQuery='';
  let localRecommendations=null;
+ let regionRecommendations=null;
  function trackOpen(url){
    const item=records.find(x=>x.url===url);
    if(item)localRecommendations?.recordOpen(item.category);
@@ -294,11 +295,15 @@
    items:()=>records,favorites:()=>favorites,open:showExternal,
    reviewed:url=>!!linkGate?.officialSourceReviewed(url)
  })||null;
+ regionRecommendations=window.AVENQIR_ATLAS_REGION_UI?.mount({
+  items:()=>records,favorites:()=>favorites,open:showExternal,
+  reviewed:url=>!!linkGate?.officialSourceReviewed(url)
+ })||null;
  updateApprovals();drawPaths();choiceBar();draw();
  catalog.load().then(data=>{
   records=data.items;
   source.textContent=data.remote?'在线目录 + 本地精选':'内置精选目录（后台不可用）';
-  loaded=true;choiceBar();draw();localRecommendations?.render();
+  loaded=true;choiceBar();draw();localRecommendations?.render();regionRecommendations?.render();
   if(pendingNoMatchQuery)openNoMatch();
  });
 })();
