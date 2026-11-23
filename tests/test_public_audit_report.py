@@ -35,7 +35,7 @@ class PublicAuditReportTests(unittest.TestCase):
         self.assertIn("40", body)
         self.assertIn("不代表全部网址有效", body)
         self.assertIn(publish.MARKER, body)
-        self.assertIn("https://example.org/", body[:])
+        self.assertIn("https://avenqir.bg5.net/", body)\n        self.assertNotIn("| https://example.org/ |", body) # healthy sample is not a warning
         self.assertNotIn("管理员密码", body)  # no credentials included
 
     def test_404_candidate_only_not_automatically_deleted(self):
