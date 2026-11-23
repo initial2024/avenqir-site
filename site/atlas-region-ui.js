@@ -31,11 +31,11 @@
    status.textContent=selected.source==='timezone'
     ?'地区建议：'+label+' · 依据浏览器时区，非公网 IP 归属地（可手动修改）'
     :'已手动选择：'+label+' · 仅在此浏览器保存地区代码';
-   const picks=model.recommend(items(),favorites(),6);
+   const picks=model.recommend(items(),favorites(),8);
    if(!picks.length){cards.append(el('p','atlas-local-empty','该地区暂无可用的精选资源。可切换其他地区，或浏览完整目录。'));return;}
-   for(const {item,reason} of picks){
+   for(const {item,reason,kind} of picks){
     const box=el('article','atlas-local-card'),top=el('div','atlas-local-card-head');
-    top.append(el('span','atlas-local-category',item.category),el('small','atlas-local-reason',reason));
+    top.append(el('span','atlas-local-category',kind+' · '+item.category),el('small','atlas-local-reason',reason));
     const a=el('a','atlas-local-link',item.name+' ↗');
     a.href=reviewed(item.url)?item.url:'leave.html?url='+encodeURIComponent(item.url)+'&name='+encodeURIComponent(item.name);
     a.referrerPolicy='no-referrer';a.rel='noopener noreferrer';
