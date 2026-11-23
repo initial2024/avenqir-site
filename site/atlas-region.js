@@ -66,12 +66,24 @@
      if(!item||item.region!==code||typeof item.url!=='string'||exclude.has(item.url)||seen.has(item.url))continue;
      seen.add(item.url);arr.push(item);
    }
-   // Rotates daily within the selected region; not location tracking.
-   arr.sort((a,b)=>hash(a.url+'|'+day)-hash(b.url+'|'+day));
-   const chosen=[],cats=new Set();
-   for(const item of arr)if(!cats.has(item.category)&&chosen.length<max){chosen.push(item);cats.add(item.category);}
-   for(const item of arr)if(chosen.length<max&&!chosen.includes(item))chosen.push(item);
-   return chosen.map(item=>({item,source,reason:source==='manual'?'按你手选的地区显示':'按当前浏览器时区估计（非 IP 定位）'}));
+   // Editorial grouping only: "everyday" means a common service type, NOT measured popularity.
+   // Present an intentional mix of everyday services and public reference sources.
+   const limit=Math.min(12,Math.max(1,Number.isInteger(max)?max:8));
+   function dailyOrder(a,b){return hash(a.url+'|'+day)-hash(b.url+'|'+day);}
+   const daily=arr.filter(x=>x.localUse==='everyday').sort(dailyOrder);
+   const publicLinks=arr.filter(x=>x.localUse!=='everyday').sort(dailyOrder);
+   const chosen=[],seenUrls=new Set();
+   function pick(x){if(chosen.length>=limit||seenUrls.has(x.url))return;chosen.push(x);seenUrls.add(x.url);}
+   // Put practical local services first, without burying reference sites.
+   for(const item of daily.slice(0,Math.min(4,limit)))pick(item);
+   const seenCategories=new Set(chosen.map(x=>x.category));
+   for(const item of publicLinks){if(chosen.length>=limit)break;if(!seenCategories.has(item.category)){pick(item);seenCategories.add(item.category);}}
+   for(const item of publicLinks){if(chosen.length>=limit)break;pick(item);}
+   for(const item of daily){if(chosen.length>=limit)break;pick(item);}
+   return chosen.map(item=>({
+     item,source,kind:item.localUse==='everyday'?'生活常用':'公共资讯',
+     reason:source==='manual'?'按手动选择的地区推荐':'浏览器时区建议（不是 IP 定位）'
+   }));
   }
   return Object.freeze({read,enable,disable,choose,useAutomatic,selection,recommend});
  }
