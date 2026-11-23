@@ -3,12 +3,15 @@
 (function(root){
  const engine=root.AVENQIR_LOCAL_RECOMMEND;
  const E=()=>{
-  const page=String(root.document?.documentElement?.lang||'').trim();
-  const setting=String(root.AVENQIR_I18N?.locale||'').trim();
-  return !/^zh(?:-|$)/i.test(page&&!/^zh(?:-|$)/i.test(page)?page:setting||page||'en');
+  const active=String(root.document?.documentElement?.lang||root.AVENQIR_I18N?.locale||'en').trim();
+  return active!=='zh-Hans';
  };
  const T=(zh,en)=>E()?en:zh;
- const category=name=>root.AVENQIR_I18N?.category(name)||name;
+ const CATEGORY_EN=Object.freeze({"地图":"Maps","地球科学":"Earth sciences","天文":"Astronomy","学术":"Academic resources","实用":"Utilities","教育":"Education","数据":"Data","文化":"Culture","新闻":"News","旅游出行":"Travel and transport","法律政策":"Law and policy","环境气候":"Environment and climate","科技资讯":"Technology","科研":"Research","经济金融":"Economics and finance","语言":"Languages","阅读":"Reading"});
+ const category=name=>{
+  const translated=root.AVENQIR_I18N?.category(name)||name;
+  return E()&&/[\u3400-\u9fff]/.test(translated)?CATEGORY_EN[name]||'Resources':translated;
+ };
  function mount({items,favorites,open,reviewed}){
   if(!engine||typeof document==='undefined')return null;
   const $=id=>document.getElementById(id);
