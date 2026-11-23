@@ -76,3 +76,37 @@
 :root[data-aq-theme="dark"] .search-body :is(.atlas-preferences,.atlas-engine-link){background:#162b45;color:#cfe8fa;border-color:#567792}
 :root[data-aq-theme="eye"] .search-body :is(.atlas-preferences,.atlas-engine-link){background:#f6ecd8;color:#58482d;border-color:#b9a588}
 @media(max-width:480px){.atlas-external-actions .atlas-engine-link{font-size:12px;min-width:75px;padding:8px 7px}.atlas-preferences{display:grid;gap:7px}.atlas-preferences button{width:100%}}
+
+/* AVENQIR v8.4 — task-first catalog; no external fonts, trackers or dependencies */
+.atlas-flows{margin:-4px 0 26px;padding:20px 21px 21px;background:#fff;border:1px solid #dce8f3;border-radius:20px;box-shadow:0 6px 27px #24466c0a}
+.atlas-flows-heading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:0 0 17px}
+.atlas-flows-eyebrow{display:block;color:#5c7b9a;font-size:10px;font-weight:760;letter-spacing:.14em;margin-bottom:4px}
+.atlas-flows h2{font-size:clamp(17px,2.3vw,21px);color:#213957;line-height:1.4;margin:0 0 5px}
+.atlas-flows-heading p{margin:0;color:#6b7e92;font-size:12px}
+#atlasResetFlow{border:1px solid #b9d5ed;border-radius:10px;background:#f2f8fe;color:#215e9f;padding:8px 12px;min-height:42px;font-size:12px;flex-shrink:0}
+#atlasResetFlow[hidden]{display:none}
+.atlas-flow-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.atlas-flow-card{min-width:0;min-height:148px;text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:5px;border:1px solid #d6e5f3;background:linear-gradient(145deg,#fbfdff,#f0f6fd);color:#263e58;padding:13px;border-radius:13px}
+.atlas-flow-card .atlas-flow-icon{font-size:23px;line-height:1.1;margin-bottom:4px}
+.atlas-flow-card strong{font-size:13px;line-height:1.45}
+.atlas-flow-card small{color:#58738e;font-size:11px;line-height:1.5}
+.atlas-flow-note{display:none;font-size:10px;color:#4b617a;line-height:1.5;margin-top:4px}
+.atlas-flow-card:hover,.atlas-flow-card:focus-visible,.atlas-flow-card.selected{border-color:#4b94de;background:#eaf4ff;box-shadow:0 0 0 1px #81b6ed2c}
+.atlas-flow-card.selected .atlas-flow-note{display:block}
+.atlas-discovery-tools{display:flex;gap:9px 14px;align-items:center;flex-wrap:wrap;border:1px solid #dce8f3;background:#fff;border-radius:11px;margin:12px 0;padding:11px 13px;color:#385573;font-size:12px}
+.atlas-reviewed-filter{display:flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap}
+.atlas-reviewed-filter input{width:18px!important;min-width:18px;height:18px;min-height:0!important;margin:0;accent-color:#236ed0}
+.atlas-discovery-tools button{border:1px solid #b8d4ee;background:#f3f9ff;color:#21609f;font-weight:650;border-radius:9px;padding:7px 10px;min-height:40px}
+.atlas-discovery-tools a{color:#21609f;text-decoration:underline;text-underline-offset:2px}
+.atlas-discovery-tools small{width:100%;font-size:11px;color:#5c7087}
+.atlas-discovery-tools small:empty{display:none}
+#atlasResults{scroll-margin-top:110px}
+:root[data-aq-theme="dark"] .search-body :is(.atlas-flows,.atlas-discovery-tools){background:#10253b;border-color:#466580;color:#d5e9f7}
+:root[data-aq-theme="dark"] .search-body :is(.atlas-flows h2,.atlas-flow-card strong){color:#e4f1fc}
+:root[data-aq-theme="dark"] .search-body :is(.atlas-flow-card,#atlasResetFlow,.atlas-discovery-tools button){background:#17344e;border-color:#567996;color:#cce9ff}
+:root[data-aq-theme="dark"] .search-body :is(.atlas-flows-heading p,.atlas-flow-card small,.atlas-flow-note,.atlas-discovery-tools small){color:#b5cfe2}
+:root[data-aq-theme="eye"] .search-body :is(.atlas-flows,.atlas-discovery-tools){background:#f6edd9;border-color:#c1ac85}
+:root[data-aq-theme="eye"] .search-body .atlas-flow-card{background:#f6eedf;border-color:#c8b993;color:#4c412d}
+:root[data-aq-theme="eye"] .search-body .atlas-flow-card strong{color:#53442b}
+@media(max-width:850px){.atlas-flow-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:560px){.atlas-flows{padding:15px 12px}.atlas-flow-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.atlas-flow-card{min-height:142px;padding:11px}.atlas-flows-heading{flex-direction:column;align-items:flex-start;gap:7px}.atlas-discovery-tools{align-items:flex-start}}
