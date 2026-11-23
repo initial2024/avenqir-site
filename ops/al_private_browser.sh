@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Private OWNER-ONLY graphical browser for an existing Altare Sandbox.
-# Commands: check | install | password | password-auto | start | stop | status
+# Commands: check | install | password | password-auto | password-reveal | start | stop | status | diagnose
 # Never makes any VNC port public; Cloudflare Access/Tunnel configured separately.
 set -euo pipefail
 umask 077
@@ -149,6 +149,30 @@ start_browser(){
   echo "NEVER publish the VNC port directly in Altare Network."
   echo "IMPORTANT: if Chrome sandbox cannot launch, inspect $PROFILE/browser.log; DO NOT add --no-sandbox."
 }
+diagnose_browser(){
+  need_root
+  echo "=== AL PRIVATE BROWSER DIAG ==="
+  printf 'USER='; id "$U" 2>&1 || true
+  printf 'TMP='; ls -ld /tmp 2>&1 || true
+  printf 'X11_DIR='; ls -ld /tmp/.X11-unix 2>&1 || true
+  printf 'DISPLAY_LOCK='; ls -l /tmp/.X88-lock 2>&1 || true
+  printf 'XVFB_BIN='; command -v Xvfb || true
+  printf 'XVFB_VER='; Xvfb -version 2>&1 | head -n 2 || true
+  printf 'PROC='; pgrep -a -u "$U" Xvfb 2>&1 || true
+  echo "--- xvfb.log ---"
+  if [ -f "$PROFILE/xvfb.log" ]; then
+    tail -n 60 "$PROFILE/xvfb.log"
+  else
+    echo "NO_XVFB_LOG"
+  fi
+  echo "--- browser.log ---"
+  if [ -f "$PROFILE/browser.log" ]; then
+    tail -n 20 "$PROFILE/browser.log"
+  else
+    echo "NO_BROWSER_LOG"
+  fi
+  echo "=== END AL DIAG ==="
+}
 stop_browser(){
   need_root
   if id "$U" >/dev/null 2>&1; then
@@ -179,6 +203,7 @@ case "${1:-}" in
   password-reveal) reveal_password_once ;;
   start) start_browser ;;
   status) status_browser ;;
+  diagnose) diagnose_browser ;;
   stop) stop_browser ;;
   *) echo "Usage: bash al_private_browser.sh check|install|password|password-auto|password-reveal|start|status|stop"; exit 2 ;;
 esac
