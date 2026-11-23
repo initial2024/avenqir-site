@@ -1,91 +1,92 @@
 <!doctype html>
 <html lang="en">
 <head>
- <meta charset="utf-8">
- <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
- <meta name="theme-color" content="#101c31">
- <meta name="referrer" content="no-referrer">
- <meta name="description" content="A secure, owner-operated shortcut to the official Altare remote desktop. No proxy, passwords or shared sessions.">
- <title>Private remote browser · AVENQIR</title>
- <link rel="stylesheet" href="common.css?v=12">
- <link rel="stylesheet" href="theme.css?v=25">
- <link rel="manifest" href="manifest.webmanifest">
- <style>
- .remote-shell{max-width:880px;margin:auto;padding:32px 15px 60px}
- .remote-shell h1{font-size:clamp(1.7rem,6vw,2.8rem);line-height:1.15;margin:8px 0 15px}
- .remote-shell .remote-p{max-width:67ch;line-height:1.7}
- .remote-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin:22px 0}
- .remote-grid .panel{margin:0;padding:21px}
- .remote-grid p{line-height:1.65}
- .remote-links{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}
- .remote-links .btn{display:inline-flex;align-items:center;text-align:center;min-height:44px}
- .remote-note{margin:16px 0;font-size:.93rem;line-height:1.65}
- </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="referrer" content="no-referrer"><meta name="theme-color" content="#101c31">
+<meta name="description" content="Private browser plan for an existing Altare Sandbox via localhost-only VNC and authenticated Cloudflare Access.">
+<title>AL private remote browser · AVENQIR</title>
+<link rel="stylesheet" href="common.css?v=12"><link rel="stylesheet" href="theme.css?v=25">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+.private-area{max-width:900px;margin:auto;padding:30px 15px 65px}
+.private-area h1{font-size:clamp(1.65rem,6vw,2.7rem);line-height:1.14;margin:10px 0 16px}
+.private-area .remote-actions{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0}
+.private-area .remote-actions a{display:inline-flex;align-items:center;min-height:44px}
+.private-area .remote-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:15px}
+.private-area .remote-steps section{padding:20px}
+.private-area p{line-height:1.7}
+.private-area .remote-warning{font-weight:500;padding:16px 0}
+</style>
 </head>
 <body>
-<header class="headbar">
- <div class="wrap head-inner"><a class="logo" href="index.html"><span class="logoicon">⬡</span> AVENQIR</a><a class="aq-theme-link" data-aq-theme-link="1" aria-label="Change display mode" href="appearance.html">◐ <span class="aq-theme-link-label">Appearance</span></a>
- <nav class="main-nav" aria-label="Site navigation"><a href="index.html" id="back-home">Home</a><a href="directory.html" id="back-directory">Websites</a></nav></div>
-</header>
-<main class="remote-shell">
- <section class="hero compact-hero">
-  <div class="eyebrow">PRIVATE ACCESS / REMOTE DESKTOP</div>
-  <h1 id="rw-title">Private remote browser</h1>
-  <p class="subline remote-p" id="rw-summary">Open an Altare desktop in your mobile browser, then use the browser installed on that remote machine. Only the remote machine accesses websites from its own network.</p>
-  <div class="remote-links">
-   <a id="rw-open" class="btn primary" href="https://console.altare.gg/" target="_blank" rel="noopener noreferrer">Open official Altare Console ↗</a>
-   <a id="rw-beta" class="btn ghost" href="https://docs.altare.gg/workstations/beta" target="_blank" rel="noopener noreferrer">Check Workstation availability ↗</a>
-  </div>
- </section>
- <div class="remote-grid">
-  <section class="panel"><h2 id="rw-step1">1. Confirm desktop access</h2><p id="rw-step1body">For an Always Free account, a Workstation Desktop requires an available beta seat. On Altare open Account → Experiments → Workstations. The existing Sandbox is a shell, not this desktop.</p></section>
-  <section class="panel"><h2 id="rw-step2">2. Start your own browser</h2><p id="rw-step2body">If you have access, create/open a Desktop Workstation (for example XFCE), select Open desktop and launch its browser. The official remote desktop is protected by your Altare account.</p></section>
-  <section class="panel"><h2 id="rw-step3">3. Keep services separated</h2><p id="rw-step3body">Your existing AL Sandbox still runs read-only monitoring. This page never proxies requests, saves passwords, reads cookies, or exposes remote desktop ports.</p></section>
- </div>
- <p class="remote-note" id="rw-limits">The remote website sees the desktop machine's network, but it may still detect remote-browser characteristics. Speed, site compatibility, sign-in risk checks and Workstation access are not guaranteed. Do not use this to bypass site restrictions or Altare rules.</p>
- <p class="remote-note"><a href="https://docs.altare.gg/workstations/desktop" rel="noopener noreferrer" target="_blank" id="rw-help">Altare official desktop instructions ↗</a></p>
+<header class="headbar"><div class="wrap head-inner">
+<a class="logo" href="index.html"><span class="logoicon">⬡</span> AVENQIR</a>
+<a class="aq-theme-link" data-aq-theme-link="1" aria-label="Change display mode" href="appearance.html">◐ <span class="aq-theme-link-label">Appearance</span></a>
+<nav class="main-nav" aria-label="Site navigation"><a id="rw-home" href="index.html">Home</a><a id="rw-directory" href="directory.html">Websites</a></nav>
+</div></header>
+<main class="private-area">
+<section class="hero compact-hero">
+<div class="eyebrow">EXISTING AL SANDBOX · PRIVATE ONLY</div>
+<h1 id="rw-title">Use your existing AL Sandbox, without Workstations beta</h1>
+<p class="subline" id="rw-summary">Your goal is a Chrome browser running on this very AL Sandbox and sending its screen to your phone. A private VNC and Cloudflare Access connection can do this if the Sandbox has enough RAM and browser sandbox permissions.</p>
+<div class="remote-actions">
+<a class="btn primary" id="rw-setup" href="https://github.com/initial2024/avenqir-site/blob/main/ops/AL_PRIVATE_BROWSER.md" target="_blank" rel="noopener noreferrer">Read Sandbox setup and safety checks</a>
+<a class="btn ghost" id="rw-console" href="https://console.altare.gg/" target="_blank" rel="noopener noreferrer">Open existing AL Console</a>
+</div>
+</section>
+<div class="remote-steps">
+<section class="panel"><h2 id="rw-step1">1. Verify the real machine</h2><p id="rw-one">Use the read-only preflight in your AL console. Check whether AVENQIR audits are installed and whether AL has at least 2 GiB assigned RAM; package installation is not automatic.</p></section>
+<section class="panel"><h2 id="rw-step2">2. Install private Chrome + VNC</h2><p id="rw-two">The opt-in installer uses an unprivileged Chrome user and VNC on 127.0.0.1 only. It does not publish a proxy, open public ports, or rotate any Orbit Android signing keys.</p></section>
+<section class="panel"><h2 id="rw-step3">3. Protect and open on your phone</h2><p id="rw-three">Create a Cloudflare Tunnel TCP route to local port 5901 and a private Access application with browser-rendered VNC and your identity as the only allowed user. Then open that protected hostname.</p></section>
+</div>
+<p class="remote-warning" id="rw-warning">NOT LIVE YET: This page is an installation guide and a launcher to the official consoles. A working remote desktop requires successful tests on your AL Sandbox plus a private Cloudflare Access URL; never enter passwords here.</p>
+<p id="rw-limits">This is personal remote browsing, not a public proxy or VPN. Target sites may block datacenter IPs or require verification. Do not bypass site restrictions or Altare's usage rules.</p>
+<p><a id="rw-cloudflare" href="https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/use-cases/vnc-browser-rendering/" rel="noopener noreferrer" target="_blank">Cloudflare's official in-browser VNC setup</a></p>
 </main>
 <script>
-(function(){
-  "use strict";
-  // Local display preference only. No remote authentication, user-entered proxy URL,
-  // network relay, or external script. English is the neutral fallback for 40 locales.
-  var lang = "";
-  try { lang = localStorage.getItem("avenqir.locale.v1") || ""; } catch (_) {}
-  if (!lang) lang = (navigator.languages && navigator.languages[0]) || navigator.language || "en";
-  var normalized = String(lang).toLowerCase();
-  var key = normalized.startsWith("zh") ? (normalized.includes("hant") || normalized.includes("tw") || normalized.includes("hk") ? "zh-Hant" : "zh-Hans") : normalized.startsWith("ja") ? "ja" : "en";
-  var tr = {
-    "zh-Hans": {
-      "rw-title":"私人远程浏览器","rw-summary":"在手机浏览器中打开 Altare 的远程桌面，再使用远程机器内的浏览器访问网站。网络出口来自远程机器，不是手机。",
-      "rw-open":"打开 Altare 官方控制台 ↗","rw-beta":"查看 Workstation 使用资格 ↗","rw-step1":"1. 确认桌面使用资格",
-      "rw-step1body":"免费账户需要 Workstations 内测名额。打开 Altare → Account → Experiments → Workstations。你现有的 Sandbox 只有命令行，不是远程图形桌面。",
-      "rw-step2":"2. 启动独立浏览器","rw-step2body":"取得资格后创建或打开 Desktop Workstation（推荐 XFCE），点击 Open desktop，再在远程桌面内打开浏览器。访问受 Altare 账户保护。",
-      "rw-step3":"3. 保持服务隔离","rw-step3body":"现有 AL Sandbox 继续运行只读巡检。本页面不代理请求、不保存密码、不读取 Cookie，也不开放远程端口。",
-      "rw-limits":"目标网站看到的是远程桌面机器的网络，但仍可能识别远程浏览环境。速度、兼容性、登录风控及 Workstation 资格都不保证。不要用来绕过网站限制或 Altare 规则。",
-      "rw-help":"Altare 官方远程桌面说明 ↗","back-home":"首页","back-directory":"公开网址"},
-    "zh-Hant": {
-      "rw-title":"私人遠端瀏覽器","rw-summary":"在手機瀏覽器開啟 Altare 遠端桌面，再用遠端機器內的瀏覽器瀏覽網站。網路出口來自遠端機器，而非手機。",
-      "rw-open":"開啟 Altare 官方控制台 ↗","rw-beta":"查看 Workstation 使用資格 ↗","rw-step1":"1. 確認桌面使用資格",
-      "rw-step1body":"免費帳戶需要 Workstations 測試名額。前往 Altare → Account → Experiments → Workstations。現有 Sandbox 只有命令列，並非圖形桌面。",
-      "rw-step2":"2. 開啟獨立瀏覽器","rw-step2body":"取得資格後建立或開啟 Desktop Workstation（建議 XFCE），點選 Open desktop，然後在遠端桌面內開啟瀏覽器。存取由 Altare 帳戶保護。",
-      "rw-step3":"3. 維持服務隔離","rw-step3body":"現有 AL Sandbox 繼續執行唯讀巡檢。本頁不代理請求、不儲存密碼、不讀取 Cookie，也不公開遠端連接埠。",
-      "rw-limits":"目標網站看到遠端桌面機器的網路，但仍可能識別遠端瀏覽環境。速度、相容性、登入風險檢查和資格均不保證。請勿用於規避網站限制或 Altare 規則。",
-      "rw-help":"Altare 官方遠端桌面說明 ↗","back-home":"首頁","back-directory":"公開網址"},
-    "ja":{
-      "rw-title":"プライベート・リモートブラウザー","rw-summary":"スマートフォンから Altare のリモートデスクトップに入り、そのマシン上のブラウザーを使います。接続元ネットワークはリモートマシン側です。",
-      "rw-open":"Altare の公式コンソールを開く ↗","rw-beta":"Workstation の利用資格を確認 ↗","rw-step1":"1. デスクトップ利用資格を確認",
-      "rw-step1body":"無料プランでは Workstations ベータへの参加資格が必要です。Altare → Account → Experiments → Workstations を確認してください。既存の Sandbox はコマンドライン環境です。",
-      "rw-step2":"2. リモートブラウザーを起動","rw-step2body":"利用可能なら Desktop Workstation（XFCE 推奨）を作成し、Open desktop からブラウザーを起動します。アクセスは Altare アカウントで保護されます。",
-      "rw-step3":"3. サービスを分離","rw-step3body":"既存の AL Sandbox は読み取り専用監視に使用します。このページはプロキシを提供せず、パスワードや Cookie を収集せず、ポートも公開しません。",
-      "rw-limits":"相手のサイトにはリモートマシン側のネットワークが見えますが、環境やリスク管理で判定される場合があります。速度、互換性、ログイン、ベータ参加を保証しません。",
-      "rw-help":"Altare 公式デスクトップガイド ↗","back-home":"ホーム","back-directory":"サイト一覧"}
-  };
-  var strings = tr[key] || {};
-  document.documentElement.lang = key;
-  Object.keys(strings).forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=strings[id];});
+(function() {
+"use strict";
+var l="";
+try {l=localStorage.getItem("avenqir.locale.v1") || ""} catch(_){}
+if(!l)l=(navigator.languages && navigator.languages[0])||navigator.language||"en";
+var lo=String(l).toLowerCase();
+var k=lo.startsWith("zh")?(lo.includes("hant")||lo.includes("tw")||lo.includes("hk")?"zh-Hant":"zh-Hans"):lo.startsWith("ja")?"ja":"en";
+var map={
+"zh-Hans":{
+"rw-title":"使用现有 AL Sandbox，不需要 Workstations 内测",
+"rw-summary":"在当前这台 AL Sandbox 上运行 Chrome，把远程浏览器画面传给手机。需要 Sandbox 有足够内存和浏览器运行权限，采用私有 VNC 与 Cloudflare Access 双重保护。",
+"rw-setup":"查看 Sandbox 安装和安全验收说明","rw-console":"打开现有 AL 控制台",
+"rw-step1":"1. 验证现有机器","rw-one":"在 AL 控制台执行只读预检，检查网址巡检是否已经安装、机器是否分配至少 2 GiB 内存；预检不会自动安装浏览器。",
+"rw-step2":"2. 安装私人 Chrome + VNC","rw-two":"自愿运行安装脚本，Chrome 使用独立低权限用户，VNC 仅监听 127.0.0.1。不公开代理、不开放公网端口，也不会更改 Orbit Android 的签名。",
+"rw-step3":"3. 手机端安全访问","rw-three":"将 Cloudflare Tunnel 的 TCP 服务连接至本机 5901 端口，创建仅允许本人登录的 Access 应用并启用浏览器 VNC。然后在手机打开该受保护的网址。",
+"rw-warning":"尚未上线：此页仅提供配置入口。必须在你的 AL 上实际安装运行、配置 Cloudflare Access 并完成真机连接验收，才算远程浏览器可用。本页面不会收集登录密码。",
+"rw-limits":"仅供本人远程浏览，不是公开代理或 VPN。目标网站可能限制数据中心 IP 或要求验证；不得用于规避网站限制或 Altare 规则。",
+"rw-cloudflare":"Cloudflare 官方网页 VNC 使用说明","rw-home":"首页","rw-directory":"公开网址"},
+"zh-Hant":{
+"rw-title":"使用現有 AL Sandbox，不需要 Workstations 內測",
+"rw-summary":"在目前這台 AL Sandbox 執行 Chrome，將遠端瀏覽器畫面傳給手機。需要足夠記憶體與瀏覽器執行權限，並透過私人 VNC 與 Cloudflare Access 保護。",
+"rw-setup":"查看 Sandbox 安裝與安全驗收說明","rw-console":"開啟現有 AL 控制台",
+"rw-step1":"1. 驗證現有機器","rw-one":"在 AL 控制台執行唯讀檢查，確認巡檢是否安裝、機器是否分配至少 2 GiB 記憶體；不會自動安裝瀏覽器。",
+"rw-step2":"2. 安裝私人 Chrome + VNC","rw-two":"安裝腳本使用低權限的 Chrome 使用者，VNC 僅監聽 127.0.0.1；不開放代理、公網連接埠或更改 Android 簽章。",
+"rw-step3":"3. 手機端安全連線","rw-three":"將 Cloudflare Tunnel TCP 服務連到本機 5901 埠，設定只允許本人登入的 Access 應用，並啟用瀏覽器 VNC。然後開啟受保護的網址。",
+"rw-warning":"尚未上線：此頁是設定入口。實際安裝、Cloudflare Access 設定與手機連線驗收完成前，不代表遠端瀏覽器已可用。",
+"rw-limits":"僅供私人遠端瀏覽，不是公開代理或 VPN。目標網站可能限制資料中心 IP 或要求驗證；不得繞過網站或 Altare 規範。",
+"rw-cloudflare":"Cloudflare 官方瀏覽器 VNC 指南","rw-home":"首頁","rw-directory":"公開網址"},
+"ja":{
+"rw-title":"既存の AL Sandbox を使う（Workstations ベータ不要）",
+"rw-summary":"この AL Sandbox 上の Chrome をスマートフォンから遠隔操作する方式です。メモリーと実行権限を確認し、専用 VNC と Cloudflare Access で保護します。",
+"rw-setup":"Sandbox の設定と安全確認","rw-console":"AL コンソールを開く",
+"rw-step1":"1. 実機の状態を確認","rw-one":"AL コンソールで読み取り専用診断を実行し、監視ツールのインストールと 2 GiB 以上の割り当てメモリーを確認します。ブラウザーは自動インストールされません。",
+"rw-step2":"2. 非公開 Chrome + VNC","rw-two":"専用の非特権ユーザーで Chrome を実行し、VNC は 127.0.0.1 でのみ待ち受けます。公開プロキシや外部ポートは作りません。",
+"rw-step3":"3. スマートフォンで安全に接続","rw-three":"Cloudflare Tunnel の TCP をローカル 5901 に向け、本人だけ許可する Access アプリを作成してブラウザー VNC を有効にします。",
+"rw-warning":"未稼働：このページは設定ガイドです。AL への実インストールと Cloudflare Access 認証、スマートフォンの動作確認が必要です。ここではパスワードを集めません。",
+"rw-limits":"個人用の遠隔ブラウザーであり、公開プロキシや VPN ではありません。サイトや Altare の制限を回避する用途には使わないでください。",
+"rw-cloudflare":"Cloudflare 公式ブラウザー VNC ガイド","rw-home":"ホーム","rw-directory":"サイト一覧"}
+};
+var v=map[k]||{};
+document.documentElement.lang=k;
+Object.keys(v).forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=v[id]});
 })();
 </script>
 <script src="theme.js?v=15" defer></script>
-</body>
-</html>
+</body></html>

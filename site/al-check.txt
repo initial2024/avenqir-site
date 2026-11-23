@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# AVENQIR read-only AL status from a short phone-friendly URL.
+# Does not install software, open ports or print credentials.
+set -euo pipefail
+tmp="$(mktemp)"
+trap 'rm -f "$tmp"' EXIT
+curl --proto '=https' --tlsv1.2 -fsSL --retry 2 --max-time 35 \
+  https://raw.githubusercontent.com/initial2024/avenqir-site/main/ops/al_browser_preflight.py -o "$tmp"
+head -n 1 "$tmp" | grep -Fxq '#!/usr/bin/env python3' || {
+ echo AL_CHECK_SOURCE_INVALID >&2
+ exit 2
+}
+python3 "$tmp"
