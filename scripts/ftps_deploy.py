@@ -18,6 +18,9 @@ from verify_site import validate, SITE
 
 HOST='ftpupload.net'
 REMOTE='avenqir.bg5.net/htdocs'
+# Existing images may have been changed directly on the shared host; never
+# overwrite a different remote asset in unattended deployments.
+PRESERVE_EXISTING_MEDIA={'.webp','.png','.jpg','.jpeg','.ico','.gif'}
 
 def credential(key):
     v=os.environ.get(key,'')
@@ -59,6 +62,11 @@ def upload(ftp, file, commit, target_root, root=SITE):
     old=retrieve(ftp,name) if name in current else None
     if old is not None and sha(old)==sha(new):
         print('UNCHANGED',rel)
+        return
+    if old is not None and file.suffix.lower() in PRESERVE_EXISTING_MEDIA:
+        # The server copy wins for binaries unless an owner-approved asset
+        # replacement procedure is used separately from routine code deploys.
+        print('PRESERVED_REMOTE_MEDIA',rel,'remote_bytes='+str(len(old)))
         return
     temp=name+'.avenqir-upload-'+commit[:12]+'.tmp'
     if temp in current: raise RuntimeError('Unexpected pre-existing temporary file: '+rel)
