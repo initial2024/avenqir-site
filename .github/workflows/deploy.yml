@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       do_deploy:
-        description: 'Deploy approved files? Requires both deployment approval variables.'
+        description: 'Deploy approved files if not paused by AVENQIR_DEPLOY_PAUSED.'
         required: true
         type: boolean
         default: false
@@ -46,7 +46,6 @@ jobs:
   deploy:
     needs: verify
     if: >-
-      false &&
       vars.AVENQIR_DEPLOY_PAUSED != 'true' &&
       github.repository == 'initial2024/avenqir-site' &&
       github.actor == 'initial2024' &&
