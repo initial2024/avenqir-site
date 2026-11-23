@@ -168,6 +168,45 @@ The script does not install or start `cloudflared` and cannot claim web
 reachability. It does not create Cloudflare DNS, tunnels, Access apps or
 policies without an explicit owner-selected Cloudflare account and hostname.
 
+## Password setup when Altare has no interactive stdin
+
+The Altare web shell can immediately return to `root@sandbox:~#` after
+`x11vnc -storepasswd` without prompting. This means no usable password was
+created, not that the chosen password is wrong. **Never paste the password
+into a root shell command.**
+
+Update the AL scripts from the trusted GitHub source using the existing
+mobile bootstrap:
+
+```bash
+curl -fsSLo /tmp/als https://raw.githubusercontent.com/initial2024/avenqir-site/main/site/al-setup.txt
+test "$(head -n 1 /tmp/als)" = '#!/usr/bin/env bash' && bash /tmp/als
+bash /opt/avenqir/al_private_browser.sh password-auto
+```
+
+The `password-auto` command generates a new 8-character random VNC
+password on AL, sends it to x11vnc via **stdin pipe (not process arguments
+or shell history)**, and creates a mode-0600 password file owned by
+`albrowser`. It does not display your password immediately. The
+one-time plaintext copy is temporarily placed in the root-only file
+`/root/.al-vnc-password-once`, with mode 0600. This is a temporary
+handling mechanism: the VNC password file itself uses reversible
+obfuscation and Cloudflare Access identity authentication is mandatory.
+
+To see the password once and remove its plaintext copy, **only when your
+phone screen is private**, run:
+
+```bash
+bash /opt/avenqir/al_private_browser.sh password-reveal
+```
+
+Store the resulting password in a private password manager.
+**Never send screenshots containing the generated password**, never paste
+it into ChatGPT, GitHub or AVENQIR. The encrypted-format x11vnc password
+file remains, so you can then start the private VNC process. The script
+refuses to overwrite an existing password; do not rerun `password-auto`
+to rotate an unknown credential.
+
 ## Private HTTPS browser UI (Cloudflare Access)
 
 Official guide:
