@@ -52,7 +52,15 @@
     'https://creativecommons.org/',
     'https://docs.github.com/',
     'https://owasp.org/',
-    'https://openverse.org/'
+    'https://openverse.org/',
+    // Source-domain checks on 2026-11-23; this does NOT establish website safety.
+    'https://www.who.int/',
+    'https://www.cdc.gov/',
+    'https://pubchem.ncbi.nlm.nih.gov/',
+    'https://www.icann.org/',
+    'https://www.ietf.org/standards/',
+    'https://www.gov.uk/',
+    'https://www.wto.org/'
   ];
   function sanitize(raw){
     if(typeof raw!=='string'||raw.length>1800||/[\u0000-\u0020\u007f\\]/.test(raw))return null;
