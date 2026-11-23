@@ -23,9 +23,10 @@ assert.equal(gate.searchEngineDestination('duck',''),'https://duckduckgo.com/');
 assert.equal(gate.searchEngineDestination('google','数二 线代'),'https://www.google.com/search?q='+encodeURIComponent('数二 线代'));
 assert.equal(gate.searchEngineDestination('other','hello'),null);
 const code=fs.readFileSync(path.resolve(__dirname,'../site/directory.js'),'utf8');
-const extras=code.match(/const extraData=(\[[^;]+\]);/);
-assert.ok(extras,'extraData must remain static and parseable');
-const records=JSON.parse(extras[1]);
+const atlas=require('../site/atlas-paths.js');
+const expansion=require('../site/atlas-expansion.js');
+const catalog=require('../site/atlas-catalog-core.js');
+const records=catalog.extras;
 assert.equal(records.length,64);
 assert.equal(new Set(records.map(r=>r.url)).size,records.length);
 for(const r of records){
@@ -37,9 +38,11 @@ assert.ok(code.includes('window.location.assign('),'use same-tab direct navigati
 assert.ok(code.includes('showExternal(url,x.name)'),'warn for unreviewed links');
 assert.ok(code.includes("a.href=permitted?url:'leave.html?url='"),'unreviewed context-menu clicks must use a local warning page');
 assert.ok(code.includes("const reviewed=!!linkGate?.officialSourceReviewed(url)"));
-assert.ok(code.includes('combine(combine(combine(sanitize(data.items),initialData),extraData),paths.links)'),'curated extras and paths must survive server override');
+assert.ok(code.includes('catalog.load().then('),'directory must load real backend + curated catalog');
+assert.ok(code.includes('renderCompare()'),'comparison is wired');
+assert.ok(code.includes('openNoMatch()'),'submit-only missing search dialog is wired');
 const page=fs.readFileSync(path.resolve(__dirname,'../site/directory.html'),'utf8');
-for(const id of ['atlasExternalDialog','atlasExternalName','atlasExternalHost','atlasExternalUrl','atlasExternalCancel','atlasExternalGo']){
+for(const id of ['atlasExternalDialog','atlasExternalName','atlasExternalHost','atlasExternalUrl','atlasExternalCancel','atlasExternalGo','atlasNoMatchDialog','atlasShowAll','atlasCompareBoard']){
  assert.ok(page.includes('id="'+id+'"'),id);
 }
 assert.ok(page.includes('name="referrer" content="no-referrer"'));
@@ -50,4 +53,4 @@ assert.ok(leave.includes('noindex,nofollow'));
 assert.ok(script.includes('go.disabled=false'));
 assert.ok(!script.includes('window.open('));
 assert.ok(!script.includes('setTimeout('));
-console.log('PASS: reviewed-only bypass, unknown/suspicious confirmation, same-tab search engines, 64 legacy extras plus add-on catalog and warning dialog');
+console.log('PASS: exact official provenance, guarded offsite links, 64 legacy records and v8.5 page wiring');
