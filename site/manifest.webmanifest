@@ -34,6 +34,12 @@
       "short_name": "工具",
       "url": "./tools.html",
       "description": "本地工具箱"
+    },
+    {
+      "name": "本地数据迁移",
+      "short_name": "迁移",
+      "url": "./transfer.html",
+      "description": "书签、笔记和小游戏存档统一导出及恢复"
     }
   ]
 }
