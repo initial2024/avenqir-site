@@ -37,9 +37,10 @@ assert.equal(JSON.parse(storeMap.get(B))[0].name,'Incoming older');
 assert.throws(()=>api.prepareImport(storage,incoming,keys,'unexpected'),/未知恢复模式/);
 assert.throws(()=>api.prepareImport(storage,{[B]:[{id:'broken'}]},[B],'merge'),/校验/);
 assert.throws(()=>api.readArchive({format:'wrong',data:incoming}),/不是/);
-const before=storeMap.get(N),failureStore={
+const before=storeMap.get(N);let failOnce=true;
+const failureStore={
  getItem:k=>storeMap.get(k)||null,
- setItem:(k,v)=>{if(k===N&&JSON.parse(v).length>1)throw Error('quota exceeded');storeMap.set(k,v)},
+ setItem:(k,v)=>{if(k===N&&failOnce){failOnce=false;throw Error('quota exceeded');}storeMap.set(k,v)},
  removeItem:k=>storeMap.delete(k)
 };
 assert.throws(()=>api.importInto(failureStore,incoming,[N],'replace'),/quota/);
