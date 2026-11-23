@@ -27,19 +27,60 @@ class ALPrivateBrowserSecurity(unittest.TestCase):
         self.assertNotIn("systemctl", source)
         self.assertIn("AL_PRIVATE_VNC_LOCAL_ONLY=YES", source)
 
-    def test_password_auto_no_terminal_and_no_shell_history_secret(self):
-        source = SETUP.read_text()
+    def test_password_auto_no_tty_no_shell_history_secret(self):
+        source=SETUP.read_text()
+        helper=(ROOT/"ops/al_vnc_password_auto.py").read_text()
+        mobile=(ROOT/"site/al-setup.txt").read_text()
         self.assertIn('password-auto) set_password_auto ;;', source)
-        self.assertIn("secrets.token_urlsafe(6)", source)
-        self.assertIn('x11vnc -storepasswd "$generated" "$tmp"', source)
-        self.assertIn('chmod 0600 "$tmp"', source)
-        self.assertIn('chown "$U:$U" "$tmp"', source)
-        self.assertIn('mv -f "$tmp" "$PROFILE/.vnc/passwd"', source)
-        self.assertIn('AL_VNC_PASSWORD_SET=YES', source)
-        self.assertIn('AL_VNC_PASSWORD_ALREADY_SET=YES', source)
-        self.assertIn('unset generated', source)
-        self.assertNotIn('read -p "Password:', source)
+        self.assertIn('password-reveal) reveal_password_once ;;', source)
+        self.assertIn('al_vnc_password_auto.py', mobile)
+        self.assertIn('secrets.choice(CHARS)', helper)
+        self.assertIn("input=password +", helper)
+        self.assertIn("stdout=subprocess.DEVNULL", helper)
+        self.assertIn("stderr=subprocess.PIPE", helper)
+        self.assertIn("AL_VNC_PASSWORD_SET=YES", helper)
+        self.assertIn("O_EXCL", helper)
+        self.assertNotIn("shell=True", helper)
         self.assertNotIn("x11vnc -nopw", source)
+
+    def test_random_password_uses_pipe_and_one_time_root_file(self):
+        import contextlib
+        import importlib.util
+        import io
+        import os
+        import tempfile
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        spec=importlib.util.spec_from_file_location(
+            "al_vnc_password_auto", ROOT/"ops/al_vnc_password_auto.py")
+        module=importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as folder:
+            passfile=Path(folder)/"passwd"
+            onefile=Path(folder)/"root-only"
+            secret_seen=[]
+            def fake_x11vnc(args, **kwargs):
+                self.assertEqual(args, ["x11vnc","-storepasswd",str(passfile)])
+                stdin_text=kwargs["input"]
+                password=stdin_text.splitlines()[0]
+                self.assertEqual(stdin_text,password+"\\n"+password+"\\ny\\n")
+                self.assertEqual(len(password),8)
+                secret_seen.append(password)
+                passfile.write_bytes(b"12345678")
+                return SimpleNamespace(returncode=0)
+            out=io.StringIO()
+            with patch.object(module.subprocess,"run",side_effect=fake_x11vnc):
+                with contextlib.redirect_stdout(out):
+                    result=module.setup(passfile,onefile,os.getuid(),os.getgid())
+            self.assertEqual(result,0)
+            self.assertEqual(passfile.stat().st_size,8)
+            self.assertEqual(onefile.stat().st_mode&0o777,0o600)
+            self.assertNotIn(secret_seen[0],out.getvalue())
+            self.assertEqual(module.setup(passfile,onefile,os.getuid(),os.getgid()),2)
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(module.reveal(onefile),0)
+            self.assertFalse(onefile.exists())
+            self.assertTrue(passfile.exists())
 
     def test_interactive_password_only_when_tty_exists(self):
         source = SETUP.read_text()
