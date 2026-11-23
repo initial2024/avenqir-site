@@ -115,7 +115,7 @@ for(const tag of ['atlasRegionToggle','atlasRegionStatus','atlasRegionBody','atl
  assert.ok(html.includes('id="'+tag+'"'),'missing local region control '+tag);
 }
 assert.ok(html.indexOf('atlas-region.js?v=18')<html.indexOf('atlas-region-ui.js?v=18'));
-assert.ok(html.indexOf('atlas-region-ui.js?v=18')<html.indexOf('directory.js?v=18'));
+assert.ok(html.indexOf('atlas-region-ui.js?v=18')<html.indexOf('directory.js?v=20'));
 assert.ok(ui.includes('optgroup'),'40-region selector needs grouping');
 assert.ok(wiring.includes('regionRecommendations?.render()'),'new catalog must re-render local regions');
 for(const source of [ui,model]){
