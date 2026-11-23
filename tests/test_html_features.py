@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+"""Cross-check the new static feature wiring without touching the real website."""
+import re, unittest
+from pathlib import Path
+from html.parser import HTMLParser
+
+ROOT=Path(__file__).resolve().parents[1]
+SITE=ROOT/'site'
+
+class Parse(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.ids=[]
+        self.scripts=[]
+        self.data_targets=[]
+        self.internal_hrefs=[]
+    def handle_starttag(self,tag,attrs):
+        a=dict(attrs)
+        if a.get('id'):self.ids.append(a['id'])
+        if a.get('data-target'):self.data_targets.append(a['data-target'])
+        if tag=='script' and a.get('src'):self.scripts.append(a['src'].split('?')[0])
+        if tag=='a' and a.get('href'):
+            href=a['href']
+            if not href.startswith(('http:','https:','mailto:','tel:','#')):self.internal_hrefs.append(href.split('#')[0].split('?')[0])
+
+class Features(unittest.TestCase):
+    def test_static_wiring(self):
+        expected={
+          'backup.html':['transferCategories','transferExport','transferInput','transferRestore','transferStatus'],
+          'tools.html':['codec','codecInput','codecB64Encode','codecB64Decode','codecUrlEncode','codecUrlDecode','color','colorHex','colorPicker'],
+          'notes.html':['notePreviewToggle','noteMarkdownPreview','diffTrim','diffCase','timeOutput'],
+          'index.html':[]
+        }
+        for file,required in expected.items():
+            p=Parse();p.feed((SITE/file).read_text('utf-8'))
+            self.assertEqual(len(p.ids),len(set(p.ids)),file+' duplicate IDs')
+            for key in required:self.assertIn(key,p.ids,file+' missing ID '+key)
+            for target in p.data_targets:self.assertIn(target,p.ids,file+' broken module '+target)
+            for src in p.scripts:self.assertTrue((SITE/src).is_file(),file+' missing script '+src)
+            for target in p.internal_hrefs:
+                if target and ('.' in target or target.endswith('/')):
+                    self.assertTrue((SITE/target).is_file(),file+' broken page link '+target)
+    def test_service_worker_entries(self):
+        s=(SITE/'sw.js').read_text('utf-8')
+        entries=re.findall(r"'\./([^']+)'",s.split('function isChallenge',1)[0])
+        self.assertGreaterEqual(len(entries),35)
+        self.assertEqual(len(entries),len(set(entries)))
+        for entry in entries:self.assertTrue((SITE/entry).is_file(),entry)
+        for asset in ('quick-search.js','backup.js','backup-schema.js','backup.html','notes-enhance.js','tool-addons.js'):
+            self.assertIn(asset,entries)
+        self.assertIn('slowAES.decrypt',s)
+        self.assertIn('/_private/',s)
+        self.assertIn('/_store/',s)
+    def test_backup_privacy_and_static_features(self):
+        for file in ('backup.js','backup-schema.js','quick-search.js','notes-enhance.js','tool-addons.js'):
+            data=(SITE/file).read_text('utf-8')
+            self.assertNotIn('.innerHTML',data)
+            self.assertNotIn('eval(',data)
+            if file in ('backup.js','backup-schema.js'):
+                self.assertNotIn('fetch(',data)
+                self.assertNotIn('XMLHttpRequest',data)
+        self.assertIn('AVENQIR_TRANSFER',(SITE/'backup-schema.js').read_text('utf-8'))
+        self.assertIn('aria-haspopup',(SITE/'quick-search.js').read_text('utf-8'))
+
+if __name__=='__main__':
+    unittest.main()
