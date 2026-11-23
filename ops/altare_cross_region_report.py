@@ -160,7 +160,7 @@ def main():
     print("PUBLISH:", outcome)
     print(comment[:4500])
     print("=== END ALTARE REPORT ===")
-    return 0 if outcome != "GITHUB_PUBLISH_FAILED_URLError" else 4
+    return 4 if outcome.startswith("GITHUB_PUBLISH_FAILED_") else 0
 
 
 if __name__ == "__main__":
