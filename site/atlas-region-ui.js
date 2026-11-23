@@ -22,11 +22,16 @@
  };
  const category=name=>root.AVENQIR_I18N?.category(name)||name;
  const regionName=r=>{if(language()==='zh-Hans')return r.label;try{return new Intl.DisplayNames([locale()],{type:'region'}).of(r.code)||r.code;}catch{return r.code;}};
- const AREA_M49=Object.freeze({'东亚':'030','东南亚':'035','南亚':'034','中东':'145','欧洲':'150','美洲':'019','大洋洲':'009','非洲':'002'});
+ const AREA_M49=Object.freeze({'东亚':['030','East Asia'],'东南亚':['035','Southeast Asia'],'南亚':['034','South Asia'],'中东':['145','Middle East'],'欧洲':['150','Europe'],'美洲':['019','Americas'],'大洋洲':['009','Oceania'],'非洲':['002','Africa']});
  const regionGroup=area=>{
   if(language()==='zh-Hans')return area;
-  const code=AREA_M49[area];if(!code)return 'Other regions';
-  try{return new Intl.DisplayNames([locale()],{type:'region'}).of(code)||'Other regions';}catch{return 'Other regions';}
+  const entry=AREA_M49[area];if(!entry)return 'Other regions';
+  try{
+   // Not all browser ICU datasets resolve UN M49 macro-regions. The numeric
+   // code itself is NOT a usable visible translation; use English as fallback.
+   const translated=new Intl.DisplayNames([locale()],{type:'region'}).of(entry[0]);
+   return translated && translated!==entry[0]?translated:entry[1];
+  }catch{return entry[1];}
  };
  // Explicit English summaries are written against the curated record, not generated
  // by contacting an outside translator. Unknown records use their existing category
