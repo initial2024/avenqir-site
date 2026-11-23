@@ -2,7 +2,7 @@
 <html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f8fd"><meta name="referrer" content="no-referrer"><meta name="description" content="AVENQIR Link Atlas：独立策展的公开网站目录。搜索网站、按分类发现资源，支持多设备访问。">
 <title>网站搜索 · AVENQIR Link Atlas</title>
-<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="common.css?v=8"><link rel="stylesheet" href="directory-search.css?v=8"><link rel="manifest" href="manifest.webmanifest"></head>
+<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="common.css?v=12"><link rel="stylesheet" href="directory-search.css?v=12"><link rel="manifest" href="manifest.webmanifest"></head>
 <body class="search-body"><header class="headbar"><div class="wrap head-inner"><a class="logo" href="index.html"><span class="logoicon">⬡</span> AVENQIR</a><button type="button" class="menu-toggle" aria-controls="global-nav" aria-expanded="false" aria-label="打开导航菜单">☰ <span>菜单</span></button><nav id="global-nav" class="main-nav" aria-label="网站导航"><a href="index.html">首页</a><a href="directory.html" class="active" aria-current="page">网站搜索</a><a href="bookmarks.html">我的书签</a><a href="notes.html">笔记</a><a href="fun.html">小游戏</a><a href="daily.html">日常</a><a href="check.html">网络检测</a><a href="tools.html">工具箱</a><a href="projects.html">GitHub</a><a href="domains.html">DNS</a><a href="logs.html">日志</a><a href="feedback.php">留言反馈</a></nav><span class="microbadge">ATLAS / v8.3</span></div></header>
 <main class="directory-main">
 <section class="search-hero" aria-labelledby="atlasTitle">
@@ -18,12 +18,12 @@
 <div class="atlas-layout">
 <section class="atlas-content" aria-labelledby="resultsTitle">
  <div class="atlas-tabs" role="group" aria-label="筛选网站"><button class="atlas-tab active" id="atlasAll" data-tab="all" type="button" aria-pressed="true">全部网站</button><button class="atlas-tab" id="atlasSaved" data-tab="saved" type="button" aria-pressed="false">★ 我的收藏</button><span class="atlas-spacer"></span><label for="atlasSort" class="sr-only">结果排序</label><select id="atlasSort"><option value="relevance">相关性优先</option><option value="name">名称 A–Z</option></select></div>
- <div id="atlasCategories" class="atlas-categories" role="group" aria-label="网站分类"></div>
+ <div id="atlasCategories" class="atlas-categories" role="group" aria-label="网站分类"></div><div class="atlas-preferences"><span id="atlasApprovalCount">本机没有记住的第三方网址</span><button type="button" id="atlasClearApprovals">清除本机已记住的跳转选择</button></div>
  <div class="atlas-results-heading"><div><h2 id="resultsTitle">精选网站</h2><p id="atlasSummary">正在载入网址索引…</p></div><span class="atlas-source" id="atlasSource">加载中</span></div>
  <div class="atlas-result-list" id="atlasResults" aria-live="polite"></div>
  <button type="button" id="atlasMore" class="atlas-more" hidden>查看更多网站 ↓</button>
  <div class="atlas-empty" id="atlasEmpty" hidden><strong>没有找到匹配项</strong><p>可以换关键词或分类，也可以选择下方的全网搜索。</p></div>
- <div class="atlas-external"><div><b>没有找到？试试全网搜索</b><p>以下按钮会离开本网站，由第三方搜索引擎处理查询。</p></div><div class="atlas-external-actions"><button type="button" data-external="google">Google</button><button type="button" data-external="bing">Bing</button><button type="button" data-external="duck">DuckDuckGo</button></div></div>
+ <div class="atlas-external"><div><b>没有找到？试试全网搜索</b><p>以下按钮会离开本网站，由第三方搜索引擎处理查询。</p></div><div class="atlas-external-actions"><a class="atlas-engine-link" data-search-provider="google" href="https://www.google.com/" rel="noreferrer">Google ↗</a><a class="atlas-engine-link" data-search-provider="bing" href="https://www.bing.com/" rel="noreferrer">Bing ↗</a><a class="atlas-engine-link" data-search-provider="duck" href="https://duckduckgo.com/" rel="noreferrer">DuckDuckGo ↗</a></div></div>
 </section>
 <aside class="atlas-aside" aria-label="快捷功能"><section class="atlas-side-card"><h2>探索分类</h2><p>从收录的网址中即时生成</p><div id="atlasCategoryCount" class="atlas-category-count"></div></section><section class="atlas-side-card"><h2>随时打开</h2><a href="bookmarks.html">☆ 我的私人书签 <span>↗</span></a><a href="tools.html">⌘ 常用工具箱 <span>↗</span></a><a href="fun.html">◈ 解压小游戏 <span>↗</span></a><a href="check.html">◉ 浏览器诊断 <span>↗</span></a><a href="feedback.php?type=link">✉ 推荐网址 / 提交反馈 <span>↗</span></a></section><section class="atlas-side-card"><h2>关于收录</h2><p>这是人工维护的独立网址目录，并非可爬取全网的搜索引擎。严格核对官方 HTTPS 地址的链接可免二次确认；其余链接先展示第三方跳转提醒。官方来源核对不是实时恶意软件扫描或安全认证，收录也不代表质量保证。</p><a class="atlas-policy" href="feedback.php?type=broken">报告失效链接 ↗</a><a class="atlas-policy" href="disclaimer.html">免责声明与外部链接提醒 ↗</a></section></aside>
 </div></main>
@@ -39,5 +39,6 @@
  <div class="atlas-external-dialog-actions">
   <button id="atlasExternalCancel" class="btn ghost" type="submit" value="cancel">取消返回</button>
   <button id="atlasExternalGo" class="btn primary" type="button">我了解风险，继续访问</button>
+  <label class="atlas-remember-choice"><input type="checkbox" id="atlasRemember" autocomplete="off"> <span>记住此网址的确认选择 30 天（仅此浏览器，可随时清除）</span></label>
  </div>
-</form></dialog><script src="link-gate.js?v=1" defer></script><script src="directory.js?v=9" defer></script><script src="site.js?v=8" defer></script></body></html>
+</form></dialog><script src="link-gate.js?v=12" defer></script><script src="directory.js?v=12" defer></script><script src="site.js?v=12" defer></script></body></html>
