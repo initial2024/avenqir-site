@@ -297,3 +297,32 @@
 .atlas-local-foot button{flex:none;min-height:40px;padding:7px 12px;border:1px solid var(--ui-line,#436481);border-radius:10px;background:var(--ui-alt,#1b344d);color:var(--ui-ink,#edf6ff);font-size:11px;cursor:pointer}
 @media(max-width:800px){.atlas-local-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:540px){.atlas-local-top{align-items:flex-start;flex-direction:column;gap:12px}.atlas-local-switch{width:100%;justify-content:center}.atlas-local-cards{grid-template-columns:1fr}.atlas-local-foot{align-items:flex-start;flex-direction:column}.atlas-local-foot button{width:100%}}
+
+
+/* AVENQIR v8.7: accessible eight-theme taxonomy; all surfaces share the same appearance tokens. */
+.search-body .atlas-taxonomy{max-width:1150px;margin:0 auto 24px;padding:clamp(17px,3vw,25px);border:1px solid var(--ui-line,#d6e3f0);border-radius:20px;background:var(--ui-card,#fff);color:var(--ui-ink,#1a314a);box-shadow:0 9px 30px #152e4a13}
+.atlas-taxonomy-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.atlas-taxonomy-head h2{font-size:clamp(19px,2.5vw,23px);line-height:1.35;margin:4px 0 6px;color:var(--ui-ink,#1a314a)!important}
+.atlas-taxonomy-head p{font-size:12px;color:var(--ui-sub,#647991)!important;margin:0;line-height:1.6}
+.search-body .atlas-group-bar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:17px}
+.search-body .atlas-group{min-width:0;display:flex;align-items:flex-start;flex-direction:column;gap:4px;text-align:left;cursor:pointer;border:1px solid var(--ui-line,#cbd7e5);border-radius:13px;min-height:88px;padding:12px 13px;background:var(--ui-alt,#edf4fa);color:var(--ui-ink,#1a314a);transition:border-color .15s ease,background .15s ease}
+.search-body .atlas-group.selected{border-color:var(--ui-link,#2e75d5);background:var(--ui-hover,#e1f0fc);box-shadow:inset 0 0 0 1px var(--ui-link,#2e75d5)}
+.search-body .atlas-group:focus-visible{outline:3px solid var(--ui-link,#2e75d5);outline-offset:2px}
+.atlas-group-icon{font-size:20px;line-height:1.1}
+.search-body .atlas-group strong{font-size:13px;line-height:1.35;color:var(--ui-ink,#1a314a)!important;overflow-wrap:anywhere}
+.search-body .atlas-group small{font-size:10px;line-height:1.5;color:var(--ui-sub,#617790)!important}
+.atlas-category-tools{display:flex;gap:9px;align-items:center;margin:16px 0 8px}
+.search-body #atlasCategorySearch{flex:1 1 200px;min-width:0;max-width:100%;min-height:42px;height:42px;margin:0;padding:10px 13px;border:1px solid var(--ui-line,#ccd8e7);border-radius:11px;background:var(--ui-alt,#eef4fa);color:var(--ui-ink,#1a314a);font-size:13px}
+.search-body #atlasCategorySearch::placeholder{color:var(--ui-sub,#637991)}
+.search-body #atlasExpandCategories{min-height:42px;margin:0;padding:9px 12px;border:1px solid var(--ui-line,#ccd8e7);border-radius:11px;background:var(--ui-alt,#eef4fa);color:var(--ui-link,#246cc2);font-size:12px;font-weight:710;white-space:nowrap;cursor:pointer}
+.search-body #atlasExpandCategories[hidden]{display:none!important}
+.search-body .atlas-taxonomy .atlas-categories{display:flex;flex-wrap:wrap;overflow:visible;gap:8px;padding:8px 0 0}
+.search-body .atlas-taxonomy .atlas-cat{white-space:normal;text-align:center;min-height:36px;padding:7px 11px;font-size:11px;font-weight:620;line-height:1.5;background:var(--ui-alt,#eef4fa)!important;color:var(--ui-ink,#1a314a)!important;border:1px solid var(--ui-line,#cbd7e5)!important;border-radius:999px}
+.search-body .atlas-taxonomy .atlas-cat.selected{background:var(--ui-hover,#e1f0fc)!important;border-color:var(--ui-link,#246cc2)!important;color:var(--ui-link,#246cc2)!important;font-weight:770}
+.atlas-taxonomy-jump{display:inline-block;margin-top:12px;text-decoration:none;font-size:12px;font-weight:730;color:var(--ui-link,#246cc2)!important}
+.search-body .atlas-aside .atlas-category-count button{background:var(--ui-alt,#eef4fa);color:var(--ui-ink,#1a314a);border:1px solid var(--ui-line,#cbd7e5)}
+:root[data-aq-theme="dark"] .search-body :is(.atlas-taxonomy,.atlas-group,.atlas-cat,.atlas-category-tools input){color:var(--ui-ink)!important}
+:root[data-aq-theme="eye"] .search-body .atlas-group.selected{background:var(--ui-hover)!important}
+@media(max-width:790px){.search-body .atlas-group-bar{grid-template-columns:repeat(2,minmax(0,1fr))}.search-body .atlas-group{min-height:82px}}
+@media(max-width:420px){.search-body .atlas-taxonomy{margin:0 10px 17px;padding:14px 12px;border-radius:16px}.search-body .atlas-group-bar{gap:7px}.search-body .atlas-group{padding:9px 10px;min-height:85px}.search-body .atlas-group strong{font-size:12px}.search-body .atlas-group small{font-size:10px}.atlas-category-tools{flex-wrap:wrap}.search-body #atlasCategorySearch{flex-basis:100%}.search-body #atlasExpandCategories{width:100%}}
+@media(prefers-reduced-motion:reduce){.search-body .atlas-group{transition:none}}
