@@ -32,7 +32,7 @@ jobs:
               print('PASS: authenticated TLS + target web root accessible; no files read, written or deleted')
           except ftplib.error_perm as exc:
               sys.exit('DENY: FTP login/path refused ('+str(exc)[:3]+'); inspect credentials or remote path')
-          except (OSError,ssl.SSLError,ftplib.all_errors) as exc:
+          except (OSError,EOFError,ftplib.Error) as exc:
               sys.exit('DENY: connection or TLS failure: '+type(exc).__name__)
           finally:
               try: ftp.quit()
