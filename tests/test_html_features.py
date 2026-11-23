@@ -33,6 +33,7 @@ class Features(unittest.TestCase):
           'directory.html':['atlasExternalDialog','atlasExternalGo','atlasExternalCancel','atlasExternalHost','atlasRemember','atlasClearApprovals'],
           'appearance.html':['aqThemeStatus'],
           'leave.html':['leaveContinue','leaveFullUrl','leaveRemember'],
+          'orbit-bridge.html':['orbitPaste','orbitScan','orbitClear','orbitCodes','orbitLinks'],
           'index.html':[]
         }
         for file,required in expected.items():
@@ -51,7 +52,7 @@ class Features(unittest.TestCase):
             if '<header' not in html:continue
             self.assertIn('data-aq-theme-link',html,f.name+' missing static mode link')
             self.assertIn('src="theme.js?v=15"',html,f.name+' missing explicit theme')
-            self.assertRegex(html,r'href="theme\.css\?v=(?:15|16|17|18|19|20|21|22|23|24)"',f.name+' missing recent theme css')
+            self.assertRegex(html,r'href="theme\.css\?v=(?:15|16|17|18|19|20|21|22|23|24|25)"',f.name+' missing recent theme css')
 
     def test_service_worker_entries(self):
         s=(SITE/'sw.js').read_text('utf-8')
@@ -59,7 +60,7 @@ class Features(unittest.TestCase):
         self.assertGreaterEqual(len(entries),35)
         self.assertEqual(len(entries),len(set(entries)))
         for entry in entries:self.assertTrue((SITE/entry).is_file(),entry)
-        for asset in ('quick-search.js','device-transfer.js','transfer-schema.js','transfer.html','notes-enhance.js','tool-addons.js','netscape-format.js','theme.js','theme.css','atlas-paths.js','atlas-expansion.js','atlas-depth-a.js','atlas-depth-b.js','atlas-depth-c.js','atlas-depth-d.js','atlas-ai.js','atlas-regional.js','atlas-everyday.js','atlas-regional-ext.js','atlas-everyday-ext.js','atlas-region.js','atlas-region-ui.js','atlas-safety.js','atlas-guides.js','atlas-find.js','atlas-enrich.js','aq-i18n.js','atlas-taxonomy.js','atlas-catalog-core.js','atlas-summary.js','feedback-pref.js','link-gate.js','leave.html','leave.js','appearance.html'):
+        for asset in ('quick-search.js','device-transfer.js','transfer-schema.js','transfer.html','notes-enhance.js','tool-addons.js','netscape-format.js','theme.js','theme.css','atlas-paths.js','atlas-expansion.js','atlas-depth-a.js','atlas-depth-b.js','atlas-depth-c.js','atlas-depth-d.js','atlas-ai.js','atlas-regional.js','atlas-everyday.js','atlas-regional-ext.js','atlas-everyday-ext.js','atlas-region.js','atlas-region-ui.js','atlas-safety.js','atlas-guides.js','atlas-find.js','atlas-enrich.js','aq-i18n.js','aq-copy.js','orbit-bridge.js','orbit-bridge.html','atlas-taxonomy.js','atlas-catalog-core.js','atlas-summary.js','feedback-pref.js','link-gate.js','leave.html','leave.js','appearance.html'):
             self.assertIn(asset,entries)
         self.assertIn('slowAES.decrypt',s)
         self.assertIn('/_private/',s)
