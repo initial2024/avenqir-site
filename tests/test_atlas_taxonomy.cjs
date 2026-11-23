@@ -56,8 +56,9 @@ for(const g of taxonomy.groups){
 assert.deepEqual([...covered].sort(),[...counts.keys()].sort(),'taxonomy must cover exactly the curated categories');
 assert.equal(taxonomy.groupFor('从后台新建的类别'),null,'unknown administrator categories remain usable');
 assert.deepEqual(taxonomy.categoriesFor('unknown'),[]);
-assert.equal(gate.officialSourceReviewed('https://pubchem.ncbi.nlm.nih.gov/'),false,'new entries do not bypass review');
-assert.equal(gate.officialSourceReviewed('https://www.icann.org/'),false,'review is exact-URL opt-in, not automatic');
+assert.equal(gate.officialSourceReviewed('https://pubchem.ncbi.nlm.nih.gov/'),true,'manually reviewed exact institutional source');
+assert.equal(gate.officialSourceReviewed('https://www.icann.org/'),true,'manually reviewed exact institutional source');
+assert.equal(gate.officialSourceReviewed('https://www.thaigov.go.th/'),false,'non-reviewed institutions never inherit automatic source status');
 const dir=fs.readFileSync(path.join(site,'directory.html'),'utf8');
 const home=fs.readFileSync(path.join(site,'index.html'),'utf8');
 const js=fs.readFileSync(path.join(site,'directory.js'),'utf8');
@@ -76,7 +77,7 @@ for(const target of ['atlasGroupBar','atlasCategorySearch','atlasExpandCategorie
  assert.ok(dir.includes('id="'+target+'"'),'missing taxonomy UI control: '+target);
 }
 assert.ok(dir.includes('atlas-taxonomy.js?v=18'));
-assert.ok(dir.indexOf('atlas-taxonomy.js?v=18')<dir.indexOf('directory.js?v=18'));
+assert.ok(dir.indexOf('atlas-taxonomy.js?v=18')<dir.indexOf('directory.js?v=20'));
 assert.ok(sw.includes("'./atlas-taxonomy.js'"));
 assert.ok(css.includes('.atlas-group-bar')&&css.includes('.atlas-taxonomy .atlas-categories'));
 assert.ok(css.includes('@media(max-width:420px)'),'mobile taxonomy CSS present');
