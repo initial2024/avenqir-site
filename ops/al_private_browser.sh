@@ -96,7 +96,7 @@ install_browser(){
   install -d -m 0700 -o "$U" -g "$U" "$PROFILE" "$PROFILE/.vnc" "$BASE"
   command -v google-chrome-stable >/dev/null || fail "Chrome installation incomplete"
   echo "AL_BROWSER_PACKAGES_INSTALLED=YES"
-  echo "NEXT: bash /opt/avenqir/al_private_browser.sh password"
+  echo "NEXT: bash /opt/avenqir/al_private_browser.sh password-auto (if no password exists)"
   echo "THEN: bash /opt/avenqir/al_private_browser.sh start"
   echo "NOTE: Google Chrome must start with its own sandbox; no --no-sandbox bypass."
 }
@@ -209,9 +209,14 @@ stop_browser(){
 status_browser(){
   need_root
   if id "$U" >/dev/null 2>&1; then
-    local_dummy=0
-    managed_found=NO
-    for n in {89..99}; do if managed_xvfb ":$n"; then managed_found=YES; echo "AL_XVFB_DISPLAY=:$n"; break; fi; done
+    local n managed_found=NO
+    for n in {89..99}; do
+      if managed_xvfb ":$n"; then
+        managed_found=YES
+        echo "AL_XVFB_DISPLAY=:$n"
+        break
+      fi
+    done
     printf 'AL_XVFB=%s\n' "$([ "$managed_found" = YES ] && echo RUNNING || echo STOPPED)"
     printf 'AL_VNC=%s\n' "$(pgrep -u "$U" -x x11vnc >/dev/null && echo RUNNING || echo STOPPED)"
     printf 'AL_CHROME=%s\n' "$(pgrep -u "$U" -f '/opt/google/chrome/chrome.*--user-data-dir=' >/dev/null && echo RUNNING || echo UNKNOWN_OR_STOPPED)"
