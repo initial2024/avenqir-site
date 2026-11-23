@@ -326,3 +326,6 @@
 @media(max-width:790px){.search-body .atlas-group-bar{grid-template-columns:repeat(2,minmax(0,1fr))}.search-body .atlas-group{min-height:82px}}
 @media(max-width:420px){.search-body .atlas-taxonomy{margin:0 10px 17px;padding:14px 12px;border-radius:16px}.search-body .atlas-group-bar{gap:7px}.search-body .atlas-group{padding:9px 10px;min-height:85px}.search-body .atlas-group strong{font-size:12px}.search-body .atlas-group small{font-size:10px}.atlas-category-tools{flex-wrap:wrap}.search-body #atlasCategorySearch{flex-basis:100%}.search-body #atlasExpandCategories{width:100%}}
 @media(prefers-reduced-motion:reduce){.search-body .atlas-group{transition:none}}
+
+/* v8.7: category-search empty feedback. */
+.search-body .atlas-taxonomy-no-match{margin:5px 0;padding:12px;color:var(--ui-sub,#647991);font-size:12px;background:var(--ui-alt,#eef4fa);border-radius:9px}
