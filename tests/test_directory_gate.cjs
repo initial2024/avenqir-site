@@ -1,0 +1,44 @@
+"use strict";
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const gate=require('../site/link-gate.js');
+assert.equal(gate.officialSourceReviewed('https://github.com/'),true);
+assert.equal(gate.officialSourceReviewed('https://www.geogebra.org/'),true);
+assert.equal(gate.officialSourceReviewed('https://phet.colorado.edu/'),true);
+assert.equal(gate.officialSourceReviewed('https://gchq.github.io/CyberChef/'),true);
+assert.equal(gate.officialSourceReviewed('https://github.com.evil.example/'),false);
+assert.equal(gate.officialSourceReviewed('http://github.com/'),false);
+assert.equal(gate.officialSourceReviewed('https://github.com/evil-redirect'),false);
+assert.equal(gate.officialSourceReviewed('https://github.com/?next=https://evil.example'),false);
+assert.equal(gate.officialSourceReviewed('https://github.com/#skip'),false);
+assert.equal(gate.officialSourceReviewed('https://a:pw@github.com/'),false);
+assert.equal(gate.officialSourceReviewed('javascript:alert(1)'),false);
+assert.equal(gate.officialSourceReviewed('https://urlscan.io/'),false);
+assert.equal(gate.officialSourceReviewed('https://example.org/'),false);
+assert.equal(gate.sanitize('data:text/html,<script>bad</script>'),null);
+assert.equal(gate.searchEngineDestination('google',''),'https://www.google.com/');
+assert.equal(gate.searchEngineDestination('bing',''),'https://www.bing.com/');
+assert.equal(gate.searchEngineDestination('duck',''),'https://duckduckgo.com/');
+assert.equal(gate.searchEngineDestination('google','数二 线代'),'https://www.google.com/search?q='+encodeURIComponent('数二 线代'));
+assert.equal(gate.searchEngineDestination('other','hello'),null);
+const code=fs.readFileSync(path.resolve(__dirname,'../site/directory.js'),'utf8');
+const extras=code.match(/const extraData=(\[[^;]+\]);/);
+assert.ok(extras,'extraData must remain static and parseable');
+const records=JSON.parse(extras[1]);
+assert.equal(records.length,24);
+assert.equal(new Set(records.map(r=>r.url)).size,records.length);
+for(const r of records){
+  assert.ok(r.name&&r.category&&r.description&&r.url);
+  assert.ok(gate.sanitize(r.url),'unsafe curated URL: '+r.name);
+}
+assert.ok(!code.includes('window.open('),'avoid popup blockers on mobile');
+assert.ok(code.includes('window.location.assign('),'use same-tab direct navigation');
+assert.ok(code.includes('showExternal(url,x.name)'),'warn for unreviewed links');
+assert.ok(code.includes('combine(sanitize(data.items),extraData)'),'curated extras must survive server override');
+const page=fs.readFileSync(path.resolve(__dirname,'../site/directory.html'),'utf8');
+for(const id of ['atlasExternalDialog','atlasExternalName','atlasExternalHost','atlasExternalUrl','atlasExternalCancel','atlasExternalGo']){
+ assert.ok(page.includes('id="'+id+'"'),id);
+}
+assert.ok(page.includes('name="referrer" content="no-referrer"'));
+console.log('PASS: reviewed-only bypass, unknown/suspicious confirmation, same-tab search engines, 24 curated sites and warning dialog');
