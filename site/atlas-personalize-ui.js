@@ -5,7 +5,9 @@
  const E=()=>{
   const page=String(root.document?.documentElement?.lang||'').trim();
   const setting=String(root.AVENQIR_I18N?.locale||'').trim();
-  return !/^zh(?:-|$)/i.test(page&&!/^zh(?:-|$)/i.test(page)?page:setting||page||'en');
+  // Distinguish Simplified and Traditional Chinese. Where no Traditional
+  // translation exists, show English fallback instead of Simplified UI.
+  return !/^zh(?:-Hans|-CN|$)/i.test(page||setting||'en');
  };
  const T=(zh,en)=>E()?en:zh;
  const category=name=>root.AVENQIR_I18N?.category(name)||name;
