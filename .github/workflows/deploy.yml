@@ -42,6 +42,7 @@ jobs:
           node tests/test_link_remember.cjs
           node tests/test_atlas_paths.cjs
           node tests/test_dynamic_atlas.cjs
+          node tests/test_atlas_personalize.cjs
       - name: Check PHP and JavaScript syntax
         shell: bash
         run: |
