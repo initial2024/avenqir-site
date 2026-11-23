@@ -61,7 +61,7 @@ class ALPrivateBrowserSecurity(unittest.TestCase):
             def fake_run(args,**kwargs):
                 self.assertEqual(args,["x11vnc","-storepasswd",str(v)])
                 first=kwargs["input"].splitlines()[0]
-                self.assertEqual(kwargs["input"],first+"\\n"+first+"\\ny\\n")
+                self.assertEqual(kwargs["input"],first+"\n"+first+"\ny\n")
                 self.assertEqual(len(first),8)
                 observed.append(first)
                 v.write_bytes(b"abcdefgh")
