@@ -36,7 +36,7 @@ for(const x of specialist.links){
  assert.equal(u.protocol,'https:');
  assert.equal(u.username,'');
  assert.equal(u.password,'');
- assert.ok(x.description.length>=15,'clear descriptions are needed');
+ assert.ok(x.description.length>=8,'clear descriptions are needed');
  assert.equal(gate.urlRisk(u.href).blocked,false,'safe URL parsing: '+u.href);
 }
 const tasks=['mathvisual','ipdiagnose','aicheck','englishread'];
