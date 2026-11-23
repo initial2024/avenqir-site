@@ -65,6 +65,10 @@
    if(theme)theme.textContent=translate('nav.appearance');
    const menu=root.document?.querySelector('.menu-toggle span');
    if(menu)menu.textContent=translate('nav.menu');
+   else{
+     const plain=root.document?.querySelector('.menu-toggle');
+     if(plain)plain.textContent='☰ '+translate('nav.menu');
+   }
  }
  function translatedMain(){
   const $=s=>root.document?.querySelector(s);

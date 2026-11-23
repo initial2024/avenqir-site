@@ -406,3 +406,27 @@
 .aq-lang-notice:not([hidden]){max-width:1100px;margin:8px auto;padding:6px 12px;color:var(--ui-sub,#60758b);background:var(--ui-alt,#eef5fb);border:1px solid var(--ui-line,#dce4ee);border-radius:10px;font-size:11px;line-height:1.5}
 .aq-lang-notice[hidden]{display:none}
 @media(max-width:600px){.aq-lang-notice:not([hidden]){margin:6px 10px;padding:5px 9px;font-size:10px}}
+
+/* v9.1 cross-product companion; no account/session data is stored here. */
+.orbit-bridge-wrap{max-width:980px;margin:0 auto 36px;display:grid;grid-template-columns:1fr 1.15fr;gap:16px}
+.orbit-companion-panel{min-width:0}
+.orbit-companion-panel:last-child{grid-column:1/-1}
+.orbit-guide{margin:15px 0;padding-inline-start:23px;line-height:1.7}
+.orbit-guide li{padding:6px 0}
+.orbit-external{display:inline-flex;text-align:center;min-height:44px;align-items:center;text-decoration:none}
+#orbitPaste{width:100%;min-height:132px;display:block;margin:9px 0 13px;padding:12px;color:var(--ui-ink,#233d59);background:var(--ui-alt,#eff5fa);border:1px solid var(--ui-line,#9baebf);border-radius:11px;resize:vertical;font:inherit;font-size:14px;line-height:1.65}
+.orbit-output{display:grid;grid-template-columns:1fr;gap:14px;margin:16px 0}
+.orbit-output h3{font-size:14px;margin:0 0 9px}
+.orbit-results{display:flex;flex-direction:column;gap:9px;max-height:330px;overflow:auto}
+.orbit-result-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;border:1px solid var(--ui-line,#d3e0eb);padding:10px;border-radius:10px;background:var(--ui-alt,#edf4fa)}
+.orbit-result-row code{font-size:17px;letter-spacing:2px}
+.orbit-result-row button{font-size:12px;min-height:34px}
+.orbit-link-host{font-size:12px;min-width:0;overflow-wrap:anywhere;direction:ltr}
+.orbit-link-risk{font-size:11px;color:var(--ui-sub,#63798e)}
+.orbit-empty{font-size:12px;color:var(--ui-sub,#63798e)}
+@media(max-width:760px){.orbit-bridge-wrap{grid-template-columns:1fr;gap:12px}.orbit-companion-panel:last-child{grid-column:auto}}
+
+/* Source metadata stays accessible but is not silently machine translated. */
+.search-body .atlas-original-desc{margin:6px 0;color:var(--ui-sub,#61788e);font-size:12px}
+.search-body .atlas-original-desc summary{cursor:pointer;color:var(--ui-link,#266cb1);padding:5px 0;font-weight:650}
+.search-body .atlas-original-desc p{margin:6px 0 0;line-height:1.6;overflow-wrap:anywhere}

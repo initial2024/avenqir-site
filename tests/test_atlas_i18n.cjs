@@ -118,6 +118,6 @@ assert.ok(backend.includes("valid_link_languages"));
 assert.ok(admin.includes('name="languages"'));
 assert.ok(admin.includes('分类（可留空自动建议）'));
 assert.ok(sw.includes("'./atlas-enrich.js'"));
-assert.ok(siteJs.includes('aq-i18n.js?v=23'));
+assert.ok(siteJs.includes('aq-i18n.js?v=25'));
 assert.ok(!fs.readFileSync(path.join(site,'atlas-enrich.js'),'utf8').includes('fetch('));
 console.log('PASS: 40 interface locales, browser auto/English fallback, local manual preference, 11 bilingual guides, cautious future-site category and explicit language matching with original security gate');
