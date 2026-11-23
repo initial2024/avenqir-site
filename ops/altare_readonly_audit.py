@@ -128,6 +128,15 @@ def locale_audit():
         return {"status": "UNKNOWN", "note": type(exc).__name__}
 
 
+def public_status_row(url):
+    # GET responses can contain JS source bytes for in-memory parsing. Audit
+    # evidence must contain metadata only, never raw page contents or bytes
+    # (which are not JSON serializable).
+    result = request(url, "HEAD").copy()
+    result.pop("body", None)
+    return {"url": url, **result}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sample", type=int, default=20, help="0..40 third-party links per run")
@@ -140,11 +149,11 @@ def main():
     today = dt.datetime.now(dt.timezone.utc)
     rows = []
     for url in FIXED:
-        rows.append({"url": url, **request(url)})
+        rows.append(public_status_row(url))
     week = int(today.strftime("%G%V"))
     urls, catalog_note = link_sample(args.sample, week) if args.sample else ([], "")
     for url in urls:
-        rows.append({"url": url, **request(url)})
+        rows.append(public_status_row(url))
         time.sleep(0.35)
     locales = locale_audit()
     report = {
