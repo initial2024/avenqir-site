@@ -126,17 +126,73 @@
     return Object.entries(GROUPS).filter(([g]) => selected.has(g))
       .flatMap(([,x]) => x.keys).filter(key => Object.prototype.hasOwnProperty.call(data,key));
   }
-  function importInto(storage, data, keys) {
+  // Deliberately conservative merge: the local record always wins if its ID / URL exists.
+  // For non-list state (timer, games, tasks), merge only fills absent local keys.
+  // Never silently overwrite an existing note body or resume an imported timer.
+  function mergeRecords(key, local, incoming) {
+    if (key === 'avenqir.link-atlas.favorites.v8') {
+      return [...new Set([...local, ...incoming])];
+    }
+    if (key === 'avenqir_v6_bookmarks' || key === 'avenqir_v6_notes') {
+      const list=local.slice(), ids=new Set(local.map(x=>x.id));
+      const urls=key==='avenqir_v6_bookmarks'?new Set(local.map(x=>x.url)):null;
+      for (const item of incoming) {
+        if (ids.has(item.id) || (urls&&urls.has(item.url))) continue;
+        list.push(item);ids.add(item.id);
+        if(urls)urls.add(item.url);
+      }
+      return list;
+    }
+    return local;
+  }
+  function prepareImport(storage, data, keys, mode='replace') {
+    if (!['replace','merge'].includes(mode)) throw new Error('未知恢复模式');
+    const chosen=[...new Set(keys)], updates=Object.create(null), counts={written:0,unchanged:0,merged:0};
+    for (const key of chosen) {
+      if (!KEYS.includes(key) || !Object.prototype.hasOwnProperty.call(data,key) || !validate(key,data[key])) {
+        throw new Error('备份数据校验未通过');
+      }
+      const old=storage.getItem(key);
+      if (mode==='replace' || old===null) {
+        updates[key]=transferCopy(key,data[key]);counts.written++;continue;
+      }
+      let original;
+      try{original=JSON.parse(old);}catch{throw new Error('本机 '+key+' 数据损坏，请先导出并选择覆盖，不能盲目合并');}
+      if (!validate(key,original))throw new Error('本机 '+key+' 格式异常，请先单独备份');
+      const combined=mergeRecords(key,original,data[key]);
+      if (!validate(key,combined))throw new Error('合并后 '+key+' 超过数量限制或包含无效记录');
+      if(JSON.stringify(combined)===JSON.stringify(original))counts.unchanged++;
+      else{updates[key]=combined;counts.written++;counts.merged++;}
+    }
+    return {updates,counts};
+  }
+  function toMarkdown(data) {
+    const esc=value=>String(value??'').replace(/[\\\r\n]+/g,' ').replace(/([\\\[\]_*<>|])/g,'\\$1').slice(0,30000);
+    const out=['# AVENQIR 可读数据备份','', '> 仅供阅读：不能从此 Markdown 文件恢复；恢复数据必须使用 JSON 备份。','> 注意：包含明文书签和笔记，请勿上传到公共平台。',''];
+    const add=(title,records,format)=>{
+      if(!Array.isArray(records)||!records.length)return;
+      out.push('## '+title,'');
+      for(const r of records)out.push(format(r),'');
+    };
+    add('私人书签',data.avenqir_v6_bookmarks,x=>'- **'+esc(x.name)+'** ('+esc(x.category)+')\n  - 网址：'+esc(x.url)+'\n  - 备注：'+esc(x.note));
+    add('公开目录收藏',data['avenqir.link-atlas.favorites.v8'],x=>'- '+esc(x));
+    add('本地笔记',data.avenqir_v6_notes,x=>'### '+esc(x.title)+'\n\n'+esc(x.body));
+    if(data.avenqir_v5_tasks)out.push('## 今日任务','',...data.avenqir_v5_tasks.items.map(x=>'- ['+(x.done?'x':' ')+'] '+esc(x.text)),'');
+    const other=Object.keys(data).filter(k=>!['avenqir_v6_bookmarks','avenqir_v6_notes','avenqir.link-atlas.favorites.v8','avenqir_v5_tasks'].includes(k));
+    if(other.length)out.push('## 其他已备份状态','',...other.map(k=>'- '+esc(k)+'：已保存（完整状态仅在 JSON 中）'),'');
+    return out.join('\n');
+  }
+  function importInto(storage, data, keys, mode='replace') {
     // Read the original bytes first. On quota/write errors restore the original values.
+    const {updates}=prepareImport(storage,data,keys,mode);
+    const changed=Object.keys(updates);
     const prior = new Map();
-    for (const key of keys) prior.set(key,storage.getItem(key));
+    for (const key of changed) prior.set(key,storage.getItem(key));
     const done = [];
     try {
-      for (const key of keys) {
-        if (!KEYS.includes(key) || !Object.prototype.hasOwnProperty.call(data,key) ||
-            !validate(key,data[key])) throw new Error('备份数据校验未通过');
-        storage.setItem(key,JSON.stringify(data[key]));
-        done.push(key);
+      for (const key of changed) {
+        done.push(key); // Roll back even if a storage provider mutates then throws.
+        storage.setItem(key,JSON.stringify(updates[key]));
       }
     } catch (error) {
       for (const key of done.reverse()) {
@@ -150,5 +206,5 @@
     }
     return done.length;
   }
-  root.AVENQIR_TRANSFER = Object.freeze({FORMAT,GROUPS,KEYS,validate,makeExport,readArchive,selectedKeys,importInto});
+  root.AVENQIR_TRANSFER = Object.freeze({FORMAT,GROUPS,KEYS,validate,makeExport,readArchive,selectedKeys,prepareImport,importInto,toMarkdown});
 })(typeof window !== 'undefined' ? window : globalThis);
