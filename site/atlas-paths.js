@@ -319,6 +319,60 @@
    "https://jupyter.org/try",
    "https://standardebooks.org/"
   ]
+ },
+ {
+  "id": "mathvisual",
+  "icon": "📐",
+  "title": "数学绘图与验算",
+  "subtitle": "交互绘图 → 代数 → 计算结果复核",
+  "note": "计算器结果不能替代证明，注意定义域、参数与步骤条件。",
+  "urls": [
+   "https://www.desmos.com/calculator",
+   "https://www.geogebra.org/graphing",
+   "https://www.symbolab.com/",
+   "https://www.mathway.com/"
+  ]
+ },
+ {
+  "id": "ipdiagnose",
+  "icon": "🌐",
+  "title": "网络出口诊断",
+  "subtitle": "公网 IP → 分流 → DNS → IPv6",
+  "note": "各网站可能观察到不同出口；网络检测会向第三方暴露本次连接信息。",
+  "urls": [
+   "https://ip.net.coffee/",
+   "https://ip.sb/",
+   "https://www.dnsleaktest.com/",
+   "https://test-ipv6.com/",
+   "https://egress.1ms.dog/"
+  ]
+ },
+ {
+  "id": "aicheck",
+  "icon": "🔎",
+  "title": "AI 文本检测对照",
+  "subtitle": "多工具参考而非作者身份认证",
+  "note": "AI 检测可能误报、漏报，绝不可单凭分数判定作弊；勿上传未公开文本。",
+  "urls": [
+   "https://cn.aifoxs.com/ai-detect",
+   "https://gptzero.me/",
+   "https://sapling.ai/ai-content-detector",
+   "https://www.zerogpt.com/"
+  ]
+ },
+ {
+  "id": "englishread",
+  "icon": "📖",
+  "title": "英语阅读与查词",
+  "subtitle": "阅读原文 → 查词义 → 听语境 → 拓展素材",
+  "note": "公开阅读站由用户提供、未成功自动核验；词典和视频素材仍需核对上下文。",
+  "urls": [
+   "https://read.claua.de/",
+   "https://www.oxfordlearnersdictionaries.com/",
+   "https://youglish.com/",
+   "https://www.bbc.co.uk/learningenglish",
+   "https://dictionary.cambridge.org/"
+  ]
  }
 ];
  function itemsForFlow(id,items){const f=flows.find(x=>x.id===id);if(!f||!Array.isArray(items))return [];
