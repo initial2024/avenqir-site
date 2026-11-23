@@ -7,8 +7,32 @@ umask 077
 BASE="/opt/avenqir/private-browser"
 PROFILE="/var/lib/albrowser"
 U="albrowser"
-D=":88"
+# Screen :88 may belong to another project. Never delete anyone's X lock.
+D=""
 VNC_PORT=5901
+managed_xvfb(){
+  local display="$1"
+  # Dedicated albrowser account AND exact Xvfb display; never treat a foreign
+  # Xvfb process or a stale PID as our own managed server.
+  pgrep -u "$U" -f "^Xvfb ${display}([[:space:]]|$)" >/dev/null 2>&1
+}
+select_browser_display(){
+  local n candidate
+  # Prefer reusing one of our own running virtual screens; this makes
+  # repeated start idempotent without relying on unsafe stale lock cleanup.
+  for n in {89..99}; do
+    candidate=":$n"
+    if managed_xvfb "$candidate"; then D="$candidate"; return 0; fi
+  done
+  # Reserve only an unused display. Fail closed if all are occupied; never
+  # delete /tmp/.X*-lock or /tmp/.X11-unix sockets from other processes.
+  for n in {89..99}; do
+    if [ ! -e "/tmp/.X${n}-lock" ] && [ ! -e "/tmp/.X11-unix/X${n}" ]; then
+      D=":$n"; return 0
+    fi
+  done
+  fail "Displays :89 through :99 are occupied; no foreign processes or X locks were modified"
+}
 
 fail(){ printf 'AL_BROWSER_DENY: %s\n' "$*" >&2; exit 2; }
 need_root(){ [ "$(id -u)" = 0 ] || fail "Run as root in your Altare Sandbox"; }
@@ -72,7 +96,7 @@ install_browser(){
   install -d -m 0700 -o "$U" -g "$U" "$PROFILE" "$PROFILE/.vnc" "$BASE"
   command -v google-chrome-stable >/dev/null || fail "Chrome installation incomplete"
   echo "AL_BROWSER_PACKAGES_INSTALLED=YES"
-  echo "NEXT: bash /opt/avenqir/al_private_browser.sh password"
+  echo "NEXT: bash /opt/avenqir/al_private_browser.sh password-auto (if no password exists)"
   echo "THEN: bash /opt/avenqir/al_private_browser.sh start"
   echo "NOTE: Google Chrome must start with its own sandbox; no --no-sandbox bypass."
 }
@@ -119,19 +143,21 @@ start_browser(){
   install -d -m 0700 -o "$U" -g "$U" "$PROFILE/.config" "$PROFILE/.config/google-chrome"
   # Using a dedicated OS user keeps Chrome isolated from /root, private audit
   # reports and the Cloudflare tunnel credential; never run Chrome as root.
-  if ! pgrep -u "$U" -x Xvfb >/dev/null; then
-    runuser -u "$U" -- sh -c 'nohup Xvfb :88 -screen 0 1280x720x24 -nolisten tcp > "$HOME/xvfb.log" 2>&1 </dev/null &'
+  select_browser_display
+  echo "AL_SELECTED_DISPLAY=$D"
+  if ! managed_xvfb "$D"; then
+    runuser -u "$U" -- sh -c 'nohup Xvfb "$1" -screen 0 1280x720x24 -nolisten tcp > "$HOME/xvfb.log" 2>&1 </dev/null &' sh "$D"
     sleep 2
   fi
-  pgrep -u "$U" -x Xvfb >/dev/null || fail "Virtual display failed; inspect $PROFILE/xvfb.log"
+  managed_xvfb "$D" || fail "Virtual display $D failed; inspect $PROFILE/xvfb.log; do not delete external X locks"
   if ! pgrep -u "$U" -x openbox >/dev/null; then
-    runuser -u "$U" -- sh -c 'DISPLAY=:88 nohup openbox-session > "$HOME/openbox.log" 2>&1 </dev/null &'
+    runuser -u "$U" -- sh -c 'DISPLAY="$1" nohup openbox-session > "$HOME/openbox.log" 2>&1 </dev/null &' sh "$D"
   fi
   if ! pgrep -u "$U" -f '/opt/google/chrome/chrome.*--user-data-dir=' >/dev/null; then
-    runuser -u "$U" -- sh -c 'DISPLAY=:88 nohup google-chrome-stable --no-first-run --no-default-browser-check --disable-sync --disable-dev-shm-usage --user-data-dir="$HOME/browser-profile" https://example.com > "$HOME/browser.log" 2>&1 </dev/null &'
+    runuser -u "$U" -- sh -c 'DISPLAY="$1" nohup google-chrome-stable --no-first-run --no-default-browser-check --disable-sync --disable-dev-shm-usage --user-data-dir="$HOME/browser-profile" https://example.com > "$HOME/browser.log" 2>&1 </dev/null &' sh "$D"
   fi
   if ! pgrep -u "$U" -x x11vnc >/dev/null; then
-    runuser -u "$U" -- sh -c 'DISPLAY=:88 nohup x11vnc -display :88 -localhost -rfbport 5901 -rfbauth "$HOME/.vnc/passwd" -forever -shared -quiet > "$HOME/vnc.log" 2>&1 </dev/null &'
+    runuser -u "$U" -- sh -c 'DISPLAY="$1" nohup x11vnc -display "$1" -localhost -rfbport 5901 -rfbauth "$HOME/.vnc/passwd" -forever -shared -quiet > "$HOME/vnc.log" 2>&1 </dev/null &' sh "$D"
   fi
   sleep 2
   command -v ss >/dev/null || fail "iproute2/ss unavailable; cannot verify loopback-only VNC listener"
@@ -144,6 +170,7 @@ start_browser(){
   if ! pgrep -u "$U" -f '/opt/google/chrome/chrome.*--user-data-dir=' >/dev/null; then
     fail "Chrome is not running; inspect $PROFILE/browser.log; do not disable Chrome sandbox"
   fi
+  managed_xvfb "$D" || fail "Managed Xvfb $D stopped unexpectedly"
   echo "AL_PRIVATE_VNC_LOCAL_ONLY=YES"
   echo "Open Chrome via Cloudflare Tunnel TCP localhost:5901 + Access VNC browser rendering."
   echo "NEVER publish the VNC port directly in Altare Network."
@@ -155,7 +182,8 @@ diagnose_browser(){
   printf 'USER='; id "$U" 2>&1 || true
   printf 'TMP='; ls -ld /tmp 2>&1 || true
   printf 'X11_DIR='; ls -ld /tmp/.X11-unix 2>&1 || true
-  printf 'DISPLAY_LOCK='; ls -l /tmp/.X88-lock 2>&1 || true
+  printf 'FOREIGN_DISPLAY_88_LOCK='; ls -l /tmp/.X88-lock 2>&1 || true
+  printf 'OWN_MANAGED_DISPLAYS='; for n in {89..99}; do managed_xvfb ":$n" && printf ':%s ' "$n"; done; echo
   printf 'XVFB_BIN='; command -v Xvfb || true
   printf 'XVFB_VER='; Xvfb -version 2>&1 | head -n 2 || true
   printf 'PROC='; pgrep -a -u "$U" Xvfb 2>&1 || true
@@ -181,7 +209,15 @@ stop_browser(){
 status_browser(){
   need_root
   if id "$U" >/dev/null 2>&1; then
-    printf 'AL_XVFB=%s\n' "$(pgrep -u "$U" -x Xvfb >/dev/null && echo RUNNING || echo STOPPED)"
+    local n managed_found=NO
+    for n in {89..99}; do
+      if managed_xvfb ":$n"; then
+        managed_found=YES
+        echo "AL_XVFB_DISPLAY=:$n"
+        break
+      fi
+    done
+    printf 'AL_XVFB=%s\n' "$([ "$managed_found" = YES ] && echo RUNNING || echo STOPPED)"
     printf 'AL_VNC=%s\n' "$(pgrep -u "$U" -x x11vnc >/dev/null && echo RUNNING || echo STOPPED)"
     printf 'AL_CHROME=%s\n' "$(pgrep -u "$U" -f '/opt/google/chrome/chrome.*--user-data-dir=' >/dev/null && echo RUNNING || echo UNKNOWN_OR_STOPPED)"
   else
