@@ -115,7 +115,7 @@ for(const tag of ['atlasRegionToggle','atlasRegionStatus','atlasRegionBody','atl
  assert.ok(html.includes('id="'+tag+'"'),'missing local region control '+tag);
 }
 assert.ok(html.indexOf('atlas-region.js?v=18')<html.indexOf('atlas-region-ui.js?v=30'));
-assert.ok(html.indexOf('atlas-region-ui.js?v=29')<html.indexOf('directory.js?v=25'));
+assert.ok(html.includes('atlas-region-ui.js?v=30') && html.indexOf('atlas-region-ui.js?v=30')<html.indexOf('directory.js?v=25'),'v9.4 region UI must precede directory runtime');
 assert.ok(ui.includes('optgroup'),'40-region selector needs grouping');
 assert.ok(ui.includes("root.document?.documentElement?.lang"),'region UI must match visible document language');
 assert.ok(ui.includes("Original source description (Chinese)"),'original source remains accessible on demand');
@@ -124,6 +124,11 @@ assert.ok(ui.includes('englishDescription(item,label)'),'English regional cards 
 const localePacks = require(path.join(dir,'atlas-region-ui.js'));
 const interfaceLocales = require(path.join(dir,'aq-i18n.js')).LOCALES.map(x=>x.code);
 assert.deepEqual(localePacks.localeCodes,interfaceLocales,'all 40 interface languages must have regional labels');
+for(const code of interfaceLocales){
+ const uiPack=localePacks.localeCodes.includes(code);
+ assert.equal(uiPack,true,'Missing regional UI locale '+code);
+}
+assert.equal(localePacks.regionGroup('东亚'),'East Asia','unsupported runtime locale should fall back to English');
 assert.equal(localePacks.PACK_KEYS.length,8,'regional labels must cover eight recurring UI roles');
 assert.ok(ui.includes("new Intl.DisplayNames"),'country and area names use browser locale data');
 assert.ok(ui.includes("phrase('auto')"),'auto selector localized, not hard-coded Chinese');
