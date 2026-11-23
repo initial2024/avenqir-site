@@ -1,9 +1,9 @@
-name: AVENQIR - weekly public-only audit and one GitHub Issue
+name: AVENQIR - daily public-only audit and one GitHub Issue
 
 on:
   schedule:
-    # Mondays 02:23 UTC = 11:23 Japan time. Schedules may start late.
-    - cron: "23 2 * * 1"
+    # Daily 02:23 UTC. GitHub scheduled runs may start late or be skipped.
+    - cron: "23 2 * * *"
   workflow_dispatch:
     inputs:
       sample:
