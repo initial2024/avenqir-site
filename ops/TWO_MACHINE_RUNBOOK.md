@@ -40,19 +40,36 @@ bash /tmp/avenqir-altare-bootstrap.sh
 python3 /opt/avenqir/altare_cross_region_report.py --sample 20 --local-only
 ```
 
-### 之后的定时执行
+### 之后的每日自动检测（必须实际建任务）
 
-Altare Console → 对应 Sandbox → 可用的 Schedules/Jobs 功能中，创建每日 UTC 定时命令：
+- GitHub 的公开网站与链接巡检：每天 **02:23 UTC** 自动运行，
+  更新 [Issue #21](https://github.com/initial2024/avenqir-site/issues/21)，
+  仅表明 GitHub 外部网络探测成功，不能代表 AL 已检查。
+- AL Sandbox 私有只读检测：现有机器 `utility-server` 内执行
+  `bash /opt/avenqir/altare_scheduled_check.sh`。
+  每天 **03:10 UTC** 执行一次，由 Altare
+  `utility-server → Schedules → Add schedule → Send command` 手动启用。
+  无需新建主机、公开开放端口或把 GitHub PAT 放到 AL。
+- 初始安装或脚本更新（不会触碰 VNC/Chrome）：
+  重新执行 `ops/altare_bootstrap.sh`，随后人工核对
+  `cat /opt/avenqir/state/latest-scheduled.status`。
+- **真实完成证据**：Altare Schedules 有最近一次自动执行记录，
+  `AL_LAST_CHECK_RESULT=COMPLETE`，并且
+  `AL_LAST_CHECK_ENDED_UTC` 晚于手动测试时间。
+  仅有脚本和手动运行成功并不等于已自动化。
+- 日志：`/opt/avenqir/reports/latest-scheduled.log`；
+  本机状态：`/opt/avenqir/state/latest-scheduled.status`。
+  所有内容仅为公开站点数据，并限制本地文件权限。
+- Sandbox `Settings → General → Pause when idle` 可能暂停机器；
+  不得假设定时任务会唤醒已经暂停的 Sandbox。
 
-```sh
-bash -lc 'python3 /opt/avenqir/altare_cross_region_report.py --sample 20'
-```
-
-这是 **Sandbox**，不支持 systemd；不要误把 Workstation 的开关机排程当作已经创建了 Sandbox 任务。仅在面板有对应 Schedule/Job 且真实执行记录可查看时，才标记 `AL_SCHEDULED`。检查 Sandbox 的 Settings → General → Pause when idle：启用自动暂停可能阻止长时间连续监测，不能假设定时任务一定唤醒已经暂停的实例。
+Altare 官方的模板 Sandbox 有独立的 **Schedules**，
+不可和 GitHub 部署应用的 Jobs 或 Workstation 排程混淆。
+完整步骤见 [ALTARE_SETUP.md](ALTARE_SETUP.md)。
 
 ### 自动回写 GitHub
 
-GitHub Runner 的公开站点巡检已经自动汇总到 [Issue #21](https://github.com/initial2024/avenqir-site/issues/21)，不需要 Altare Token。要让 AL 的**独立网络出口**自动追加结果，仍需要在 Altare 单独存储受限的 GitHub fine-grained PAT：仅授权本仓库 `Issues: Read and write`，禁止加入代码、日志或聊天。具体安全安装方法见 [ALTARE_SETUP](ALTARE_SETUP.md)。不配置 PAT 时 AL 仍可本地运行巡检，但不能声称已回传。
+GitHub Runner 每日公开站点巡检已经自动汇总到 [Issue #21](https://github.com/initial2024/avenqir-site/issues/21)，不需要 Altare Token。要让 AL 的**独立网络出口**自动追加结果，仍需要在 Altare 单独存储受限的 GitHub fine-grained PAT：仅授权本仓库 `Issues: Read and write`，禁止加入代码、日志或聊天。具体安全安装方法见 [ALTARE_SETUP](ALTARE_SETUP.md)。不配置 PAT 时 AL 仍可本地运行巡检，但不能声称已回传。
 
 ## 两台机器的工作分配
 
@@ -71,7 +88,7 @@ GitHub Runner 的公开站点巡检已经自动汇总到 [Issue #21](https://git
 - `AVE_DEPLOYED`：实际部署 Actions 成功且 FTPS 回读通过；浏览器显示另行验收。
 - `AL_SOURCE_READY`：巡检与自动评论程序已写入仓库。
 - `AL_INSTALLED`：只有机器内启动输出可证明。
-- `AL_SCHEDULED`：必须看到 Altare 实际任务执行记录。
+- `AL_SCHEDULED`：必须看到 Altare 实际任务执行记录和比手动运行更新的本机状态时间。
 - `AL_GITHUB_REPORTING`：Issue #21 存在标有 Altare second-vantage 的新评论。
 - `ANDROID_SIGNED_RELEASE`：Production 固定证书 SHA-256、真机回归、后端门禁与官方 Release URL 全部通过。
 
