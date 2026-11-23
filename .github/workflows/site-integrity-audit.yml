@@ -16,8 +16,8 @@ jobs:
           persist-credentials: false
       - name: Read-only check site and image integrity (never write or delete)
         env:
-          FTPS_USERNAME: \${{ secrets.AVENQIR_FTPS_USERNAME }}
-          FTPS_PASSWORD: \${{ secrets.AVENQIR_FTPS_PASSWORD }}
+          FTPS_USERNAME: ${{ secrets.AVENQIR_FTPS_USERNAME }}
+          FTPS_PASSWORD: ${{ secrets.AVENQIR_FTPS_PASSWORD }}
         run: |
           python3 - <<'PY'
           import os,ftplib,ssl,io,hashlib,json,sys
