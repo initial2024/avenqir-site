@@ -1,0 +1,76 @@
+name: AVENQIR weekly public site audit (GitHub Issue)
+on:
+  schedule:
+    # Weekly Monday 02:17 UTC (11:17 JST); GitHub cron may run later.
+    - cron: "17 2 * * 1"
+  workflow_dispatch:
+    inputs:
+      sample:
+        description: "Number of public third-party links to inspect (0..40)"
+        required: true
+        default: "20"
+        type: choice
+        options: ["0", "10", "20", "40"]
+  push:
+    branches:
+      - feat/weekly-public-readonly-github-report-20261123
+    paths:
+      - ".github/workflows/avenqir-public-audit.yml"
+      - "ops/altare_readonly_audit.py"
+      - "ops/publish_readonly_issue.py"
+      - "tests/test_public_audit_report.py"
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: avenqir-public-audit
+  cancel-in-progress: false
+
+jobs:
+  public-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout only public project source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Validate reporter and no-network unit tests
+        run: |
+          set -euo pipefail
+          python3 -m py_compile ops/altare_readonly_audit.py ops/publish_readonly_issue.py
+          python3 -m unittest discover -s tests -p test_public_audit_report.py -v
+
+      - name: Run public HTTPS checks (no login or cookies)
+        shell: bash
+        env:
+          SAMPLE_INPUT: ${{ inputs.sample || '20' }}
+        run: |
+          set -euo pipefail
+          mkdir -p audit-report
+          python3 ops/altare_readonly_audit.py \
+            --vantage github-actions \
+            --sample "$SAMPLE_INPUT" \
+            --report-dir audit-report
+
+      - name: Upload complete JSON as private-to-workflow evidence artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: avenqir-public-audit-${{ github.run_id }}
+          if-no-files-found: error
+          retention-days: 30
+          path: audit-report/public-audit-*.json
+
+      - name: Update single GitHub Issue (only on protected default branch)
+        if: github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python3 ops/publish_readonly_issue.py \
+            --report-dir audit-report \
+            --run-url "$RUN_URL"
