@@ -160,11 +160,12 @@
      const title=name?name+' · '+count:'全部 · '+totalInGroup;
      const button=el('button','atlas-cat'+(category===name?' selected':''),title);
      button.type='button';button.setAttribute('aria-pressed',String(category===name));
-     button.addEventListener('click',()=>{category=name;limit=24;choiceBar();draw()});
+     button.addEventListener('click',()=>{category=name;limit=24;choiceBar();draw();$('atlasResults').scrollIntoView({behavior:'smooth',block:'start'});});
      cats.append(button);
    };
    if(!needle)add('',totalInGroup);
    for(const [name,count] of entries)add(name,count);
+   if(!entries.length&&needle)cats.append(el('p','atlas-taxonomy-no-match','没有匹配的分类。请换一个分类关键词。'));
    const expand=$('atlasExpandCategories');
    if(expand){
      expand.hidden=!!needle||visibleCategories<=12;
