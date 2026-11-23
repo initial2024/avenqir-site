@@ -48,6 +48,7 @@ jobs:
     if: >-
       vars.AVENQIR_DEPLOY_PAUSED != 'true' &&
       github.repository == 'initial2024/avenqir-site' &&
+      github.actor == 'initial2024' &&
       github.ref == 'refs/heads/main' &&
       (github.event_name == 'push' || inputs.do_deploy == true)
     runs-on: ubuntu-latest
