@@ -71,10 +71,14 @@ def request(url, method="HEAD"):
         with OPENER.open(req, timeout=TIMEOUT) as response:
             code = response.status
             data = response.read(LIMIT + 1) if method == "GET" else b""
-            return {"status": "OK" if 200 <= code < 300 else "CHECK",
-                    "code": code, "ms": round((time.monotonic()-start)*1000),
-                    "bytes": len(data), "truncated": len(data) > LIMIT,
-                    "body": data[:LIMIT] if method == "GET" else b""}
+            result = {"status": "OK" if 200 <= code < 300 else "CHECK",
+                      "code": code, "ms": round((time.monotonic()-start)*1000),
+                      "bytes": len(data), "truncated": len(data) > LIMIT}
+            # Bytes are needed ONLY temporarily to parse the public JS assets.
+            # HEAD report rows must stay JSON-safe (no bytes, even b"").
+            if method == "GET":
+                result["body"] = data[:LIMIT]
+            return result
     except urllib.error.HTTPError as exc:
         code = exc.code
         # A 301/302, 401, 403 or 429 is not proof of a broken site.

@@ -92,6 +92,25 @@ class ReportTests(unittest.TestCase):
         self.assertIsNone(audit.NoRedirect().redirect_request(
             None, None, 302, "redirect", {}, "https://other.example/"))
 
+    def test_head_result_is_json_serializable_without_binary_payload(self):
+        from unittest.mock import MagicMock
+        fake_response = MagicMock()
+        fake_response.status = 200
+        fake_response.read.return_value = b""
+        with (patch.object(audit, "safe_public_https", return_value=True),
+              patch.object(audit.OPENER, "open") as opened):
+            opened.return_value.__enter__.return_value = fake_response
+            result = audit.request("https://example.org/", method="HEAD")
+        self.assertNotIn("body", result)
+        import json
+        json.dumps({"results": [{"url": "https://example.org/", **result}]})
+
+    def test_get_result_binary_content_is_kept_out_of_public_report(self):
+        import json
+        row = audit.request("http://invalid", method="HEAD")
+        self.assertNotIn("body", row)
+        json.dumps({"results": [row]})
+
 
 if __name__ == "__main__":
     unittest.main()
