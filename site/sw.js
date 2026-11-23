@@ -5,7 +5,7 @@ const ASSETS = [
   './index.html','./directory.html','./directory.js','./directory-search.css','./directory-seed.json',
   './module-switcher.js','./quick-search.js','./site.js','./common.css',
   './bookmarks.html','./bookmarks.js','./notes.html','./notes.js','./notes-enhance.js',
-  './backup.html','./backup-schema.js','./backup.js',
+  './transfer.html','./transfer-schema.js','./device-transfer.js',
   './fun.html','./fun.js','./daily.html','./daily.js','./check.html','./check.js',
   './tools.html','./tools.js','./tool-addons.js',
   './projects.html','./projects.js','./domains.html','./domains.js','./logs.html','./logs.js',
