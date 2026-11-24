@@ -43,7 +43,7 @@ const html=fs.readFileSync(path.join(site,'orbit-bridge.html'),'utf8');
 assert.ok(html.includes('id="orbit-no-backend"'));
 const sw=fs.readFileSync(path.join(site,'sw.js'),'utf8');
 assert.ok(sw.includes("'./aq-copy.js'"));
-assert.ok(sw.includes('avenqir-v94-static'));
+assert.ok(Number(sw.match(/const CACHE = 'avenqir-v([0-9]+)-static-/)?.[1])>=97,'updated offline cache generation');
 const directoryHtml=fs.readFileSync(path.join(site,'directory.html'),'utf8');
 assert.ok(directoryHtml.includes('aq-i18n.js?v=26'));
 assert.ok(directoryHtml.includes('aq-copy.js?v=26'));
