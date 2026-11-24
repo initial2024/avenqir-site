@@ -120,7 +120,7 @@ if($logged)$_SESSION['until']=time()+1800;
 <?php if(!$ready):?><p>需要先启用 TOTP 双重验证，并且主机支持 WebAuthn 验签。密码登录保持可用。</p>
 <?php elseif($logged):?><h2>已登记通行密钥：<?= count($state['keys']) ?> / <?= AQ_PK_MAX ?></h2>
 <p>每次新增或撤销均需重新验证密码及当前 6 位动态码。修改密码或重置 2FA 后，旧通行密钥自动失效。</p>
-<form id="pk-manage" class="stack"><label>管理员密码<input name="password" type="password" autocomplete="current-password" required maxlength="128"></label>
+<form id="pk-manage" class="stack" method="post" action="passkey.php"><label>管理员密码<input name="password" type="password" autocomplete="current-password" required maxlength="128"></label>
 <label>当前 TOTP 动态码<input name="otp" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required></label>
 <button type="button" class="btn primary" id="pk-register" disabled>登记系统通行密钥</button>
 <button type="button" class="btn ghost" id="pk-revoke" disabled>撤销全部通行密钥</button></form>

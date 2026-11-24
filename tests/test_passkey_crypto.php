@@ -35,7 +35,9 @@ $registered=aq_pk_registration($create,$challenge);
 yes($registered['id']===$key['id']);yes(aq_pk_assertion($in,$registered,$user,$challenge)===1);
 denied(fn()=>aq_pk_registration(array_replace($create,['id'=>aq_pk_encode(random_bytes(32))]),$challenge));
 $s=[];aq_pk_challenge($s,'get','r1',$challenge);yes(aq_pk_take($s,'get','r1')===$challenge);
-try{aq_pk_take($s,'get','r1');throw new LogicException('replay accepted');}catch(RuntimeException $e){}
+denied(fn()=>aq_pk_take($s,'get','r1'));
+aq_pk_challenge($s,'get','r1',$challenge);denied(fn()=>aq_pk_take($s,'get','r2'));
+aq_pk_challenge($s,'get','r1',$challenge);$s['pk_pending']['expires']=time()-1;denied(fn()=>aq_pk_take($s,'get','r1'));
 $auth=['password_hash'=>'x','security_rev'=>'r1','totp_secret'=>aq_secret_create()];
 $record=['rev'=>aq_auth_tag($auth),'keys'=>[$registered]];
 yes(count(aq_pk_record($auth,$record)['keys'])===1);

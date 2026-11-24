@@ -27,6 +27,7 @@
   else{out.authenticatorData=enc(r.authenticatorData);out.signature=enc(r.signature);if(r.userHandle)out.userHandle=enc(r.userHandle);}
   return out;
  };
+ document.getElementById('pk-manage')?.addEventListener('submit',e=>e.preventDefault());
  const reauth=()=>{
   const f=document.getElementById('pk-manage');if(!f.reportValidity())throw Error('invalid form');
   const data=new FormData(f);return {password:data.get('password'),otp:data.get('otp')};
@@ -38,13 +39,13 @@
  };
  for(const b of buttons)b.disabled=false;
  document.getElementById('pk-register')?.addEventListener('click',()=>run(async()=>{
-  const data=await request('register_begin',reauth());document.getElementById('pk-manage').reset();
+  const fields=reauth();document.getElementById('pk-manage').reset();const data=await request('register_begin',fields);
   const c=await navigator.credentials.create(options(data.options,true));
   await request('register_finish',body(c,true));location.reload();
  }));
  document.getElementById('pk-revoke')?.addEventListener('click',()=>{
   if(!confirm('确认撤销所有已登记通行密钥？密码和 2FA 仍可使用。'))return;
-  run(async()=>{await request('revoke',reauth());location.reload();});
+  run(async()=>{const fields=reauth();document.getElementById('pk-manage').reset();await request('revoke',fields);location.reload();});
  });
  document.getElementById('pk-login')?.addEventListener('click',()=>run(async()=>{
   const data=await request('login_begin');
