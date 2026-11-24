@@ -1,0 +1,336 @@
+{
+  "reviewDate": "2026-11-24",
+  "scope": "Exact official page identity via indexed retrieval. Excludes failed, unreadable and redirected endpoints. Not live transport or malware certification.",
+  "records": [
+    {
+      "url": "https://nodejs.org/en",
+      "source": "https://nodejs.org/en",
+      "identity": "Node.js",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.typescriptlang.org/docs/",
+      "source": "https://www.typescriptlang.org/docs/",
+      "identity": "TypeScript Documentation",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://go.dev/",
+      "source": "https://go.dev/",
+      "identity": "Go Programming Language",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://developer.android.com/",
+      "source": "https://developer.android.com/",
+      "identity": "Android Developers",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://react.dev/",
+      "source": "https://react.dev/",
+      "identity": "React",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://vuejs.org/",
+      "source": "https://vuejs.org/",
+      "identity": "Vue.js",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://svelte.dev/",
+      "source": "https://svelte.dev/",
+      "identity": "Svelte",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://pypi.org/",
+      "source": "https://pypi.org/",
+      "identity": "Python Package Index",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.loc.gov/",
+      "source": "https://www.loc.gov/",
+      "identity": "Library of Congress",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.aps.org/",
+      "source": "https://www.aps.org/",
+      "identity": "American Physical Society",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.iop.org/",
+      "source": "https://www.iop.org/",
+      "identity": "Institute of Physics",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://pdg.lbl.gov/",
+      "source": "https://pdg.lbl.gov/",
+      "identity": "Particle Data Group",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.nist.gov/pml",
+      "source": "https://www.nist.gov/pml",
+      "identity": "NIST Physical Measurement Laboratory",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.aip.org/",
+      "source": "https://www.aip.org/",
+      "identity": "American Institute of Physics",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.eso.org/public/",
+      "source": "https://www.eso.org/public/",
+      "identity": "European Southern Observatory",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.uniprot.org/",
+      "source": "https://www.uniprot.org/",
+      "identity": "UniProt",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.ebi.ac.uk/",
+      "source": "https://www.ebi.ac.uk/",
+      "identity": "EMBL-EBI",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.acs.org/",
+      "source": "https://www.acs.org/",
+      "identity": "American Chemical Society",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.ebi.ac.uk/chembl/",
+      "source": "https://www.ebi.ac.uk/chembl/",
+      "identity": "ChEMBL",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.e-stat.go.jp/",
+      "source": "https://www.e-stat.go.jp/",
+      "identity": "Japan official statistics portal",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://cir.nii.ac.jp/",
+      "source": "https://cir.nii.ac.jp/",
+      "identity": "CiNii Research",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.jstage.jst.go.jp/",
+      "source": "https://www.jstage.jst.go.jp/",
+      "identity": "J-STAGE",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.jma.go.jp/jma/index.html",
+      "source": "https://www.jma.go.jp/jma/index.html",
+      "identity": "Japan Meteorological Agency",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.jst.go.jp/",
+      "source": "https://www.jst.go.jp/",
+      "identity": "Japan Science and Technology Agency",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.stats.gov.cn/",
+      "source": "https://www.stats.gov.cn/",
+      "identity": "National Bureau of Statistics of China",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.cas.cn/",
+      "source": "https://www.cas.cn/",
+      "identity": "Chinese Academy of Sciences",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.gov.sg/",
+      "source": "https://www.gov.sg/",
+      "identity": "Singapore Government",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.singstat.gov.sg/",
+      "source": "https://www.singstat.gov.sg/",
+      "identity": "Singapore Department of Statistics",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.cwa.gov.tw/",
+      "source": "https://www.cwa.gov.tw/",
+      "identity": "Central Weather Administration",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.stat.gov.tw/",
+      "source": "https://www.stat.gov.tw/",
+      "identity": "Statistics portal",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.hkpl.gov.hk/",
+      "source": "https://www.hkpl.gov.hk/",
+      "identity": "Hong Kong Public Libraries",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.gov.mo/en/",
+      "source": "https://www.gov.mo/en/",
+      "identity": "Macao Government Portal",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.govt.nz/",
+      "source": "https://www.govt.nz/",
+      "identity": "New Zealand Government",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.apnic.net/",
+      "source": "https://www.apnic.net/",
+      "identity": "APNIC",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.audacityteam.org/",
+      "source": "https://www.audacityteam.org/",
+      "identity": "Audacity",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://commonmark.org/",
+      "source": "https://commonmark.org/",
+      "identity": "CommonMark",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://developer.chrome.com/docs/lighthouse/",
+      "source": "https://developer.chrome.com/docs/lighthouse/",
+      "identity": "Chrome Lighthouse",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://typst.app/",
+      "source": "https://typst.app/",
+      "identity": "Typst",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.torproject.org/",
+      "source": "https://www.torproject.org/",
+      "identity": "Tor Project",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://wiki.openstreetmap.org/",
+      "source": "https://wiki.openstreetmap.org/",
+      "identity": "OpenStreetMap Wiki",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.nomoreransom.org/",
+      "source": "https://www.nomoreransom.org/",
+      "identity": "No More Ransom",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://github.com/advisories",
+      "source": "https://github.com/advisories",
+      "identity": "GitHub Advisory Database",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://explore.openaire.eu/",
+      "source": "https://explore.openaire.eu/",
+      "identity": "OpenAIRE",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://speed.cloudflare.com/",
+      "source": "https://speed.cloudflare.com/",
+      "identity": "Cloudflare Speed Test",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://huggingface.co/models",
+      "source": "https://huggingface.co/models",
+      "identity": "Hugging Face Models",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://ollama.com/",
+      "source": "https://ollama.com/",
+      "identity": "Ollama",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://lmstudio.ai/",
+      "source": "https://lmstudio.ai/",
+      "identity": "LM Studio",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://computerhistory.org/",
+      "source": "https://computerhistory.org/",
+      "identity": "Computer History Museum",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.w3.org/History.html",
+      "source": "https://www.w3.org/History.html",
+      "identity": "W3C Web history",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://chem.libretexts.org/",
+      "source": "https://chem.libretexts.org/",
+      "identity": "Chemistry LibreTexts",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://gnupg.org/",
+      "source": "https://gnupg.org/",
+      "identity": "GnuPG",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://f-droid.org/",
+      "source": "https://f-droid.org/",
+      "identity": "F-Droid",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://stellarium.org/",
+      "source": "https://stellarium.org/",
+      "identity": "Stellarium",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://openlibrary.org/",
+      "source": "https://openlibrary.org/",
+      "identity": "Open Library",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.ssllabs.com/ssltest/",
+      "source": "https://www.ssllabs.com/ssltest/",
+      "identity": "Qualys SSL Labs",
+      "method": "Inspected exact official page via indexed retrieval"
+    }
+  ]
+}
