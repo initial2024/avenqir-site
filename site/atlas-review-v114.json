@@ -1,0 +1,186 @@
+{
+  "reviewDate": "2026-11-24",
+  "scope": "Official source identity only; no current availability, TLS or malware guarantee. Moved pages and challenge-only pages excluded unless independently supported by exact official directory evidence.",
+  "records": [
+    {
+      "url": "https://jarvis.nist.gov/",
+      "source": "https://jarvis.nist.gov/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://cccbdb.nist.gov/",
+      "source": "https://cccbdb.nist.gov/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://validator.w3.org/",
+      "source": "https://validator.w3.org/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.w3.org/TR/",
+      "source": "https://www.w3.org/TR/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.iana.org/domains",
+      "source": "https://www.iana.org/domains",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.iana.org/protocols",
+      "source": "https://www.iana.org/protocols",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.nist.gov/cyberframework",
+      "source": "https://www.nist.gov/cyberframework",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://dlmf.nist.gov/",
+      "source": "https://dlmf.nist.gov/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://nvd.nist.gov/",
+      "source": "https://nvd.nist.gov/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.ncsc.gov.uk/",
+      "source": "https://www.ncsc.gov.uk/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.enisa.europa.eu/",
+      "source": "https://www.enisa.europa.eu/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://cert.europa.eu/",
+      "source": "https://cert.europa.eu/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.earthdata.nasa.gov/",
+      "source": "https://www.earthdata.nasa.gov/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://apod.nasa.gov/apod/",
+      "source": "https://apod.nasa.gov/apod/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://exoplanetarchive.ipac.caltech.edu/",
+      "source": "https://exoplanetarchive.ipac.caltech.edu/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.ncei.noaa.gov/",
+      "source": "https://www.ncei.noaa.gov/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://data.un.org/",
+      "source": "https://data.un.org/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://oyc.yale.edu/",
+      "source": "https://oyc.yale.edu/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://plato.stanford.edu/",
+      "source": "https://plato.stanford.edu/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.nist.gov/",
+      "source": "https://www.nist.gov/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.nist.gov/srd",
+      "source": "https://www.nist.gov/srd",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.weather.gov/",
+      "source": "https://www.weather.gov/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.usgs.gov/",
+      "source": "https://www.usgs.gov/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://earthexplorer.usgs.gov/",
+      "source": "https://earthexplorer.usgs.gov/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.ncbi.nlm.nih.gov/",
+      "source": "https://www.ncbi.nlm.nih.gov/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://medlineplus.gov/",
+      "source": "https://medlineplus.gov/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.fda.gov/",
+      "source": "https://www.fda.gov/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.archives.gov/",
+      "source": "https://www.archives.gov/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.ietf.org/",
+      "source": "https://www.ietf.org/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://data.europa.eu/",
+      "source": "https://data.europa.eu/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://ec.europa.eu/eurostat",
+      "source": "https://ec.europa.eu/eurostat",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://eur-lex.europa.eu/",
+      "source": "https://eur-lex.europa.eu/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.federalreserve.gov/",
+      "source": "https://www.federalreserve.gov/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.investor.gov/",
+      "source": "https://www.investor.gov/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.usa.gov/",
+      "source": "https://www.usa.gov/",
+      "method": "exact official page inspected, identifiable institutional or project content; indexed retrieval, not a live availability or malware verdict"
+    },
+    {
+      "url": "https://www.noaa.gov/",
+      "source": "https://www.usa.gov/agencies/national-oceanic-and-atmospheric-administration",
+      "method": "official government directory identifies NOAA website; direct access returned 403, availability unconfirmed"
+    }
+  ]
+}
