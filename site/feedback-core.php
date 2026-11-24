@@ -106,6 +106,20 @@ function fb_admin_hash(PDO $db): ?string {
         $s->execute();$v=$s->fetchColumn();return is_string($v)?$v:null;
     } catch (PDOException $e) {return null;}
 }
+/** The legacy admin_password setting only marks an existing installation.
+ * Never verify it as a login secret after the adm consolidation.
+ */
+function fb_submission_enabled(PDO $db):bool{
+  try{
+    $s=$db->prepare("SELECT setting_key,setting_value FROM fb_settings WHERE setting_key IN ('feedback_enabled','admin_password')");
+    $s->execute();
+    foreach($s->fetchAll() as $row){
+      if(($row['setting_key']??'')==='feedback_enabled' && ($row['setting_value']??'')==='1')return true;
+      if(($row['setting_key']??'')==='admin_password' && is_string($row['setting_value']??null) && $row['setting_value']!=='')return true;
+    }
+  }catch(PDOException $e){return false;}
+  return false;
+}
 function fb_config_message(Throwable $e): string {
     return match($e->getMessage()) {
         'NOT_CONFIGURED'=>'数据库连接尚未配置，请站长先完成安装。',
