@@ -3843,6 +3843,316 @@
       "reviewedOn": "2026-11-24",
       "evidence": "Observed redirect to official English postal homepage",
       "evidenceFreshness": "Indexed approximately 5 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.inegi.org.mx/",
+      "source": "https://www.inegi.org.mx/",
+      "identity": "INEGI",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Population and economic indicators, publications and official reporting services",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.banxico.org.mx/",
+      "source": "https://www.banxico.org.mx/",
+      "identity": "Banco de México",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Central bank mandate and statistical indicators",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.argentina.gob.ar/",
+      "source": "https://www.argentina.gob.ar/",
+      "identity": "Argentina government",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official state portal and public-service directory",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.indec.gob.ar/",
+      "source": "https://www.indec.gob.ar/",
+      "identity": "INDEC",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official population, society and economy statistics; institutional address",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.bcra.gob.ar/",
+      "source": "https://www.bcra.gob.ar/",
+      "identity": "BCRA",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Central bank policy, statistics and financial service navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.awwwards.com/",
+      "source": "https://www.awwwards.com/",
+      "identity": "Awwwards",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Design awards, jury and project navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.behance.net/",
+      "source": "https://www.behance.net/",
+      "identity": "Behance",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Portfolio service and Adobe corporate/privacy links",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.pexels.com/videos/",
+      "source": "https://www.pexels.com/videos/",
+      "identity": "Pexels Videos",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Video catalogue, license and support links",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://goodfirstissue.dev/",
+      "source": "https://goodfirstissue.dev/",
+      "identity": "Good First Issue",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Open-source contribution directory, DeepSource attribution",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.wikivoyage.org/",
+      "source": "https://www.wikivoyage.org/",
+      "identity": "Wikivoyage",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Multilingual travel guide portal",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.rome2rio.com/",
+      "source": "https://www.rome2rio.com/",
+      "identity": "Rome2Rio",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Travel route planning interface",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.seat61.com/",
+      "source": "https://www.seat61.com/",
+      "identity": "Seat61",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Author-operated travel guide, about and contact links",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.flightaware.com/",
+      "source": "https://www.flightaware.com/",
+      "identity": "FlightAware",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Flight tracking, institutional and product navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.alltrails.com/",
+      "source": "https://www.alltrails.com/",
+      "identity": "AllTrails",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Trail discovery service homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.komoot.com/",
+      "source": "https://www.komoot.com/",
+      "identity": "Komoot",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Route planner and official app links",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://wanderlog.com/",
+      "source": "https://wanderlog.com/",
+      "identity": "Wanderlog",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Trip planner and official app links",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.subito.it/",
+      "source": "https://www.subito.it/",
+      "identity": "Subito",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Marketplace homepage and selling navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.2dehands.be/",
+      "source": "https://www.2dehands.be/",
+      "identity": "2dehands",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Marketplace homepage with help and safety center",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.donedeal.ie/",
+      "source": "https://www.donedeal.ie/",
+      "identity": "DoneDeal",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Vehicle marketplace and dealership search",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.poczta-polska.pl/",
+      "source": "https://www.poczta-polska.pl/",
+      "identity": "Poczta Polska",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Postal services and parcel navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://allegro.pl/",
+      "source": "https://allegro.pl/",
+      "identity": "Allegro",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded marketplace homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.continente.pt/",
+      "source": "https://www.continente.pt/",
+      "identity": "Continente",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded grocery service homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.olx.pt/",
+      "source": "https://www.olx.pt/",
+      "identity": "OLX Portugal",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded classifieds and account navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.correios.com.br/",
+      "source": "https://www.correios.com.br/",
+      "identity": "Correios",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Postal service homepage and tracking/service navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://99app.com/",
+      "source": "https://99app.com/",
+      "identity": "99",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official driver, passenger and safety navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.correoargentino.com.ar/",
+      "source": "https://www.correoargentino.com.ar/",
+      "identity": "Correo Argentino",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded postal homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.pedidosya.com.ar/",
+      "source": "https://www.pedidosya.com.ar/",
+      "identity": "PedidosYa",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Local food and commerce service navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.emiratespost.ae/",
+      "source": "https://www.emiratespost.ae/",
+      "identity": "Emirates Post",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded postal homepage and official account link",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.careem.com/",
+      "source": "https://www.careem.com/",
+      "identity": "Careem",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded transport and consumer service navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.grab.com/th/",
+      "source": "https://www.grab.com/th/",
+      "identity": "Grab Thailand",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Thai localized Grab homepage and readable service navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.meteo.be/en/",
+      "source": "https://www.meteo.be/",
+      "previousUrl": "https://www.meteo.be/",
+      "identity": "Royal Meteorological Institute",
+      "method": "Observed official redirect and inspected destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect; official RMI forecasts and institute description",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.italotreno.com/en",
+      "source": "https://www.italotreno.com/",
+      "previousUrl": "https://www.italotreno.com/",
+      "identity": "Italo",
+      "method": "Observed official redirect and inspected destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to branded English rail booking service",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.ctt.pt/particulares/index",
+      "source": "https://www.ctt.pt/",
+      "previousUrl": "https://www.ctt.pt/",
+      "identity": "CTT",
+      "method": "Observed official redirect and inspected destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to postal customer portal",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.noon.com/uae-en/",
+      "source": "https://www.noon.com/",
+      "previousUrl": "https://www.noon.com/",
+      "identity": "noon UAE",
+      "method": "Observed official redirect and inspected destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to UAE storefront, matching region",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
     }
   ]
 }
