@@ -36,7 +36,7 @@ const require=(condition,reason)=>{if(!condition)throw Error(reason);};
  require(screen(home)&&screen(directory),'viewport size differs from 390×844');
  const h=home.document;
  const d=directory.document;
- require(h.documentElement.scrollWidth<=390&&d.documentElement.scrollWidth<=390,'page overflows the mobile viewport');
+ require(h.documentElement.scrollWidth<=390&&d.documentElement.scrollWidth<=390,'mobile overflow: home '+h.documentElement.scrollWidth+', directory '+d.documentElement.scrollWidth);
  const homeCards=h.getElementById('popularCards');
  require(homeCards.scrollWidth>homeCards.clientWidth&&homeCards.getBoundingClientRect().width<=390,'homepage cards should scroll horizontally within the screen');
  require(h.getElementById('popularHeroAction').getAttribute('href')==='#popular','homepage must lead with an editor picks shortcut');
@@ -111,7 +111,8 @@ with http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler) as server:
              f"http://127.0.0.1:{server.server_port}/mobile-test.html"],
             capture_output=True, text=True, timeout=55, check=True,
         )
-    assert 'data-result="pass"' in result.stdout, re.search(r'<html[^>]+>', result.stdout)
+    state = re.search(r'<html[^>]+>', result.stdout)
+    assert 'data-result="pass"' in result.stdout, state[0] if state else 'No test page rendered'
     count = re.search(r'data-picks="(\d+)"', result.stdout)[1]
     print(f"PASS 390×844 homepage and directory, {count} editor picks, intents, random preview, privacy and locale switching")
     server.shutdown()
