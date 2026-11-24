@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /.well-known/assetlinks.json
+Disallow: /_store/
+Disallow: /admin.php
+Disallow: /passkey.php
+Disallow: /feedback-admin.php
