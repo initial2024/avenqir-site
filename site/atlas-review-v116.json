@@ -585,6 +585,115 @@
       "previousUrl": "https://www.trenitalia.com/",
       "identity": "Trenitalia",
       "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://chocolatey.org/",
+      "source": "https://chocolatey.org/",
+      "identity": "Chocolatey",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://ninite.com/",
+      "source": "https://ninite.com/",
+      "identity": "Ninite",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.mathsisfun.com/",
+      "source": "https://www.mathsisfun.com/",
+      "identity": "Math is Fun",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.rapidtables.com/",
+      "source": "https://www.rapidtables.com/",
+      "identity": "RapidTables",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.chemguide.co.uk/",
+      "source": "https://www.chemguide.co.uk/",
+      "identity": "Chemguide",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://apnews.com/",
+      "source": "https://apnews.com/",
+      "identity": "Associated Press",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.reuters.com/",
+      "source": "https://www.reuters.com/",
+      "identity": "Reuters",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://arstechnica.com/",
+      "source": "https://arstechnica.com/",
+      "identity": "Ars Technica",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.theverge.com/",
+      "source": "https://www.theverge.com/",
+      "identity": "The Verge",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.wired.com/",
+      "source": "https://www.wired.com/",
+      "identity": "WIRED",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://techcrunch.com/",
+      "source": "https://techcrunch.com/",
+      "identity": "TechCrunch",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.theregister.com/",
+      "source": "https://www.theregister.com/",
+      "identity": "The Register",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.engadget.com/",
+      "source": "https://www.engadget.com/",
+      "identity": "Engadget",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://spectrum.ieee.org/",
+      "source": "https://spectrum.ieee.org/",
+      "identity": "IEEE Spectrum",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://hackaday.com/",
+      "source": "https://hackaday.com/",
+      "identity": "Hackaday",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://alternativeto.net/",
+      "source": "https://alternativeto.net/",
+      "identity": "AlternativeTo",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://dribbble.com/",
+      "source": "https://dribbble.com/",
+      "identity": "Dribbble",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://flathub.org/en",
+      "source": "https://flathub.org/en",
+      "identity": "Flathub",
+      "method": "Inspected exact official page via indexed retrieval",
+      "previousUrl": "https://flathub.org/"
     }
   ]
 }
