@@ -31,7 +31,12 @@ def download(url, accepted, limit=LIMIT):
             raise ValueError("HTTP_STATUS_NOT_200")
         media = response.headers.get_content_type()
         if media not in accepted:
-            raise ValueError("NON_JSON_HTML" if media == "text/html" else "UNEXPECTED_MEDIA_TYPE")
+            if media == "text/html":
+                sample = response.read(16384).lower()
+                if b"aes.js" in sample and (b"__test" in sample or b"document.cookie" in sample):
+                    raise ValueError("HOST_BROWSER_CHALLENGE")
+                raise ValueError("NON_JSON_HTML")
+            raise ValueError("UNEXPECTED_MEDIA_TYPE")
         data = response.read(limit + 1)
         if not data or len(data) > limit:
             raise ValueError("empty or oversized response")
@@ -162,7 +167,7 @@ def main():
         return 0
     except (ValueError, OSError, KeyError, TypeError) as exc:
         # Do not echo HTTP bodies or any local credential material.
-        known = {"HTTP_STATUS_NOT_200", "NON_JSON_HTML", "UNEXPECTED_MEDIA_TYPE", "DAL_PINNED_TARGET_MISMATCH"}
+        known = {"HTTP_STATUS_NOT_200", "HOST_BROWSER_CHALLENGE", "NON_JSON_HTML", "UNEXPECTED_MEDIA_TYPE", "DAL_PINNED_TARGET_MISMATCH"}
         code = str(exc) if str(exc) in known else ("INVALID_JSON" if isinstance(exc, json.JSONDecodeError) else "UNCLASSIFIED")
         print(json.dumps({"status": "DENY", "reason": code, "errorType": type(exc).__name__, "httpStatus": getattr(exc, "code", None)}))
         return 1
