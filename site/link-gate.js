@@ -529,7 +529,8 @@
     'https://securityheaders.com/',
     'https://www.englishclub.com/',
     'https://elllo.org/',
-    'https://www.perfect-english-grammar.com/'
+    'https://www.perfect-english-grammar.com/',
+    'https://www.cast.org.cn/',    'https://www.weather.com.cn/',    'https://www.naver.com/',    'https://www.india.gov.in/',    'https://mausam.imd.gov.in/',    'https://ncert.nic.in/',    'https://www.internethalloffame.org/',    'https://www.sciencenews.org/',    'https://www.nature.com/',    'https://www.japan.travel/en/',    'https://www.data.gov.in/'
   ];
   function sanitize(raw){
     if(typeof raw!=='string'||raw.length>1800||/[\u0000-\u0020\u007f\\]/.test(raw))return null;
