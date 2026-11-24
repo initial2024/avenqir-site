@@ -1,0 +1,882 @@
+{
+  "schema": "avenqir-exact-source-review-v1",
+  "reviewDate": "2026-11-24",
+  "scope": "Follow-up on the 150 pending URLs, including publisher corroboration and independently retrieved migration destinations.",
+  "records": [
+    {
+      "id": "a122",
+      "name": "Krita",
+      "category": "创作",
+      "originalUrl": "https://krita.org/",
+      "url": "https://krita.org/",
+      "finalUrl": "https://krita.org/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://krita.org/",
+          "status": 200
+        }
+      ],
+      "title": "https://krita.org/en/",
+      "checkedAt": "2026-11-24T14:35:36+00:00",
+      "observationIssue": "page indicates a client-side redirect",
+      "status": "confirmed",
+      "source": "https://github.com/KDE/krita/blob/master/krita/main.cc",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://krita.org/",
+        "publisherPageTitle": "krita/main.cc at master · KDE/krita",
+        "publisherEvidence": "KDE's official Krita source code sets the application's homepage to https://krita.org. The public root response advertises Krita's localized site.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "KDE's official Krita source code sets the application's homepage to https://krita.org. The public root response advertises Krita's localized site."
+    },
+    {
+      "id": "dA070",
+      "name": "MarineTraffic",
+      "category": "地图",
+      "originalUrl": "https://www.marinetraffic.com/",
+      "url": "https://www.marinetraffic.com/",
+      "finalUrl": "https://www.marinetraffic.com/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.marinetraffic.com/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:43:39+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "source": "https://www.kpler.com/company/consumer-terms-conditions",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.marinetraffic.com/",
+        "publisherPageTitle": "Consumer Terms & Conditions",
+        "publisherEvidence": "Kpler's consumer terms expressly define www.marinetraffic.com as the website for its MarineTraffic online platform.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "Kpler's consumer terms expressly define www.marinetraffic.com as the website for its MarineTraffic online platform."
+    },
+    {
+      "id": "dB019",
+      "name": "ReadTheory",
+      "category": "英语阅读",
+      "originalUrl": "https://readtheory.org/",
+      "url": "https://readtheory.org/",
+      "finalUrl": "https://readtheory.org/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://readtheory.org/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:43:41+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "source": "https://readtheory.org/teachers-lounge/readtheory-expands-new-domains-same-commitment-to-education/",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://readtheory.org/",
+        "publisherPageTitle": "ReadTheory Expands: New Domains, Same Commitment to Education",
+        "publisherEvidence": "ReadTheory’s publisher identifies readtheory.org as an active entry to its reading education service in its announcement about additional web addresses.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "ReadTheory’s publisher identifies readtheory.org as an active entry to its reading education service in its announcement about additional web addresses."
+    },
+    {
+      "id": "dB079",
+      "name": "Turnitin",
+      "category": "AI检测",
+      "originalUrl": "https://www.turnitin.com/",
+      "url": "https://www.turnitin.com/",
+      "finalUrl": "https://www.turnitin.com/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.turnitin.com/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:43:45+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "source": "https://guides.turnitin.com/hc/en-us/articles/26708418753165-Joining-an-account-in-Turnitin-Feedback-Studio",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.turnitin.com/",
+        "publisherPageTitle": "Joining an account in Turnitin Feedback Studio – Turnitin Guides",
+        "publisherEvidence": "The publisher's Feedback Studio guide directs users to www.turnitin.com to sign in.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "The publisher's Feedback Studio guide directs users to www.turnitin.com to sign in."
+    },
+    {
+      "id": "every020",
+      "name": "UPS",
+      "category": "实用",
+      "originalUrl": "https://www.ups.com/",
+      "url": "https://www.ups.com/",
+      "finalUrl": "https://www.ups.com/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.ups.com/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:44:02+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "source": "https://about.ups.com/content/dam/upsstories/images/our-company/global-presence/asia-pacific-region-facts/ups-asia-pacific-region-facts.pdf",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.ups.com/",
+        "publisherPageTitle": "Asia Pacific Region",
+        "publisherEvidence": "The UPS fact sheet identifies the company and links https://www.ups.com as the entry for finding a UPS location.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "The UPS fact sheet identifies the company and links https://www.ups.com as the entry for finding a UPS location."
+    },
+    {
+      "id": "every023",
+      "name": "Tesco",
+      "category": "实用",
+      "originalUrl": "https://www.tesco.com/",
+      "url": "https://www.tesco.com/",
+      "finalUrl": "https://www.tesco.com/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.tesco.com/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:44:02+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "source": "https://www.tescoplc.com/media/eswhcoi2/tesco-annual-report-2022.pdf",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.tesco.com/",
+        "publisherPageTitle": "Tesco Annual Report 2022",
+        "publisherEvidence": "The retailer's annual report gives www.tesco.com as the website for Tesco.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "The retailer's annual report gives www.tesco.com as the website for Tesco."
+    },
+    {
+      "id": "every031",
+      "name": "SNCF Connect",
+      "category": "旅游出行",
+      "originalUrl": "https://www.sncf-connect.com/",
+      "url": "https://www.sncf-connect.com/",
+      "finalUrl": "https://www.sncf-connect.com/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.sncf-connect.com/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:44:03+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "source": "https://www.sncf-connect.com/statics/cgv/cgv-en-en.pdf",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.sncf-connect.com/",
+        "publisherPageTitle": "General Terms and Conditions of Sale and Use of the Website www.sncf-connect.com",
+        "publisherEvidence": "SNCF Connect's contractual terms name www.sncf-connect.com as the website covered by the terms of sale and use.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "SNCF Connect's contractual terms name www.sncf-connect.com as the website covered by the terms of sale and use."
+    },
+    {
+      "id": "every055",
+      "name": "Amazon India",
+      "category": "实用",
+      "originalUrl": "https://www.amazon.in/",
+      "url": "https://www.amazon.in/",
+      "finalUrl": "https://www.amazon.in/",
+      "httpStatus": 503,
+      "redirectChain": [
+        {
+          "url": "https://www.amazon.in/",
+          "status": 503
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T14:35:45+00:00",
+      "observationIssue": "HTTP 503",
+      "status": "confirmed",
+      "source": "https://sell.amazon.in/sell-online/seller-registration-guide",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.amazon.in/",
+        "publisherPageTitle": "How to create a seller account to start your business on Amazon.in",
+        "publisherEvidence": "Amazon Seller Services Private Limited explicitly identifies www.amazon.in as the marketplace for its sellers in its seller registration guide.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "Amazon Seller Services Private Limited explicitly identifies www.amazon.in as the marketplace for its sellers in its seller registration guide."
+    },
+    {
+      "id": "exd027",
+      "name": "Coop Schweiz",
+      "category": "实用",
+      "originalUrl": "https://www.coop.ch/",
+      "url": "https://www.coop.ch/",
+      "finalUrl": "https://www.coop.ch/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.coop.ch/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:44:11+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "source": "https://www.coop.ch/de/unternehmen/medien/medienmitteilungen/2020/coop-revolutioniert-ihren-online-auftritt.html",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.coop.ch/",
+        "publisherPageTitle": "Coop revolutioniert ihren Online-Auftritt",
+        "publisherEvidence": "The Swiss retailer announces that its grocery delivery and store information are available on its consolidated customer platform at www.coop.ch.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "The Swiss retailer announces that its grocery delivery and store information are available on its consolidated customer platform at www.coop.ch."
+    },
+    {
+      "id": "exd050",
+      "name": "Irish Rail",
+      "category": "旅游出行",
+      "originalUrl": "https://www.irishrail.ie/",
+      "url": "https://www.irishrail.ie/",
+      "finalUrl": "https://www.irishrail.ie/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.irishrail.ie/",
+          "status": 200
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T14:35:46+00:00",
+      "observationIssue": "page indicates a client-side redirect",
+      "status": "confirmed",
+      "source": "https://datacatalogue.gov.ie/organization/about/iarnrod-eireann",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.irishrail.ie/",
+        "publisherPageTitle": "About - Iarnród Éireann - Organisations - PSB Data Catalogue",
+        "publisherEvidence": "The Irish government's public-service catalogue identifies the national rail operator and gives https://www.irishrail.ie/ as its website.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "The Irish government's public-service catalogue identifies the national rail operator and gives https://www.irishrail.ie/ as its website."
+    },
+    {
+      "id": "exd054",
+      "name": "PKP Intercity",
+      "category": "旅游出行",
+      "originalUrl": "https://www.intercity.pl/",
+      "url": "https://www.intercity.pl/",
+      "finalUrl": "https://www.intercity.pl/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.intercity.pl/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T13:02:11+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "source": "https://regulamin-eic.intercity.pl/files/Regulamin_e-IC_17052023.pdf",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.intercity.pl/",
+        "publisherPageTitle": "Regulamin e-IC",
+        "publisherEvidence": "The Polish rail operator's electronic ticketing terms define its website as www.intercity.pl and link the HTTPS root.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "The Polish rail operator's electronic ticketing terms define its website as www.intercity.pl and link the HTTPS root."
+    },
+    {
+      "id": "exd066",
+      "name": "Mercado Libre México",
+      "category": "实用",
+      "originalUrl": "https://www.mercadolibre.com.mx/",
+      "url": "https://www.mercadolibre.com.mx/",
+      "finalUrl": "https://www.mercadolibre.com.mx/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.mercadolibre.com.mx/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:44:16+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "source": "https://vendedores.mercadolibre.com.mx/nota/contactanos-a-traves-de-nuestros-medios-oficiales",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.mercadolibre.com.mx/",
+        "publisherPageTitle": "Central de aprendizaje",
+        "publisherEvidence": "The Mexican marketplace's seller help explicitly designates https://www.mercadolibre.com.mx/ as its official web app.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "The Mexican marketplace's seller help explicitly designates https://www.mercadolibre.com.mx/ as its official web app."
+    },
+    {
+      "id": "exd068",
+      "name": "ADO",
+      "category": "旅游出行",
+      "originalUrl": "https://www.ado.com.mx/",
+      "url": "https://www.ado.com.mx/",
+      "finalUrl": "https://www.ado.com.mx/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.ado.com.mx/",
+          "status": 200
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T14:35:46+00:00",
+      "observationIssue": "no HTML title",
+      "status": "confirmed",
+      "source": "https://hola.ado.com.mx/hc/es/articles/4415981075355--C%C3%B3mo-ingresar-a-la-p%C3%A1gina-web-de-ADO",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.ado.com.mx/",
+        "publisherPageTitle": "¿Cómo ingresar a la página web de ADO? – ADO",
+        "publisherEvidence": "ADO's official support article identifies www.ado.com.mx as the website for its bus service and directs passengers to enter that address in a browser.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "ADO's official support article identifies www.ado.com.mx as the website for its bus service and directs passengers to enter that address in a browser."
+    },
+    {
+      "id": "exd070",
+      "name": "Mercado Libre Argentina",
+      "category": "实用",
+      "originalUrl": "https://www.mercadolibre.com.ar/",
+      "url": "https://www.mercadolibre.com.ar/",
+      "finalUrl": "https://www.mercadolibre.com.ar/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.mercadolibre.com.ar/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:44:17+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "source": "https://vendedores.mercadolibre.com.ar/aprender/nota/contactanos-a-traves-de-nuestros-medios-oficiales",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.mercadolibre.com.ar/",
+        "publisherPageTitle": "Central de aprendizaje",
+        "publisherEvidence": "The Argentine marketplace's seller help explicitly designates https://www.mercadolibre.com.ar/ as its official web app.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "The Argentine marketplace's seller help explicitly designates https://www.mercadolibre.com.ar/ as its official web app."
+    },
+    {
+      "id": "exd077",
+      "name": "Thailand Post",
+      "category": "实用",
+      "originalUrl": "https://www.thailandpost.co.th/",
+      "url": "https://www.thailandpost.co.th/",
+      "finalUrl": "https://www.thailandpost.co.th/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.thailandpost.co.th/",
+          "status": 200
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T14:35:47+00:00",
+      "observationIssue": "no HTML title",
+      "status": "confirmed",
+      "source": "https://thailand.go.th/public/index.php/useful-information-detail/catering-to-long-distance-shipping-needs-thailand-post-introduces-ems-world-for-fast-delivery-worldwide",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.thailandpost.co.th/",
+        "publisherPageTitle": "Catering to Long-distance Shipping Needs, Thailand Post Introduces EMS World for Fast Delivery Worldwide! - THAILAND.GO.TH",
+        "publisherEvidence": "The Thai Public Relations Department announces Thailand Post's postal service and links exactly to https://www.thailandpost.co.th.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "The Thai Public Relations Department announces Thailand Post's postal service and links exactly to https://www.thailandpost.co.th."
+    },
+    {
+      "id": "exd083",
+      "name": "Shopee Malaysia",
+      "category": "实用",
+      "originalUrl": "https://shopee.com.my/",
+      "url": "https://shopee.com.my/",
+      "finalUrl": "https://shopee.com.my/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://shopee.com.my/",
+          "status": 200
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T14:35:48+00:00",
+      "observationIssue": "no HTML title",
+      "status": "confirmed",
+      "source": "https://help.shopee.com.my/portal/4/article/78567-",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://shopee.com.my/",
+        "publisherPageTitle": "[Account Safety] How do I avoid & report scam/suspicious activity?",
+        "publisherEvidence": "Shopee Malaysia's support advisory identifies shopee.com.my as the official website for transactions.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "Shopee Malaysia's support advisory identifies shopee.com.my as the official website for transactions."
+    },
+    {
+      "id": "exd086",
+      "name": "Tiket.com",
+      "category": "旅游出行",
+      "originalUrl": "https://www.tiket.com/",
+      "url": "https://www.tiket.com/",
+      "finalUrl": "https://www.tiket.com/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.tiket.com/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T13:02:15+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "source": "https://www.blibli.com/faq/topic/blipay/saldo-blipay/penggunaan-blipay-di-tiket-com/",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.tiket.com/",
+        "publisherPageTitle": "Penggunaan BlibliPay di tiket.com – Pusat Bantuan",
+        "publisherEvidence": "Blibli's service documentation explicitly attributes www.tiket.com to PT Global Tiket Network and describes the service integration.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "Blibli's service documentation explicitly attributes www.tiket.com to PT Global Tiket Network and describes the service integration."
+    },
+    {
+      "id": "n042",
+      "name": "Smithsonian Open Access",
+      "category": "文化",
+      "originalUrl": "https://www.si.edu/openaccess",
+      "url": "https://www.si.edu/openaccess",
+      "finalUrl": "https://www.si.edu/openaccess",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.si.edu/openaccess",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:44:26+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "source": "https://npg.si.edu/national-history-day-national-portrait-gallery",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.si.edu/openaccess",
+        "publisherPageTitle": "National History Day at the National Portrait Gallery",
+        "publisherEvidence": "The Smithsonian's National Portrait Gallery identifies and links https://www.si.edu/openaccess as the Smithsonian Open Access collections service.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "The Smithsonian's National Portrait Gallery identifies and links https://www.si.edu/openaccess as the Smithsonian Open Access collections service."
+    },
+    {
+      "id": "r24",
+      "name": "VirusTotal",
+      "category": "安全",
+      "originalUrl": "https://www.virustotal.com/gui/home/url",
+      "url": "https://www.virustotal.com/gui/home/url",
+      "finalUrl": "https://www.virustotal.com/gui/home/url",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.virustotal.com/gui/home/url",
+          "status": 200
+        }
+      ],
+      "title": "VirusTotal",
+      "checkedAt": "2026-11-24T14:35:49+00:00",
+      "observationIssue": null,
+      "status": "confirmed",
+      "source": "https://blog.virustotal.com/2019/06/virustotal-segasec-url-scanner.html",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.virustotal.com/gui/home/url",
+        "publisherPageTitle": "VirusTotal += Segasec URL scanner ~ VirusTotal Blog",
+        "publisherEvidence": "VirusTotal's announcement explicitly identifies the exact https://www.virustotal.com/gui/home/url path as the service's URL submission entry. No URL was submitted in this review.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "VirusTotal's announcement explicitly identifies the exact https://www.virustotal.com/gui/home/url path as the service's URL submission entry. No URL was submitted in this review."
+    },
+    {
+      "id": "rex043",
+      "name": "挪威气象机构",
+      "category": "环境气候",
+      "originalUrl": "https://www.met.no/",
+      "url": "https://www.met.no/",
+      "finalUrl": "https://www.met.no/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.met.no/",
+          "status": 200
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T14:35:50+00:00",
+      "observationIssue": "no HTML title",
+      "status": "confirmed",
+      "source": "https://cis2.eea.europa.eu/provider/81/",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.met.no/",
+        "publisherPageTitle": "Data Provider",
+        "publisherEvidence": "The European Environment Agency's provider directory identifies the Norwegian Meteorological Institute and lists https://www.met.no/ as its website.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "The European Environment Agency's provider directory identifies the Norwegian Meteorological Institute and lists https://www.met.no/ as its website."
+    },
+    {
+      "id": "rex138",
+      "name": "埃及中央银行",
+      "category": "经济金融",
+      "originalUrl": "https://www.cbe.org.eg/",
+      "url": "https://www.cbe.org.eg/",
+      "finalUrl": null,
+      "httpStatus": null,
+      "redirectChain": [],
+      "title": null,
+      "checkedAt": "2026-11-24T14:35:54+00:00",
+      "observationIssue": "gaierror",
+      "status": "confirmed",
+      "source": "https://www.cbe.org.eg/-/media/project/cbe/listing/research/volumes/2023-2024/%D9%85%D8%AC%D9%84%D8%AF-64-%D8%B1%D9%82%D9%85-2.pdf",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.cbe.org.eg/",
+        "publisherPageTitle": "CENTRAL BANK OF EGYPT",
+        "publisherEvidence": "The Central Bank of Egypt's periodical lists and links https://www.cbe.org.eg as the bank's publication website.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "The Central Bank of Egypt's periodical lists and links https://www.cbe.org.eg as the bank's publication website."
+    },
+    {
+      "id": "rg88023",
+      "name": "新加坡教育部",
+      "category": "教育",
+      "originalUrl": "https://www.moe.gov.sg/",
+      "url": "https://www.moe.gov.sg/",
+      "finalUrl": "https://www.moe.gov.sg/",
+      "httpStatus": 202,
+      "redirectChain": [
+        {
+          "url": "https://www.moe.gov.sg/",
+          "status": 202
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T13:02:10+00:00",
+      "observationIssue": "HTTP 202",
+      "status": "confirmed",
+      "source": "https://ekap.desa.un.org/DataCenter/SurveyDocument/242",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.moe.gov.sg/",
+        "publisherPageTitle": "Singapore_MSQ 2026.docx",
+        "publisherEvidence": "Singapore's country questionnaire in the UN e-government survey states that the Ministry of Education's website is https://www.moe.gov.sg/. The Singapore Government Directory independently names the same ministry and site.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "Singapore's country questionnaire in the UN e-government survey states that the Ministry of Education's website is https://www.moe.gov.sg/. The Singapore Government Directory independently names the same ministry and site."
+    },
+    {
+      "id": "s031",
+      "name": "Character.AI",
+      "category": "AI交流",
+      "originalUrl": "https://character.ai/",
+      "url": "https://character.ai/",
+      "finalUrl": "https://character.ai/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://character.ai/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T13:02:25+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "source": "https://blog.character.ai/introducing-our-next-generation-web-platform/",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://character.ai/",
+        "publisherPageTitle": "Introducing Our Next-Generation Web Platform",
+        "publisherEvidence": "Character.AI's publisher announcement explicitly says the new primary web domain for its service is https://character.ai.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "Character.AI's publisher announcement explicitly says the new primary web domain for its service is https://character.ai."
+    },
+    {
+      "id": "v110-130",
+      "name": "OECD Data Explorer",
+      "category": "数据",
+      "originalUrl": "https://data-explorer.oecd.org/",
+      "url": "https://data-explorer.oecd.org/",
+      "finalUrl": "https://data-explorer.oecd.org/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://data-explorer.oecd.org/",
+          "status": 200
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T14:36:01+00:00",
+      "observationIssue": "no HTML title",
+      "status": "confirmed",
+      "source": "https://www.oecd.org/en/publications/education-at-a-glance-2025_1c0d9c79-en/full-report/reader-s-guide_c747c85e.html",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://data-explorer.oecd.org/",
+        "publisherPageTitle": "Reader’s guide: Education at a Glance 2025",
+        "publisherEvidence": "The OECD's reader guide explicitly labels https://data-explorer.oecd.org/ as its Data Explorer for underlying education data.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "The OECD's reader guide explicitly labels https://data-explorer.oecd.org/ as its Data Explorer for underlying education data."
+    },
+    {
+      "id": "exd030",
+      "name": "SJ 瑞典铁路",
+      "category": "旅游出行",
+      "originalUrl": "https://www.sj.se/",
+      "url": "https://www.sj.se/",
+      "finalUrl": "https://www.sj.se/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.sj.se/",
+          "status": 200
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T14:35:45+00:00",
+      "observationIssue": "no HTML title",
+      "status": "confirmed",
+      "source": "https://www.sj.se/en/about-sj/terms-and-conditions/terms-and-conditions-of-travel",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.sj.se/",
+        "publisherPageTitle": "SJ Terms and conditions of travel - SJ",
+        "publisherEvidence": "The Swedish rail operator's passenger terms identify www.sj.se as SJ's website for travel and ticketing information.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "The Swedish rail operator's passenger terms identify www.sj.se as SJ's website for travel and ticketing information."
+    },
+    {
+      "id": "rex021",
+      "name": "意大利政府",
+      "category": "法律政策",
+      "originalUrl": "https://www.governo.it/",
+      "url": "https://www.governo.it/",
+      "finalUrl": "https://www.governo.it/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.governo.it/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:44:34+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "source": "https://www.dipartimentosud.gov.it/it/note-legali/",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.governo.it/",
+        "publisherPageTitle": "Note legali",
+        "publisherEvidence": "The Italian government's legal notice says the Presidency of the Council of Ministers created www.governo.it to publish official government information and documents.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "The Italian government's legal notice says the Presidency of the Council of Ministers created www.governo.it to publish official government information and documents."
+    },
+    {
+      "id": "rex089",
+      "name": "阿根廷开放数据",
+      "category": "数据",
+      "originalUrl": "https://datos.gob.ar/",
+      "url": "https://datos.gob.ar/",
+      "finalUrl": null,
+      "httpStatus": null,
+      "redirectChain": [],
+      "title": null,
+      "checkedAt": "2026-11-24T14:35:51+00:00",
+      "observationIssue": "TimeoutError",
+      "status": "confirmed",
+      "source": "https://www.argentina.gob.ar/sites/default/files/2023/05/anexo_i_-_instructivo_de_transparencia_activa_web.pdf",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://datos.gob.ar/",
+        "publisherPageTitle": "Instructivo para el cumplimiento",
+        "publisherEvidence": "Argentina's official active transparency guidance names the national public data portal and specifies the exact hyperlink https://datos.gob.ar/.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "Argentina's official active transparency guidance names the national public data portal and specifies the exact hyperlink https://datos.gob.ar/."
+    },
+    {
+      "id": "rex103",
+      "name": "马来西亚气象局",
+      "category": "环境气候",
+      "originalUrl": "https://www.met.gov.my/",
+      "url": "https://www.met.gov.my/",
+      "finalUrl": "https://www.met.gov.my/",
+      "httpStatus": 503,
+      "redirectChain": [
+        {
+          "url": "https://www.met.gov.my/",
+          "status": 503
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T14:35:52+00:00",
+      "observationIssue": "HTTP 503",
+      "status": "confirmed",
+      "source": "https://www.nadma.gov.my/images/2023/Penerbitan/Brochures/InformasiBencana.pdf",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.met.gov.my/",
+        "publisherPageTitle": "INFORMASI BENCANA",
+        "publisherEvidence": "Malaysia's National Disaster Management Agency lists METMalaysia as the source of public weather forecasts and gives https://www.met.gov.my as the website.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "Malaysia's National Disaster Management Agency lists METMalaysia as the source of public weather forecasts and gives https://www.met.gov.my as the website."
+    },
+    {
+      "id": "rg88084",
+      "name": "印度铁路",
+      "category": "旅游出行",
+      "originalUrl": "https://indianrailways.gov.in/",
+      "url": "https://indianrailways.gov.in/",
+      "finalUrl": "https://indianrailways.gov.in/",
+      "httpStatus": 503,
+      "redirectChain": [
+        {
+          "url": "https://indianrailways.gov.in/",
+          "status": 503
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T14:35:57+00:00",
+      "observationIssue": "HTTP 503",
+      "status": "confirmed",
+      "source": "https://igod.gov.in/organization/5745",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://indianrailways.gov.in/",
+        "publisherPageTitle": "Integrated Government Online Directory · Ministry of Railways",
+        "publisherEvidence": "India's government directory identifies its Ministry of Railways and links https://indianrailways.gov.in as its official site.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:39:16+00:00"
+      },
+      "reason": "India's government directory identifies its Ministry of Railways and links https://indianrailways.gov.in as its official site."
+    },
+    {
+      "id": "exd058",
+      "name": "Comboios de Portugal",
+      "category": "旅游出行",
+      "originalUrl": "https://www.cp.pt/",
+      "url": "https://www.cp.pt/pt",
+      "finalUrl": "https://www.cp.pt/pt",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.cp.pt/",
+          "status": 302,
+          "location": "https://www.cp.pt/pt"
+        },
+        {
+          "url": "https://www.cp.pt/pt",
+          "status": 200
+        }
+      ],
+      "title": "CP - Comboios de Portugal",
+      "checkedAt": "2026-11-24T14:35:46+00:00",
+      "observationIssue": null,
+      "status": "confirmed",
+      "previousUrl": "https://www.cp.pt/",
+      "source": "https://www.cp.pt/pt",
+      "independentDestination": {
+        "checked_at": "2026-11-24T14:35:50+00:00",
+        "final_url": "https://www.cp.pt/pt",
+        "status": 200,
+        "chain": [
+          {
+            "url": "https://www.cp.pt/pt",
+            "status": 200
+          }
+        ]
+      },
+      "evidence": {
+        "exactDestination": "https://www.cp.pt/pt",
+        "heading": "",
+        "pageDescription": null,
+        "serviceEvidence": "CP - Comboios de Portugal"
+      },
+      "reason": "The CP homepage redirects to /pt. An independent request retrieved the same railway operator's titled Portuguese homepage with its schedules and booking navigation."
+    }
+  ]
+}

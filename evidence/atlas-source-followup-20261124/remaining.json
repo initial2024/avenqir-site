@@ -1,44 +1,7 @@
 {
-  "reviewedAt": "2026-11-24T14:22:08+00:00",
+  "reviewedAt": "2026-11-24T14:39:16+00:00",
   "baseline": "evidence/atlas-source-review-20261124/remaining.json",
   "records": [
-    {
-      "id": "a122",
-      "originalUrl": "https://krita.org/",
-      "name": "Krita",
-      "category": "创作",
-      "status": "pending",
-      "reasonCode": "client-redirect",
-      "reason": "The page advertises a different localized address. The complete client-side migration and final exact URL remain unverified.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:43:24+00:00",
-          "finalUrl": "https://krita.org/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://krita.org/",
-              "status": 200
-            }
-          ],
-          "title": "https://krita.org/en/",
-          "issue": null
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:04+00:00",
-          "finalUrl": "https://krita.org/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://krita.org/",
-              "status": 200
-            }
-          ],
-          "title": "https://krita.org/en/",
-          "issue": "page indicates a client-side redirect"
-        }
-      ]
-    },
     {
       "id": "ai88006",
       "originalUrl": "https://qwenlm.github.io/",
@@ -46,7 +9,7 @@
       "category": "AI官网",
       "status": "pending",
       "reasonCode": "client-redirect",
-      "reason": "The page announces a new blog and a client-side redirect. The complete migration and precise final address remain unverified.",
+      "reason": "Qwen maintains the old blog repository and points readers to its new research site. The observed root indicates a client-side redirect, and the exact migration of this catalog entry remains unverified.",
       "observations": [
         {
           "checkedAt": "2026-11-24T12:43:30+00:00",
@@ -73,6 +36,19 @@
           ],
           "title": "Qwen",
           "issue": "page indicates a client-side redirect"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:36+00:00",
+          "finalUrl": "https://qwenlm.github.io/",
+          "httpStatus": 200,
+          "redirectChain": [
+            {
+              "url": "https://qwenlm.github.io/",
+              "status": 200
+            }
+          ],
+          "title": "Qwen",
+          "issue": "page indicates a client-side redirect"
         }
       ]
     },
@@ -83,7 +59,7 @@
       "category": "AI绘图",
       "status": "pending",
       "reasonCode": "product-changed",
-      "reason": "The root redirected to Brand Studio. The response did not establish that the listed DreamStudio service continues there.",
+      "reason": "The old address redirects to Brand Studio. The observed pages did not establish publisher-confirmed continuity of DreamStudio at the exact new address.",
       "observations": [
         {
           "checkedAt": "2026-11-24T12:43:31+00:00",
@@ -105,6 +81,24 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:04+00:00",
+          "finalUrl": "https://brandstudio.com/",
+          "httpStatus": 200,
+          "redirectChain": [
+            {
+              "url": "https://dreamstudio.ai/",
+              "status": 301,
+              "location": "https://brandstudio.com/"
+            },
+            {
+              "url": "https://brandstudio.com/",
+              "status": 200
+            }
+          ],
+          "title": "Brand Studio | Creative Production Platform",
+          "issue": null
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:36+00:00",
           "finalUrl": "https://brandstudio.com/",
           "httpStatus": 200,
           "redirectChain": [
@@ -173,6 +167,20 @@
           ],
           "title": null,
           "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:36+00:00",
+          "finalUrl": "https://www.tabnine.com/",
+          "httpStatus": 301,
+          "redirectChain": [
+            {
+              "url": "https://www.tabnine.com/",
+              "status": 301,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
         }
       ]
     },
@@ -213,6 +221,19 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:04+00:00",
+          "finalUrl": "https://www.dw.com/",
+          "httpStatus": 200,
+          "redirectChain": [
+            {
+              "url": "https://www.dw.com/",
+              "status": 200
+            }
+          ],
+          "title": null,
+          "issue": "no HTML title"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:36+00:00",
           "finalUrl": "https://www.dw.com/",
           "httpStatus": 200,
           "redirectChain": [
@@ -265,6 +286,20 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:04+00:00",
+          "finalUrl": "https://www.nature.com/news",
+          "httpStatus": 303,
+          "redirectChain": [
+            {
+              "url": "https://www.nature.com/news",
+              "status": 303,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:36+00:00",
           "finalUrl": "https://www.nature.com/news",
           "httpStatus": 303,
           "redirectChain": [
@@ -342,6 +377,20 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:04+00:00",
+          "finalUrl": "https://www.nature.com/",
+          "httpStatus": 303,
+          "redirectChain": [
+            {
+              "url": "https://www.nature.com/",
+              "status": 303,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:36+00:00",
           "finalUrl": "https://www.nature.com/",
           "httpStatus": 303,
           "redirectChain": [
@@ -435,6 +484,20 @@
           ],
           "title": null,
           "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:36+00:00",
+          "finalUrl": "https://poe.com/",
+          "httpStatus": 307,
+          "redirectChain": [
+            {
+              "url": "https://poe.com/",
+              "status": 307,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
         }
       ]
     },
@@ -487,30 +550,20 @@
           ],
           "title": null,
           "issue": "redirect target requires manual review"
-        }
-      ]
-    },
-    {
-      "id": "dA070",
-      "originalUrl": "https://www.marinetraffic.com/",
-      "name": "MarineTraffic",
-      "category": "地图",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
+        },
         {
-          "checkedAt": "2026-11-24T12:43:39+00:00",
-          "finalUrl": "https://www.marinetraffic.com/",
-          "httpStatus": 403,
+          "checkedAt": "2026-11-24T14:35:36+00:00",
+          "finalUrl": "https://www.mapillary.com/",
+          "httpStatus": 302,
           "redirectChain": [
             {
-              "url": "https://www.marinetraffic.com/",
-              "status": 403
+              "url": "https://www.mapillary.com/",
+              "status": 302,
+              "location_redacted": true
             }
           ],
           "title": null,
-          "issue": "HTTP 403"
+          "issue": "redirect target requires manual review"
         }
       ]
     },
@@ -538,6 +591,19 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:05+00:00",
+          "finalUrl": "https://play2048.co/",
+          "httpStatus": 200,
+          "redirectChain": [
+            {
+              "url": "https://play2048.co/",
+              "status": 200
+            }
+          ],
+          "title": "2048 • Play the Free Online Game",
+          "issue": null
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:36+00:00",
           "finalUrl": "https://play2048.co/",
           "httpStatus": 200,
           "redirectChain": [
@@ -640,6 +706,25 @@
           ],
           "title": null,
           "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:36+00:00",
+          "finalUrl": "https://calendar.google.com/calendar/u/0/r",
+          "httpStatus": 302,
+          "redirectChain": [
+            {
+              "url": "https://calendar.google.com/",
+              "status": 302,
+              "location": "https://calendar.google.com/calendar/u/0/r"
+            },
+            {
+              "url": "https://calendar.google.com/calendar/u/0/r",
+              "status": 302,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
         }
       ]
     },
@@ -693,30 +778,20 @@
           ],
           "title": null,
           "issue": "redirect target requires manual review"
-        }
-      ]
-    },
-    {
-      "id": "dB019",
-      "originalUrl": "https://readtheory.org/",
-      "name": "ReadTheory",
-      "category": "英语阅读",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
+        },
         {
-          "checkedAt": "2026-11-24T12:43:41+00:00",
-          "finalUrl": "https://readtheory.org/",
-          "httpStatus": 403,
+          "checkedAt": "2026-11-24T14:35:36+00:00",
+          "finalUrl": "https://keep.google.com/",
+          "httpStatus": 302,
           "redirectChain": [
             {
-              "url": "https://readtheory.org/",
-              "status": 403
+              "url": "https://keep.google.com/",
+              "status": 302,
+              "location_redacted": true
             }
           ],
           "title": null,
-          "issue": "HTTP 403"
+          "issue": "redirect target requires manual review"
         }
       ]
     },
@@ -727,7 +802,7 @@
       "category": "阅读",
       "status": "pending",
       "reasonCode": "migration-incomplete",
-      "reason": "The observed destination is the OAPEN organization home. The precise active library route has not been established.",
+      "reason": "The old address redirects to the OAPEN organization homepage. The exact library destination is still unresolved.",
       "observations": [
         {
           "checkedAt": "2026-11-24T12:43:41+00:00",
@@ -749,6 +824,24 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:07+00:00",
+          "finalUrl": "https://oapen.org/",
+          "httpStatus": 200,
+          "redirectChain": [
+            {
+              "url": "https://www.oapen.org/",
+              "status": 301,
+              "location": "https://oapen.org/"
+            },
+            {
+              "url": "https://oapen.org/",
+              "status": 200
+            }
+          ],
+          "title": "OAPEN Home | OAPEN",
+          "issue": null
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:37+00:00",
           "finalUrl": "https://oapen.org/",
           "httpStatus": 200,
           "redirectChain": [
@@ -881,6 +974,14 @@
           "redirectChain": [],
           "title": null,
           "issue": "gaierror"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:37+00:00",
+          "finalUrl": null,
+          "httpStatus": null,
+          "redirectChain": [],
+          "title": null,
+          "issue": "gaierror"
         }
       ]
     },
@@ -919,6 +1020,14 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:11+00:00",
+          "finalUrl": null,
+          "httpStatus": null,
+          "redirectChain": [],
+          "title": null,
+          "issue": "gaierror"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:38+00:00",
           "finalUrl": null,
           "httpStatus": null,
           "redirectChain": [],
@@ -974,30 +1083,19 @@
           ],
           "title": null,
           "issue": "no HTML title"
-        }
-      ]
-    },
-    {
-      "id": "dB079",
-      "originalUrl": "https://www.turnitin.com/",
-      "name": "Turnitin",
-      "category": "AI检测",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
+        },
         {
-          "checkedAt": "2026-11-24T12:43:45+00:00",
-          "finalUrl": "https://www.turnitin.com/",
-          "httpStatus": 403,
+          "checkedAt": "2026-11-24T14:35:38+00:00",
+          "finalUrl": "https://citrination.com/",
+          "httpStatus": 200,
           "redirectChain": [
             {
-              "url": "https://www.turnitin.com/",
-              "status": 403
+              "url": "https://citrination.com/",
+              "status": 200
             }
           ],
           "title": null,
-          "issue": "HTTP 403"
+          "issue": "no HTML title"
         }
       ]
     },
@@ -1040,6 +1138,20 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:11+00:00",
+          "finalUrl": "https://www.unep.org/",
+          "httpStatus": 301,
+          "redirectChain": [
+            {
+              "url": "https://www.unep.org/",
+              "status": 301,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:38+00:00",
           "finalUrl": "https://www.unep.org/",
           "httpStatus": 301,
           "redirectChain": [
@@ -1104,6 +1216,20 @@
           ],
           "title": null,
           "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:42+00:00",
+          "finalUrl": "https://www.cochranelibrary.com/",
+          "httpStatus": 302,
+          "redirectChain": [
+            {
+              "url": "https://www.cochranelibrary.com/",
+              "status": 302,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
         }
       ]
     },
@@ -1136,6 +1262,24 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:11+00:00",
+          "finalUrl": "https://www.analog.com/jp/index.html",
+          "httpStatus": 200,
+          "redirectChain": [
+            {
+              "url": "https://www.analog.com/",
+              "status": 302,
+              "location": "https://www.analog.com/jp/index.html"
+            },
+            {
+              "url": "https://www.analog.com/jp/index.html",
+              "status": 200
+            }
+          ],
+          "title": "ミックスド・シグナルおよびデジタル信号処理IC | アナログ・デバイセズ",
+          "issue": null
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:42+00:00",
           "finalUrl": "https://www.analog.com/jp/index.html",
           "httpStatus": 200,
           "redirectChain": [
@@ -1193,6 +1337,20 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:12+00:00",
+          "finalUrl": "https://www.british-history.ac.uk/",
+          "httpStatus": 302,
+          "redirectChain": [
+            {
+              "url": "https://www.british-history.ac.uk/",
+              "status": 302,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:42+00:00",
           "finalUrl": "https://www.british-history.ac.uk/",
           "httpStatus": 302,
           "redirectChain": [
@@ -1368,6 +1526,20 @@
           ],
           "title": null,
           "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:43+00:00",
+          "finalUrl": "https://apps.microsoft.com/",
+          "httpStatus": 302,
+          "redirectChain": [
+            {
+              "url": "https://apps.microsoft.com/",
+              "status": 302,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
         }
       ]
     },
@@ -1500,6 +1672,24 @@
           ],
           "title": "ClickHouse | Feito para cargas de trabalho com uso intensivo de dados",
           "issue": null
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:43+00:00",
+          "finalUrl": "https://clickhouse.com/pt-BR",
+          "httpStatus": 200,
+          "redirectChain": [
+            {
+              "url": "https://clickhouse.com/",
+              "status": 307,
+              "location": "https://clickhouse.com/pt-BR"
+            },
+            {
+              "url": "https://clickhouse.com/pt-BR",
+              "status": 200
+            }
+          ],
+          "title": "ClickHouse | Feito para cargas de trabalho com uso intensivo de dados",
+          "issue": null
         }
       ]
     },
@@ -1542,6 +1732,20 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:12+00:00",
+          "finalUrl": "https://www.ansible.com/",
+          "httpStatus": 301,
+          "redirectChain": [
+            {
+              "url": "https://www.ansible.com/",
+              "status": 301,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:43+00:00",
           "finalUrl": "https://www.ansible.com/",
           "httpStatus": 301,
           "redirectChain": [
@@ -1606,6 +1810,20 @@
           ],
           "title": null,
           "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:43+00:00",
+          "finalUrl": "https://docs.google.com/",
+          "httpStatus": 302,
+          "redirectChain": [
+            {
+              "url": "https://docs.google.com/",
+              "status": 302,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
         }
       ]
     },
@@ -1648,6 +1866,20 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:12+00:00",
+          "finalUrl": "https://sheets.google.com/",
+          "httpStatus": 301,
+          "redirectChain": [
+            {
+              "url": "https://sheets.google.com/",
+              "status": 301,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:44+00:00",
           "finalUrl": "https://sheets.google.com/",
           "httpStatus": 301,
           "redirectChain": [
@@ -1712,6 +1944,20 @@
           ],
           "title": null,
           "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:44+00:00",
+          "finalUrl": "https://drive.google.com/",
+          "httpStatus": 302,
+          "redirectChain": [
+            {
+              "url": "https://drive.google.com/",
+              "status": 302,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
         }
       ]
     },
@@ -1754,6 +2000,20 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:13+00:00",
+          "finalUrl": "https://opentripmap.io/",
+          "httpStatus": 302,
+          "redirectChain": [
+            {
+              "url": "https://opentripmap.io/",
+              "status": 302,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:44+00:00",
           "finalUrl": "https://opentripmap.io/",
           "httpStatus": 302,
           "redirectChain": [
@@ -1910,6 +2170,14 @@
           ],
           "title": null,
           "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:44+00:00",
+          "finalUrl": null,
+          "httpStatus": null,
+          "redirectChain": [],
+          "title": null,
+          "issue": "gaierror"
         }
       ]
     },
@@ -1953,54 +2221,20 @@
           ],
           "title": null,
           "issue": "gaierror"
-        }
-      ]
-    },
-    {
-      "id": "every020",
-      "originalUrl": "https://www.ups.com/",
-      "name": "UPS",
-      "category": "实用",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
+        },
         {
-          "checkedAt": "2026-11-24T12:44:02+00:00",
-          "finalUrl": "https://www.ups.com/",
-          "httpStatus": 403,
+          "checkedAt": "2026-11-24T14:35:44+00:00",
+          "finalUrl": "https://www.jd.com/",
+          "httpStatus": 301,
           "redirectChain": [
             {
-              "url": "https://www.ups.com/",
-              "status": 403
+              "url": "https://www.jd.com/",
+              "status": 301,
+              "location": "https://global.jd.com"
             }
           ],
           "title": null,
-          "issue": "HTTP 403"
-        }
-      ]
-    },
-    {
-      "id": "every023",
-      "originalUrl": "https://www.tesco.com/",
-      "name": "Tesco",
-      "category": "实用",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:02+00:00",
-          "finalUrl": "https://www.tesco.com/",
-          "httpStatus": 403,
-          "redirectChain": [
-            {
-              "url": "https://www.tesco.com/",
-              "status": 403
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 403"
+          "issue": "gaierror"
         }
       ]
     },
@@ -2041,30 +2275,6 @@
           "redirectChain": [
             {
               "url": "https://www.argos.co.uk/",
-              "status": 403
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 403"
-        }
-      ]
-    },
-    {
-      "id": "every031",
-      "originalUrl": "https://www.sncf-connect.com/",
-      "name": "SNCF Connect",
-      "category": "旅游出行",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:03+00:00",
-          "finalUrl": "https://www.sncf-connect.com/",
-          "httpStatus": 403,
-          "redirectChain": [
-            {
-              "url": "https://www.sncf-connect.com/",
               "status": 403
             }
           ],
@@ -2147,6 +2357,14 @@
           "redirectChain": [],
           "title": null,
           "issue": "gaierror"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:44+00:00",
+          "finalUrl": null,
+          "httpStatus": null,
+          "redirectChain": [],
+          "title": null,
+          "issue": "TimeoutError"
         }
       ]
     },
@@ -2197,6 +2415,19 @@
           ],
           "title": null,
           "issue": "no HTML title"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:45+00:00",
+          "finalUrl": "https://www.coles.com.au/",
+          "httpStatus": 200,
+          "redirectChain": [
+            {
+              "url": "https://www.coles.com.au/",
+              "status": 200
+            }
+          ],
+          "title": null,
+          "issue": "no HTML title"
         }
       ]
     },
@@ -2221,69 +2452,6 @@
           ],
           "title": null,
           "issue": "HTTP 403"
-        }
-      ]
-    },
-    {
-      "id": "every055",
-      "originalUrl": "https://www.amazon.in/",
-      "name": "Amazon India",
-      "category": "实用",
-      "status": "pending",
-      "reasonCode": "ownership-evidence-insufficient",
-      "reason": "Page content alone leaves the publisher identity or exact service attribution unresolved.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:06+00:00",
-          "finalUrl": "https://www.amazon.in/",
-          "httpStatus": 503,
-          "redirectChain": [
-            {
-              "url": "https://www.amazon.in/",
-              "status": 503
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 503"
-        },
-        {
-          "checkedAt": "2026-11-24T12:45:49+00:00",
-          "finalUrl": "https://www.amazon.in/",
-          "httpStatus": 503,
-          "redirectChain": [
-            {
-              "url": "https://www.amazon.in/",
-              "status": 503
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 503"
-        },
-        {
-          "checkedAt": "2026-11-24T13:02:07+00:00",
-          "finalUrl": "https://www.amazon.in/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.amazon.in/",
-              "status": 200
-            }
-          ],
-          "title": "Amazon.in",
-          "issue": null
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:14+00:00",
-          "finalUrl": "https://www.amazon.in/",
-          "httpStatus": 503,
-          "redirectChain": [
-            {
-              "url": "https://www.amazon.in/",
-              "status": 503
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 503"
         }
       ]
     },
@@ -2344,6 +2512,14 @@
           ],
           "title": null,
           "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:45+00:00",
+          "finalUrl": null,
+          "httpStatus": null,
+          "redirectChain": [],
+          "title": null,
+          "issue": "gaierror"
         }
       ]
     },
@@ -2409,6 +2585,24 @@
           ],
           "title": null,
           "issue": "no HTML title"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:45+00:00",
+          "finalUrl": "https://www.mtr.com.hk/index.php",
+          "httpStatus": 200,
+          "redirectChain": [
+            {
+              "url": "https://www.mtr.com.hk/",
+              "status": 301,
+              "location": "https://www.mtr.com.hk/index.php"
+            },
+            {
+              "url": "https://www.mtr.com.hk/index.php",
+              "status": 200
+            }
+          ],
+          "title": null,
+          "issue": "no HTML title"
         }
       ]
     },
@@ -2459,125 +2653,14 @@
           ],
           "title": null,
           "issue": "page indicates a client-side redirect"
-        }
-      ]
-    },
-    {
-      "id": "exd027",
-      "originalUrl": "https://www.coop.ch/",
-      "name": "Coop Schweiz",
-      "category": "实用",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:11+00:00",
-          "finalUrl": "https://www.coop.ch/",
-          "httpStatus": 403,
-          "redirectChain": [
-            {
-              "url": "https://www.coop.ch/",
-              "status": 403
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 403"
-        }
-      ]
-    },
-    {
-      "id": "exd030",
-      "originalUrl": "https://www.sj.se/",
-      "name": "SJ 瑞典铁路",
-      "category": "旅游出行",
-      "status": "pending",
-      "reasonCode": "service-not-readable",
-      "reason": "The response had no readable HTML title. The available evidence does not establish the exact service identity.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:11+00:00",
-          "finalUrl": "https://www.sj.se/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.sj.se/",
-              "status": 200
-            }
-          ],
-          "title": null,
-          "issue": "no HTML title"
         },
         {
-          "checkedAt": "2026-11-24T13:02:11+00:00",
-          "finalUrl": "https://www.sj.se/",
+          "checkedAt": "2026-11-24T14:35:45+00:00",
+          "finalUrl": "https://www.mlm.com.mo/",
           "httpStatus": 200,
           "redirectChain": [
             {
-              "url": "https://www.sj.se/",
-              "status": 200
-            }
-          ],
-          "title": null,
-          "issue": "no HTML title"
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:15+00:00",
-          "finalUrl": "https://www.sj.se/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.sj.se/",
-              "status": 200
-            }
-          ],
-          "title": null,
-          "issue": "no HTML title"
-        }
-      ]
-    },
-    {
-      "id": "exd050",
-      "originalUrl": "https://www.irishrail.ie/",
-      "name": "Irish Rail",
-      "category": "旅游出行",
-      "status": "pending",
-      "reasonCode": "client-redirect",
-      "reason": "The page indicates a client-side redirect. The final exact URL remains unverified.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:14+00:00",
-          "finalUrl": "https://www.irishrail.ie/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.irishrail.ie/",
-              "status": 200
-            }
-          ],
-          "title": null,
-          "issue": "no HTML title"
-        },
-        {
-          "checkedAt": "2026-11-24T13:02:11+00:00",
-          "finalUrl": "https://www.irishrail.ie/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.irishrail.ie/",
-              "status": 200
-            }
-          ],
-          "title": null,
-          "issue": "page indicates a client-side redirect"
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:15+00:00",
-          "finalUrl": "https://www.irishrail.ie/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.irishrail.ie/",
+              "url": "https://www.mlm.com.mo/",
               "status": 200
             }
           ],
@@ -2611,44 +2694,6 @@
       ]
     },
     {
-      "id": "exd054",
-      "originalUrl": "https://www.intercity.pl/",
-      "name": "PKP Intercity",
-      "category": "旅游出行",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:15+00:00",
-          "finalUrl": "https://www.intercity.pl/",
-          "httpStatus": 301,
-          "redirectChain": [
-            {
-              "url": "https://www.intercity.pl/",
-              "status": 301,
-              "location_redacted": true
-            }
-          ],
-          "title": null,
-          "issue": "redirect target requires manual review"
-        },
-        {
-          "checkedAt": "2026-11-24T13:02:11+00:00",
-          "finalUrl": "https://www.intercity.pl/",
-          "httpStatus": 403,
-          "redirectChain": [
-            {
-              "url": "https://www.intercity.pl/",
-              "status": 403
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 403"
-        }
-      ]
-    },
-    {
       "id": "exd056",
       "originalUrl": "https://www.olx.pl/",
       "name": "OLX Poland",
@@ -2669,43 +2714,6 @@
           ],
           "title": null,
           "issue": "HTTP 403"
-        }
-      ]
-    },
-    {
-      "id": "exd058",
-      "originalUrl": "https://www.cp.pt/",
-      "name": "Comboios de Portugal",
-      "category": "旅游出行",
-      "status": "pending",
-      "reasonCode": "migration-incomplete",
-      "reason": "The original URL redirected to the Portuguese railway site. The separate request for the exact final URL failed.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:15+00:00",
-          "finalUrl": "https://www.cp.pt/pt",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.cp.pt/",
-              "status": 302,
-              "location": "https://www.cp.pt/pt"
-            },
-            {
-              "url": "https://www.cp.pt/pt",
-              "status": 200
-            }
-          ],
-          "title": "CP - Comboios de Portugal",
-          "issue": null
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:15+00:00",
-          "finalUrl": null,
-          "httpStatus": null,
-          "redirectChain": [],
-          "title": null,
-          "issue": "gaierror"
         }
       ]
     },
@@ -2841,104 +2849,19 @@
           ],
           "title": null,
           "issue": "HTTP 503"
-        }
-      ]
-    },
-    {
-      "id": "exd066",
-      "originalUrl": "https://www.mercadolibre.com.mx/",
-      "name": "Mercado Libre México",
-      "category": "实用",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:16+00:00",
-          "finalUrl": "https://www.mercadolibre.com.mx/",
-          "httpStatus": 403,
-          "redirectChain": [
-            {
-              "url": "https://www.mercadolibre.com.mx/",
-              "status": 403
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 403"
-        }
-      ]
-    },
-    {
-      "id": "exd068",
-      "originalUrl": "https://www.ado.com.mx/",
-      "name": "ADO",
-      "category": "旅游出行",
-      "status": "pending",
-      "reasonCode": "service-not-readable",
-      "reason": "The response had no readable HTML title. The available evidence does not establish the exact service identity.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:17+00:00",
-          "finalUrl": "https://www.ado.com.mx/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.ado.com.mx/",
-              "status": 200
-            }
-          ],
-          "title": null,
-          "issue": "no HTML title"
         },
         {
-          "checkedAt": "2026-11-24T13:02:12+00:00",
-          "finalUrl": "https://www.ado.com.mx/",
-          "httpStatus": 200,
+          "checkedAt": "2026-11-24T14:35:46+00:00",
+          "finalUrl": "https://www.correosdemexico.gob.mx/",
+          "httpStatus": 503,
           "redirectChain": [
             {
-              "url": "https://www.ado.com.mx/",
-              "status": 200
+              "url": "https://www.correosdemexico.gob.mx/",
+              "status": 503
             }
           ],
           "title": null,
-          "issue": "no HTML title"
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:16+00:00",
-          "finalUrl": "https://www.ado.com.mx/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.ado.com.mx/",
-              "status": 200
-            }
-          ],
-          "title": null,
-          "issue": "no HTML title"
-        }
-      ]
-    },
-    {
-      "id": "exd070",
-      "originalUrl": "https://www.mercadolibre.com.ar/",
-      "name": "Mercado Libre Argentina",
-      "category": "实用",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:17+00:00",
-          "finalUrl": "https://www.mercadolibre.com.ar/",
-          "httpStatus": 403,
-          "redirectChain": [
-            {
-              "url": "https://www.mercadolibre.com.ar/",
-              "status": 403
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 403"
+          "issue": "HTTP 503"
         }
       ]
     },
@@ -2989,56 +2912,14 @@
           ],
           "title": null,
           "issue": "no HTML title"
-        }
-      ]
-    },
-    {
-      "id": "exd077",
-      "originalUrl": "https://www.thailandpost.co.th/",
-      "name": "Thailand Post",
-      "category": "实用",
-      "status": "pending",
-      "reasonCode": "service-not-readable",
-      "reason": "The response had no readable HTML title. The available evidence does not establish the exact service identity.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:17+00:00",
-          "finalUrl": "https://www.thailandpost.co.th/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.thailandpost.co.th/",
-              "status": 200
-            }
-          ],
-          "title": null,
-          "issue": "no HTML title"
         },
         {
-          "checkedAt": "2026-11-24T13:02:12+00:00",
-          "finalUrl": "https://www.thailandpost.co.th/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.thailandpost.co.th/",
-              "status": 200
-            }
-          ],
+          "checkedAt": "2026-11-24T14:35:47+00:00",
+          "finalUrl": null,
+          "httpStatus": null,
+          "redirectChain": [],
           "title": null,
-          "issue": "no HTML title"
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:16+00:00",
-          "finalUrl": "https://www.thailandpost.co.th/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.thailandpost.co.th/",
-              "status": 200
-            }
-          ],
-          "title": null,
-          "issue": "no HTML title"
+          "issue": "gaierror"
         }
       ]
     },
@@ -3092,6 +2973,14 @@
           "redirectChain": [],
           "title": null,
           "issue": "gaierror"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:47+00:00",
+          "finalUrl": null,
+          "httpStatus": null,
+          "redirectChain": [],
+          "title": null,
+          "issue": "gaierror"
         }
       ]
     },
@@ -3140,94 +3029,14 @@
           "redirectChain": [],
           "title": null,
           "issue": "URLError"
-        }
-      ]
-    },
-    {
-      "id": "exd083",
-      "originalUrl": "https://shopee.com.my/",
-      "name": "Shopee Malaysia",
-      "category": "实用",
-      "status": "pending",
-      "reasonCode": "service-not-readable",
-      "reason": "The response had no readable HTML title. The available evidence does not establish the exact service identity.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:18+00:00",
-          "finalUrl": "https://shopee.com.my/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://shopee.com.my/",
-              "status": 200
-            }
-          ],
-          "title": null,
-          "issue": "no HTML title"
         },
         {
-          "checkedAt": "2026-11-24T13:02:14+00:00",
-          "finalUrl": "https://shopee.com.my/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://shopee.com.my/",
-              "status": 200
-            }
-          ],
+          "checkedAt": "2026-11-24T14:35:48+00:00",
+          "finalUrl": null,
+          "httpStatus": null,
+          "redirectChain": [],
           "title": null,
-          "issue": "no HTML title"
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:17+00:00",
-          "finalUrl": "https://shopee.com.my/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://shopee.com.my/",
-              "status": 200
-            }
-          ],
-          "title": null,
-          "issue": "no HTML title"
-        }
-      ]
-    },
-    {
-      "id": "exd086",
-      "originalUrl": "https://www.tiket.com/",
-      "name": "Tiket.com",
-      "category": "旅游出行",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:19+00:00",
-          "finalUrl": "https://www.tiket.com/",
-          "httpStatus": 301,
-          "redirectChain": [
-            {
-              "url": "https://www.tiket.com/",
-              "status": 301,
-              "location_redacted": true
-            }
-          ],
-          "title": null,
-          "issue": "redirect target requires manual review"
-        },
-        {
-          "checkedAt": "2026-11-24T13:02:15+00:00",
-          "finalUrl": "https://www.tiket.com/",
-          "httpStatus": 403,
-          "redirectChain": [
-            {
-              "url": "https://www.tiket.com/",
-              "status": 403
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 403"
+          "issue": "URLError"
         }
       ]
     },
@@ -3271,6 +3080,14 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:17+00:00",
+          "finalUrl": null,
+          "httpStatus": null,
+          "redirectChain": [],
+          "title": null,
+          "issue": "URLError"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:48+00:00",
           "finalUrl": null,
           "httpStatus": null,
           "redirectChain": [],
@@ -3400,6 +3217,19 @@
           ],
           "title": null,
           "issue": "no HTML title"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:48+00:00",
+          "finalUrl": "https://www.saudia.com/",
+          "httpStatus": 200,
+          "redirectChain": [
+            {
+              "url": "https://www.saudia.com/",
+              "status": 200
+            }
+          ],
+          "title": null,
+          "issue": "no HTML title"
         }
       ]
     },
@@ -3498,6 +3328,20 @@
           ],
           "title": null,
           "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:48+00:00",
+          "finalUrl": "https://www.egyptair.com/",
+          "httpStatus": 302,
+          "redirectChain": [
+            {
+              "url": "https://www.egyptair.com/",
+              "status": 302,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
         }
       ]
     },
@@ -3530,6 +3374,24 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:18+00:00",
+          "finalUrl": "https://ai.google/",
+          "httpStatus": 200,
+          "redirectChain": [
+            {
+              "url": "https://ai.google.dev/",
+              "status": 301,
+              "location": "https://ai.google/"
+            },
+            {
+              "url": "https://ai.google/",
+              "status": 200
+            }
+          ],
+          "title": "Google AI - How we're making AI helpful for everyone",
+          "issue": null
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:48+00:00",
           "finalUrl": "https://ai.google/",
           "httpStatus": 200,
           "redirectChain": [
@@ -3603,6 +3465,14 @@
           ],
           "title": null,
           "issue": "HTTP 502"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:49+00:00",
+          "finalUrl": null,
+          "httpStatus": null,
+          "redirectChain": [],
+          "title": null,
+          "issue": "gaierror"
         }
       ]
     },
@@ -3650,30 +3520,20 @@
           ],
           "title": "NOMAD",
           "issue": null
-        }
-      ]
-    },
-    {
-      "id": "n042",
-      "originalUrl": "https://www.si.edu/openaccess",
-      "name": "Smithsonian Open Access",
-      "category": "文化",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
+        },
         {
-          "checkedAt": "2026-11-24T12:44:26+00:00",
-          "finalUrl": "https://www.si.edu/openaccess",
-          "httpStatus": 403,
+          "checkedAt": "2026-11-24T14:35:49+00:00",
+          "finalUrl": "https://nomad-lab.eu/",
+          "httpStatus": 302,
           "redirectChain": [
             {
-              "url": "https://www.si.edu/openaccess",
-              "status": 403
+              "url": "https://nomad-lab.eu/",
+              "status": 302,
+              "location": "https://nomad-lab.eu/select-gui"
             }
           ],
           "title": null,
-          "issue": "HTTP 403"
+          "issue": "gaierror"
         }
       ]
     },
@@ -3727,6 +3587,20 @@
           ],
           "title": null,
           "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:49+00:00",
+          "finalUrl": "https://unsplash.com/",
+          "httpStatus": 307,
+          "redirectChain": [
+            {
+              "url": "https://unsplash.com/",
+              "status": 307,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
         }
       ]
     },
@@ -3751,43 +3625,6 @@
           ],
           "title": null,
           "issue": "HTTP 403"
-        }
-      ]
-    },
-    {
-      "id": "r24",
-      "originalUrl": "https://www.virustotal.com/gui/home/url",
-      "name": "VirusTotal",
-      "category": "安全",
-      "status": "pending",
-      "reasonCode": "ownership-evidence-insufficient",
-      "reason": "The page identified VirusTotal by title, with no independently established exact URL reference to the URL-analysis path.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:32+00:00",
-          "finalUrl": "https://www.virustotal.com/gui/home/url",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.virustotal.com/gui/home/url",
-              "status": 200
-            }
-          ],
-          "title": "VirusTotal",
-          "issue": null
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:20+00:00",
-          "finalUrl": "https://www.virustotal.com/gui/home/url",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.virustotal.com/gui/home/url",
-              "status": 200
-            }
-          ],
-          "title": "VirusTotal",
-          "issue": null
         }
       ]
     },
@@ -3862,30 +3699,19 @@
           ],
           "title": null,
           "issue": "no HTML title"
-        }
-      ]
-    },
-    {
-      "id": "rex021",
-      "originalUrl": "https://www.governo.it/",
-      "name": "意大利政府",
-      "category": "法律政策",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
+        },
         {
-          "checkedAt": "2026-11-24T12:44:34+00:00",
-          "finalUrl": "https://www.governo.it/",
-          "httpStatus": 403,
+          "checkedAt": "2026-11-24T14:35:49+00:00",
+          "finalUrl": "https://www.censtatd.gov.hk/",
+          "httpStatus": 200,
           "redirectChain": [
             {
-              "url": "https://www.governo.it/",
-              "status": 403
+              "url": "https://www.censtatd.gov.hk/",
+              "status": 200
             }
           ],
           "title": null,
-          "issue": "HTTP 403"
+          "issue": "no HTML title"
         }
       ]
     },
@@ -3931,56 +3757,6 @@
           ],
           "title": null,
           "issue": "HTTP 403"
-        }
-      ]
-    },
-    {
-      "id": "rex043",
-      "originalUrl": "https://www.met.no/",
-      "name": "挪威气象机构",
-      "category": "环境气候",
-      "status": "pending",
-      "reasonCode": "service-not-readable",
-      "reason": "The response had no readable HTML title. The available evidence does not establish the exact service identity.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:39+00:00",
-          "finalUrl": "https://www.met.no/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.met.no/",
-              "status": 200
-            }
-          ],
-          "title": null,
-          "issue": "no HTML title"
-        },
-        {
-          "checkedAt": "2026-11-24T13:02:21+00:00",
-          "finalUrl": "https://www.met.no/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.met.no/",
-              "status": 200
-            }
-          ],
-          "title": null,
-          "issue": "no HTML title"
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:20+00:00",
-          "finalUrl": "https://www.met.no/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.met.no/",
-              "status": 200
-            }
-          ],
-          "title": null,
-          "issue": "no HTML title"
         }
       ]
     },
@@ -4079,6 +3855,20 @@
           ],
           "title": null,
           "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:50+00:00",
+          "finalUrl": "https://www.belgium.be/",
+          "httpStatus": 302,
+          "redirectChain": [
+            {
+              "url": "https://www.belgium.be/",
+              "status": 302,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
         }
       ]
     },
@@ -4121,6 +3911,20 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:21+00:00",
+          "finalUrl": "https://statbel.fgov.be/",
+          "httpStatus": 302,
+          "redirectChain": [
+            {
+              "url": "https://statbel.fgov.be/",
+              "status": 302,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:50+00:00",
           "finalUrl": "https://statbel.fgov.be/",
           "httpStatus": 302,
           "redirectChain": [
@@ -4185,6 +3989,20 @@
           ],
           "title": null,
           "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:50+00:00",
+          "finalUrl": "https://data.gov.be/",
+          "httpStatus": 302,
+          "redirectChain": [
+            {
+              "url": "https://data.gov.be/",
+              "status": 302,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
         }
       ]
     },
@@ -4227,6 +4045,20 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:21+00:00",
+          "finalUrl": "https://www.nbb.be/",
+          "httpStatus": 302,
+          "redirectChain": [
+            {
+              "url": "https://www.nbb.be/",
+              "status": 302,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:50+00:00",
           "finalUrl": "https://www.nbb.be/",
           "httpStatus": 302,
           "redirectChain": [
@@ -4360,6 +4192,20 @@
           ],
           "title": null,
           "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:51+00:00",
+          "finalUrl": "https://www.ine.pt/",
+          "httpStatus": 301,
+          "redirectChain": [
+            {
+              "url": "https://www.ine.pt/",
+              "status": 301,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
         }
       ]
     },
@@ -4384,54 +4230,6 @@
           ],
           "title": null,
           "issue": "HTTP 403"
-        }
-      ]
-    },
-    {
-      "id": "rex089",
-      "originalUrl": "https://datos.gob.ar/",
-      "name": "阿根廷开放数据",
-      "category": "数据",
-      "status": "pending",
-      "reasonCode": "network-inconclusive",
-      "reason": "Public retrieval ended with TimeoutError. The result does not establish availability or ownership.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:46+00:00",
-          "finalUrl": null,
-          "httpStatus": null,
-          "redirectChain": [],
-          "title": null,
-          "issue": "TimeoutError"
-        },
-        {
-          "checkedAt": "2026-11-24T12:45:54+00:00",
-          "finalUrl": "https://datos.gob.ar/",
-          "httpStatus": 503,
-          "redirectChain": [
-            {
-              "url": "https://datos.gob.ar/",
-              "status": 503
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 503"
-        },
-        {
-          "checkedAt": "2026-11-24T13:02:24+00:00",
-          "finalUrl": null,
-          "httpStatus": null,
-          "redirectChain": [],
-          "title": null,
-          "issue": "TimeoutError"
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:22+00:00",
-          "finalUrl": null,
-          "httpStatus": null,
-          "redirectChain": [],
-          "title": null,
-          "issue": "TimeoutError"
         }
       ]
     },
@@ -4483,6 +4281,20 @@
           "redirectChain": [],
           "title": null,
           "issue": "gaierror"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:51+00:00",
+          "finalUrl": "https://www.ncm.ae/",
+          "httpStatus": 302,
+          "redirectChain": [
+            {
+              "url": "https://www.ncm.ae/",
+              "status": 302,
+              "location": "https://www.ncm.gov.ae/"
+            }
+          ],
+          "title": null,
+          "issue": "gaierror"
         }
       ]
     },
@@ -4526,6 +4338,14 @@
           "redirectChain": [],
           "title": null,
           "issue": "gaierror"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:52+00:00",
+          "finalUrl": null,
+          "httpStatus": null,
+          "redirectChain": [],
+          "title": null,
+          "issue": "gaierror"
         }
       ]
     },
@@ -4558,6 +4378,24 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:22+00:00",
+          "finalUrl": "https://www.visitdubai.com/ja",
+          "httpStatus": 200,
+          "redirectChain": [
+            {
+              "url": "https://www.visitdubai.com/",
+              "status": 302,
+              "location": "https://www.visitdubai.com/ja"
+            },
+            {
+              "url": "https://www.visitdubai.com/ja",
+              "status": 200
+            }
+          ],
+          "title": "ビジット・ドバイ",
+          "issue": null
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:52+00:00",
           "finalUrl": "https://www.visitdubai.com/ja",
           "httpStatus": 200,
           "redirectChain": [
@@ -4630,52 +4468,18 @@
           ],
           "title": "รัฐบาลไทย | ยินดีต้อนรับ",
           "issue": null
-        }
-      ]
-    },
-    {
-      "id": "rex103",
-      "originalUrl": "https://www.met.gov.my/",
-      "name": "马来西亚气象局",
-      "category": "环境气候",
-      "status": "pending",
-      "reasonCode": "network-inconclusive",
-      "reason": "Public retrieval ended with URLError. The result does not establish availability or ownership.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:47+00:00",
-          "finalUrl": null,
-          "httpStatus": null,
-          "redirectChain": [],
-          "title": null,
-          "issue": "gaierror"
         },
         {
-          "checkedAt": "2026-11-24T12:45:54+00:00",
-          "finalUrl": "https://www.met.gov.my/",
-          "httpStatus": 503,
+          "checkedAt": "2026-11-24T14:35:52+00:00",
+          "finalUrl": "https://www.thaigov.go.th/",
+          "httpStatus": 302,
           "redirectChain": [
             {
-              "url": "https://www.met.gov.my/",
-              "status": 503
+              "url": "https://www.thaigov.go.th/",
+              "status": 302,
+              "location": "https://www.thaigov.go.th/landing"
             }
           ],
-          "title": null,
-          "issue": "HTTP 503"
-        },
-        {
-          "checkedAt": "2026-11-24T13:02:00+00:00",
-          "finalUrl": null,
-          "httpStatus": null,
-          "redirectChain": [],
-          "title": null,
-          "issue": "URLError"
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:23+00:00",
-          "finalUrl": null,
-          "httpStatus": null,
-          "redirectChain": [],
           "title": null,
           "issue": "gaierror"
         }
@@ -4716,6 +4520,14 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:23+00:00",
+          "finalUrl": null,
+          "httpStatus": null,
+          "redirectChain": [],
+          "title": null,
+          "issue": "gaierror"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:52+00:00",
           "finalUrl": null,
           "httpStatus": null,
           "redirectChain": [],
@@ -4764,6 +4576,14 @@
           "redirectChain": [],
           "title": null,
           "issue": "gaierror"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:52+00:00",
+          "finalUrl": null,
+          "httpStatus": null,
+          "redirectChain": [],
+          "title": null,
+          "issue": "gaierror"
         }
       ]
     },
@@ -4802,6 +4622,14 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:24+00:00",
+          "finalUrl": null,
+          "httpStatus": null,
+          "redirectChain": [],
+          "title": null,
+          "issue": "gaierror"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:52+00:00",
           "finalUrl": null,
           "httpStatus": null,
           "redirectChain": [],
@@ -4865,6 +4693,19 @@
           ],
           "title": null,
           "issue": "HTTP 503"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:52+00:00",
+          "finalUrl": "https://moet.gov.vn/",
+          "httpStatus": 503,
+          "redirectChain": [
+            {
+              "url": "https://moet.gov.vn/",
+              "status": 503
+            }
+          ],
+          "title": null,
+          "issue": "HTTP 503"
         }
       ]
     },
@@ -4905,6 +4746,14 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:24+00:00",
+          "finalUrl": null,
+          "httpStatus": null,
+          "redirectChain": [],
+          "title": null,
+          "issue": "gaierror"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:53+00:00",
           "finalUrl": null,
           "httpStatus": null,
           "redirectChain": [],
@@ -4987,6 +4836,20 @@
           ],
           "title": null,
           "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:53+00:00",
+          "finalUrl": "https://stats.gov.sa/",
+          "httpStatus": 302,
+          "redirectChain": [
+            {
+              "url": "https://stats.gov.sa/",
+              "status": 302,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
         }
       ]
     },
@@ -5040,6 +4903,19 @@
           "redirectChain": [],
           "title": null,
           "issue": "gaierror"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:53+00:00",
+          "finalUrl": "https://open.data.gov.sa/",
+          "httpStatus": 503,
+          "redirectChain": [
+            {
+              "url": "https://open.data.gov.sa/",
+              "status": 503
+            }
+          ],
+          "title": null,
+          "issue": "HTTP 503"
         }
       ]
     },
@@ -5098,38 +4974,19 @@
           ],
           "title": null,
           "issue": "HTTP 503"
-        }
-      ]
-    },
-    {
-      "id": "rex138",
-      "originalUrl": "https://www.cbe.org.eg/",
-      "name": "埃及中央银行",
-      "category": "经济金融",
-      "status": "pending",
-      "reasonCode": "ownership-evidence-insufficient",
-      "reason": "Page content alone leaves the publisher identity or exact service attribution unresolved.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:52+00:00",
-          "finalUrl": "https://www.cbe.org.eg/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.cbe.org.eg/",
-              "status": 200
-            }
-          ],
-          "title": "Request Rejected",
-          "issue": null
         },
         {
-          "checkedAt": "2026-11-24T14:08:25+00:00",
-          "finalUrl": null,
-          "httpStatus": null,
-          "redirectChain": [],
+          "checkedAt": "2026-11-24T14:35:54+00:00",
+          "finalUrl": "https://www.egypt.gov.eg/",
+          "httpStatus": 503,
+          "redirectChain": [
+            {
+              "url": "https://www.egypt.gov.eg/",
+              "status": 503
+            }
+          ],
           "title": null,
-          "issue": "gaierror"
+          "issue": "HTTP 503"
         }
       ]
     },
@@ -5188,6 +5045,19 @@
           ],
           "title": null,
           "issue": "HTTP 503"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:55+00:00",
+          "finalUrl": "https://www.sis.gov.eg/",
+          "httpStatus": 503,
+          "redirectChain": [
+            {
+              "url": "https://www.sis.gov.eg/",
+              "status": 503
+            }
+          ],
+          "title": null,
+          "issue": "HTTP 503"
         }
       ]
     },
@@ -5225,6 +5095,29 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:26+00:00",
+          "finalUrl": "https://www.japan.travel/fr/fr/",
+          "httpStatus": 200,
+          "redirectChain": [
+            {
+              "url": "https://www.japan.travel/",
+              "status": 302,
+              "location": "https://www.japan.travel/fr/"
+            },
+            {
+              "url": "https://www.japan.travel/fr/",
+              "status": 302,
+              "location": "https://www.japan.travel/fr/fr/"
+            },
+            {
+              "url": "https://www.japan.travel/fr/fr/",
+              "status": 200
+            }
+          ],
+          "title": "Travel Japan - Office national du tourisme japonais（Official Site)",
+          "issue": null
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:55+00:00",
           "finalUrl": "https://www.japan.travel/fr/fr/",
           "httpStatus": 200,
           "redirectChain": [
@@ -5302,6 +5195,14 @@
           ],
           "title": null,
           "issue": "gaierror"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:56+00:00",
+          "finalUrl": null,
+          "httpStatus": null,
+          "redirectChain": [],
+          "title": null,
+          "issue": "gaierror"
         }
       ]
     },
@@ -5352,51 +5253,19 @@
           ],
           "title": null,
           "issue": "page indicates a client-side redirect"
-        }
-      ]
-    },
-    {
-      "id": "rg88023",
-      "originalUrl": "https://www.moe.gov.sg/",
-      "name": "新加坡教育部",
-      "category": "教育",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 202. Exact ownership evidence remains insufficient.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:56+00:00",
-          "finalUrl": null,
-          "httpStatus": null,
-          "redirectChain": [],
-          "title": null,
-          "issue": "gaierror"
         },
         {
-          "checkedAt": "2026-11-24T12:45:57+00:00",
-          "finalUrl": "https://www.moe.gov.sg/",
-          "httpStatus": 503,
+          "checkedAt": "2026-11-24T14:35:57+00:00",
+          "finalUrl": "https://openstd.samr.gov.cn/",
+          "httpStatus": 200,
           "redirectChain": [
             {
-              "url": "https://www.moe.gov.sg/",
-              "status": 503
+              "url": "https://openstd.samr.gov.cn/",
+              "status": 200
             }
           ],
           "title": null,
-          "issue": "HTTP 503"
-        },
-        {
-          "checkedAt": "2026-11-24T13:02:10+00:00",
-          "finalUrl": "https://www.moe.gov.sg/",
-          "httpStatus": 202,
-          "redirectChain": [
-            {
-              "url": "https://www.moe.gov.sg/",
-              "status": 202
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 202"
+          "issue": "page indicates a client-side redirect"
         }
       ]
     },
@@ -5451,6 +5320,20 @@
           "redirectChain": [],
           "title": null,
           "issue": "gaierror"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:57+00:00",
+          "finalUrl": "https://www.studyinkorea.go.kr/",
+          "httpStatus": 302,
+          "redirectChain": [
+            {
+              "url": "https://www.studyinkorea.go.kr/",
+              "status": 302,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
         }
       ]
     },
@@ -5528,6 +5411,20 @@
           ],
           "title": null,
           "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:57+00:00",
+          "finalUrl": "https://www.australia.gov.au/",
+          "httpStatus": 301,
+          "redirectChain": [
+            {
+              "url": "https://www.australia.gov.au/",
+              "status": 301,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
         }
       ]
     },
@@ -5586,59 +5483,14 @@
           ],
           "title": null,
           "issue": "HTTP 503"
-        }
-      ]
-    },
-    {
-      "id": "rg88084",
-      "originalUrl": "https://indianrailways.gov.in/",
-      "name": "印度铁路",
-      "category": "旅游出行",
-      "status": "pending",
-      "reasonCode": "network-inconclusive",
-      "reason": "Public retrieval ended with URLError. The result does not establish availability or ownership.",
-      "observations": [
+        },
         {
-          "checkedAt": "2026-11-24T12:45:05+00:00",
-          "finalUrl": "https://indianrailways.gov.in/",
+          "checkedAt": "2026-11-24T14:35:57+00:00",
+          "finalUrl": "https://data.gov.in/",
           "httpStatus": 503,
           "redirectChain": [
             {
-              "url": "https://indianrailways.gov.in/",
-              "status": 503
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 503"
-        },
-        {
-          "checkedAt": "2026-11-24T12:46:01+00:00",
-          "finalUrl": "https://indianrailways.gov.in/",
-          "httpStatus": 503,
-          "redirectChain": [
-            {
-              "url": "https://indianrailways.gov.in/",
-              "status": 503
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 503"
-        },
-        {
-          "checkedAt": "2026-11-24T13:02:18+00:00",
-          "finalUrl": null,
-          "httpStatus": null,
-          "redirectChain": [],
-          "title": null,
-          "issue": "URLError"
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:28+00:00",
-          "finalUrl": "https://indianrailways.gov.in/",
-          "httpStatus": 503,
-          "redirectChain": [
-            {
-              "url": "https://indianrailways.gov.in/",
+              "url": "https://data.gov.in/",
               "status": 503
             }
           ],
@@ -5687,6 +5539,19 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:29+00:00",
+          "finalUrl": "https://ncert.nic.in/",
+          "httpStatus": 503,
+          "redirectChain": [
+            {
+              "url": "https://ncert.nic.in/",
+              "status": 503
+            }
+          ],
+          "title": null,
+          "issue": "HTTP 503"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:58+00:00",
           "finalUrl": "https://ncert.nic.in/",
           "httpStatus": 503,
           "redirectChain": [
@@ -5755,6 +5620,19 @@
           "redirectChain": [],
           "title": null,
           "issue": "gaierror"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:58+00:00",
+          "finalUrl": "https://cn.aifoxs.com/ai-detect",
+          "httpStatus": 200,
+          "redirectChain": [
+            {
+              "url": "https://cn.aifoxs.com/ai-detect",
+              "status": 200
+            }
+          ],
+          "title": "ContentAny",
+          "issue": null
         }
       ]
     },
@@ -5818,6 +5696,19 @@
           ],
           "title": "IP 查询 - IP分流测试 - Net.Coffee",
           "issue": null
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:58+00:00",
+          "finalUrl": "https://ip.net.coffee/",
+          "httpStatus": 200,
+          "redirectChain": [
+            {
+              "url": "https://ip.net.coffee/",
+              "status": 200
+            }
+          ],
+          "title": "IP 查询 - IP分流测试 - Net.Coffee",
+          "issue": null
         }
       ]
     },
@@ -5866,6 +5757,14 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:31+00:00",
+          "finalUrl": null,
+          "httpStatus": null,
+          "redirectChain": [],
+          "title": null,
+          "issue": "gaierror"
+        },
+        {
+          "checkedAt": "2026-11-24T14:35:59+00:00",
           "finalUrl": null,
           "httpStatus": null,
           "redirectChain": [],
@@ -5924,6 +5823,19 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:31+00:00",
+          "finalUrl": "https://read.claua.de/",
+          "httpStatus": 200,
+          "redirectChain": [
+            {
+              "url": "https://read.claua.de/",
+              "status": 200
+            }
+          ],
+          "title": "考研英语一 · 外刊训练库 Lite",
+          "issue": null
+        },
+        {
+          "checkedAt": "2026-11-24T14:36:00+00:00",
           "finalUrl": "https://read.claua.de/",
           "httpStatus": 200,
           "redirectChain": [
@@ -5997,6 +5909,19 @@
           ],
           "title": "EgressLens · IP leak test: see which IP each website sees (VPN, proxy, WebRTC, IPv6)",
           "issue": null
+        },
+        {
+          "checkedAt": "2026-11-24T14:36:00+00:00",
+          "finalUrl": "https://egress.1ms.dog/",
+          "httpStatus": 200,
+          "redirectChain": [
+            {
+              "url": "https://egress.1ms.dog/",
+              "status": 200
+            }
+          ],
+          "title": "EgressLens · IP leak test: see which IP each website sees (VPN, proxy, WebRTC, IPv6)",
+          "issue": null
         }
       ]
     },
@@ -6060,6 +5985,19 @@
           ],
           "title": "12CE · IP reputation, proxy quality & browser leak tests",
           "issue": null
+        },
+        {
+          "checkedAt": "2026-11-24T14:36:00+00:00",
+          "finalUrl": "https://www.12ce.com/en.html",
+          "httpStatus": 200,
+          "redirectChain": [
+            {
+              "url": "https://www.12ce.com/en.html",
+              "status": 200
+            }
+          ],
+          "title": "12CE · IP reputation, proxy quality & browser leak tests",
+          "issue": null
         }
       ]
     },
@@ -6113,6 +6051,19 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:32+00:00",
+          "finalUrl": "https://ip.icekam.com/check.php",
+          "httpStatus": 200,
+          "redirectChain": [
+            {
+              "url": "https://ip.icekam.com/check.php",
+              "status": 200
+            }
+          ],
+          "title": "IP Tools",
+          "issue": null
+        },
+        {
+          "checkedAt": "2026-11-24T14:36:00+00:00",
           "finalUrl": "https://ip.icekam.com/check.php",
           "httpStatus": 200,
           "redirectChain": [
@@ -6281,56 +6232,19 @@
           ],
           "title": "RegExr: Temporarily Offline",
           "issue": null
-        }
-      ]
-    },
-    {
-      "id": "s031",
-      "originalUrl": "https://character.ai/",
-      "name": "Character.AI",
-      "category": "AI交流",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:45:07+00:00",
-          "finalUrl": "https://character.ai/",
-          "httpStatus": 503,
-          "redirectChain": [
-            {
-              "url": "https://character.ai/",
-              "status": 503
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 503"
         },
         {
-          "checkedAt": "2026-11-24T12:46:06+00:00",
-          "finalUrl": "https://character.ai/",
-          "httpStatus": 503,
+          "checkedAt": "2026-11-24T14:36:00+00:00",
+          "finalUrl": "https://regexr.com/",
+          "httpStatus": 200,
           "redirectChain": [
             {
-              "url": "https://character.ai/",
-              "status": 503
+              "url": "https://regexr.com/",
+              "status": 200
             }
           ],
-          "title": null,
-          "issue": "HTTP 503"
-        },
-        {
-          "checkedAt": "2026-11-24T13:02:25+00:00",
-          "finalUrl": "https://character.ai/",
-          "httpStatus": 403,
-          "redirectChain": [
-            {
-              "url": "https://character.ai/",
-              "status": 403
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 403"
+          "title": "RegExr: Temporarily Offline",
+          "issue": null
         }
       ]
     },
@@ -6444,6 +6358,19 @@
           ],
           "title": null,
           "issue": "HTTP 404"
+        },
+        {
+          "checkedAt": "2026-11-24T14:36:00+00:00",
+          "finalUrl": "https://simbad.u-strasbg.fr/simbad/",
+          "httpStatus": 404,
+          "redirectChain": [
+            {
+              "url": "https://simbad.u-strasbg.fr/simbad/",
+              "status": 404
+            }
+          ],
+          "title": null,
+          "issue": "HTTP 404"
         }
       ]
     },
@@ -6482,6 +6409,14 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:33+00:00",
+          "finalUrl": null,
+          "httpStatus": null,
+          "redirectChain": [],
+          "title": null,
+          "issue": "gaierror"
+        },
+        {
+          "checkedAt": "2026-11-24T14:36:01+00:00",
           "finalUrl": null,
           "httpStatus": null,
           "redirectChain": [],
@@ -6541,6 +6476,20 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:33+00:00",
+          "finalUrl": "https://docs.qgis.org/",
+          "httpStatus": 302,
+          "redirectChain": [
+            {
+              "url": "https://docs.qgis.org/",
+              "status": 302,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:36:01+00:00",
           "finalUrl": "https://docs.qgis.org/",
           "httpStatus": 302,
           "redirectChain": [
@@ -6615,69 +6564,19 @@
           ],
           "title": "Redirecting…",
           "issue": "page indicates a client-side redirect"
-        }
-      ]
-    },
-    {
-      "id": "v110-130",
-      "originalUrl": "https://data-explorer.oecd.org/",
-      "name": "OECD Data Explorer",
-      "category": "数据",
-      "status": "pending",
-      "reasonCode": "service-not-readable",
-      "reason": "The response had no readable HTML title. The available evidence does not establish the exact service identity.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:45:10+00:00",
-          "finalUrl": "https://data-explorer.oecd.org/",
-          "httpStatus": 503,
-          "redirectChain": [
-            {
-              "url": "https://data-explorer.oecd.org/",
-              "status": 503
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 503"
         },
         {
-          "checkedAt": "2026-11-24T12:46:12+00:00",
-          "finalUrl": "https://data-explorer.oecd.org/",
-          "httpStatus": 503,
-          "redirectChain": [
-            {
-              "url": "https://data-explorer.oecd.org/",
-              "status": 503
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 503"
-        },
-        {
-          "checkedAt": "2026-11-24T13:02:33+00:00",
-          "finalUrl": "https://data-explorer.oecd.org/",
+          "checkedAt": "2026-11-24T14:36:01+00:00",
+          "finalUrl": "https://duckdb.org/docs/",
           "httpStatus": 200,
           "redirectChain": [
             {
-              "url": "https://data-explorer.oecd.org/",
+              "url": "https://duckdb.org/docs/",
               "status": 200
             }
           ],
-          "title": null,
-          "issue": "no HTML title"
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:33+00:00",
-          "finalUrl": "https://data-explorer.oecd.org/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://data-explorer.oecd.org/",
-              "status": 200
-            }
-          ],
-          "title": null,
-          "issue": "no HTML title"
+          "title": "Redirecting…",
+          "issue": "page indicates a client-side redirect"
         }
       ]
     },
@@ -6737,6 +6636,25 @@
         },
         {
           "checkedAt": "2026-11-24T14:08:33+00:00",
+          "finalUrl": "https://microdata.worldbank.org/index.php",
+          "httpStatus": 301,
+          "redirectChain": [
+            {
+              "url": "https://microdata.worldbank.org/",
+              "status": 302,
+              "location": "https://microdata.worldbank.org/index.php"
+            },
+            {
+              "url": "https://microdata.worldbank.org/index.php",
+              "status": 301,
+              "location_redacted": true
+            }
+          ],
+          "title": null,
+          "issue": "redirect target requires manual review"
+        },
+        {
+          "checkedAt": "2026-11-24T14:36:01+00:00",
           "finalUrl": "https://microdata.worldbank.org/index.php",
           "httpStatus": 301,
           "redirectChain": [
