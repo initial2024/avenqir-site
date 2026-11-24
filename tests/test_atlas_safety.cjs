@@ -18,7 +18,7 @@ const catalog=require(path.join(site,'atlas-catalog-core.js'));
 const items=catalog.catalog();
 assert.equal(items.length,1239);
 const result=safety.summary(items);
-assert.deepEqual(result,{total:1239,blocked:0,caution:0,reviewed:288,pending:951},'separate structural audit from provenance review');
+assert.deepEqual(result,{total:1239,blocked:0,caution:0,reviewed:306,pending:933},'separate structural audit from provenance review');
 assert.equal(safety.inspect('https://www.icann.org/').type,'reviewed');
 const evidence=JSON.parse(fs.readFileSync(path.join(site,'atlas-review-v101.json'),'utf8'));
 assert.equal(evidence.records.length,13);
@@ -33,7 +33,7 @@ const additional=JSON.parse(fs.readFileSync(path.join(site,'atlas-review-v115.js
 assert.equal(additional.records.length,22);
 for(const row of additional.records){assert.ok(items.some(x=>x.url===row.url));assert.equal(gate.officialSourceReviewed(row.url),true);assert.equal(gate.maySkipConfirmation(row.url+'?next=evil',null),false);}
 const v116=JSON.parse(fs.readFileSync(path.join(site,'atlas-review-v116.json'),'utf8'));
-assert.equal(v116.records.length,77);
+assert.equal(v116.records.length,95);
 for(const row of v116.records){assert.ok(items.some(x=>x.url===row.url));assert.equal(gate.officialSourceReviewed(row.url),true);assert.equal(gate.maySkipConfirmation(row.url+'?next=evil',null),false);}
 const latest=JSON.parse(fs.readFileSync(path.join(site,'atlas-review-v114.json'),'utf8'));
 assert.equal(latest.records.length,36);
@@ -123,4 +123,4 @@ assert.ok(!script.includes('安全认证通过'),'must not claim certification')
 const backend={url:'https://100.74.2.3/',name:'Untrusted internal link',category:'其他',description:'test'};
 const newCounts=safety.summary([backend,...items]);
 assert.equal(newCounts.blocked,1,'backend links need identical runtime structural screening');
-console.log('PASS: 1239 locally structurally checked URLs, 288 exact source reviews, 951 pending provenance, reserved IPv4/IPv6 blocking, explicit Google risk checks; no security certification claimed');
+console.log('PASS: 1239 locally structurally checked URLs, 306 exact source reviews, 933 pending provenance, reserved IPv4/IPv6 blocking, explicit Google risk checks; no security certification claimed');
