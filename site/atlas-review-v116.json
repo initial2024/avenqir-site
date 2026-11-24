@@ -2297,6 +2297,200 @@
       "method": "Observed redirect and inspected destination via indexed retrieval",
       "reviewedOn": "2026-11-24",
       "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://cursor.com/",
+      "source": "https://cursor.com/",
+      "identity": "Cursor",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://replit.com/",
+      "source": "https://replit.com/",
+      "identity": "Replit",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://bolt.new/",
+      "source": "https://bolt.new/",
+      "identity": "Bolt",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://lovable.dev/",
+      "source": "https://lovable.dev/",
+      "identity": "Lovable",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://v0.app/",
+      "source": "https://v0.app/",
+      "identity": "v0 by Vercel",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://aider.chat/",
+      "source": "https://aider.chat/",
+      "identity": "Aider",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://elevenlabs.io/",
+      "source": "https://elevenlabs.io/",
+      "identity": "ElevenLabs",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://suno.com/",
+      "source": "https://suno.com/",
+      "identity": "Suno",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.aiva.ai/",
+      "source": "https://www.aiva.ai/",
+      "identity": "AIVA",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.midjourney.com/",
+      "source": "https://www.midjourney.com/",
+      "identity": "Midjourney",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://ideogram.ai/",
+      "source": "https://ideogram.ai/",
+      "identity": "Ideogram",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.recraft.ai/",
+      "source": "https://www.recraft.ai/",
+      "identity": "Recraft",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://leonardo.ai/",
+      "source": "https://leonardo.ai/",
+      "identity": "Leonardo AI",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.krea.ai/",
+      "source": "https://www.krea.ai/",
+      "identity": "Krea",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://clipdrop.co/",
+      "source": "https://clipdrop.co/",
+      "identity": "Clipdrop",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://pika.art/",
+      "source": "https://pika.art/",
+      "identity": "Pika",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://hailuoai.video/",
+      "source": "https://hailuoai.video/",
+      "identity": "Hailuo AI",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.heygen.com/",
+      "source": "https://www.heygen.com/",
+      "identity": "HeyGen",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.synthesia.io/",
+      "source": "https://www.synthesia.io/",
+      "identity": "Synthesia",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.veed.io/",
+      "source": "https://www.veed.io/",
+      "identity": "VEED",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.kapwing.com/",
+      "source": "https://www.kapwing.com/",
+      "identity": "Kapwing",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.tabnine.com/",
+      "source": "https://www.tabnine.com/",
+      "identity": "Tabnine",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://runway.com/",
+      "source": "https://runwayml.com/",
+      "previousUrl": "https://runwayml.com/",
+      "identity": "Runway",
+      "method": "Observed redirect and inspected branded destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://pixverse.ai/en",
+      "source": "https://pixverse.ai/",
+      "previousUrl": "https://pixverse.ai/",
+      "identity": "PixVerse",
+      "method": "Observed redirect and inspected branded destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
     }
   ]
 }
