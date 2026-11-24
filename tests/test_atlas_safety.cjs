@@ -18,7 +18,7 @@ const catalog=require(path.join(site,'atlas-catalog-core.js'));
 const items=catalog.catalog();
 assert.equal(items.length,1239);
 const result=safety.summary(items);
-assert.deepEqual(result,{total:1239,blocked:0,caution:0,reviewed:189,pending:1050},'separate structural audit from provenance review');
+assert.deepEqual(result,{total:1239,blocked:0,caution:0,reviewed:211,pending:1028},'separate structural audit from provenance review');
 assert.equal(safety.inspect('https://www.icann.org/').type,'reviewed');
 const evidence=JSON.parse(fs.readFileSync(path.join(site,'atlas-review-v101.json'),'utf8'));
 assert.equal(evidence.records.length,13);
@@ -29,6 +29,9 @@ for(const record of evidence.records){
  assert.equal(gate.maySkipConfirmation(record.url,null),true);
  assert.equal(gate.maySkipConfirmation(record.url+'?next=evil',null),false);
 }
+const additional=JSON.parse(fs.readFileSync(path.join(site,'atlas-review-v115.json'),'utf8'));
+assert.equal(additional.records.length,22);
+for(const row of additional.records){assert.ok(items.some(x=>x.url===row.url));assert.equal(gate.officialSourceReviewed(row.url),true);assert.equal(gate.maySkipConfirmation(row.url+'?next=evil',null),false);}
 const latest=JSON.parse(fs.readFileSync(path.join(site,'atlas-review-v114.json'),'utf8'));
 assert.equal(latest.records.length,36);
 for(const record of latest.records){assert.ok(items.some(x=>x.url===record.url));assert.equal(gate.officialSourceReviewed(record.url),true);assert.equal(gate.maySkipConfirmation(record.url+'?redirect=evil',null),false);}
@@ -101,8 +104,8 @@ const privacy=fs.readFileSync(path.join(site,'privacy.html'),'utf8');
 for(const id of ['atlasSecurityTitle','atlasSecurityCounts']){
  assert.ok(html.includes('id="'+id+'"'));
 }
-assert.ok(html.indexOf('link-gate.js?v=114')<html.indexOf('atlas-safety.js?v=112'));
-assert.ok(html.indexOf('atlas-safety.js?v=112')<html.search(/directory\.js\?v=[0-9]+/));
+assert.ok(html.indexOf('link-gate.js?v=115')<html.indexOf('atlas-safety.js?v=115'));
+assert.ok(html.indexOf('atlas-safety.js?v=115')<html.search(/directory\.js\?v=[0-9]+/));
 assert.ok(serviceWorker.includes("'./atlas-safety.js'"));
 assert.ok(script.includes('renderSafetyAudit()'));
 assert.ok(script.includes("a.removeAttribute('href')"),'blocked entries must have no direct link');
@@ -117,4 +120,4 @@ assert.ok(!script.includes('安全认证通过'),'must not claim certification')
 const backend={url:'https://100.74.2.3/',name:'Untrusted internal link',category:'其他',description:'test'};
 const newCounts=safety.summary([backend,...items]);
 assert.equal(newCounts.blocked,1,'backend links need identical runtime structural screening');
-console.log('PASS: 1239 locally structurally checked URLs, 189 exact source reviews, 1050 pending provenance, reserved IPv4/IPv6 blocking, explicit Google risk checks; no security certification claimed');
+console.log('PASS: 1239 locally structurally checked URLs, 211 exact source reviews, 1028 pending provenance, reserved IPv4/IPv6 blocking, explicit Google risk checks; no security certification claimed');

@@ -178,7 +178,8 @@
    if(filterCountRecords!==records||filterCountLocale!==currentLocale||filterCountMinute!==minute){
      filterCountRecords=records;filterCountLocale=currentLocale;filterCountMinute=minute;
      const threat=safety?.threatSummary(records)||{checked:0,listed:0,unknown:records.length};
-     filterCountCache={reviewed:safety?.summary(records).reviewed||0,clear:threat.checked-threat.listed,listed:threat.listed,unknown:threat.unknown};
+     const registry=records.filter(x=>safety?.registryEvidence(x.url)).length;
+     filterCountCache={reviewed:safety?.summary(records).reviewed||0,clear:threat.checked-threat.listed,listed:threat.listed,unknown:threat.unknown,registry};
    }
    const c=filterCountCache;
    if($('atlasReviewedLabel'))$('atlasReviewedLabel').textContent=T('只看已核对官方来源','Exact official sources only')+' ('+c.reviewed+')';
@@ -188,7 +189,7 @@
      for(const option of threatBox.options)option.textContent=labels[option.value]||option.value;
    }
    const counts=$('atlasFilterCounts');
-   if(counts)counts.textContent=T('全部 '+records.length+' · 来源核对 '+c.reviewed+' · 近期清单未命中 '+c.clear+' · 命中 '+c.listed+' · 未知 '+c.unknown+'。未命中不等于安全认证。','All '+records.length+' · source reviewed '+c.reviewed+' · recent no match '+c.clear+' · listed '+c.listed+' · unknown '+c.unknown+'. No match is not safety certification.');
+   if(counts)counts.textContent=T('全部 '+records.length+' · 来源核对 '+c.reviewed+' · 政府域名归属 '+c.registry+' · 近期清单未命中 '+c.clear+' · 命中 '+c.listed+' · 未知 '+c.unknown+'。未命中不等于安全认证。','All '+records.length+' · source reviewed '+c.reviewed+' · government registry '+c.registry+' · recent no match '+c.clear+' · listed '+c.listed+' · unknown '+c.unknown+'. No match is not safety certification.');
  }
  $('atlasExportFavorites')?.addEventListener('click',()=>{
    const items=records.filter(x=>favorites.includes(x.url)).map(x=>({name:x.name,url:x.url,category:x.category,description:x.description}));
@@ -377,6 +378,8 @@
        draw();
      });
      const cardActions=el('div','atlas-card-actions');cardActions.append(report,cmp);
+     const reg=safety?.registryEvidence(url);
+     if(reg)data.append(el('small','atlas-review-unknown',T('美国政府域名登记归属：','US federal domain registration: ')+reg.organization+T(' · 非精确网址安全核验',' · not exact URL safety verification')));
      const externalVerdict=safety?.threatStatus(url);
      if(externalVerdict==='listed')data.append(el('small','atlas-review-unknown',T('CERT Polska 清单命中 · 目录内禁止访问','CERT Polska warning-list match · blocked in directory')));
      else if(externalVerdict==='not-listed')data.append(el('small','atlas-review-unknown',T('CERT Polska 清单未命中 · 非安全认证','CERT Polska list: no match · not safety-certified')));

@@ -1,0 +1,116 @@
+{
+  "reviewDate": "2026-11-24",
+  "scope": "Exact official page identity only. Blocked and migrated endpoints excluded.",
+  "records": [
+    {
+      "url": "https://docs.materialsproject.org/",
+      "source": "https://docs.materialsproject.org/",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://www.materialscloud.org/",
+      "source": "https://www.materialscloud.org/",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://doaj.org/",
+      "source": "https://doaj.org/",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://www.debian.org/doc/",
+      "source": "https://www.debian.org/doc/",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://llvm.org/docs/",
+      "source": "https://llvm.org/docs/",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://go.dev/doc/",
+      "source": "https://go.dev/doc/",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://www.postgresql.org/docs/",
+      "source": "https://www.postgresql.org/docs/",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://www.sqlite.org/docs.html",
+      "source": "https://www.sqlite.org/docs.html",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://docs.kernel.org/",
+      "source": "https://docs.kernel.org/",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://www.rcsb.org/",
+      "source": "https://www.rcsb.org/",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://jigsaw.w3.org/css-validator/",
+      "source": "https://jigsaw.w3.org/css-validator/",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://cheatsheetseries.owasp.org/",
+      "source": "https://cheatsheetseries.owasp.org/",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://docs.freebsd.org/en/books/handbook/",
+      "source": "https://docs.freebsd.org/en/books/handbook/",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://cmake.org/documentation/",
+      "source": "https://cmake.org/documentation/",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://maven.apache.org/guides/",
+      "source": "https://maven.apache.org/guides/",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://opendata.cern.ch/",
+      "source": "https://opendata.cern.ch/",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://www.nims.go.jp/eng/",
+      "source": "https://www.nims.go.jp/eng/",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://www.crossref.org/documentation/",
+      "source": "https://www.crossref.org/documentation/",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/API",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/CSS",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+      "method": "Inspected exact institutional or project page via indexed retrieval; not a live safety or availability guarantee"
+    },
+    {
+      "url": "https://openstax.org/subjects",
+      "source": "https://openstax.org/faq",
+      "method": "Official FAQ explicitly directs readers to this subject index"
+    }
+  ]
+}

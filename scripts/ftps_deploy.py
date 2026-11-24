@@ -136,7 +136,7 @@ def main():
         target_root=ftp.pwd()
         print('FTPS connected with certificate verification; target:',REMOTE)
         for file in sorted(files,key=deploy_order):
-            if file.name=='atlas-threat-snapshot.js' and b'window.AVENQIR_THREAT_SNAPSHOT = null;' in file.read_bytes():
+            if (file.name=='atlas-threat-snapshot.js' and b'window.AVENQIR_THREAT_SNAPSHOT = null;' in file.read_bytes()) or (file.name=='atlas-registry-snapshot.js' and b'window.AVENQIR_REGISTRY_SNAPSHOT = null;' in file.read_bytes()):
                 ftp.cwd(target_root)
                 if file.name in remote_names(ftp):
                     print('PRESERVED_LAST_THREAT_SNAPSHOT',file.name)

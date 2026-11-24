@@ -48,7 +48,16 @@
   for(const item of items||[]){if(!item?.url||seen.has(item.url))continue;seen.add(item.url);const v=threatStatus(item.url,now);if(v==='unknown')out.unknown++;else{out.checked++;if(v==='listed')out.listed++}}
   return out;
  }
- const api=Object.freeze({TYPES,inspect,summary,googleStatusLink,threatStatus,threatSummary});
+ const registry=root.AVENQIR_REGISTRY_SNAPSHOT;
+ function registryEvidence(raw,now=Date.now()){
+  if(!registry||registry.schema!=='aq-registry-us-v1'||registry.source!=='https://raw.githubusercontent.com/cisagov/dotgov-data/main/current-federal.csv')return null;
+  const date=Date.parse(registry.checkedAt);
+  if(!Number.isFinite(date)||date>now+300000||now-date>7*86400000||!registry.records||!Object.hasOwn(registry.records,raw))return null;
+  const row=registry.records[raw],u=gate?.sanitize(raw);
+  if(!u||u.protocol!=='https:'||!row||typeof row.registeredDomain!=='string'||!row.registeredDomain.endsWith('.gov')||!(u.hostname===row.registeredDomain||u.hostname.endsWith('.'+row.registeredDomain)))return null;
+  return row;
+ }
+ const api=Object.freeze({TYPES,inspect,summary,googleStatusLink,threatStatus,threatSummary,registryEvidence});
  root.AVENQIR_ATLAS_SAFETY=api;
  if(typeof module==='object'&&module.exports)module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

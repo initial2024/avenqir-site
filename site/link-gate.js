@@ -196,7 +196,30 @@
     'https://www.federalreserve.gov/',
     'https://www.investor.gov/',
     'https://www.usa.gov/',
-    'https://www.noaa.gov/'
+    'https://www.noaa.gov/',
+    // Exact-source evidence review 2026-11-24; not malware certification.
+    'https://docs.materialsproject.org/',
+    'https://www.materialscloud.org/',
+    'https://doaj.org/',
+    'https://www.debian.org/doc/',
+    'https://llvm.org/docs/',
+    'https://go.dev/doc/',
+    'https://www.postgresql.org/docs/',
+    'https://www.sqlite.org/docs.html',
+    'https://docs.kernel.org/',
+    'https://www.rcsb.org/',
+    'https://jigsaw.w3.org/css-validator/',
+    'https://cheatsheetseries.owasp.org/',
+    'https://docs.freebsd.org/en/books/handbook/',
+    'https://cmake.org/documentation/',
+    'https://maven.apache.org/guides/',
+    'https://opendata.cern.ch/',
+    'https://www.nims.go.jp/eng/',
+    'https://www.crossref.org/documentation/',
+    'https://developer.mozilla.org/en-US/docs/Web/API',
+    'https://developer.mozilla.org/en-US/docs/Web/CSS',
+    'https://developer.mozilla.org/en-US/docs/Web/JavaScript',
+    'https://openstax.org/subjects'
   ];
   function sanitize(raw){
     if(typeof raw!=='string'||raw.length>1800||/[\u0000-\u0020\u007f\\]/.test(raw))return null;
