@@ -92,6 +92,96 @@ function aq_mfa_verify_and_consume(array $auth,string $input): ?array {
   }
   return null;
 }
+
+
+// Opt-in trusted browser, 14 days. NOT a passwordless authenticator.
+// It bypasses repeated TOTP only after a fresh password+TOTP registration.
+// Token is never stored in plaintext server-side and is scoped to one HTTPS site.
+const AQ_TRUST_COOKIE='__Host-AVENQIR_TRUST';
+const AQ_TRUST_TTL=1209600;
+function aq_trust_cookie_value($cookies):string {
+  if(!is_array($cookies))return '';
+  $token=$cookies[AQ_TRUST_COOKIE]??'';
+  return is_string($token) && preg_match('/^[A-Za-z0-9_-]{43}$/D',$token)===1 ? $token : '';
+}
+function aq_trust_allowed(?array $auth,$cookies,?int $now=null):bool {
+  if(!is_array($auth)||!aq_mfa_enabled($auth))return false;
+  $raw=aq_trust_cookie_value($cookies);
+  if($raw==='')return false;
+  $hash=hash('sha256',$raw);
+  $rev=(string)($auth['security_rev']??'');
+  foreach(($auth['trusted_devices']??[]) as $d){
+    if(!is_array($d))continue;
+    if((int)($d['expires']??0)<=($now??time()))continue;
+    if(!is_string($d['token_hash']??null) || !is_string($d['rev']??null))continue;
+    if(hash_equals($rev,$d['rev']) && hash_equals($d['token_hash'],$hash))return true;
+  }
+  return false;
+}
+function aq_trust_set_cookie(string $token,int $expires):void{
+  setcookie(AQ_TRUST_COOKIE,$token,[
+    'expires'=>$expires,'path'=>'/','secure'=>true,'httponly'=>true,'samesite'=>'Strict'
+  ]);
+}
+function aq_trust_register(string $password):bool{
+  // Serialize with MFA login / protected auth writes.
+  $lock=@fopen(__DIR__.'/_store/.admin-mfa.lock','c');
+  if($lock===false)return false;
+  if(!@flock($lock,LOCK_EX)){fclose($lock);return false;}
+  $token=null;$expires=0;$ok=false;
+  try{
+    $latest=stored_read('auth');
+    if(!is_array($latest)||!aq_mfa_enabled($latest) ||
+       !password_verify($password,(string)($latest['password_hash']??'')))return false;
+    $now=time();$expires=$now+AQ_TRUST_TTL;
+    $token=rtrim(strtr(base64_encode(random_bytes(32)),'+/','-_'),'=');
+    $items=[];
+    foreach(($latest['trusted_devices']??[]) as $item){
+      if(is_array($item) && (int)($item['expires']??0)>$now &&
+         isset($item['token_hash']) && is_string($item['token_hash']) &&
+         ($item['rev']??'')===($latest['security_rev']??''))$items[]=$item;
+    }
+    // Maximum six entries; rolling eviction on registration.
+    $items=array_slice($items,-5);
+    $items[]=['id'=>bin2hex(random_bytes(8)),
+      'token_hash'=>hash('sha256',$token),'rev'=>(string)($latest['security_rev']??''),
+      'created'=>$now,'expires'=>$expires];
+    $latest['trusted_devices']=$items;
+    $ok=stored_write('auth',$latest);
+  }finally{
+    flock($lock,LOCK_UN);fclose($lock);
+  }
+  if($ok && is_string($token))aq_trust_set_cookie($token,$expires);
+  return $ok;
+}
+function aq_trust_clear_all():bool{
+  $lock=@fopen(__DIR__.'/_store/.admin-mfa.lock','c');
+  if($lock===false)return false;
+  if(!@flock($lock,LOCK_EX)){fclose($lock);return false;}
+  try{
+    $latest=stored_read('auth');
+    if(!is_array($latest))return false;
+    $latest['trusted_devices']=[];
+    // Explicit emergency revoke invalidates *all* currently authenticated
+    // sessions and trusted-browser grants, even under concurrent login.
+    $latest['security_rev']=bin2hex(random_bytes(18));
+    $saved=stored_write('auth',$latest);
+  }finally{
+    flock($lock,LOCK_UN);fclose($lock);
+  }
+  if($saved)aq_trust_set_cookie('',time()-3600);
+  return $saved;
+}
+function aq_trust_active_count(?array $auth,?int $now=null):int {
+  if(!is_array($auth))return 0;
+  $count=0;$rev=(string)($auth['security_rev']??'');
+  foreach(($auth['trusted_devices']??[]) as $d){
+    if(is_array($d) && ($d['rev']??null)===$rev &&
+       (int)($d['expires']??0)>($now??time()))++$count;
+  }
+  return $count;
+}
+
 function aq_private_access_url($raw): ?string {
   if(!is_string($raw)||strlen($raw)>240)return null;
   $url=trim($raw);

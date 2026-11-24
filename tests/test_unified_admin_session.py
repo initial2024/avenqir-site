@@ -24,7 +24,8 @@ class UnifiedAdM(unittest.TestCase):
         self.assertIn("session_destroy()",FEEDBACK)
         self.assertIn("session_destroy()",ADMIN)
         self.assertIn("CSRF validation failed",FEEDBACK)
-        self.assertIn("go_admin('登录成功 · adm。',aq_post_login_destination())",ADMIN)
+        self.assertIn("aq_post_login_destination());",ADMIN)
+        self.assertIn("$trustedSaved?'登录成功，并信任当前浏览器 14 天。':'登录成功 · adm。'",ADMIN)
         self.assertIn("!=='GET'",FEEDBACK)
     def test_legacy_data_migrates_without_password_or_delete(self):
         self.assertIn("INSERT INTO fb_settings",FEEDBACK)
