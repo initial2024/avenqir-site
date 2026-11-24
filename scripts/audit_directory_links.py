@@ -115,18 +115,31 @@ def audit_review_evidence(catalog: dict, reviewed: set) -> dict:
                 superseded.add(url)
             if status != "confirmed":
                 continue
-            if url in structured or not row.get("title") or not row.get("evidence"):
+            evidence = row.get("evidence")
+            reference = row.get("retrieval") == "publisher-reference"
+            if url in structured or not evidence or (not reference and not row.get("title")):
                 raise ValueError(f"{path.name}: duplicate or unsupported confirmation for {url}")
-            if row["finalUrl"] != url:
-                raise ValueError(f"{path.name}: confirmation does not match final URL: {url}")
             original = row["originalUrl"]
             chain = row["redirectChain"]
-            if (
-                not chain or chain[0]["url"] != original or chain[-1]["url"] != url
-                or chain[-1]["status"] != row["httpStatus"]
-                or any(hop.get("location") != successor["url"] for hop, successor in zip(chain, chain[1:]))
-            ):
-                raise ValueError(f"{path.name}: invalid response chain for {url}")
+            observed = row["finalUrl"]
+            if reference:
+                audit_url(row["source"])
+                if (
+                    original != url or observed not in {url, None} or row["source"] == url
+                    or evidence.get("exactDestination") != url or not evidence.get("publisherPageTitle")
+                ):
+                    raise ValueError(f"{path.name}: reference must identify the exact destination: {url}")
+            elif observed != url:
+                raise ValueError(f"{path.name}: confirmation does not match final URL: {url}")
+            if chain:
+                if (
+                    chain[0]["url"] != original or chain[-1]["url"] != observed
+                    or chain[-1]["status"] != row["httpStatus"]
+                    or any(hop.get("location") != successor["url"] for hop, successor in zip(chain, chain[1:]))
+                ):
+                    raise ValueError(f"{path.name}: invalid response chain for {url}")
+            elif not reference or observed is not None or row["httpStatus"] is not None:
+                raise ValueError(f"{path.name}: missing HTTP observations for {url}")
             if original != url:
                 destination = row.get("independentDestination", {})
                 if row.get("previousUrl") != original or destination.get("chain") != [{"url": url, "status": 200}]:

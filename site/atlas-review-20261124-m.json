@@ -1,0 +1,158 @@
+{
+  "schema": "avenqir-exact-source-review-v1",
+  "reviewDate": "2026-11-24",
+  "scope": "Exact publisher references for six legacy entries with restricted or unreadable direct responses.",
+  "records": [
+    {
+      "id": "r5",
+      "name": "Project Gutenberg",
+      "category": "阅读",
+      "originalUrl": "https://www.gutenberg.org/",
+      "url": "https://www.gutenberg.org/",
+      "finalUrl": "https://www.gutenberg.org/",
+      "httpStatus": 503,
+      "redirectChain": [
+        {
+          "url": "https://www.gutenberg.org/",
+          "status": 503
+        }
+      ],
+      "title": null,
+      "source": "https://www.gutenberg.org/policy/license.html",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.gutenberg.org/",
+        "publisherPageTitle": "License | Project Gutenberg"
+      },
+      "checkedAt": "2026-11-24T13:02:19+00:00",
+      "referenceCheckedAt": "2026-11-24T13:10:29+00:00",
+      "status": "confirmed",
+      "reason": "The Project Gutenberg Literary Archive Foundation names the www.gutenberg.org site as the official distribution location for its ebook collection."
+    },
+    {
+      "id": "r11",
+      "name": "Khan Academy",
+      "category": "教育",
+      "originalUrl": "https://www.khanacademy.org/",
+      "url": "https://www.khanacademy.org/",
+      "finalUrl": "https://www.khanacademy.org/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.khanacademy.org/",
+          "status": 200
+        }
+      ],
+      "title": "Client Challenge",
+      "source": "https://github.com/Khan",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.khanacademy.org/",
+        "publisherPageTitle": "Khan Academy · GitHub"
+      },
+      "checkedAt": "2026-11-24T12:44:31+00:00",
+      "referenceCheckedAt": "2026-11-24T13:10:29+00:00",
+      "status": "confirmed",
+      "reason": "Khan Academy’s development organization lists the exact HTTPS homepage as the organization website alongside its official repositories."
+    },
+    {
+      "id": "r15",
+      "name": "NASA Image Library",
+      "category": "科学",
+      "originalUrl": "https://images.nasa.gov/",
+      "url": "https://images.nasa.gov/",
+      "finalUrl": "https://images.nasa.gov/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://images.nasa.gov/",
+          "status": 200
+        }
+      ],
+      "title": null,
+      "source": "https://api.nasa.gov/",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://images.nasa.gov/",
+        "publisherPageTitle": "NASA Open APIs"
+      },
+      "checkedAt": "2026-11-24T13:02:19+00:00",
+      "referenceCheckedAt": "2026-11-24T13:10:29+00:00",
+      "status": "confirmed",
+      "reason": "NASA’s open API directory names the exact NASA Image and Video Library destination and describes it as the agency’s searchable image and video collection."
+    },
+    {
+      "id": "e50",
+      "name": "Openverse",
+      "category": "创作",
+      "originalUrl": "https://openverse.org/",
+      "url": "https://openverse.org/",
+      "finalUrl": "https://openverse.org/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://openverse.org/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "source": "https://make.wordpress.org/openverse/",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://openverse.org/",
+        "publisherPageTitle": "Make Openverse | WordPress.org"
+      },
+      "checkedAt": "2026-11-24T12:43:58+00:00",
+      "referenceCheckedAt": "2026-11-24T13:10:29+00:00",
+      "status": "confirmed",
+      "reason": "The WordPress Openverse team identifies the exact Openverse application address alongside its official development repository and describes the open media catalog."
+    },
+    {
+      "id": "e52",
+      "name": "Blender",
+      "category": "创作",
+      "originalUrl": "https://www.blender.org/",
+      "url": "https://www.blender.org/",
+      "finalUrl": "https://www.blender.org/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.blender.org/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "source": "https://github.com/blender",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://www.blender.org/",
+        "publisherPageTitle": "Blender · GitHub"
+      },
+      "checkedAt": "2026-11-24T12:43:58+00:00",
+      "referenceCheckedAt": "2026-11-24T13:10:29+00:00",
+      "status": "confirmed",
+      "reason": "The Blender project’s organization lists the exact homepage and GitHub confirms the organization controls www.blender.org. The project page identifies its official mirrors."
+    },
+    {
+      "id": "e54",
+      "name": "Inkscape",
+      "category": "创作",
+      "originalUrl": "https://inkscape.org/",
+      "url": "https://inkscape.org/",
+      "finalUrl": null,
+      "httpStatus": null,
+      "redirectChain": [],
+      "title": null,
+      "source": "https://gitlab.com/inkscape",
+      "retrieval": "publisher-reference",
+      "evidence": {
+        "exactDestination": "https://inkscape.org/",
+        "publisherPageTitle": "Inkscape · GitLab"
+      },
+      "checkedAt": "2026-11-24T13:02:03+00:00",
+      "referenceCheckedAt": "2026-11-24T13:10:29+00:00",
+      "status": "confirmed",
+      "reason": "The Inkscape maintainers list the exact project homepage in the source organization’s getting-started information."
+    }
+  ]
+}
