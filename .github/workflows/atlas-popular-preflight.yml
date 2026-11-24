@@ -15,32 +15,8 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: 1210a9662d9af638ed680616caebba369798d4a0
+          ref: f8866d67f29fce391e6dbcb39882b3afb5744756
           persist-credentials: false
-      - name: Instrument layout overflow diagnostics
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('tests/browser_popular_mobile.py')
-          t=p.read_text()
-          t=t.replace("require(h.documentElement.scrollWidth<=390&&d.documentElement.scrollWidth<=390,'page overflows the mobile viewport');", """const describe=(win)=>{
-            const doc=win.document;
-            const overflowing=[...doc.querySelectorAll('body *')].filter(node=>{
-              const box=node.getBoundingClientRect();
-              if(box.right<=390||box.height===0)return false;
-              let parent=node.parentElement;
-              while(parent&&parent!==doc.body){
-                if(['auto','scroll','hidden','clip'].includes(win.getComputedStyle(parent).overflowX))return false;
-                parent=parent.parentElement;
-              }
-              return true;
-            }).slice(0,18).map(node=>node.tagName+'#'+node.id+'.'+String(node.className).slice(0,42)+'@'+Math.round(node.getBoundingClientRect().right));
-            return doc.documentElement.scrollWidth+' '+overflowing.join('|');
-          };
-          require(h.documentElement.scrollWidth<=390&&d.documentElement.scrollWidth<=390,'home '+describe(home)+'; directory '+describe(directory));""")
-          t=t.replace("re.search(r'<html[^>]+>', result.stdout)", "re.search(r'<html[^>]+>', result.stdout).group(0)")
-          p.write_text(t)
-          PY
       - name: Verify 390×844 homepage and directory
         run: python3 tests/browser_popular_mobile.py
       - name: Verify directory first paint and interaction flow
