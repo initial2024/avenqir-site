@@ -342,7 +342,29 @@
     'https://www.thewarehouse.co.nz/',
     'https://data.gov.tw/',
     'https://www.grab.com/sg/',
-    'https://www.octopus.com.hk/tc/consumer/index.html'
+    'https://www.octopus.com.hk/tc/consumer/index.html',
+    'https://pixabay.com/',
+    'https://www.photopea.com/',
+    'https://browserleaks.com/',
+    'https://dnschecker.org/',
+    'https://time.is/',
+    'https://haveibeenpwned.com/',
+    'https://www.chess.com/',
+    'https://www.ripe.net/',
+    'https://iupac.org/',
+    'https://www.jigsawplanet.com/',
+    'https://skribbl.io/',
+    'https://www.coolmathgames.com/',
+    'https://www.unitconverters.net/',
+    'https://www.convertunits.com/',
+    'https://www.worldtimebuddy.com/',
+    'https://ticktick.com/',
+    'https://www.ilovepdf.com/',
+    'https://smallpdf.com/',
+    'https://www.gbif.org/',
+    'https://www.deepl.com/en/translator',
+    'https://www.todoist.com/',
+    'https://tools.pdf24.org/en/'
   ];
   function sanitize(raw){
     if(typeof raw!=='string'||raw.length>1800||/[\u0000-\u0020\u007f\\]/.test(raw))return null;
