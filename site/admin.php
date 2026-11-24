@@ -13,11 +13,22 @@ header('Cache-Control: no-store, private, max-age=0');header('X-Content-Type-Opt
 header('Referrer-Policy: no-referrer');header('X-Frame-Options: DENY');
 header("Content-Security-Policy: default-src 'none'; style-src 'self'; script-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
 if(!isset($_SESSION['csrf']))$_SESSION['csrf']=bin2hex(random_bytes(24));
-$auth=stored_read('auth');$logged=$auth!==null && !empty($_SESSION['logged']) && ($_SESSION['until']??0)>time() && isset($_SESSION['auth_tag']) && hash_equals((string)$_SESSION['auth_tag'],aq_auth_tag($auth));
+$auth=stored_read('auth');$logged=aq_shared_adm_logged($auth,$_SESSION);
+if(!$logged && ($_SERVER['REQUEST_METHOD']??'GET')==='GET'){
+  if(($_GET['next']??'')==='feedback')$_SESSION['admin_after_login']='feedback-admin.php';
+  elseif(isset($_GET['next']))unset($_SESSION['admin_after_login']);
+}
 if($logged)$_SESSION['until']=time()+1800;
 $notice='';$failure=false;
 function post_action(): string {return is_string($_POST['action']??null)?$_POST['action']:'';}
-function go_admin(string $msg): never {$_SESSION['flash']=$msg;header('Location: admin.php',true,303);exit;}
+function go_admin(string $msg,string $target='admin.php'): never {
+  $_SESSION['flash']=$msg;
+  header('Location: '.($target==='feedback-admin.php'?'feedback-admin.php':'admin.php'),true,303);exit;
+}
+function aq_post_login_destination():string{
+  $target=($_SESSION['admin_after_login']??'')==='feedback-admin.php'?'feedback-admin.php':'admin.php';
+  unset($_SESSION['admin_after_login']);return $target;
+}
 if($_SERVER['REQUEST_METHOD']==='POST'){
   if(!hash_equals($_SESSION['csrf'],(string)($_POST['csrf']??''))){http_response_code(403);exit('CSRF check failed');}
   $act=post_action();
@@ -27,7 +38,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     if(!is_string($expected)||!hash_equals($expected,$code)){$failure=true;$notice='激活码错误。';}
     elseif(strlen($pwd)<14||strlen($pwd)>128||$pwd!==$pwd2){$failure=true;$notice='管理员密码需要至少14个字符、两次一致。';}
     elseif(!stored_write('auth',['username'=>AQ_ADMIN_NAME,'password_hash'=>password_hash($pwd,PASSWORD_DEFAULT),'created'=>gmdate('c')])){$failure=true;$notice='保存管理员凭据失败：'.store_failure_reason().' 不要修改目录为 777，也不要重新上传激活码文件。';}
-    else{session_regenerate_id(true);$_SESSION['logged']=true;$_SESSION['auth_tag']=aq_auth_tag((array)stored_read('auth'));$_SESSION['until']=time()+1800;go_admin('后台设置成功；初始化入口已关闭。');}
+    else{session_regenerate_id(true);$_SESSION['logged']=true;$_SESSION['auth_tag']=aq_auth_tag((array)stored_read('auth'));$_SESSION['until']=time()+1800;go_admin('后台设置成功；初始化入口已关闭。',aq_post_login_destination());}
   }elseif($act==='login' && $auth!==null){
     $username=(string)($_POST['username']??'');
     $pwd=(string)($_POST['password']??'');
@@ -49,7 +60,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         session_regenerate_id(true);
         $_SESSION['logged']=true;$_SESSION['auth_tag']=aq_auth_tag($verified);
         $_SESSION['until']=time()+1800;$_SESSION['fails']=0;$_SESSION['lock_until']=0;
-        go_admin('登录成功 · adm。');
+        go_admin('登录成功 · adm。',aq_post_login_destination());
       }
     }
   }elseif($act==='logout' && $logged){$_SESSION=[];session_destroy();header('Location: admin.php',true,303);exit;}
@@ -184,7 +195,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     }else{$failure=true;$notice='不支持的操作。';}
   }else{$failure=true;$notice='尚未登录或会话已过期，请重新登录。';}
 }
-$auth=stored_read('auth');$logged=$auth!==null && !empty($_SESSION['logged'])&&($_SESSION['until']??0)>time() && isset($_SESSION['auth_tag']) && hash_equals((string)$_SESSION['auth_tag'],aq_auth_tag($auth));
+$auth=stored_read('auth');$logged=aq_shared_adm_logged($auth,$_SESSION);
 $recovery_once=$_SESSION['mfa_recovery_once']??null;
 unset($_SESSION['mfa_recovery_once']);
 if($logged && isset($_GET['export'])){
@@ -196,7 +207,7 @@ $edit=null;
 if($logged&&isset($_GET['edit']))foreach(public_links() as $r)if(($r['id']??'')===(string)$_GET['edit']){$edit=$r;break;}
 ?><!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><title>AVENQIR · 目录管理</title><link href="common.css?v=7" rel="stylesheet"></head><body class="admin-body">
 <header class="headbar"><div class="wrap head-inner"><a class="logo" href="index.html">⬡ AVENQIR</a><nav class="main-nav"><a href="directory.html">公开目录</a><a href="index.html">网站首页</a></nav><span class="microbadge">ADMIN</span></div></header>
-<main class="wrap"><section class="hero"><div class="eyebrow">PRIVATE ADMIN · HTTPS ONLY</div><h1>网址目录管理后台</h1><p class="subline">这里只发布你愿意公开的网址。后台无需 GitHub Token；数据保存在 SEUS 主机的受保护 PHP 数据文件中。</p></section>
+<main class="wrap"><section class="hero"><div class="eyebrow">PRIVATE ADMIN · HTTPS ONLY</div><h1>网址目录管理后台</h1><p class="subline">这里只发布你愿意公开的网址。后台无需 GitHub Token；数据保存在 SEUS 主机的受保护 PHP 数据文件中。</p><?php if($logged):?><div class="btnrow"><a class="btn primary" href="feedback-admin.php" id="adminGoFeedback">打开站长留言 · 无需重复登录</a><a class="btn ghost" href="admin.php">管理网址目录</a></div><p class="hint">两处共用 adm 身份、密码和 2FA；退出任一后台即退出全部。</p><?php endif;?></section>
 <?php if($notice!==''):?><p class="admin-notice<?= $failure?' error':'' ?>" role="status"><?= e($notice) ?></p><?php endif; ?>
 <?php if(is_array($recovery_once)&&count($recovery_once)===10):?>
 <section class="panel admin-form" aria-label="MFA one-time backup codes"><h2>2FA 已绑定 · 恢复码只显示一次</h2>
