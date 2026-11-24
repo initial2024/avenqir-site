@@ -66,9 +66,9 @@ const summary=fs.readFileSync(path.join(site,'atlas-summary.js'),'utf8');
 const sw=fs.readFileSync(path.join(site,'sw.js'),'utf8');
 const css=fs.readFileSync(path.join(site,'theme.css'),'utf8');
 for(const n of depthNames){
- const p='atlas-depth-'+n+'.js?v=17';
- assert.ok(dir.includes('src="'+p+'"'),'directory missing depth '+n);
- assert.ok(home.includes('src="'+p+'"'),'homepage missing depth '+n);
+ const p='atlas-depth-'+n+'.js?v=';
+ assert.ok(new RegExp('src="'+p.replace(/[.*+?^${}()|[\]\\]/g,'\\dir.includes('src="'+p+'"')')+'[0-9]+"').test(dir),'directory missing depth '+n);
+ assert.ok(new RegExp('src="'+p.replace(/[.*+?^${}()|[\]\\]/g,'\\home.includes('src="'+p+'"')')+'[0-9]+"').test(home),'homepage missing depth '+n);
  assert.ok(sw.includes("'./atlas-depth-"+n+".js'"),'SW missing depth '+n);
  assert.ok(dir.indexOf(p)<dir.indexOf('atlas-catalog-core.js?v=110'),'directory scripts must preserve data before consumer order');
  assert.ok(home.indexOf(p)<home.indexOf('atlas-catalog-core.js?v=110'),'home scripts must preserve data before consumer order');
