@@ -890,6 +890,355 @@
       "previousUrl": "https://tools.pdf24.org/",
       "identity": "PDF24",
       "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://docs.docker.com/",
+      "source": "https://docs.docker.com/",
+      "identity": "Docker Docs",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://developers.cloudflare.com/",
+      "source": "https://developers.cloudflare.com/",
+      "identity": "Cloudflare Developer Docs",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://huggingface.co/datasets",
+      "source": "https://huggingface.co/datasets",
+      "identity": "Hugging Face Datasets",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://huggingface.co/spaces",
+      "source": "https://huggingface.co/spaces",
+      "identity": "Hugging Face Spaces",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://ai.google.dev/",
+      "source": "https://ai.google.dev/",
+      "identity": "Google AI for Developers",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://pytorch.org/",
+      "source": "https://pytorch.org/",
+      "identity": "PyTorch",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.tensorflow.org/",
+      "source": "https://www.tensorflow.org/",
+      "identity": "TensorFlow",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://scikit-learn.org/stable/",
+      "source": "https://scikit-learn.org/stable/",
+      "identity": "scikit-learn",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://onnx.ai/",
+      "source": "https://onnx.ai/",
+      "identity": "ONNX",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://oqmd.org/",
+      "source": "https://oqmd.org/",
+      "identity": "OQMD",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://aflow.org/",
+      "source": "https://aflow.org/",
+      "identity": "AFLOW",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.optimade.org/",
+      "source": "https://www.optimade.org/",
+      "identity": "OPTIMADE",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://pymatgen.org/",
+      "source": "https://pymatgen.org/",
+      "identity": "pymatgen",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.si.edu/openaccess",
+      "source": "https://www.si.edu/openaccess",
+      "identity": "Smithsonian Open Access",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.europeana.eu/en",
+      "source": "https://www.europeana.eu/en",
+      "identity": "Europeana",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://iep.utm.edu/",
+      "source": "https://iep.utm.edu/",
+      "identity": "Internet Encyclopedia of Philosophy",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.open.edu/openlearn/",
+      "source": "https://www.open.edu/openlearn/",
+      "identity": "OpenLearn",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.edx.org/",
+      "source": "https://www.edx.org/",
+      "identity": "edX",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://pll.harvard.edu/",
+      "source": "https://pll.harvard.edu/",
+      "identity": "Harvard Professional and Lifelong Learning",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://ed.ted.com/",
+      "source": "https://ed.ted.com/",
+      "identity": "TED-Ed",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.merriam-webster.com/",
+      "source": "https://www.merriam-webster.com/",
+      "identity": "Merriam-Webster",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://reference.wolfram.com/language/",
+      "source": "https://reference.wolfram.com/language/",
+      "identity": "Wolfram Language Documentation",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://data.gov/",
+      "source": "https://data.gov/",
+      "identity": "US Data.gov",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://fred.stlouisfed.org/",
+      "source": "https://fred.stlouisfed.org/",
+      "identity": "Federal Reserve Economic Data",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.inaturalist.org/",
+      "source": "https://www.inaturalist.org/",
+      "identity": "iNaturalist",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.itis.gov/",
+      "source": "https://www.itis.gov/",
+      "identity": "Integrated Taxonomic Information System",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.bgs.ac.uk/",
+      "source": "https://www.bgs.ac.uk/",
+      "identity": "British Geological Survey",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.earthscope.org/",
+      "source": "https://www.earthscope.org/",
+      "identity": "EarthScope",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://geology.com/",
+      "source": "https://geology.com/",
+      "identity": "Geology.com",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://volcano.si.edu/",
+      "source": "https://volcano.si.edu/",
+      "identity": "Smithsonian Global Volcanism Program",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://climate.copernicus.eu/",
+      "source": "https://climate.copernicus.eu/",
+      "identity": "Copernicus Climate Change Service",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.carbonbrief.org/",
+      "source": "https://www.carbonbrief.org/",
+      "identity": "Carbon Brief",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.unep.org/",
+      "source": "https://www.unep.org/",
+      "identity": "UN Environment Programme",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.globalcarbonproject.org/",
+      "source": "https://www.globalcarbonproject.org/",
+      "identity": "Global Carbon Project",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://climateactiontracker.org/",
+      "source": "https://climateactiontracker.org/",
+      "identity": "Climate Action Tracker",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.nhs.uk/",
+      "source": "https://www.nhs.uk/",
+      "identity": "NHS England",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.mayoclinic.org/",
+      "source": "https://www.mayoclinic.org/",
+      "identity": "Mayo Clinic",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.allaboutcircuits.com/",
+      "source": "https://www.allaboutcircuits.com/",
+      "identity": "All About Circuits",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.electronics-tutorials.ws/",
+      "source": "https://www.electronics-tutorials.ws/",
+      "identity": "Electronics Tutorials",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.ti.com/",
+      "source": "https://www.ti.com/",
+      "identity": "Texas Instruments",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.microchip.com/",
+      "source": "https://www.microchip.com/",
+      "identity": "Microchip Technology",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.arduino.cc/",
+      "source": "https://www.arduino.cc/",
+      "identity": "Arduino",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.raspberrypi.com/",
+      "source": "https://www.raspberrypi.com/",
+      "identity": "Raspberry Pi",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://nomad-lab.eu/nomad-lab/",
+      "source": "https://nomad-lab.eu/",
+      "previousUrl": "https://nomad-lab.eu/",
+      "identity": "NOMAD",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.oecd.org/en/data.html",
+      "source": "https://data.oecd.org/",
+      "previousUrl": "https://data.oecd.org/",
+      "identity": "OECD Data",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://data.imf.org/en",
+      "source": "https://data.imf.org/",
+      "previousUrl": "https://data.imf.org/",
+      "identity": "IMF Data",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://science.nasa.gov/earth/earth-observatory/",
+      "source": "https://earthobservatory.nasa.gov/",
+      "previousUrl": "https://earthobservatory.nasa.gov/",
+      "identity": "NASA Earth Observatory",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.analog.com/en/index.html",
+      "source": "https://www.analog.com/",
+      "previousUrl": "https://www.analog.com/",
+      "identity": "Analog Devices",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.st.com/content/st_com/en.html",
+      "source": "https://www.st.com/",
+      "previousUrl": "https://www.st.com/",
+      "identity": "STMicroelectronics",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
     }
   ]
 }
