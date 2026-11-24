@@ -331,6 +331,20 @@
       "source": "https://www.ssllabs.com/ssltest/",
       "identity": "Qualys SSL Labs",
       "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://laws.e-gov.go.jp/",
+      "source": "https://laws.e-gov.go.jp/",
+      "previousUrl": "https://elaws.e-gov.go.jp/",
+      "identity": "e-Gov 法令検索",
+      "method": "Observed old URL redirect and inspected official successor"
+    },
+    {
+      "url": "https://data.e-gov.go.jp/info/ja",
+      "source": "https://data.e-gov.go.jp/info/ja",
+      "previousUrl": "https://www.data.go.jp/",
+      "identity": "e-Gov データポータル",
+      "method": "Observed old URL redirect and inspected official successor"
     }
   ]
 }
