@@ -2196,6 +2196,107 @@
       "reviewedOn": "2026-11-24",
       "evidenceFreshness": "indexed snapshot approximately three months old",
       "evidence": "Grammar education homepage"
+    },
+    {
+      "url": "https://www.cast.org.cn/",
+      "source": "https://www.cast.org.cn/",
+      "identity": "中国科学技术协会",
+      "evidence": "中国科协官方机构首页",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.weather.com.cn/",
+      "source": "https://www.weather.com.cn/",
+      "identity": "中国天气网",
+      "evidence": "天气服务及城市索引",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.naver.com/",
+      "source": "https://www.naver.com/",
+      "identity": "NAVER",
+      "evidence": "NAVER Korean search interface",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.india.gov.in/",
+      "source": "https://www.india.gov.in/",
+      "identity": "National Portal of India",
+      "evidence": "Government national services and datasets portal",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://mausam.imd.gov.in/",
+      "source": "https://mausam.imd.gov.in/",
+      "identity": "India Meteorological Department",
+      "evidence": "Ministry of Earth Sciences department homepage",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://ncert.nic.in/",
+      "source": "https://ncert.nic.in/",
+      "identity": "NCERT",
+      "evidence": "National education council institutional navigation",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.internethalloffame.org/",
+      "source": "https://www.internethalloffame.org/",
+      "identity": "Internet Hall of Fame",
+      "evidence": "Project homepage and Internet Society donation link",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.sciencenews.org/",
+      "source": "https://www.sciencenews.org/",
+      "identity": "Science News",
+      "evidence": "Official science journalism homepage",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.nature.com/",
+      "source": "https://www.nature.com/",
+      "identity": "Nature",
+      "evidence": "Journal homepage and publisher navigation",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.japan.travel/en/",
+      "source": "https://www.japan.travel/",
+      "previousUrl": "https://www.japan.travel/",
+      "identity": "Japan National Tourism Organization",
+      "evidence": "Official English tourism portal and language selection",
+      "method": "Observed redirect and inspected destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.data.gov.in/",
+      "source": "https://data.gov.in/",
+      "previousUrl": "https://data.gov.in/",
+      "identity": "Open Government Data Platform India",
+      "evidence": "Official portal observed redirect and dataset search interface",
+      "method": "Observed redirect and inspected destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
     }
   ]
 }
