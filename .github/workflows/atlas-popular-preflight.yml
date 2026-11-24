@@ -1,0 +1,35 @@
+name: AVENQIR Popular preflight
+
+on:
+  push:
+    branches: [atlas-popular-observations-20261124]
+    paths: [evidence/atlas-popular-preflight-ref.txt, .github/workflows/atlas-popular-preflight.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 1210a9662d9af638ed680616caebba369798d4a0
+          persist-credentials: false
+      - name: Verify 390×844 homepage and directory
+        run: python3 tests/browser_popular_mobile.py
+      - name: Verify directory first paint and interaction flow
+        run: python3 tests/browser_directory_first_paint.py
+      - name: Verify public data, source gate, translations and application tests
+        run: |
+          python3 scripts/verify_site.py
+          python3 scripts/audit_public.py
+          python3 scripts/audit_directory_links.py
+          python3 -m unittest discover -s tests -v
+          for test in tests/test_*.cjs; do node "$test"; done
+          php tests/test_server_url_classification.php
+          php tests/test_admin_security.php
+          php tests/test_unified_admin_session.php
+          php tests/test_trusted_browser.php
+          php tests/test_passkey_crypto.php
