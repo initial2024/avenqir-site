@@ -4,6 +4,26 @@
    Never accept security decisions from user-generated labels or admin data fields. */
 (function(root){
   const OFFICIAL_URLS = [
+    // Scientific and technical exact sources; evidence in atlas-review-20261124-d.json.
+    'https://www.wolframalpha.com/',
+    'https://developer.mozilla.org/en-US/observatory',
+    'https://json-schema.org/',
+    'https://mathworld.wolfram.com/',
+    'https://www.internetsociety.org/',
+    'https://projecteuler.net/',
+    'https://dnsviz.net/',
+    'https://opencitations.net/',
+    'https://www.lmfdb.org/',
+    'https://www.sagemath.org/',
+    'https://www.naturalearthdata.com/',
+    'https://opentopography.org/',
+    'https://dataspace.copernicus.eu/',
+    'https://www.geonames.org/',
+    'https://www.metmuseum.org/art/collection',
+    'https://ase-lib.org/',
+    'https://www.rhea-db.org/',
+    'https://eosc.eu/',
+    'https://vizier.cds.unistra.fr/',
     // Exact institutional sources; evidence in atlas-review-20261124-c.json.
     'https://www.e-stat.go.jp/en',
     'https://www.jst.go.jp/',
