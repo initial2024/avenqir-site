@@ -1827,6 +1827,375 @@
       "method": "Official brand guidelines explicitly identify exact registry URL; registry frontend requires JavaScript",
       "reviewedOn": "2026-11-24",
       "evidenceFreshness": "official guidelines indexed yesterday"
+    },
+    {
+      "url": "https://www.postgresql.org/",
+      "source": "https://www.postgresql.org/",
+      "identity": "PostgreSQL",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "PostgreSQL relational database homepage"
+    },
+    {
+      "url": "https://mariadb.org/",
+      "source": "https://mariadb.org/",
+      "identity": "MariaDB Foundation",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Foundation homepage, documentation and project navigation"
+    },
+    {
+      "url": "https://www.sqlite.org/",
+      "source": "https://www.sqlite.org/",
+      "identity": "SQLite",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "SQLite home and documentation"
+    },
+    {
+      "url": "https://redis.io/",
+      "source": "https://redis.io/",
+      "identity": "Redis",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Redis product and platform homepage"
+    },
+    {
+      "url": "https://duckdb.org/",
+      "source": "https://duckdb.org/",
+      "identity": "DuckDB",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "DuckDB documentation and project homepage"
+    },
+    {
+      "url": "https://clickhouse.com/",
+      "source": "https://clickhouse.com/",
+      "identity": "ClickHouse",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "ClickHouse OLAP database homepage"
+    },
+    {
+      "url": "https://tailwindcss.com/",
+      "source": "https://tailwindcss.com/",
+      "identity": "Tailwind CSS",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Framework homepage and docs"
+    },
+    {
+      "url": "https://vite.dev/",
+      "source": "https://vite.dev/",
+      "identity": "Vite",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Official tooling homepage and guide"
+    },
+    {
+      "url": "https://nextjs.org/",
+      "source": "https://nextjs.org/",
+      "identity": "Next.js",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "React framework homepage and learning links"
+    },
+    {
+      "url": "https://astro.build/",
+      "source": "https://astro.build/",
+      "identity": "Astro",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Astro project homepage and docs"
+    },
+    {
+      "url": "https://nuxt.com/",
+      "source": "https://nuxt.com/",
+      "identity": "Nuxt",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Vue framework homepage and guide"
+    },
+    {
+      "url": "https://nginx.org/",
+      "source": "https://nginx.org/",
+      "identity": "nginx",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Project homepage with official documentation and downloads"
+    },
+    {
+      "url": "https://caddyserver.com/",
+      "source": "https://caddyserver.com/",
+      "identity": "Caddy",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Web server homepage and docs"
+    },
+    {
+      "url": "https://shotcut.org/",
+      "source": "https://shotcut.org/",
+      "identity": "Shotcut",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Video editor project homepage and downloads"
+    },
+    {
+      "url": "https://kdenlive.org/",
+      "source": "https://kdenlive.org/",
+      "identity": "Kdenlive",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "KDE video editor project homepage"
+    },
+    {
+      "url": "https://handbrake.fr/",
+      "source": "https://handbrake.fr/",
+      "identity": "HandBrake",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Project homepage with download and community links"
+    },
+    {
+      "url": "https://www.abs.gov.au/",
+      "source": "https://www.abs.gov.au/",
+      "identity": "Australian Bureau of Statistics",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "ABS official statistics and agency navigation"
+    },
+    {
+      "url": "https://www.bom.gov.au/",
+      "source": "https://www.bom.gov.au/",
+      "identity": "Bureau of Meteorology",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Australian weather and climate service homepage"
+    },
+    {
+      "url": "https://www.smartraveller.gov.au/",
+      "source": "https://www.smartraveller.gov.au/",
+      "identity": "Smartraveller",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Australian government consular travel advice"
+    },
+    {
+      "url": "https://www.csiro.au/",
+      "source": "https://www.csiro.au/",
+      "identity": "CSIRO",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Australian national science agency homepage"
+    },
+    {
+      "url": "https://www.ga.gov.au/",
+      "source": "https://www.ga.gov.au/",
+      "identity": "Geoscience Australia",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "National geoscience agency data and research"
+    },
+    {
+      "url": "https://travel.gc.ca/",
+      "source": "https://travel.gc.ca/",
+      "identity": "Government of Canada Travel",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Government of Canada travel portal"
+    },
+    {
+      "url": "https://www.esa.int/",
+      "source": "https://www.esa.int/",
+      "identity": "European Space Agency",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "ESA agency homepage and programmes"
+    },
+    {
+      "url": "https://royalsociety.org/",
+      "source": "https://royalsociety.org/",
+      "identity": "Royal Society",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Society homepage and fellowship resources"
+    },
+    {
+      "url": "https://www.nationalacademies.org/",
+      "source": "https://www.nationalacademies.org/",
+      "identity": "National Academies",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "National Academies of Sciences Engineering and Medicine homepage"
+    },
+    {
+      "url": "https://www.nngroup.com/",
+      "source": "https://www.nngroup.com/",
+      "identity": "Nielsen Norman Group",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "UX research and training homepage"
+    },
+    {
+      "url": "https://inclusive-components.design/",
+      "source": "https://inclusive-components.design/",
+      "identity": "Inclusive Components",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Project homepage and about links"
+    },
+    {
+      "url": "https://www.ocenaudio.com/",
+      "source": "https://www.ocenaudio.com/",
+      "identity": "ocenaudio",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Audio editor development team homepage"
+    },
+    {
+      "url": "https://www.blackmagicdesign.com/products/davinciresolve",
+      "source": "https://www.blackmagicdesign.com/products/davinciresolve",
+      "identity": "DaVinci Resolve",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Blackmagic Design product page"
+    },
+    {
+      "url": "https://www.frontendmentor.io/",
+      "source": "https://www.frontendmentor.io/",
+      "identity": "Frontend Mentor",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Project-based coding education homepage"
+    },
+    {
+      "url": "https://cssgridgarden.com/",
+      "source": "https://cssgridgarden.com/",
+      "identity": "Grid Garden",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Codepip CSS grid learning game"
+    },
+    {
+      "url": "https://lichess.org/",
+      "source": "https://lichess.org/",
+      "identity": "Lichess",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Chess service homepage; indexed result warns assets blocked"
+    },
+    {
+      "url": "https://neal.fun/",
+      "source": "https://neal.fun/",
+      "identity": "Neal.fun",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Creator's own web project homepage"
+    },
+    {
+      "url": "https://penpot.app/",
+      "source": "https://penpot.app/",
+      "identity": "Penpot",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Open source design platform homepage"
+    },
+    {
+      "url": "https://freesound.org/",
+      "source": "https://freesound.org/",
+      "identity": "Freesound",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Freesound service page with account interface"
+    },
+    {
+      "url": "https://www.privacyguides.org/",
+      "source": "https://www.privacyguides.org/",
+      "identity": "Privacy Guides",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Privacy Guides knowledge base homepage"
+    },
+    {
+      "url": "https://coveryourtracks.eff.org/",
+      "source": "https://coveryourtracks.eff.org/",
+      "identity": "EFF Cover Your Tracks",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "EFF browser tracking test homepage"
+    },
+    {
+      "url": "https://securityheaders.com/",
+      "source": "https://securityheaders.com/",
+      "identity": "Security Headers",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "HTTP header analysis service"
+    },
+    {
+      "url": "https://www.englishclub.com/",
+      "source": "https://www.englishclub.com/",
+      "identity": "EnglishClub",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "EnglishClub lessons and teaching resources"
+    },
+    {
+      "url": "https://elllo.org/",
+      "source": "https://elllo.org/",
+      "identity": "ELLLO",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "English Listening Lesson Library Online"
+    },
+    {
+      "url": "https://www.perfect-english-grammar.com/",
+      "source": "https://www.perfect-english-grammar.com/",
+      "identity": "Perfect English Grammar",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Grammar education homepage"
     }
   ]
 }
