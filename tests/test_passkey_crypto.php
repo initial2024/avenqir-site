@@ -43,3 +43,8 @@ $record=['rev'=>aq_auth_tag($auth),'keys'=>[$registered]];
 yes(count(aq_pk_record($auth,$record)['keys'])===1);
 $auth['security_rev']='r2';yes(aq_pk_record($auth,$record)['keys']===[]);
 echo "PASS: real ES256 registration and assertion; wrong origin/challenge/id/handle/signature, missing UV, replay and revision denied\n";
+
+$engine=aq_pk_engine();$opts=$engine->getCreateArgs(random_bytes(32),'adm','AVENQIR adm',120,true,true);
+$wire=json_decode(json_encode($opts,JSON_THROW_ON_ERROR),true,16,JSON_THROW_ON_ERROR)['publicKey'];
+yes($wire['rp']['id']===AQ_PK_RP);yes($wire['authenticatorSelection']['userVerification']==='required');yes($wire['authenticatorSelection']['residentKey']==='required');yes(strlen(aq_pk_decode($wire['challenge'],128))===32);yes(strlen(aq_pk_decode($wire['user']['id'],64))===32);
+echo "PASS: create options JSON wire format and UV policy\n";

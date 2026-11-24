@@ -22,6 +22,7 @@ function pk_json(array $data,int $code=200):never{
   echo json_encode($data,JSON_THROW_ON_ERROR|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);exit;
 }
 if(($_SERVER['REQUEST_METHOD']??'GET')==='POST'){
+  $stage='REQUEST';
   try{
     aq_pk_require($ready&&($_SERVER['HTTP_ORIGIN']??'')===AQ_PK_ORIGIN
       &&hash_equals($_SESSION['csrf'],(string)($_SERVER['HTTP_X_CSRF_TOKEN']??''))
@@ -30,13 +31,16 @@ if(($_SERVER['REQUEST_METHOD']??'GET')==='POST'){
     aq_pk_require(is_string($raw)&&strlen($raw)<=150000);
     $in=json_decode($raw,true,16,JSON_THROW_ON_ERROR);aq_pk_require(is_array($in));
     $action=$in['action']??'';
+    $stage='SESSION';
     $rev=aq_auth_tag($auth);
     $now=time();
     if((int)($_SESSION['pk_window']??0)<$now-300){$_SESSION['pk_window']=$now;$_SESSION['pk_attempts']=0;}
     $_SESSION['pk_attempts']=(int)($_SESSION['pk_attempts']??0)+1;
+    $stage='RATE_LIMIT';
     aq_pk_require($_SESSION['pk_attempts']<=20 && (int)($_SESSION['lock_until']??0)<=$now);
     if($action==='register_begin'||$action==='revoke'){
-      aq_pk_require($logged);
+      $stage='SESSION';aq_pk_require($logged);
+      $stage='REAUTH';
       $pwd=$in['password']??null;$otp=$in['otp']??null;
       aq_pk_require(is_string($pwd)&&strlen($pwd)<=128&&is_string($otp)&&preg_match('/^[0-9]{6}$/D',$otp)===1);
       $verified=aq_mfa_consume_login($pwd,$otp);
@@ -48,12 +52,14 @@ if(($_SERVER['REQUEST_METHOD']??'GET')==='POST'){
       aq_pk_require(hash_equals($rev,aq_auth_tag($verified)));
       $_SESSION['fails']=0;$_SESSION['lock_until']=0;
       if($action==='revoke'){
+        $stage='REVOKE';
         aq_pk_lock(function()use($rev){
           $latest=stored_read('auth');aq_pk_require(is_array($latest)&&hash_equals($rev,aq_auth_tag($latest)));
           aq_pk_require(stored_write('passkeys',['rev'=>$rev,'user'=>aq_pk_encode(random_bytes(32)),'keys'=>[]]));
         });
         unset($_SESSION['pk_pending']);pk_json(['ok'=>true]);
       }
+      $stage='REGISTER_PREPARE';
       $options=aq_pk_lock(function()use($rev){
         $latest=stored_read('auth');aq_pk_require(is_array($latest)&&hash_equals($rev,aq_auth_tag($latest)));
         $s=aq_pk_record($latest,stored_read('passkeys'));
@@ -71,9 +77,12 @@ if(($_SERVER['REQUEST_METHOD']??'GET')==='POST'){
       pk_json(['ok'=>true,'options'=>$options]);
     }
     if($action==='register_finish'){
+      $stage='CHALLENGE';
       $pending=$_SESSION['pk_pending']??[];
       $challenge=aq_pk_take($_SESSION,'create',$rev);aq_pk_require($logged);
+      $stage='REGISTER_VERIFY';
       $key=aq_pk_registration($in,$challenge);
+      $stage='REGISTER_SAVE';
       aq_pk_lock(function()use($rev,$key,$pending){
         $latest=stored_read('auth');aq_pk_require(is_array($latest)&&hash_equals($rev,aq_auth_tag($latest)));
         $s=aq_pk_record($latest,stored_read('passkeys'));
@@ -83,6 +92,7 @@ if(($_SERVER['REQUEST_METHOD']??'GET')==='POST'){
       pk_json(['ok'=>true]);
     }
     if($action==='login_begin'){
+      $stage='LOGIN_PREPARE';
       aq_pk_require(!$logged&&count($state['keys'])>0);
       $engine=aq_pk_engine();$ids=array_values(array_map(fn($k)=>aq_pk_decode($k['id'],1024),$state['keys']));
       $args=$engine->getGetArgs($ids,AQ_PK_TTL,true,true,true,true,true,true);
@@ -91,8 +101,10 @@ if(($_SERVER['REQUEST_METHOD']??'GET')==='POST'){
       pk_json(['ok'=>true,'options'=>$args]);
     }
     if($action==='login_finish'){
+      $stage='CHALLENGE';
       $pending=$_SESSION['pk_pending']??[];
       $challenge=aq_pk_take($_SESSION,'get',$rev);aq_pk_require(!$logged);
+      $stage='LOGIN_VERIFY';
       aq_pk_lock(function()use($rev,$in,$challenge,$pending){
         $latest=stored_read('auth');aq_pk_require(is_array($latest)&&hash_equals($rev,aq_auth_tag($latest)));
         $s=aq_pk_record($latest,stored_read('passkeys'));
@@ -108,13 +120,17 @@ if(($_SERVER['REQUEST_METHOD']??'GET')==='POST'){
       unset($_SESSION['admin_after_login']);pk_json(['ok'=>true,'next'=>$target]);
     }
     throw new RuntimeException('Invalid action');
-  }catch(Throwable $e){unset($_SESSION['pk_pending']);pk_json(['ok'=>false,'message'=>'操作未通过验证或已过期。请重新尝试，或返回密码＋2FA 登录。'],403);}
+  }catch(Throwable $e){
+    unset($_SESSION['pk_pending']);
+    // Fixed stage codes only: no credentials, exception text or internal paths.
+    pk_json(['ok'=>false,'stage'=>$stage],403);
+  }
 }
 if(($_SERVER['REQUEST_METHOD']??'GET')!=='GET'){http_response_code(405);exit;}
 if($logged)$_SESSION['until']=time()+1800;
 ?>
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AVENQIR · 通行密钥</title><link rel="stylesheet" href="common.css"><script src="passkey.js" defer></script></head>
+<title>AVENQIR · 通行密钥</title><link rel="stylesheet" href="common.css"><script src="passkey.js?v=2" defer></script></head>
 <body><main class="wrap"><section class="hero"><h1>管理员通行密钥 · Passkey</h1><p>仅限 adm。使用系统指纹、人脸或设备 PIN 验证；网站只保存公钥，不接触生物识别数据。</p><a class="btn ghost" href="admin.php">返回密码登录 / 目录管理</a></section>
 <section class="panel stack" id="pk-panel" data-csrf="<?= htmlspecialchars($_SESSION['csrf'],ENT_QUOTES,'UTF-8') ?>">
 <?php if(!$ready):?><p>需要先启用 TOTP 双重验证，并且主机支持 WebAuthn 验签。密码登录保持可用。</p>
@@ -122,8 +138,9 @@ if($logged)$_SESSION['until']=time()+1800;
 <p>每次新增或撤销均需重新验证密码及当前 6 位动态码。修改密码或重置 2FA 后，旧通行密钥自动失效。</p>
 <form id="pk-manage" class="stack" method="post" action="passkey.php"><label>管理员密码<input name="password" type="password" autocomplete="current-password" required maxlength="128"></label>
 <label>当前 TOTP 动态码<input name="otp" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required></label>
-<button type="button" class="btn primary" id="pk-register" disabled>登记系统通行密钥</button>
+<button type="button" class="btn primary" id="pk-register" disabled>第一步：验证密码与动态码</button>
+<button type="button" class="btn primary" id="pk-create" disabled>第二步：打开系统通行密钥</button>
 <button type="button" class="btn ghost" id="pk-revoke" disabled>撤销全部通行密钥</button></form>
 <p>撤销不会删除手机密码管理器里的记录；可在系统中手动清理。现有登录会话仍遵循原有 30 分钟空闲过期规则。</p>
 <?php else:?><h2>使用通行密钥登录</h2><button type="button" class="btn primary" id="pk-login" disabled>使用系统通行密钥</button><p>必须先在已登录的管理后台登记通行密钥。如果设备不支持或密钥遗失，请使用原密码与 2FA。</p><?php endif;?>
-<p role="status" id="pk-status">正在检测浏览器支持情况…</p></section></main></body></html>
+<p class="hint">若在 Orbit 内失败，请先在 Chrome 等支持通行密钥的系统浏览器测试；不要关闭 2FA。动态码只能使用一次，请等新的 6 位码。</p><p role="status" id="pk-status">正在检测浏览器支持情况…</p></section></main></body></html>
