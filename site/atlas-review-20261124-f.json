@@ -1,0 +1,76 @@
+{
+  "reviewDate": "2026-11-24",
+  "scope": "Exact source identity only, not safety or malware guarantee. Redirect targets are independently inspected; previous URLs do not receive approval.",
+  "records": [
+    {
+      "previousUrl": "https://earthobservatory.nasa.gov/",
+      "url": "https://science.nasa.gov/earth/earth-observatory/",
+      "source": "https://science.nasa.gov/earth/earth-observatory/",
+      "title": "NASA Earth Observatory",
+      "method": "Observed redirect from existing catalog URL to this destination; independently opened exact destination and inspected readable institutional content on 2026-11-24"
+    },
+    {
+      "previousUrl": "https://www.rsc.org/periodic-table",
+      "url": "https://periodic-table.rsc.org/",
+      "source": "https://periodic-table.rsc.org/",
+      "title": "Royal Society of Chemistry Periodic Table",
+      "method": "Observed redirect from existing catalog URL to this destination; independently opened exact destination and inspected readable institutional content on 2026-11-24"
+    },
+    {
+      "previousUrl": "https://www.gov.br/",
+      "url": "https://www.gov.br/pt-br",
+      "source": "https://www.gov.br/pt-br",
+      "title": "Brazilian government public services",
+      "method": "Observed redirect from existing catalog URL to this destination; independently opened exact destination and inspected readable institutional content on 2026-11-24"
+    },
+    {
+      "previousUrl": "https://data.gov.hk/",
+      "url": "https://data.gov.hk/en/",
+      "source": "https://data.gov.hk/en/",
+      "title": "Hong Kong open data portal",
+      "method": "Observed redirect from existing catalog URL to this destination; independently opened exact destination and inspected readable institutional content on 2026-11-24"
+    },
+    {
+      "previousUrl": "https://owasp.org/www-project-application-security-verification-standard/",
+      "url": "https://asvs.owasp.org/",
+      "source": "https://asvs.owasp.org/",
+      "title": "OWASP ASVS",
+      "method": "Observed redirect from existing catalog URL to this destination; independently opened exact destination and inspected readable institutional content on 2026-11-24"
+    },
+    {
+      "previousUrl": "https://archive.eso.org/",
+      "url": "https://archive.eso.org/cms.html",
+      "source": "https://archive.eso.org/cms.html",
+      "title": "ESO Archive",
+      "method": "Observed redirect from existing catalog URL to this destination; independently opened exact destination and inspected readable institutional content on 2026-11-24"
+    },
+    {
+      "previousUrl": "https://www.bipm.org/",
+      "url": "https://www.bipm.org/en/",
+      "source": "https://www.bipm.org/en/",
+      "title": "BIPM",
+      "method": "Observed redirect from existing catalog URL to this destination; independently opened exact destination and inspected readable institutional content on 2026-11-24"
+    },
+    {
+      "previousUrl": "https://comtradeplus.un.org/",
+      "url": "https://comtrade.un.org/en/",
+      "source": "https://comtrade.un.org/en/",
+      "title": "UN Comtrade",
+      "method": "Observed redirect from existing catalog URL to this destination; independently opened exact destination and inspected readable institutional content on 2026-11-24"
+    },
+    {
+      "url": "https://regex101.com/",
+      "source": "https://regex101.com/",
+      "title": "regex101",
+      "evidence": "Regex editor and debugger",
+      "method": "Exact URL indexed retrieval with readable service identity, no reported redirect"
+    },
+    {
+      "url": "https://app.diagrams.net/",
+      "source": "https://app.diagrams.net/",
+      "title": "draw.io",
+      "evidence": "Named diagram editor with functional description",
+      "method": "Exact URL indexed retrieval with readable service identity, no reported redirect"
+    }
+  ]
+}
