@@ -530,7 +530,8 @@
     'https://www.englishclub.com/',
     'https://elllo.org/',
     'https://www.perfect-english-grammar.com/',
-    'https://www.cast.org.cn/',    'https://www.weather.com.cn/',    'https://www.naver.com/',    'https://www.india.gov.in/',    'https://mausam.imd.gov.in/',    'https://ncert.nic.in/',    'https://www.internethalloffame.org/',    'https://www.sciencenews.org/',    'https://www.nature.com/',    'https://www.japan.travel/en/',    'https://www.data.gov.in/'
+    'https://www.cast.org.cn/',    'https://www.weather.com.cn/',    'https://www.naver.com/',    'https://www.india.gov.in/',    'https://mausam.imd.gov.in/',    'https://ncert.nic.in/',    'https://www.internethalloffame.org/',    'https://www.sciencenews.org/',    'https://www.nature.com/',    'https://www.japan.travel/en/',    'https://www.data.gov.in/',
+    'https://cursor.com/',    'https://replit.com/',    'https://bolt.new/',    'https://lovable.dev/',    'https://v0.app/',    'https://aider.chat/',    'https://elevenlabs.io/',    'https://suno.com/',    'https://www.aiva.ai/',    'https://www.midjourney.com/',    'https://ideogram.ai/',    'https://www.recraft.ai/',    'https://leonardo.ai/',    'https://www.krea.ai/',    'https://clipdrop.co/',    'https://pika.art/',    'https://hailuoai.video/',    'https://www.heygen.com/',    'https://www.synthesia.io/',    'https://www.veed.io/',    'https://www.kapwing.com/',    'https://www.tabnine.com/',    'https://runway.com/',    'https://pixverse.ai/en'
   ];
   function sanitize(raw){
     if(typeof raw!=='string'||raw.length>1800||/[\u0000-\u0020\u007f\\]/.test(raw))return null;
