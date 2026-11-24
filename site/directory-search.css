@@ -135,3 +135,7 @@
 :root[data-aq-theme="dark"] .atlas-no-match-dialog{background:#172c44;color:#eef7ff}
 :root[data-aq-theme="eye"] .atlas-no-match-dialog{background:#f6edd9;color:#4c412d}
 @media(max-width:600px){.atlas-next-buttons a,.atlas-no-match-actions a{flex:1 1 110px;text-align:center}}
+
+/* Search result cards precede optional continuation actions on a match. */
+.atlas-search-next .atlas-next-buttons a{min-width:0;overflow-wrap:anywhere}
+@media(max-width:600px){.atlas-next-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.atlas-next-buttons a{font-size:13px;padding:8px 6px}.atlas-no-match-actions a{min-width:0}.atlas-no-match-dialog .atlas-recommend-link{width:100%;margin-top:8px}.atlas-no-match-close{display:block;width:100%;text-align:center}}

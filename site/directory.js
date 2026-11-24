@@ -86,11 +86,13 @@
  try{const v=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(v))favorites=v.filter(x=>typeof x==='string').slice(0,500)}catch{}
  input.value=query;
  const normalize=x=>String(x||'').toLocaleLowerCase().normalize('NFKC').trim();
+ const initialsCache=new WeakMap();
+ function initialsMatch(item,term){if(!finder||!/^[a-z]{2,20}$/.test(term))return false;let values=initialsCache.get(item);if(!values){values=[finder.initials(item.name),finder.initials(item.category)];initialsCache.set(item,values)}return values.some(v=>v.includes(term));}
  const fieldCache=new WeakMap();
  const meaningful=x=>{let fields=fieldCache.get(x);if(!fields){fields=[x.name,x.url,x.category,x.description].map(normalize);fieldCache.set(x,fields)}return fields};
  let termsQuery=null,termsCache=[];
  function score(x){if(!query)return 1;if(termsQuery!==query){termsQuery=query;termsCache=normalize(query).split(/\s+/).filter(Boolean)}const terms=termsCache;const fields=meaningful(x);
-   if(!terms.every(w=>fields.some(v=>v.includes(w))||(/^[a-z]{2,20}$/.test(w)&&finder?.matches(w,[x.name,x.category]))))return -1;
+   if(!terms.every(w=>fields.some(v=>v.includes(w))||initialsMatch(x,w)))return -1;
    return terms.reduce((acc,t)=>acc+(fields[0]===t?12:fields[0].startsWith(t)?8:fields[0].includes(t)?6:0)+(fields[1].includes(t)?4:0)+(fields[2].includes(t)?3:0)+(fields[3].includes(t)?1:0),0);
  }
  function matchingGroup(x){
@@ -277,7 +279,7 @@
  function replaceQuery(v){query=v.slice(0,140);input.value=query;limit=pageSize;draw();const u=new URL(location.href);query?u.searchParams.set('q',query):u.searchParams.delete('q');history.replaceState(null,'',u.pathname+u.search+u.hash)}
  function suggestClose(){suggest.hidden=true;suggest.replaceChildren()}
  function suggestions(){const q=normalize(input.value);suggest.replaceChildren();if(q.length<2){suggestClose();return}
-   const matched=records.filter(r=>meaningful(r).some(v=>v.includes(q))).slice(0,5);if(!matched.length){suggestClose();return}
+   const matched=records.map(r=>({r,rank:score(r)})).filter(x=>x.rank>=0).sort((a,b)=>b.rank-a.rank).slice(0,5).map(x=>x.r);if(!matched.length){suggestClose();return}
    matched.forEach(r=>{const b=el('button','atlas-suggest-item',r.name);b.type='button';b.setAttribute('role','option');b.append(el('small','',new URL(r.url).hostname+' · '+r.category));b.addEventListener('click',()=>submitSearch(r.name));suggest.append(b)});suggest.hidden=false;
  }
  let safetyRecords=null,safetyLocale='',safetyTotals=null;
@@ -411,16 +413,21 @@
    const box=$('atlasSearchNext');if(!box)return;
    box.hidden=!q;
    if(!q)return;
+   // Prioritize matching sites. With no matches put continuation before the empty state.
+   const empty=$('atlasEmpty'),paging=$('atlasMore')?.parentElement;
+   if(noMatch&&empty)empty.insertAdjacentElement('beforebegin',box);
+   else if(paging)paging.insertAdjacentElement('afterend',box);
    $('atlasSearchNextText').textContent=noMatch?T('没有收录「'+q+'」相关资源。','No catalog matches for “'+q+'”.'):T('还想找更多「'+q+'」相关内容？','Looking for more about “'+q+'”?');
    $('atlasReopenNoMatch').hidden=!noMatch;
    for(const a of box.querySelectorAll('[data-search-next-engine]'))a.href=linkGate.searchEngineDestination(a.dataset.searchNextEngine,q);
  }
- function clearSearchNext(){committedQuery='';lastNoMatch='';updateSearchNext('',false);}
+ function clearSearchNext(){committedQuery='';lastNoMatch='';updateSearchNext('',false);const d=$('atlasNoMatchDialog');if(d?.open){if(d.close)d.close();else d.removeAttribute('open');}}
  function navigateProvider(e,engine,q){
    const target=searchActions?.engineURL(engine,q,linkGate)||linkGate?.searchEngineDestination(engine,q);
    if(!target)return;
-   if(e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;
-   e.preventDefault();window.location.assign(target);
+   // Keep the anchor's trusted native navigation (including WebView gesture,
+   // open-in-new-tab and keyboard activation). Never rewrite to a local search.
+   e.currentTarget.href=target;
  }
  for(const a of document.querySelectorAll('[data-search-next-engine]'))a.addEventListener('click',e=>navigateProvider(e,a.dataset.searchNextEngine,committedQuery));
  for(const a of document.querySelectorAll('[data-no-match-engine]'))a.addEventListener('click',e=>navigateProvider(e,a.dataset.noMatchEngine,lastNoMatch));
@@ -475,12 +482,15 @@
  });
  $('atlasSort').addEventListener('change',draw);
  $('atlasSiteLanguageMode')?.addEventListener('change',()=>{limit=pageSize;draw();});
- let inputTimer=null;
- input.addEventListener('input',()=>{pendingNoMatchQuery='';clearSearchNext();query=input.value.slice(0,140);limit=pageSize;clearTimeout(inputTimer);inputTimer=setTimeout(()=>{draw();suggestions()},90)});
+ let inputTimer=null,composing=false;
+ function scheduleInput(){clearTimeout(inputTimer);pendingNoMatchQuery='';clearSearchNext();query=input.value.slice(0,140);limit=pageSize;inputTimer=setTimeout(()=>{if(!composing){draw();suggestions()}},90);}
+ input.addEventListener('compositionstart',()=>{composing=true;clearTimeout(inputTimer)});
+ input.addEventListener('compositionend',()=>{composing=false;scheduleInput()});
+ input.addEventListener('input',e=>{if(!composing&&!e.isComposing)scheduleInput()});
 
  input.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!suggest.hidden){suggestClose()}else{replaceQuery('')}e.preventDefault()}});
- $('atlasForm').addEventListener('submit',e=>{e.preventDefault();submitSearch(input.value);});
- $('atlasClear').addEventListener('click',()=>{clearSearchNext();pendingNoMatchQuery='';replaceQuery('');suggestClose();input.focus()});
+ $('atlasForm').addEventListener('submit',e=>{e.preventDefault();if(!composing)submitSearch(input.value);});
+ $('atlasClear').addEventListener('click',()=>{clearTimeout(inputTimer);clearSearchNext();pendingNoMatchQuery='';replaceQuery('');suggestClose();input.focus()});
  $('atlasMore').addEventListener('click',()=>{limit+=pageSize;draw()});
  $('atlasShowAll')?.addEventListener('click',()=>{limit=filtered().length;draw();});
  $('atlasRandom').addEventListener('click',()=>{let entries=filtered();if(!entries.length)entries=records;const entry=entries[Math.floor(Math.random()*entries.length)];if(entry)showExternal(entry.url,entry.name)});

@@ -15,6 +15,25 @@ document.addEventListener('DOMContentLoaded',()=>{
  const s=document.getElementById('atlasSource');
  document.documentElement.dataset.aqLocalReady=String(!!r&&r.children.length>0&&!!n&&!!s&&/1107|1,107/.test(n.textContent));
  document.documentElement.dataset.aqInitialCount=String(r?.children.length||0);
+ const input=document.getElementById('atlasQuery'),form=document.getElementById('atlasForm'),dialog=document.getElementById('atlasNoMatchDialog');
+ const until=performance.now()+10000;
+ const run=()=>{
+  if(/syncing public entries|同步公开数据中/.test(s.textContent)&&performance.now()<until){setTimeout(run,100);return;}
+  const q='zzq-no-directory-match-7293';
+  input.value=q;input.dispatchEvent(new Event('input',{bubbles:true}));
+  setTimeout(()=>{
+   const quiet=!dialog.open;
+   form.requestSubmit();
+   const noMatch=dialog.open&&document.getElementById('atlasNoMatchQuery').textContent.includes(q)&&document.querySelector('[data-no-match-engine="google"]').href==='https://www.google.com/search?q='+encodeURIComponent(q);
+   document.getElementById('atlasNoMatchClose').click();
+   const closed=!dialog.open&&!document.getElementById('atlasSearchNext').hidden;
+   input.value='Python';input.dispatchEvent(new Event('input',{bubbles:true}));form.requestSubmit();
+   const matched=r.children.length>0&&!dialog.open&&document.querySelector('[data-search-next-engine="google"]').href==='https://www.google.com/search?q=Python';
+   const order=!!(r.compareDocumentPosition(document.getElementById('atlasSearchNext'))&Node.DOCUMENT_POSITION_FOLLOWING);
+   document.documentElement.dataset.aqSearchFlow=String(quiet&&noMatch&&closed&&matched&&order);
+  },150);
+ };
+ setTimeout(run,50);
 });
 </script>"""
 class Handler(http.server.SimpleHTTPRequestHandler):
@@ -41,7 +60,7 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
     url='http://127.0.0.1:%d/directory.html?q=Python'%server.server_port
     with tempfile.TemporaryDirectory() as tmp:
         start=time.monotonic()
-        result=subprocess.run([CHROME,'--headless','--no-sandbox','--disable-dev-shm-usage','--disable-background-networking','--disable-gpu','--no-first-run','--user-data-dir='+tmp,'--virtual-time-budget=6000','--dump-dom',url],capture_output=True,text=True,timeout=45,check=True)
+        result=subprocess.run([CHROME,'--headless','--no-sandbox','--disable-dev-shm-usage','--disable-background-networking','--disable-gpu','--no-first-run','--user-data-dir='+tmp,'--virtual-time-budget=15000','--dump-dom',url],capture_output=True,text=True,timeout=45,check=True)
         dom=result.stdout
         print('CHROME_SMOKE_ELAPSED_SECONDS=%.2f'%(time.monotonic()-start))
         import re
@@ -51,7 +70,8 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
             print(id,m.group(0) if m else 'missing')
         assert 'data-aq-runtime-error=' not in dom, 'unexpected script runtime error'
         assert 'data-aq-local-ready="true"' in dom, 'directory did not render local results before delayed remote API'
+        assert 'data-aq-search-flow="true"' in dom, 'interactive no-match, close, re-search or result order failed'
         assert 'id="atlasResults"' in dom and 'Python' in dom, 'search results absent'
         assert 'https://www.google.com/search?q=Python' in dom, 'search continuation URL missing'
-        print('PASS browser local-first catalog, initial Python search and continuation URL with slow API fixture')
+        print('PASS browser local-first catalog, initial Python search, no-match submit/close/re-search and result ordering with slow API fixture')
     server.shutdown()
