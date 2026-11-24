@@ -16,6 +16,7 @@ jobs:
           persist-credentials: false
       - run: |
           python3 scripts/audit_directory_links.py
+          python3 scripts/list_pending_official_reviews.py --summary
           python3 scripts/audit_v116_public_evidence.py --self-test
           node --check site/link-gate.js
           node tests/test_atlas_safety.cjs
