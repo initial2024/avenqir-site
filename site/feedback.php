@@ -3,6 +3,7 @@ declare(strict_types=1);
 require __DIR__.'/feedback-core.php';
 require __DIR__.'/server-core.php';
 require __DIR__.'/feedback-abuse.php';
+require __DIR__.'/feedback-turnstile.php';
 fb_headers();
 if(!fb_https()) {http_response_code(403);exit('请通过 HTTPS 打开留言中心。');}
 if((int)($_SERVER['CONTENT_LENGTH']??0)>16384){http_response_code(413);exit('提交内容过大。');}
@@ -10,7 +11,7 @@ fb_start_session('AVENQIR_FEEDBACK');
 $csrf=fb_csrf();
 if(!isset($_SESSION['form_since'])) $_SESSION['form_since']=time();
 $notice='';$success=false;$can_submit=false;$riskRequired=fb_abuse_required($_SESSION,time());
-$quota=200;
+$quota=200;$ts=fb_ts_config();
 if(($_SERVER['REQUEST_METHOD']??'')==='POST'){
   $quota=fb_abuse_budget();
   if($quota['code']!==200){http_response_code($quota['code']);header('Retry-After: 60');$notice='请求过于频繁或保护服务暂不可用，请稍后重试。';}
@@ -39,7 +40,7 @@ if($_SERVER['REQUEST_METHOD']==='POST') {
   }
   elseif(time()-(int)($_SESSION['form_since']??time())<2){$notice='操作过快，请稍后再提交。';}
   elseif(time()-(int)($_SESSION['last_sent']??0)<25){$notice='发送太频繁，请稍后重试。';}
-  elseif($riskRequired&&!fb_abuse_consume($_SESSION,$_POST,time())){$notice='请完成下方一次性人机确认后重试。';http_response_code(400);}
+  elseif($riskRequired&&!(($ts['mode']==='turnstile')?fb_ts_verify($ts,$_POST['cf-turnstile-response']??null,'feedback'):($ts['mode']==='local'&&fb_abuse_consume($_SESSION,$_POST,time())))){$notice=$ts['mode']==='local'?'请完成下方一次性人机确认后重试。':'第三方人机验证未通过或暂不可用，请刷新重试或使用系统浏览器。';http_response_code(400);}
   elseif((string)($_POST['consent']??'')!=='yes'){$notice='请先确认隐私提示。';}
   elseif(preg_match('/[\x00-\x08\x0b\x0c\x0e-\x1f]/', $inputs['body'])){$notice='留言包含不支持的控制字符。';}
   elseif(strlen($inputs['name'])<2 || strlen($inputs['name'])>180 || trim($inputs['subject'])==='' || (function_exists('mb_strlen') ? mb_strlen($inputs['body'],'UTF-8') : preg_match_all('/./us',$inputs['body']))<10){$notice='请填写昵称、主题，以及至少 10 字的留言内容。';}
@@ -67,7 +68,9 @@ if($_SERVER['REQUEST_METHOD']==='POST') {
     } catch(Throwable $e) {error_log('AVENQIR feedback insert failed');$notice='保存失败，服务器数据库暂不可用；请勿重复快速提交。';}
   }
 }
-if($can_submit&&$riskRequired)$human=fb_abuse_issue($_SESSION,time());
+if($can_submit&&$riskRequired&&$ts['mode']==='local')$human=fb_abuse_issue($_SESSION,time());
+$showTurnstile=$can_submit&&$riskRequired&&$ts['mode']==='turnstile';
+if($showTurnstile)fb_ts_headers();
 ?><!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="index,follow"><meta name="referrer" content="no-referrer"><meta name="description" content="向 AVENQIR 站长提交网站反馈、网址推荐或失效链接报告。无需注册，内容不公开。"><meta name="theme-color" content="#0a1827"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="common.css?v=81"><link rel="stylesheet" href="feedback.css?v=81"><link rel="stylesheet" href="theme.css?v=15"><title>留言与网址推荐 · AVENQIR</title></head><body>
 <?= fb_nav() ?>
 <main class="wrap fb-page"><section class="fb-hero"><p class="eyebrow">AVENQIR / FEEDBACK</p><h1>把想说的话，<br>留在这里。</h1><p>推荐一个网站，报告失效链接，或给网站提个建议。无需注册，提交后只由站长查看。</p><div class="fb-pills"><span>✦ 无需账户</span><span>✦ 人工处理</span><span>✦ 不公开内容</span></div></section>
@@ -81,6 +84,7 @@ if($can_submit&&$riskRequired)$human=fb_abuse_issue($_SESSION,time());
 <label>相关网页 <small>选填</small><input type="url" name="ref_url" maxlength="1400" inputmode="url" placeholder="https://example.com/" value="<?= fb_e($inputs['ref_url']) ?>"></label>
 <label>留言内容 <b>*</b><textarea name="body" maxlength="2000" minlength="10" required rows="6" placeholder="说说你发现的问题、推荐的理由，或者希望增加的功能…"><?= fb_e($inputs['body']) ?></textarea></label>
 <?php if(isset($human)):?><fieldset><legend>额外人机确认</legend><p>仅在重复或异常请求时出现。回答后继续发送，不需要第三方账号。</p><input type="hidden" name="human_id" value="<?=fb_e($human['id'])?>"><label><?=fb_e($human['question'])?><input name="human_answer" inputmode="numeric" autocomplete="off" maxlength="3" required></label></fieldset><?php endif;?>
+<?php if($showTurnstile):?><fieldset><legend>Cloudflare 人机验证</legend><p>高频提交需额外验证。Cloudflare 会处理验证所需的浏览器和网络信号；不会由本站发送留言正文或邮箱。若组件无法加载，请使用系统浏览器。</p><div class="cf-turnstile" data-sitekey="<?=fb_e($ts['sitekey'])?>" data-action="feedback" data-theme="auto" data-size="flexible"></div><script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script></fieldset><?php elseif($riskRequired&&$ts['mode']==='unavailable'):?><p role="alert">验证配置不可用，请稍后再试。</p><?php endif;?>
 <label class="fb-consent"><input type="checkbox" name="consent" value="yes" required> 我已阅读<a href="privacy.html">隐私说明</a>，同意站长为处理反馈而保存此留言和选填邮箱。</label>
 <button class="btn primary fb-submit" type="submit">发送留言 <span aria-hidden="true">↗</span></button><p class="fb-caption">反垃圾限制：每个网络出口每小时最多 3 条；高频请求需额外人机确认，重复内容不会再次入库。无即时回复承诺；提交不代表已发送邮件。</p></form>
 <?php else:?><div class="fb-alert fb-error"><strong>留言系统尚未开放。</strong><p>这不会影响其他网页和工具。请站长进入<a href="feedback-admin.php">留言管理后台</a>完成 MySQL 配置与初始化。</p></div><?php endif; ?></section>
