@@ -11,12 +11,12 @@ function fb_conf(): array {
 }
 function fb_ready(): bool {
     $c=fb_conf();
-    foreach (['db_host','db_name','db_user','db_password','ip_hmac_secret','setup_sha256'] as $k) {
+    foreach (['db_host','db_name','db_user','db_password','ip_hmac_secret'] as $k) {
         if (!isset($c[$k]) || !is_string($c[$k]) || trim($c[$k])==='' || str_contains($c[$k], 'REPLACE_')) return false;
     }
     return (bool)preg_match('/^[a-zA-Z0-9_]{1,64}$/D', $c['db_name']) &&
         (bool)preg_match('/^[a-zA-Z0-9_.-]{1,255}$/D', $c['db_host']) &&
-        strlen($c['ip_hmac_secret'])>=32 && preg_match('/^[0-9a-f]{64}$/D',$c['setup_sha256'])===1;
+        strlen($c['ip_hmac_secret'])>=32;
 }
 function fb_db(): PDO {
     static $pdo=null;
