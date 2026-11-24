@@ -1,0 +1,37 @@
+name: AVENQIR popular candidate observations
+
+on:
+  push:
+    branches: [atlas-popular-observations-20261124]
+    paths: [evidence/atlas-popular-candidates.json, .github/workflows/atlas-popular-observations.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  observe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Observe public candidate destinations
+        run: |
+          python3 - <<'PY'
+          import json, sys
+          from pathlib import Path
+          sys.path.insert(0, 'scripts')
+          import collect_atlas_source_evidence as review
+          rows = json.loads(Path('evidence/atlas-popular-candidates.json').read_text())
+          review.catalog_entries = lambda: rows
+          sys.argv = [review.__file__, '--state', 'popular-state', '--workers', '10', '--timeout', '12']
+          review.main()
+          PY
+      - name: Preserve the public evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: atlas-popular-observations
+          path: popular-state/*.json
+          retention-days: 7
