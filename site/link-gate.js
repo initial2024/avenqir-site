@@ -276,7 +276,12 @@
     'https://openlibrary.org/',
     'https://www.ssllabs.com/ssltest/',
     'https://laws.e-gov.go.jp/',
-    'https://data.e-gov.go.jp/info/ja'
+    'https://data.e-gov.go.jp/info/ja',
+    'https://www.iau.org/',
+    'https://www.wolframalpha.com/',
+    'https://www.geogebra.org/graphing',
+    'https://rust-lang.org/',
+    'https://stackoverflow.com/questions'
   ];
   function sanitize(raw){
     if(typeof raw!=='string'||raw.length>1800||/[\u0000-\u0020\u007f\\]/.test(raw))return null;
