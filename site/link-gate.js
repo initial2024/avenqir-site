@@ -4,6 +4,17 @@
    Never accept security decisions from user-generated labels or admin data fields. */
 (function(root){
   const OFFICIAL_URLS = [
+    // Individually reviewed exact URL migrations and identities: atlas-review-20261124-f.json.
+    'https://science.nasa.gov/earth/earth-observatory/',
+    'https://periodic-table.rsc.org/',
+    'https://www.gov.br/pt-br',
+    'https://data.gov.hk/en/',
+    'https://asvs.owasp.org/',
+    'https://archive.eso.org/cms.html',
+    'https://www.bipm.org/en/',
+    'https://comtrade.un.org/en/',
+    'https://regex101.com/',
+    'https://app.diagrams.net/',
     // Exact source identity checks: atlas-review-20261124-e.json.
     'https://www.loc.gov/',
     'https://data.gov/',
