@@ -1,25 +1,26 @@
 {
-  "reviewedAt": "2026-11-24T14:16:53+00:00",
+  "reviewedAt": "2026-11-24T14:22:08+00:00",
   "catalogUniqueUrls": 1337,
   "confirmedBeforeFollowup": 1141,
-  "confirmedAfterFollowup": 1173,
-  "confirmedPct": 87.73,
-  "newConfirmations": 32,
-  "migrations": 2,
+  "confirmedAfterFollowup": 1187,
+  "confirmedPct": 88.78,
+  "newConfirmations": 46,
+  "migrations": 5,
   "revocations": 0,
   "newCatalogEntries": 0,
   "directRetries": 121,
-  "pending": 164,
+  "pending": 150,
   "pendingByReason": {
-    "client-redirect": 10,
-    "product-changed": 4,
+    "client-redirect": 9,
+    "product-changed": 1,
     "migration-incomplete": 44,
-    "access-restricted": 60,
     "service-not-readable": 15,
+    "access-restricted": 52,
     "ownership-evidence-insufficient": 11,
-    "network-inconclusive": 19,
+    "network-inconclusive": 17,
     "not-found": 1
   },
   "sourceEvidence": "site/atlas-review-20261124-followup.json",
-  "remainingList": "evidence/atlas-source-followup-20261124/remaining.json"
+  "remainingList": "evidence/atlas-source-followup-20261124/remaining.json",
+  "additionalSourceEvidence": "site/atlas-review-20261124-followup-b.json"
 }

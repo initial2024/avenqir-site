@@ -1,5 +1,5 @@
 {
-  "reviewedAt": "2026-11-24T14:16:53+00:00",
+  "reviewedAt": "2026-11-24T14:22:08+00:00",
   "baseline": "evidence/atlas-source-review-20261124/remaining.json",
   "records": [
     {
@@ -124,53 +124,6 @@
       ]
     },
     {
-      "id": "ai88035",
-      "originalUrl": "https://windsurf.com/",
-      "name": "Windsurf",
-      "category": "AI编程",
-      "status": "pending",
-      "reasonCode": "product-changed",
-      "reason": "The root redirected to Devin Desktop. The observation did not establish equivalence to the listed Windsurf service.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:43:32+00:00",
-          "finalUrl": "https://devin.ai/desktop",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://windsurf.com/",
-              "status": 308,
-              "location": "https://devin.ai/desktop"
-            },
-            {
-              "url": "https://devin.ai/desktop",
-              "status": 200
-            }
-          ],
-          "title": "Devin Desktop | Devin",
-          "issue": null
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:04+00:00",
-          "finalUrl": "https://devin.ai/desktop",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://windsurf.com/",
-              "status": 308,
-              "location": "https://devin.ai/desktop"
-            },
-            {
-              "url": "https://devin.ai/desktop",
-              "status": 200
-            }
-          ],
-          "title": "Devin Desktop | Devin",
-          "issue": null
-        }
-      ]
-    },
-    {
       "id": "ai88040",
       "originalUrl": "https://www.tabnine.com/",
       "name": "Tabnine",
@@ -220,90 +173,6 @@
           ],
           "title": null,
           "issue": "redirect target requires manual review"
-        }
-      ]
-    },
-    {
-      "id": "ai88053",
-      "originalUrl": "https://notebooklm.google.com/",
-      "name": "NotebookLM",
-      "category": "AI研究",
-      "status": "pending",
-      "reasonCode": "product-changed",
-      "reason": "The root redirected to Gemini Notebook. Operator continuity alone does not establish the exact NotebookLM service migration.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:43:33+00:00",
-          "finalUrl": "https://notebook.google.com/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://notebooklm.google.com/",
-              "status": 301,
-              "location": "https://notebook.google.com/"
-            },
-            {
-              "url": "https://notebook.google.com/",
-              "status": 200
-            }
-          ],
-          "title": "Gemini Notebook",
-          "issue": null
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:04+00:00",
-          "finalUrl": "https://notebook.google.com/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://notebooklm.google.com/",
-              "status": 301,
-              "location": "https://notebook.google.com/"
-            },
-            {
-              "url": "https://notebook.google.com/",
-              "status": 200
-            }
-          ],
-          "title": "Gemini Notebook",
-          "issue": null
-        }
-      ]
-    },
-    {
-      "id": "ai88057",
-      "originalUrl": "https://scispace.com/",
-      "name": "SciSpace",
-      "category": "AI研究",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:43:33+00:00",
-          "finalUrl": "https://scispace.com/",
-          "httpStatus": 202,
-          "redirectChain": [
-            {
-              "url": "https://scispace.com/",
-              "status": 202
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 202"
-        },
-        {
-          "checkedAt": "2026-11-24T13:02:00+00:00",
-          "finalUrl": "https://scispace.com/",
-          "httpStatus": 403,
-          "redirectChain": [
-            {
-              "url": "https://scispace.com/",
-              "status": 403
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 403"
         }
       ]
     },
@@ -679,30 +548,6 @@
           ],
           "title": "2048 • Play the Free Online Game",
           "issue": null
-        }
-      ]
-    },
-    {
-      "id": "dB004",
-      "originalUrl": "https://agar.io/",
-      "name": "Agar.io",
-      "category": "休闲",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:43:39+00:00",
-          "finalUrl": "https://agar.io/",
-          "httpStatus": 403,
-          "redirectChain": [
-            {
-              "url": "https://agar.io/",
-              "status": 403
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 403"
         }
       ]
     },
@@ -1133,30 +978,6 @@
       ]
     },
     {
-      "id": "dB069",
-      "originalUrl": "https://www.ck12.org/",
-      "name": "CK-12",
-      "category": "教育",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:43:44+00:00",
-          "finalUrl": "https://www.ck12.org/",
-          "httpStatus": 403,
-          "redirectChain": [
-            {
-              "url": "https://www.ck12.org/",
-              "status": 403
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 403"
-        }
-      ]
-    },
-    {
       "id": "dB079",
       "originalUrl": "https://www.turnitin.com/",
       "name": "Turnitin",
@@ -1177,77 +998,6 @@
           ],
           "title": null,
           "issue": "HTTP 403"
-        }
-      ]
-    },
-    {
-      "id": "dC029",
-      "originalUrl": "https://www.mindat.org/",
-      "name": "Mindat",
-      "category": "地球科学",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:43:47+00:00",
-          "finalUrl": "https://www.mindat.org/",
-          "httpStatus": 403,
-          "redirectChain": [
-            {
-              "url": "https://www.mindat.org/",
-              "status": 403
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 403"
-        }
-      ]
-    },
-    {
-      "id": "dC036",
-      "originalUrl": "https://www.globalforestwatch.org/",
-      "name": "Global Forest Watch",
-      "category": "环境气候",
-      "status": "pending",
-      "reasonCode": "product-changed",
-      "reason": "The root redirected to Global Nature Watch. The observation did not establish continuity of the listed Global Forest Watch service.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:43:48+00:00",
-          "finalUrl": "https://globalnaturewatch.org/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.globalforestwatch.org/",
-              "status": 301,
-              "location": "https://globalnaturewatch.org/"
-            },
-            {
-              "url": "https://globalnaturewatch.org/",
-              "status": 200
-            }
-          ],
-          "title": "Forest Monitoring, Land Use & Deforestation Trends | Global Nature Watch",
-          "issue": null
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:11+00:00",
-          "finalUrl": "https://globalnaturewatch.org/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.globalforestwatch.org/",
-              "status": 301,
-              "location": "https://globalnaturewatch.org/"
-            },
-            {
-              "url": "https://globalnaturewatch.org/",
-              "status": 200
-            }
-          ],
-          "title": "Forest Monitoring, Land Use & Deforestation Trends | Global Nature Watch",
-          "issue": null
         }
       ]
     },
@@ -1523,51 +1273,6 @@
           ],
           "title": null,
           "issue": "HTTP 403"
-        }
-      ]
-    },
-    {
-      "id": "dC067",
-      "originalUrl": "https://www.wipo.int/",
-      "name": "WIPO",
-      "category": "法律政策",
-      "status": "pending",
-      "reasonCode": "client-redirect",
-      "reason": "The page indicates a client-side redirect. The final exact URL remains unverified.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:43:50+00:00",
-          "finalUrl": "https://www.wipo.int/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.wipo.int/",
-              "status": 200
-            }
-          ],
-          "title": null,
-          "issue": "no HTML title"
-        },
-        {
-          "checkedAt": "2026-11-24T13:02:02+00:00",
-          "finalUrl": "https://www.wipo.int/",
-          "httpStatus": 200,
-          "redirectChain": [
-            {
-              "url": "https://www.wipo.int/",
-              "status": 200
-            }
-          ],
-          "title": null,
-          "issue": "page indicates a client-side redirect"
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:12+00:00",
-          "finalUrl": null,
-          "httpStatus": null,
-          "redirectChain": [],
-          "title": null,
-          "issue": "gaierror"
         }
       ]
     },
@@ -3575,64 +3280,6 @@
       ]
     },
     {
-      "id": "exd097",
-      "originalUrl": "https://www.ptt.gov.tr/",
-      "name": "PTT 土耳其邮政",
-      "category": "实用",
-      "status": "pending",
-      "reasonCode": "network-inconclusive",
-      "reason": "Public retrieval ended with URLError. The result does not establish availability or ownership.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:20+00:00",
-          "finalUrl": "https://www.ptt.gov.tr/",
-          "httpStatus": 503,
-          "redirectChain": [
-            {
-              "url": "https://www.ptt.gov.tr/",
-              "status": 503
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 503"
-        },
-        {
-          "checkedAt": "2026-11-24T12:45:51+00:00",
-          "finalUrl": "https://www.ptt.gov.tr/",
-          "httpStatus": 503,
-          "redirectChain": [
-            {
-              "url": "https://www.ptt.gov.tr/",
-              "status": 503
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 503"
-        },
-        {
-          "checkedAt": "2026-11-24T13:02:16+00:00",
-          "finalUrl": null,
-          "httpStatus": null,
-          "redirectChain": [],
-          "title": null,
-          "issue": "URLError"
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:17+00:00",
-          "finalUrl": "https://www.ptt.gov.tr/",
-          "httpStatus": 503,
-          "redirectChain": [
-            {
-              "url": "https://www.ptt.gov.tr/",
-              "status": 503
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 503"
-        }
-      ]
-    },
-    {
       "id": "exd100",
       "originalUrl": "https://www.sahibinden.com/",
       "name": "Sahibinden",
@@ -4619,30 +4266,6 @@
       ]
     },
     {
-      "id": "rex065",
-      "originalUrl": "https://www.citizensinformation.ie/",
-      "name": "Citizens Information",
-      "category": "实用",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:43+00:00",
-          "finalUrl": "https://www.citizensinformation.ie/",
-          "httpStatus": 403,
-          "redirectChain": [
-            {
-              "url": "https://www.citizensinformation.ie/",
-              "status": 403
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 403"
-        }
-      ]
-    },
-    {
       "id": "rex070",
       "originalUrl": "https://nbp.pl/",
       "name": "波兰国家银行",
@@ -4756,30 +4379,6 @@
           "redirectChain": [
             {
               "url": "https://www.gob.mx/",
-              "status": 403
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 403"
-        }
-      ]
-    },
-    {
-      "id": "rex088",
-      "originalUrl": "https://www.smn.gob.ar/",
-      "name": "阿根廷气象局",
-      "category": "环境气候",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:46+00:00",
-          "finalUrl": "https://www.smn.gob.ar/",
-          "httpStatus": 403,
-          "redirectChain": [
-            {
-              "url": "https://www.smn.gob.ar/",
               "status": 403
             }
           ],
@@ -5802,30 +5401,6 @@
       ]
     },
     {
-      "id": "rg88038",
-      "originalUrl": "https://www.nationalarchives.gov.uk/",
-      "name": "英国国家档案馆",
-      "category": "文化",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:44:58+00:00",
-          "finalUrl": "https://www.nationalarchives.gov.uk/",
-          "httpStatus": 403,
-          "redirectChain": [
-            {
-              "url": "https://www.nationalarchives.gov.uk/",
-              "status": 403
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 403"
-        }
-      ]
-    },
-    {
       "id": "rg88060",
       "originalUrl": "https://www.studyinkorea.go.kr/",
       "name": "Study in Korea",
@@ -6122,54 +5697,6 @@
           ],
           "title": null,
           "issue": "HTTP 503"
-        }
-      ]
-    },
-    {
-      "id": "rg88086",
-      "originalUrl": "https://www.nta.ac.in/",
-      "name": "NTA",
-      "category": "教育",
-      "status": "pending",
-      "reasonCode": "network-inconclusive",
-      "reason": "Public retrieval ended with URLError. The result does not establish availability or ownership.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:45:05+00:00",
-          "finalUrl": null,
-          "httpStatus": null,
-          "redirectChain": [],
-          "title": null,
-          "issue": "gaierror"
-        },
-        {
-          "checkedAt": "2026-11-24T12:46:02+00:00",
-          "finalUrl": "https://www.nta.ac.in/",
-          "httpStatus": 503,
-          "redirectChain": [
-            {
-              "url": "https://www.nta.ac.in/",
-              "status": 503
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 503"
-        },
-        {
-          "checkedAt": "2026-11-24T13:02:19+00:00",
-          "finalUrl": null,
-          "httpStatus": null,
-          "redirectChain": [],
-          "title": null,
-          "issue": "URLError"
-        },
-        {
-          "checkedAt": "2026-11-24T14:08:29+00:00",
-          "finalUrl": null,
-          "httpStatus": null,
-          "redirectChain": [],
-          "title": null,
-          "issue": "gaierror"
         }
       ]
     },
@@ -6849,56 +6376,6 @@
           "redirectChain": [
             {
               "url": "https://oercommons.org/",
-              "status": 403
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 403"
-        }
-      ]
-    },
-    {
-      "id": "v101-74",
-      "originalUrl": "https://www.europeana.eu/",
-      "name": "Europeana",
-      "category": "阅读",
-      "status": "pending",
-      "reasonCode": "access-restricted",
-      "reason": "Public retrieval returned HTTP 403. Exact ownership evidence remains insufficient.",
-      "observations": [
-        {
-          "checkedAt": "2026-11-24T12:45:09+00:00",
-          "finalUrl": "https://www.europeana.eu/",
-          "httpStatus": 503,
-          "redirectChain": [
-            {
-              "url": "https://www.europeana.eu/",
-              "status": 503
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 503"
-        },
-        {
-          "checkedAt": "2026-11-24T12:46:09+00:00",
-          "finalUrl": "https://www.europeana.eu/",
-          "httpStatus": 503,
-          "redirectChain": [
-            {
-              "url": "https://www.europeana.eu/",
-              "status": 503
-            }
-          ],
-          "title": null,
-          "issue": "HTTP 503"
-        },
-        {
-          "checkedAt": "2026-11-24T13:02:28+00:00",
-          "finalUrl": "https://www.europeana.eu/",
-          "httpStatus": 403,
-          "redirectChain": [
-            {
-              "url": "https://www.europeana.eu/",
               "status": 403
             }
           ],

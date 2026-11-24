@@ -1,0 +1,448 @@
+{
+  "schema": "avenqir-exact-source-review-v1",
+  "reviewDate": "2026-11-24",
+  "scope": "Second batch of exact attributions using official publisher and government sources, including independently retrieved service migrations.",
+  "records": [
+    {
+      "id": "rg88038",
+      "name": "英国国家档案馆",
+      "category": "文化",
+      "originalUrl": "https://www.nationalarchives.gov.uk/",
+      "url": "https://www.nationalarchives.gov.uk/",
+      "finalUrl": "https://www.nationalarchives.gov.uk/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.nationalarchives.gov.uk/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:44:58+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "retrieval": "publisher-reference",
+      "source": "https://www.gov.uk/government/publications/government-ministers-and-responsibilities/list-of-non-ministerial-departments-and-executive-agencies-html",
+      "evidence": {
+        "publisherPageTitle": "List of Non-Ministerial Departments and Executive Agencies (HTML)",
+        "exactDestination": "https://www.nationalarchives.gov.uk/",
+        "publisherEvidence": "GOV.UK's institutional directory identifies The National Archives as the United Kingdom government's official archive and publisher and lists https://www.nationalarchives.gov.uk as its website.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:22:08+00:00"
+      },
+      "reason": "The first-party or supervising institution source identifies the named service at the exact catalog entry. The direct observation is recorded separately."
+    },
+    {
+      "id": "dB004",
+      "name": "Agar.io",
+      "category": "休闲",
+      "originalUrl": "https://agar.io/",
+      "url": "https://agar.io/",
+      "finalUrl": "https://agar.io/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://agar.io/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:43:39+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "retrieval": "publisher-reference",
+      "source": "https://support.miniclip.com/hc/en-us/articles/360047896973-Official-Miniclip-Support-Channels-How-to-Stay-Safe-from-Scams",
+      "evidence": {
+        "publisherPageTitle": "Official Miniclip Support Channels & How to Stay Safe from Scams",
+        "exactDestination": "https://agar.io/",
+        "publisherEvidence": "The game's publisher explicitly identifies agar.io as the official browser version of Agar.io.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:22:08+00:00"
+      },
+      "reason": "The first-party or supervising institution source identifies the named service at the exact catalog entry. The direct observation is recorded separately."
+    },
+    {
+      "id": "dB069",
+      "name": "CK-12",
+      "category": "教育",
+      "originalUrl": "https://www.ck12.org/",
+      "url": "https://www.ck12.org/",
+      "finalUrl": "https://www.ck12.org/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.ck12.org/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:43:44+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "retrieval": "publisher-reference",
+      "source": "https://www.ck12info.org/wp-content/uploads/2008/12/CK12_Prob_Stat_Basic.pdf",
+      "evidence": {
+        "publisherPageTitle": "CK-12 Probability and Statistics Basic",
+        "exactDestination": "https://www.ck12.org/",
+        "publisherEvidence": "The teaching text's publisher notice identifies the CK-12 Foundation as the publisher and gives www.ck12.org as its website.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:22:08+00:00"
+      },
+      "reason": "The first-party or supervising institution source identifies the named service at the exact catalog entry. The direct observation is recorded separately."
+    },
+    {
+      "id": "dC029",
+      "name": "Mindat",
+      "category": "地球科学",
+      "originalUrl": "https://www.mindat.org/",
+      "url": "https://www.mindat.org/",
+      "finalUrl": "https://www.mindat.org/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.mindat.org/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:43:47+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "retrieval": "publisher-reference",
+      "source": "https://www.mindat.org/a/linkingtomindat",
+      "evidence": {
+        "publisherPageTitle": "Linking to mindat.org",
+        "exactDestination": "https://www.mindat.org/",
+        "publisherEvidence": "The Mindat project's linking guide lists https://www.mindat.org/ as the mineral database homepage and identifies the Hudson Institute of Mineralogy as the project operator.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:22:08+00:00"
+      },
+      "reason": "The first-party or supervising institution source identifies the named service at the exact catalog entry. The direct observation is recorded separately."
+    },
+    {
+      "id": "dC067",
+      "name": "WIPO",
+      "category": "法律政策",
+      "originalUrl": "https://www.wipo.int/",
+      "url": "https://www.wipo.int/",
+      "finalUrl": null,
+      "httpStatus": null,
+      "redirectChain": [],
+      "title": null,
+      "checkedAt": "2026-11-24T14:08:12+00:00",
+      "observationIssue": "gaierror",
+      "status": "confirmed",
+      "retrieval": "publisher-reference",
+      "source": "https://www.wipo.int/edocs/pubdocs/en/wipo-pub-1020-2025-en-a-guide-to-the-main-wipo-services.pdf",
+      "evidence": {
+        "publisherPageTitle": "A Guide to the Main WIPO Services",
+        "exactDestination": "https://www.wipo.int/",
+        "publisherEvidence": "The World Intellectual Property Organization's guide identifies https://www.wipo.int as its public information and contact homepage.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:22:08+00:00"
+      },
+      "reason": "The first-party or supervising institution source identifies the named service at the exact catalog entry. The direct observation is recorded separately."
+    },
+    {
+      "id": "v101-74",
+      "name": "Europeana",
+      "category": "阅读",
+      "originalUrl": "https://www.europeana.eu/",
+      "url": "https://www.europeana.eu/",
+      "finalUrl": "https://www.europeana.eu/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.europeana.eu/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T13:02:28+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "retrieval": "publisher-reference",
+      "source": "https://pro.europeana.eu/files/Europeana_Professional/Projects/Project_list/Europeana_DSI-4/Europeana%20DSI-4_B.4%20Annual%20report_M24_PDF%20%28Interactive%29.pdf",
+      "evidence": {
+        "publisherPageTitle": "Discoverability and use of digital cultural heritage",
+        "exactDestination": "https://www.europeana.eu/",
+        "publisherEvidence": "The Europeana project's report links its digital cultural heritage collections site at https://www.europeana.eu and describes the catalog.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:22:08+00:00"
+      },
+      "reason": "The first-party or supervising institution source identifies the named service at the exact catalog entry. The direct observation is recorded separately."
+    },
+    {
+      "id": "ai88057",
+      "name": "SciSpace",
+      "category": "AI研究",
+      "originalUrl": "https://scispace.com/",
+      "url": "https://scispace.com/",
+      "finalUrl": "https://scispace.com/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://scispace.com/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T13:02:00+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "retrieval": "publisher-reference",
+      "source": "https://status.scispace.com/",
+      "evidence": {
+        "publisherPageTitle": "SciSpace status",
+        "exactDestination": "https://scispace.com/",
+        "publisherEvidence": "The status page identifies the service as SciSpace, and its public index.json publishes SciSpace as its company name and https://scispace.com as the company URL.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:22:08+00:00"
+      },
+      "reason": "The first-party or supervising institution source identifies the named service at the exact catalog entry. The direct observation is recorded separately."
+    },
+    {
+      "id": "rex065",
+      "name": "Citizens Information",
+      "category": "实用",
+      "originalUrl": "https://www.citizensinformation.ie/",
+      "url": "https://www.citizensinformation.ie/",
+      "finalUrl": "https://www.citizensinformation.ie/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.citizensinformation.ie/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:44:43+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "retrieval": "publisher-reference",
+      "source": "https://www.citizensinformationboard.ie/en/about/our_structure/",
+      "evidence": {
+        "publisherPageTitle": "Our Structure - Citizens Information Board",
+        "exactDestination": "https://www.citizensinformation.ie/",
+        "publisherEvidence": "The board describes its Digital Content team's responsibility for the Citizens Information service and specifically identifies www.citizensinformation.ie as the website.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:22:08+00:00"
+      },
+      "reason": "The first-party or supervising institution source identifies the named service at the exact catalog entry. The direct observation is recorded separately."
+    },
+    {
+      "id": "rg88086",
+      "name": "NTA",
+      "category": "教育",
+      "originalUrl": "https://www.nta.ac.in/",
+      "url": "https://www.nta.ac.in/",
+      "finalUrl": null,
+      "httpStatus": null,
+      "redirectChain": [],
+      "title": null,
+      "checkedAt": "2026-11-24T14:08:29+00:00",
+      "observationIssue": "gaierror",
+      "status": "confirmed",
+      "retrieval": "publisher-reference",
+      "source": "https://cdnbbsr.s3waas.gov.in/s388a839f2f6f1427879fc33ee4acf4f66/uploads/2026/11/202611142125034006.pdf",
+      "evidence": {
+        "publisherPageTitle": "National Testing Agency",
+        "exactDestination": "https://www.nta.ac.in/",
+        "publisherEvidence": "The NTA notice identifies the National Testing Agency and the Ministry of Education's Department of Higher Education and names www.nta.ac.in. A current Press Information Bureau release corroborates the exact address.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:22:08+00:00"
+      },
+      "reason": "The first-party or supervising institution source identifies the named service at the exact catalog entry. The direct observation is recorded separately."
+    },
+    {
+      "id": "exd097",
+      "name": "PTT 土耳其邮政",
+      "category": "实用",
+      "originalUrl": "https://www.ptt.gov.tr/",
+      "url": "https://www.ptt.gov.tr/",
+      "finalUrl": "https://www.ptt.gov.tr/",
+      "httpStatus": 503,
+      "redirectChain": [
+        {
+          "url": "https://www.ptt.gov.tr/",
+          "status": 503
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T14:08:17+00:00",
+      "observationIssue": "HTTP 503",
+      "status": "confirmed",
+      "retrieval": "publisher-reference",
+      "source": "https://turkiye.gov.tr/ptt-genel-mudurlugu",
+      "evidence": {
+        "publisherPageTitle": "PTT Genel Müdürlüğü",
+        "exactDestination": "https://www.ptt.gov.tr/",
+        "publisherEvidence": "The Turkish government's e-government directory links https://www.ptt.gov.tr/ as the website of the PTT General Directorate.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:22:08+00:00"
+      },
+      "reason": "The first-party or supervising institution source identifies the named service at the exact catalog entry. The direct observation is recorded separately."
+    },
+    {
+      "id": "rex088",
+      "name": "阿根廷气象局",
+      "category": "环境气候",
+      "originalUrl": "https://www.smn.gob.ar/",
+      "url": "https://www.smn.gob.ar/",
+      "finalUrl": "https://www.smn.gob.ar/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.smn.gob.ar/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:44:46+00:00",
+      "observationIssue": "HTTP 403",
+      "status": "confirmed",
+      "retrieval": "publisher-reference",
+      "source": "https://halo-db.pa.op.dlr.de/institute/62",
+      "evidence": {
+        "publisherPageTitle": "SMN Argentina – HALO Database – The High Altitude and LOng Range Research Aircraft Database",
+        "exactDestination": "https://www.smn.gob.ar/",
+        "publisherEvidence": "DLR's public atmospheric research directory identifies Servicio Meteorológico Nacional (Argentina) and lists https://www.smn.gob.ar as its official website. The operator's own institutional publications give the same address.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:22:08+00:00"
+      },
+      "reason": "The first-party or supervising institution source identifies the named service at the exact catalog entry. The direct observation is recorded separately."
+    },
+    {
+      "id": "ai88035",
+      "name": "Devin Desktop（原 Windsurf）",
+      "category": "AI编程",
+      "originalUrl": "https://windsurf.com/",
+      "previousUrl": "https://windsurf.com/",
+      "url": "https://devin.ai/desktop",
+      "finalUrl": "https://devin.ai/desktop",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://windsurf.com/",
+          "status": 308,
+          "location": "https://devin.ai/desktop"
+        },
+        {
+          "url": "https://devin.ai/desktop",
+          "status": 200
+        }
+      ],
+      "title": "Devin Desktop | Devin",
+      "source": "https://devin.ai/desktop",
+      "checkedAt": "2026-11-24T14:08:04+00:00",
+      "status": "confirmed",
+      "reason": "The publisher documented the renamed service and the redirected exact destination was retrieved independently.",
+      "independentDestination": {
+        "checked_at": "2026-11-24T14:08:07+00:00",
+        "final_url": "https://devin.ai/desktop",
+        "status": 200,
+        "chain": [
+          {
+            "url": "https://devin.ai/desktop",
+            "status": 200
+          }
+        ]
+      },
+      "evidence": {
+        "migrationAnnouncement": "https://windsurf.com/editor",
+        "publisherPageTitle": "Devin Desktop · Devin",
+        "publisherEvidence": "The publisher explicitly identifies Devin Desktop as the new name for Windsurf. The independently retrieved exact desktop entry presents that editor under its new name.",
+        "heading": "Devin Desktop",
+        "oldServiceName": "Windsurf"
+      }
+    },
+    {
+      "id": "ai88053",
+      "name": "Gemini Notebook（原 NotebookLM）",
+      "category": "AI研究",
+      "originalUrl": "https://notebooklm.google.com/",
+      "previousUrl": "https://notebooklm.google.com/",
+      "url": "https://notebook.google.com/",
+      "finalUrl": "https://notebook.google.com/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://notebooklm.google.com/",
+          "status": 301,
+          "location": "https://notebook.google.com/"
+        },
+        {
+          "url": "https://notebook.google.com/",
+          "status": 200
+        }
+      ],
+      "title": "Gemini Notebook",
+      "source": "https://notebook.google.com/",
+      "checkedAt": "2026-11-24T14:08:04+00:00",
+      "status": "confirmed",
+      "reason": "The publisher documented the renamed service and the redirected exact destination was retrieved independently.",
+      "independentDestination": {
+        "checked_at": "2026-11-24T14:08:14+00:00",
+        "final_url": "https://notebook.google.com/",
+        "status": 200,
+        "chain": [
+          {
+            "url": "https://notebook.google.com/",
+            "status": 200
+          }
+        ]
+      },
+      "evidence": {
+        "migrationAnnouncement": "https://blog.google/innovation-and-ai/products/gemini-notebook/notebooklm-gemini-notebook/",
+        "publisherPageTitle": "NotebookLM is now Gemini Notebook",
+        "publisherEvidence": "Google formally renamed NotebookLM to Gemini Notebook and identifies it as the same standalone product. The independent retrieval of the exact new address displayed Gemini Notebook and its document and study features.",
+        "heading": "Understand anything",
+        "oldServiceName": "NotebookLM"
+      }
+    },
+    {
+      "id": "dC036",
+      "name": "Global Nature Watch（原 Global Forest Watch）",
+      "category": "环境气候",
+      "originalUrl": "https://www.globalforestwatch.org/",
+      "previousUrl": "https://www.globalforestwatch.org/",
+      "url": "https://globalnaturewatch.org/",
+      "finalUrl": "https://globalnaturewatch.org/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.globalforestwatch.org/",
+          "status": 301,
+          "location": "https://globalnaturewatch.org/"
+        },
+        {
+          "url": "https://globalnaturewatch.org/",
+          "status": 200
+        }
+      ],
+      "title": "Forest Monitoring, Land Use & Deforestation Trends | Global Nature Watch",
+      "source": "https://globalnaturewatch.org/",
+      "checkedAt": "2026-11-24T14:08:11+00:00",
+      "status": "confirmed",
+      "reason": "The publisher documented the renamed service and the redirected exact destination was retrieved independently.",
+      "independentDestination": {
+        "checked_at": "2026-11-24T14:08:12+00:00",
+        "final_url": "https://globalnaturewatch.org/",
+        "status": 200,
+        "chain": [
+          {
+            "url": "https://globalnaturewatch.org/",
+            "status": 200
+          }
+        ]
+      },
+      "evidence": {
+        "migrationAnnouncement": "https://www.wri.org/news/release-global-forest-watch-becomes-global-nature-watch-expanding-cover-more-land-ecosystems",
+        "publisherPageTitle": "RELEASE: Global Forest Watch Becomes Global Nature Watch, Expanding to Cover More Land Ecosystems",
+        "publisherEvidence": "The World Resources Institute names Global Nature Watch as the successor public service, retaining forest monitoring and adding other land ecosystems. The exact new landing page was retrieved independently and provides forest and land monitoring.",
+        "heading": "Nature Monitoring Designed for Action",
+        "oldServiceName": "Global Forest Watch"
+      }
+    }
+  ]
+}
