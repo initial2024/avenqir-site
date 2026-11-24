@@ -2718,6 +2718,333 @@
       "method": "Observed redirect and inspected branded destination via indexed retrieval",
       "reviewedOn": "2026-11-24",
       "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.data.govt.nz/",
+      "source": "https://www.data.govt.nz/",
+      "identity": "New Zealand Government Open Data",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.istat.it/",
+      "source": "https://www.istat.it/",
+      "identity": "Istat",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.rijksoverheid.nl/",
+      "source": "https://www.rijksoverheid.nl/",
+      "identity": "Government of the Netherlands",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.cbs.nl/",
+      "source": "https://www.cbs.nl/",
+      "identity": "Statistics Netherlands",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.government.se/",
+      "source": "https://www.government.se/",
+      "identity": "Government of Sweden",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.scb.se/",
+      "source": "https://www.scb.se/",
+      "identity": "Statistics Sweden",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.smhi.se/",
+      "source": "https://www.smhi.se/",
+      "identity": "SMHI",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.ssb.no/",
+      "source": "https://www.ssb.no/",
+      "identity": "Statistics Norway",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.met.no/",
+      "source": "https://www.met.no/",
+      "identity": "Norwegian Meteorological Institute",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.nav.no/",
+      "source": "https://www.nav.no/",
+      "identity": "NAV",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://denmark.dk/",
+      "source": "https://denmark.dk/",
+      "identity": "Denmark official national portal",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.dmi.dk/",
+      "source": "https://www.dmi.dk/",
+      "identity": "Danish Meteorological Institute",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.borger.dk/",
+      "source": "https://www.borger.dk/",
+      "identity": "Borger.dk",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://en.ilmatieteenlaitos.fi/",
+      "source": "https://en.ilmatieteenlaitos.fi/",
+      "identity": "Finnish Meteorological Institute",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.ine.es/",
+      "source": "https://www.ine.es/",
+      "identity": "Spain INE",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.boe.es/",
+      "source": "https://www.boe.es/",
+      "identity": "Spain Official State Gazette",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.spain.info/",
+      "source": "https://www.spain.info/",
+      "identity": "Spain Official Tourism",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.isro.gov.in/",
+      "source": "https://www.isro.gov.in/",
+      "identity": "Indian Space Research Organisation",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.nta.ac.in/",
+      "source": "https://www.nta.ac.in/",
+      "identity": "National Testing Agency",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.nationalrail.co.uk/",
+      "source": "https://www.nationalrail.co.uk/",
+      "identity": "National Rail",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://tfl.gov.uk/",
+      "source": "https://tfl.gov.uk/",
+      "identity": "Transport for London",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://auspost.com.au/",
+      "source": "https://auspost.com.au/",
+      "identity": "Australia Post",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://translink.com.au/",
+      "source": "https://translink.com.au/",
+      "identity": "Translink Queensland",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.anpost.com/",
+      "source": "https://www.anpost.com/",
+      "identity": "An Post",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.meteoam.it/it/home",
+      "source": "https://www.meteoam.it/",
+      "previousUrl": "https://www.meteoam.it/",
+      "identity": "Meteo Aeronautica Militare",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://www.knmi.nl/home",
+      "source": "https://www.knmi.nl/",
+      "previousUrl": "https://www.knmi.nl/",
+      "identity": "KNMI",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://www.admin.ch/de",
+      "source": "https://www.admin.ch/",
+      "previousUrl": "https://www.admin.ch/",
+      "identity": "Swiss Federal Government",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://www.ch.ch/en/",
+      "source": "https://www.ch.ch/",
+      "previousUrl": "https://www.ch.ch/",
+      "identity": "Swiss authorities information portal",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 6 months old"
+    },
+    {
+      "url": "https://www.regjeringen.no/no/id4/",
+      "source": "https://www.regjeringen.no/",
+      "previousUrl": "https://www.regjeringen.no/",
+      "identity": "Government of Norway",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 4 months old"
+    },
+    {
+      "url": "https://www.dst.dk/da/",
+      "source": "https://www.dst.dk/",
+      "previousUrl": "https://www.dst.dk/",
+      "identity": "Statistics Denmark",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://www.suomi.fi/etusivu",
+      "source": "https://www.suomi.fi/",
+      "previousUrl": "https://www.suomi.fi/",
+      "identity": "Suomi.fi",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://data.norge.no/nb",
+      "source": "https://data.norge.no/",
+      "previousUrl": "https://data.norge.no/",
+      "identity": "Norwegian government data portal",
+      "method": "Inspected old redirect and separately retrieved stable HTTPS official endpoint",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://www.belgium.be/en",
+      "source": "https://www.belgium.be/",
+      "previousUrl": "https://www.belgium.be/",
+      "identity": "Belgium government portal",
+      "method": "Inspected old redirect and separately retrieved stable HTTPS official endpoint",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://statbel.fgov.be/en",
+      "source": "https://statbel.fgov.be/",
+      "previousUrl": "https://statbel.fgov.be/",
+      "identity": "Statbel",
+      "method": "Inspected old redirect and separately retrieved stable HTTPS official endpoint",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://www.aemet.es/es/portada",
+      "source": "https://www.aemet.es/",
+      "previousUrl": "https://www.aemet.es/",
+      "identity": "AEMET",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://datos.gob.es/es/",
+      "source": "https://datos.gob.es/",
+      "previousUrl": "https://datos.gob.es/",
+      "identity": "Spain government open data",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://cervantes.org/",
+      "source": "https://www.cervantes.es/",
+      "previousUrl": "https://www.cervantes.es/",
+      "identity": "Instituto Cervantes",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://www.renfe.com/es/es",
+      "source": "https://www.renfe.com/",
+      "previousUrl": "https://www.renfe.com/",
+      "identity": "Renfe",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://www.viarail.ca/en",
+      "source": "https://www.viarail.ca/",
+      "previousUrl": "https://www.viarail.ca/",
+      "identity": "VIA Rail",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
     }
   ]
 }
