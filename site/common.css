@@ -97,3 +97,9 @@ body{overflow-x:hidden;background:radial-gradient(circle at 70% 0%,#17405844,tra
 @media(max-width:420px){.aq-primary-link{padding:13px 11px}.aq-primary-link strong{font-size:13px}.aq-primary-link span{font-size:11px}}
 
 .aq-compact-home>summary{cursor:pointer;font-weight:650;min-height:44px;display:list-item;padding:10px 0;box-sizing:border-box}.aq-compact-home>section{padding:8px 0;border:0;background:transparent;box-shadow:none}.aq-compact-home:not([open]){padding-block:5px}
+
+/* Owner-only mobile actions: anchors must be layout boxes, not wrapping inline fragments. */
+.owner-action-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:stretch;margin-top:14px;min-width:0}
+.owner-action-grid>.btn{display:flex;align-items:center;justify-content:center;text-align:center;min-width:0;max-width:100%;min-height:48px;line-height:1.45;white-space:normal;overflow-wrap:anywhere;padding:10px 12px;margin:0}
+@media(max-width:720px){.owner-action-grid{grid-template-columns:1fr}.owner-action-grid>.btn{width:100%}}
+.owner-security-page{max-width:820px;margin-inline:auto;min-width:0;padding-bottom:32px}.owner-security-page .panel{margin-top:16px;min-width:0}.owner-security-page .stack{display:grid;gap:12px;min-width:0}.owner-security-page .stack input{width:100%;min-width:0;max-width:100%}.owner-security-page .btn{display:inline-flex;align-items:center;justify-content:center;text-align:center;white-space:normal;overflow-wrap:anywhere;max-width:100%;min-height:44px}.owner-security-page .stack>.btn{width:100%}.owner-security-page .cf-turnstile{min-width:0;max-width:100%;overflow-x:auto}.owner-security-page p{overflow-wrap:anywhere}.owner-security-page summary{cursor:pointer;padding:8px 0}

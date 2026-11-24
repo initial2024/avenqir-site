@@ -104,6 +104,18 @@ def upload(ftp, file, commit, target_root, root=SITE):
             if temp in remote_names(ftp):ftp.delete(temp)
         except Exception:pass
 
+def deploy_order(file, root=SITE):
+    # Publish shared PHP dependencies before dependent pages, pages before
+    # navigation entrypoints, and cache version last. This reduces transient
+    # missing-target errors during shared-host deployment, not atomic rollout.
+    rel=file.relative_to(root).as_posix()
+    if rel == 'sw.js': priority=4
+    elif rel in ('admin.php','index.html','directory.html'): priority=3
+    elif rel in ('feedback.php','owner-feedback-security.php'): priority=2
+    elif rel.endswith(('.js','.css','.json')) or rel.startswith('webauthn/') or rel in ('server-core.php','feedback-core.php','feedback-abuse.php','feedback-turnstile.php','admin-security.php'): priority=0
+    else: priority=1
+    return priority,rel
+
 def main():
     commit=credential('GITHUB_SHA')
     if len(commit)!=40 or any(x not in '0123456789abcdef' for x in commit):
@@ -123,7 +135,7 @@ def main():
         ftp.cwd(REMOTE)
         target_root=ftp.pwd()
         print('FTPS connected with certificate verification; target:',REMOTE)
-        for file in sorted(files,key=lambda p:p.as_posix()):
+        for file in sorted(files,key=deploy_order):
             upload(ftp,file,commit,target_root)
         metadata={'schema':'avenqir-deploy-state-1','commit':commit,'deployed_at':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())}
         state=SITE/'deploy-state.json'
