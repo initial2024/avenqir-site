@@ -368,7 +368,7 @@
   "note": "公开阅读站由用户提供、未成功自动核验；词典和视频素材仍需核对上下文。",
   "urls": [
    "https://read.claua.de/",
-   "https://www.oxfordlearnersdictionaries.com/",
+   "https://www.oxfordlearnersdictionaries.com/us/",
    "https://youglish.com/",
    "https://www.bbc.co.uk/learningenglish",
    "https://dictionary.cambridge.org/"

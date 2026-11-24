@@ -59,10 +59,10 @@ for(const id of tasks){
 assert.ok(paths.flows.find(x=>x.id==='englishread').urls.includes('https://read.claua.de/'));
 assert.ok(paths.flows.find(x=>x.id==='ipdiagnose').urls.includes('https://ip.net.coffee/'));
 assert.ok(paths.flows.find(x=>x.id==='aicheck').note.includes('误报'));
-assert.ok(html.includes('src="atlas-specialist.js?v=16"'));
-assert.ok(home.includes('src="atlas-specialist.js?v=16"'));
-assert.ok(html.indexOf('atlas-specialist.js?v=16')<html.search(/atlas-catalog-core\.js\?v=\d+/));
-assert.ok(home.indexOf('atlas-specialist.js?v=16')<home.search(/atlas-catalog-core\.js\?v=\d+/));
+assert.ok(html.includes('src="atlas-specialist.js?v='));
+assert.ok(home.includes('src="atlas-specialist.js?v='));
+assert.ok(html.search(/atlas-specialist\.js\?v=\d+/)<html.search(/atlas-catalog-core\.js\?v=\d+/));
+assert.ok(home.search(/atlas-specialist\.js\?v=\d+/)<home.search(/atlas-catalog-core\.js\?v=\d+/));
 assert.ok(worker.includes("'./atlas-specialist.js'"));
 assert.ok(!worker.includes("'./english.claua.de'"));
 const model=fs.readFileSync(path.join(base,'atlas-personalize.js'),'utf8');

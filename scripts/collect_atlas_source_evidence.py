@@ -22,7 +22,7 @@ import socket
 import threading
 import time
 from urllib.error import HTTPError
-from urllib.parse import urljoin, urlsplit
+from urllib.parse import unquote, urljoin, urlsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 import zlib
 
@@ -35,7 +35,8 @@ REDIRECTS = {301, 302, 303, 307, 308}
 RETRYABLE = {408, 425, 429, 500, 502, 503, 504}
 CHALLENGE = re.compile(
     r"just a moment|attention required|access denied|request blocked|"
-    r"checking your browser|verify you are human|client challenge|captcha", re.I
+    r"checking your browser|verify you are human|client challenge|making sure you.re not a bot|"
+    r"request rejected|captcha", re.I
 )
 IDENTITY = re.compile(
     r"copyright|©|operated by|maintained by|provided by|published by|part of|"
@@ -55,7 +56,10 @@ def clean(text, limit=350):
 def public_url(url):
     parsed, warnings = audit_url(url)
     parts = urlsplit(parsed)
-    if warnings or parts.query or parts.fragment or len(parsed) > 1024:
+    path = unquote(parts.path)
+    if warnings or parts.query or parts.fragment or ";" in path or len(parsed) > 1024:
+        raise ValueError("URL requires manual review")
+    if re.search(r"/(?:session(?:id)?|access[-_]?token|api[-_]?key)/[^/]+", path, re.I):
         raise ValueError("URL requires manual review")
     if not re.fullmatch(r"(?:[a-z0-9-]+\.)+[a-z][a-z0-9-]*", parts.hostname):
         raise ValueError("nonstandard public hostname")
