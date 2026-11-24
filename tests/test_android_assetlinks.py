@@ -10,7 +10,8 @@ class DigitalAssetLinks(unittest.TestCase):
   def test_fixed_signed_cert_only(self):
     path=SITE/'.well-known/assetlinks.json'
     items=json.loads(path.read_text('utf8'))
-    self.assertEqual(len(items),1)
+    self.assertEqual(len(items),2)
+    self.assertEqual(items[1],{'relation':['delegate_permission/common.get_login_creds'],'target':{'namespace':'web','site':'https://avenqir.bg5.net'}})
     stmt=items[0]
     self.assertEqual(stmt['relation'],['delegate_permission/common.get_login_creds'])
     self.assertEqual(stmt['target']['namespace'],'android_app')
