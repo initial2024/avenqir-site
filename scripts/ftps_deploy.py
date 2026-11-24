@@ -33,7 +33,8 @@ def safe_mkdir(ftp, dirname, target_root):
     ftp.cwd(target_root)
     if not dirname: return
     for segment in dirname.split('/'):
-        if segment in ('','.','..') or not all(c.isalnum() or c in '-_' for c in segment):
+        allowed_dot=(dirname=='.well-known' and segment=='.well-known')
+        if segment in ('','.','..') or (not allowed_dot and not all(c.isalnum() or c in '-_' for c in segment)):
             raise RuntimeError('Invalid remote folder')
         try: ftp.cwd(segment)
         except ftplib.error_perm as e:

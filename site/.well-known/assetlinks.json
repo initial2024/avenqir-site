@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "de.kango99w.orbitadmin",
+      "sha256_cert_fingerprints": [
+        "6E:3E:5B:08:37:BE:97:08:23:8F:EC:5B:20:BD:80:CF:51:A2:AA:63:B2:44:F1:94:62:57:40:1F:3A:EE:04:91"
+      ]
+    }
+  }
+]
