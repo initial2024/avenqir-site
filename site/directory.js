@@ -396,7 +396,7 @@
  });
  function revealHashPanel(){
    let id;try{id=decodeURIComponent(location.hash.slice(1))}catch{return;}
-   const target=id&&$(id);const panel=target?.closest('details.atlas-compact-panel');if(panel){panel.open=true;requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));}
+   const target=id?$(id):null;const panel=target?.closest('details.atlas-compact-panel');if(panel){panel.open=true;requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));}
  }
  function translateCompact(){for(const s of document.querySelectorAll('[data-compact-en]')){if(!s.dataset.compactCn)s.dataset.compactCn=s.textContent;s.textContent=T(s.dataset.compactCn,s.dataset.compactEn);}}
  window.addEventListener('hashchange',revealHashPanel);
@@ -507,15 +507,15 @@
  draw();
  source.textContent=T('内置目录已可用 · 同步公开数据中','Built-in catalog ready · syncing public entries');
  const initialLocalQuery=pendingNoMatchQuery;
- loaded=true;
- if(initialLocalQuery){pendingNoMatchQuery='';committedQuery=initialLocalQuery;updateSearchNext(initialLocalQuery,false);scrollToResults();}
+ // Local results are usable immediately; the no-match verdict waits for the bounded public sync.
+ if(initialLocalQuery){committedQuery=initialLocalQuery;updateSearchNext(initialLocalQuery,false);scrollToResults();}
  requestAnimationFrame(()=>setTimeout(()=>{try{updateApprovals();drawPaths();choiceBar();mountOptionalRecommendations()}catch{}},0));
  if($('atlasStartupNotice'))$('atlasStartupNotice').hidden=true;
  catalog.load().then(data=>{
   if(data.remote)records=data.items;
   source.textContent=data.remote?T('在线目录 + 本地精选','Online directory + curated links'):T('内置精选目录（后台不可用）','Built-in directory (backend unavailable)');
   loaded=true;if(data.remote){choiceBar();draw();}
-  if(pendingNoMatchQuery)completeSearch();else if(initialLocalQuery&&initialLocalQuery===query.trim()){pendingNoMatchQuery=initialLocalQuery;completeSearch();}else revealHashPanel();
+  if(pendingNoMatchQuery)completeSearch();else revealHashPanel();
   localRecommendations?.render();regionRecommendations?.render();drawGuide();
  }).catch(()=>{loaded=true;if(pendingNoMatchQuery)completeSearch();});
 })();

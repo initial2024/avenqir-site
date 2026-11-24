@@ -49,6 +49,7 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
         for id in ['atlasLiveCount','atlasSource','atlasSummary','atlasStartupNotice']:
             m=re.search(r'<[^>]+id="'+id+r'"[^>]*>[^<]{0,350}',dom)
             print(id,m.group(0) if m else 'missing')
+        assert 'data-aq-runtime-error=' not in dom, 'unexpected script runtime error'
         assert 'data-aq-local-ready="true"' in dom, 'directory did not render local results before delayed remote API'
         assert 'id="atlasResults"' in dom and 'Python' in dom, 'search results absent'
         assert 'https://www.google.com/search?q=Python' in dom, 'search continuation URL missing'
