@@ -18,9 +18,10 @@ class MobileMenuContrastTest(unittest.TestCase):
 
     def test_pwa_cache_is_bumped_for_existing_installs(self):
         sw = (SITE / "sw.js").read_text(encoding="utf-8")
-        version = re.search(r"const CACHE = 'avenqir-v94-static-([0-9]{8})([a-z])';", sw)
+        version = re.search(r"const CACHE = 'avenqir-v(\\d+)-static-(\\d{8})[^']*';", sw)
         self.assertIsNotNone(version)
-        self.assertGreaterEqual((int(version.group(1)), version.group(2)), (20261123, "e"))
+        self.assertGreaterEqual((int(version.group(1)), int(version.group(2))), (94, 20261123))
+        self.assertIn("avenqir-v97-static-20261124-compact", sw)
         self.assertIn("'./theme.css'", sw)
 
 if __name__ == "__main__":

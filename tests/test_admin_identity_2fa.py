@@ -41,13 +41,19 @@ class AdminIdentityAndALShortcut(unittest.TestCase):
         self.assertIn("LOCK_EX|LOCK_NB",SECURITY)
         self.assertIn("return null",SECURITY)
         self.assertNotIn("eval(",ADMIN+SECURITY)
-    def test_private_link_only_in_login_page_and_never_proxy(self):
-        self.assertIn('<?php if($logged):?><script src="admin-al-link.js?v=1" defer></script>',ADMIN)
-        self.assertIn('id="adminAlDirect"',ADMIN)
-        self.assertIn('href="remote-workspace.html"',ADMIN)
-        self.assertIn("avenqir.remote-access-url.v1",LINK)
-        self.assertIn("direct.href=url.origin",LINK)
-        for text in ("fetch(","XMLHttpRequest","document.cookie","innerHTML","localStorage.setItem","window.location.assign"):
-            self.assertNotIn(text,LINK)
+    def test_retired_remote_shortcut_and_owner_access(self):
+        # The old AL shortcut has been retired; a public launcher or proxy is a regression.
+        self.assertNotIn('href="remote-workspace.html"',ADMIN)
+        self.assertNotIn('id="adminAlDirect"',ADMIN)
+        self.assertNotIn('admin-al-link.js',ADMIN)
+        self.assertIn('href="owner-sites.php"',ADMIN)
+        owner=(ROOT/"site/owner-sites.php").read_text(encoding="utf8")
+        for token in ('aq_shared_adm_logged', 'hash_equals', 'Cache-Control',
+                      'owner_sites', 'LOCK_EX', 'no-referrer'):
+            self.assertIn(token,owner)
+        self.assertIn("localStorage.removeItem",LINK)
+        self.assertNotIn("localStorage.setItem",LINK)
+        for token in ("fetch(","XMLHttpRequest","document.cookie","innerHTML","window.location.assign"):
+            self.assertNotIn(token,LINK)
 
 if __name__=="__main__":unittest.main()

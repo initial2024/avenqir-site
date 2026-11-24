@@ -177,8 +177,11 @@ class ALPrivateBrowserSecurity(unittest.TestCase):
         page = PAGE.read_text()
         self.assertIn("Cloudflare Access", doc)
         self.assertIn("Allow", doc)
-        self.assertIn("Cloudflare Access", page)
-        self.assertIn("NOT LIVE YET", page)
+        # Historical ops documentation may remain, but the public site cannot launch it.
+        self.assertIn("Feature retired", page)
+        self.assertNotIn("Cloudflare Access", page)
+        self.assertNotIn("href=\"https://console.altare.gg/\"", page)
+        self.assertNotIn("rw-access-url", page)
         self.assertNotIn("docs.altare.gg/workstations/beta", page)
 
 if __name__ == "__main__":
