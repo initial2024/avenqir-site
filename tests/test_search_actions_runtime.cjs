@@ -1,0 +1,15 @@
+"use strict";
+const assert=require('node:assert/strict');
+const gate=require('../site/link-gate.js');
+const a=require('../site/directory-search-actions.js');
+const q='材料 二阶搜索 + & ?';
+assert.equal(a.engineURL('google',q,gate),'https://www.google.com/search?q='+encodeURIComponent(q));
+assert.equal(a.engineURL('bing',q,gate),'https://www.bing.com/search?q='+encodeURIComponent(q));
+assert.equal(a.engineURL('duck',q,gate),'https://duckduckgo.com/?q='+encodeURIComponent(q));
+assert.equal(a.engineURL('evil',q,gate),null);
+const data=new Map();
+const sessionStorage={setItem:(k,v)=>data.set(k,v),getItem:k=>data.get(k)};
+assert.equal(a.recommendationURL(q,{sessionStorage}),'feedback.php?type=link');
+assert.equal(data.get('avenqir.feedback.query.once.v1'),q);
+assert.equal(a.recommendationURL(q,{get sessionStorage(){throw Error('denied')}}),'feedback.php?type=link&q='+encodeURIComponent(q));
+console.log('PASS actual search URLs, encoded Unicode, invalid provider rejection, private one-use recommendation and blocked-storage fallback');

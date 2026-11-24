@@ -7,9 +7,11 @@ class SearchFlowTests(unittest.TestCase):
             subprocess.run(['node','--check',str(ROOT/'site'/name)],check=True)
     def test_explicit_search_and_navigation(self):
         s=(ROOT/'site/directory.js').read_text()
-        for token in ['submitSearch(input.value)','submitSearch(r.name)','scrollToResults()','if(filtered().length)return','if(pendingNoMatchQuery)completeSearch()','searchEngineDestination','atlasClearFilters']:
+        for token in ['submitSearch(input.value)','submitSearch(r.name)','scrollToResults()','if(filtered().length){updateSearchNext(q,false);return;}','if(pendingNoMatchQuery)completeSearch()','searchEngineDestination','atlasClearFilters']:
             self.assertIn(token,s)
         self.assertNotIn("feedback.php?type=link&q=",s)
+    def test_search_actions_runtime(self):
+        subprocess.run(['node',str(ROOT/'tests/test_search_actions_runtime.cjs')],check=True)
     def test_feedback_opt_out(self):
         s=(ROOT/'site/feedback-pref.js').read_text()
         self.assertIn("sessionStorage.removeItem('avenqir.feedback.query.once.v1')",s)

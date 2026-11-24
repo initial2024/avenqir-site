@@ -13,9 +13,10 @@
  check.id='fbRememberContact';
  const labelText=document.createElement('span');labelText.textContent='在此浏览器记住昵称和选填邮箱（下次自动填写）';
  label.append(check,labelText);
+ const save=document.createElement('button');save.type='button';save.textContent='保存本机联系信息';
  const clear=document.createElement('button');clear.type='button';clear.textContent='清除本机记忆';
  const status=document.createElement('small');status.className='fb-local-status';status.setAttribute('role','status');
- wrap.append(label,clear,status);
+ wrap.append(label,save,clear,status);
  const row=form.querySelector('.fb-pair');if(row)row.insertAdjacentElement('afterend',wrap);else form.prepend(wrap);
  let saved=null;
  try{saved=JSON.parse(localStorage.getItem(KEY)||'null');}catch{}
@@ -30,10 +31,12 @@
    check.checked=false;status.textContent='已清除本机保存的联系信息。';
  });
  check.addEventListener('change',()=>{if(!check.checked){try{localStorage.removeItem(KEY);status.textContent='已关闭联系信息记忆。';}catch{status.textContent='无法清除本机记忆，请检查浏览器设置。';}}});
- form.addEventListener('submit',()=>{
-   if(!check.checked)return;
+ function saveContact(){
+   if(!check.checked){status.textContent='请先选择记住联系信息。';return;}
    const entry={version:1,name:name.value.trim().slice(0,60),email:email.value.trim().slice(0,190)};
-   if(entry.name.length<2)return;
-   try{localStorage.setItem(KEY,JSON.stringify(entry));}catch{status.textContent='浏览器不允许保存偏好，表单仍可提交。';}
- });
+   if(entry.name.length<2||!email.validity.valid){status.textContent='请填写有效昵称及选填邮箱。';return;}
+   try{localStorage.setItem(KEY,JSON.stringify(entry));status.textContent='已保存本机联系信息，下次自动填写。不会保存留言内容。';}catch{status.textContent='浏览器不允许保存偏好，表单仍可提交。';}
+ }
+ save.addEventListener('click',saveContact);
+ form.addEventListener('submit',()=>{if(check.checked)saveContact();});
 })();

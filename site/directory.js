@@ -6,6 +6,7 @@
  const linkGate=window.AVENQIR_LINK_GATE;
  const safety=window.AVENQIR_ATLAS_SAFETY;
  const finder=window.AVENQIR_ATLAS_FIND;
+ const searchActions=window.AVENQIR_SEARCH_ACTIONS;
  const enrichment=window.AVENQIR_ATLAS_ENRICH;
  const locale=()=>window.AVENQIR_I18N;
  const trCategory=name=>locale()?.category(name)||name;
@@ -391,23 +392,54 @@
  window.addEventListener('hashchange',revealHashPanel);
  function scrollToResults(){
    const target=$('resultsTitle');if(!target)return;
-   target.setAttribute('tabindex','-1');target.focus({preventScroll:true});
-   target.scrollIntoView({behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+   target.setAttribute('tabindex','-1');
+   requestAnimationFrame(()=>{try{target.focus({preventScroll:true});}catch{}target.scrollIntoView({behavior:'auto',block:'start'});});
  }
+ let committedQuery='';
+ let lastNoMatch='';
+ function updateSearchNext(q,noMatch){
+   const box=$('atlasSearchNext');if(!box)return;
+   box.hidden=!q;
+   if(!q)return;
+   $('atlasSearchNextText').textContent=noMatch?T('没有收录「'+q+'」相关资源。','No catalog matches for “'+q+'”.'):T('还想找更多「'+q+'」相关内容？','Looking for more about “'+q+'”?');
+   $('atlasReopenNoMatch').hidden=!noMatch;
+   for(const a of box.querySelectorAll('[data-search-next-engine]'))a.href=linkGate.searchEngineDestination(a.dataset.searchNextEngine,q);
+ }
+ function clearSearchNext(){committedQuery='';lastNoMatch='';updateSearchNext('',false);}
+ function navigateProvider(e,engine,q){
+   const target=searchActions?.engineURL(engine,q,linkGate)||linkGate?.searchEngineDestination(engine,q);
+   if(!target)return;
+   if(e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;
+   e.preventDefault();window.location.assign(target);
+ }
+ for(const a of document.querySelectorAll('[data-search-next-engine]'))a.addEventListener('click',e=>navigateProvider(e,a.dataset.searchNextEngine,committedQuery));
+ for(const a of document.querySelectorAll('[data-no-match-engine]'))a.addEventListener('click',e=>navigateProvider(e,a.dataset.noMatchEngine,lastNoMatch));
+ for(const a of document.querySelectorAll('[data-search-recommend]'))a.addEventListener('click',e=>{
+   const q=(a.id==='atlasRecommendQuery'?lastNoMatch:committedQuery).trim();
+   if(!q||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;
+   e.preventDefault();
+   const target=searchActions?.recommendationURL(q,window)||'feedback.php?type=link';
+   window.location.assign(target);
+ });
+ $('atlasReopenNoMatch')?.addEventListener('click',()=>{if(lastNoMatch)openNoMatch(lastNoMatch);});
  function completeSearch(){
    const q=pendingNoMatchQuery.trim();if(!q||q!==query.trim())return;
    pendingNoMatchQuery='';
+   committedQuery=q;lastNoMatch='';
    scrollToResults();
-   if(filtered().length)return;
+   if(filtered().length){updateSearchNext(q,false);return;}
    if(records.some(x=>score(x)>=0)){
-     $('atlasFilteredHint').hidden=false;return;
+     $('atlasFilteredHint').hidden=false;updateSearchNext(q,false);return;
    }
+   lastNoMatch=q;updateSearchNext(q,true);
    openNoMatch(q);
  }
  function submitSearch(value){
+   clearSearchNext();
    replaceQuery(value.trim());suggestClose();input.blur();
    pendingNoMatchQuery=query.trim();
    if(loaded)completeSearch();
+   else {committedQuery=pendingNoMatchQuery;updateSearchNext(committedQuery,false);scrollToResults();}
  }
  function openNoMatch(q){
    const dialog=$('atlasNoMatchDialog');if(!dialog||dialog.open)return;
@@ -416,9 +448,9 @@
      a.href=linkGate?.searchEngineDestination(a.dataset.noMatchEngine,q)||a.href;
    }
    $('atlasRecommendQuery').href='feedback.php?type=link';
-   if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');
+   try{if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');}catch{dialog.setAttribute('open','');}
  }
- $('atlasRecommendQuery')?.addEventListener('click',()=>{try{sessionStorage.setItem('avenqir.feedback.query.once.v1',query.trim().slice(0,80))}catch{}});
+
  $('atlasNoMatchClose')?.addEventListener('click',()=>{const d=$('atlasNoMatchDialog');if(d.close)d.close();else d.removeAttribute('open');});
  $('atlasNoMatchDialog')?.addEventListener('click',e=>{const d=$('atlasNoMatchDialog');if(e.target===d){if(d.close)d.close();else d.removeAttribute('open');}});
 
@@ -432,10 +464,10 @@
  });
  $('atlasSort').addEventListener('change',draw);
  $('atlasSiteLanguageMode')?.addEventListener('change',()=>{limit=pageSize;draw();});
- input.addEventListener('input',()=>{pendingNoMatchQuery='';query=input.value.slice(0,140);limit=pageSize;draw();suggestions()});
+ input.addEventListener('input',()=>{pendingNoMatchQuery='';clearSearchNext();query=input.value.slice(0,140);limit=pageSize;draw();suggestions()});
  input.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!suggest.hidden){suggestClose()}else{replaceQuery('')}e.preventDefault()}});
  $('atlasForm').addEventListener('submit',e=>{e.preventDefault();submitSearch(input.value);});
- $('atlasClear').addEventListener('click',()=>{replaceQuery('');suggestClose();input.focus()});
+ $('atlasClear').addEventListener('click',()=>{clearSearchNext();pendingNoMatchQuery='';replaceQuery('');suggestClose();input.focus()});
  $('atlasMore').addEventListener('click',()=>{limit+=pageSize;draw()});
  $('atlasShowAll')?.addEventListener('click',()=>{limit=filtered().length;draw();});
  $('atlasRandom').addEventListener('click',()=>{let entries=filtered();if(!entries.length)entries=records;const entry=entries[Math.floor(Math.random()*entries.length)];if(entry)showExternal(entry.url,entry.name)});
@@ -460,7 +492,8 @@
  catalog.load().then(data=>{
   records=data.items;
   source.textContent=data.remote?T('在线目录 + 本地精选','Online directory + curated links'):T('内置精选目录（后台不可用）','Built-in directory (backend unavailable)');
-  loaded=true;choiceBar();draw();localRecommendations?.render();regionRecommendations?.render();drawGuide();
+  loaded=true;choiceBar();draw();
   if(pendingNoMatchQuery)completeSearch();else revealHashPanel();
- });
+  localRecommendations?.render();regionRecommendations?.render();drawGuide();
+ }).catch(()=>{loaded=true;if(pendingNoMatchQuery)completeSearch();});
 })();
