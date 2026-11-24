@@ -469,6 +469,122 @@
       "source": "https://qwenlm.github.io/",
       "previousUrl": "https://qwenlm.github.io/",
       "method": "Official old page identifies successor; destination confirmed via indexed retrieval"
+    },
+    {
+      "url": "https://www.ncl.edu.tw/",
+      "source": "https://www.ncl.edu.tw/",
+      "identity": "National Central Library",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.ctt.gov.mo/",
+      "source": "https://www.ctt.gov.mo/",
+      "identity": "Macao Post",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.nzpost.co.nz/",
+      "source": "https://www.nzpost.co.nz/",
+      "identity": "NZ Post",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.poste.it/",
+      "source": "https://www.poste.it/",
+      "identity": "Poste Italiane",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.jreast.co.jp/",
+      "source": "https://www.jreast.co.jp/",
+      "identity": "JR East",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.post.japanpost.jp/",
+      "source": "https://www.post.japanpost.jp/",
+      "identity": "Japan Post",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.usps.com/",
+      "source": "https://www.usps.com/",
+      "identity": "USPS",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.oneservice.gov.sg/",
+      "source": "https://www.oneservice.gov.sg/",
+      "identity": "OneService Singapore",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.singpost.com/",
+      "source": "https://www.singpost.com/",
+      "identity": "SingPost",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.smrt.com.sg/",
+      "source": "https://www.smrt.com.sg/",
+      "identity": "SMRT",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://data.gov.hk/en/",
+      "source": "https://data.gov.hk/",
+      "previousUrl": "https://data.gov.hk/",
+      "identity": "DATA.GOV.HK",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://www.dsec.gov.mo/zh-MO/",
+      "source": "https://www.dsec.gov.mo/",
+      "previousUrl": "https://www.dsec.gov.mo/",
+      "identity": "Macao Statistics and Census Service",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://www.macaotourism.gov.mo/en/",
+      "source": "https://www.macaotourism.gov.mo/",
+      "previousUrl": "https://www.macaotourism.gov.mo/",
+      "identity": "Macao Government Tourism Office",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://www.dsat.gov.mo/dsat/index.aspx",
+      "source": "https://www.dsat.gov.mo/",
+      "previousUrl": "https://www.dsat.gov.mo/",
+      "identity": "Macao Transport Bureau",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://www.post.gov.tw/post/internet/Group/default.jsp",
+      "source": "https://www.post.gov.tw/",
+      "previousUrl": "https://www.post.gov.tw/",
+      "identity": "Chunghwa Post",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://www.railway.gov.tw/tra-tip-web/tip",
+      "source": "https://www.railway.gov.tw/",
+      "previousUrl": "https://www.railway.gov.tw/",
+      "identity": "Taiwan Railway",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://www.airnewzealand.com/en-nz",
+      "source": "https://www.airnewzealand.co.nz/",
+      "previousUrl": "https://www.airnewzealand.co.nz/",
+      "identity": "Air New Zealand",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://www.trenitalia.com/it.html",
+      "source": "https://www.trenitalia.com/",
+      "previousUrl": "https://www.trenitalia.com/",
+      "identity": "Trenitalia",
+      "method": "Observed redirect and inspected official destination"
     }
   ]
 }
