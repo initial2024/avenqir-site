@@ -63,7 +63,7 @@
  const params=new URLSearchParams(location.search);
  const input=$('atlasQuery'),results=$('atlasResults'),cats=$('atlasCategories'),summary=$('atlasSummary'),source=$('atlasSource'),suggest=$('atlasSuggestions');
  const combine=catalog.combine;
- let records=catalog.catalog(), query=(params.get('q')||quickQuery||'').slice(0,140),category='',mode='all',limit=24,loaded=false,selectedFlow='',reviewedOnly=false,groupId='',expandedCategories=false;
+ let records=catalog.catalog(), query=(params.get('q')||quickQuery||'').slice(0,140),category='',mode='all',limit=24,loaded=false,selectedFlow='',reviewedOnly=false,threatFilter='all',groupId='',expandedCategories=false;
  const pageSize=window.matchMedia?.('(max-width: 600px)').matches?12:24;
  limit=pageSize;
  const key='avenqir.link-atlas.favorites.v8';let favorites=[],compareUrls=[];let pendingNoMatchQuery=query.trim();
@@ -101,7 +101,7 @@
    return taxonomy.groupFor(x.category)===groupId;
  }
  function filtered(){const flow=paths.flows.find(f=>f.id===selectedFlow);const selectedUrls=flow?new Set(flow.urls):null;
-   let r=records.map(x=>({x,rank:score(x)})).filter(({x,rank})=>rank>=0&&matchingGroup(x)&&(multiOn()?(!multiCategories.size||multiCategories.has(x.category)):(!category||x.category===category))&&(mode!=='saved'||favorites.includes(x.url))&&(!selectedUrls||selectedUrls.has(x.url))&&(!reviewedOnly||!!linkGate?.officialSourceReviewed(x.url))&&(languageMode()!=='exact'||languageRank(x)===0));
+   let r=records.map(x=>({x,rank:score(x)})).filter(({x,rank})=>rank>=0&&matchingGroup(x)&&(multiOn()?(!multiCategories.size||multiCategories.has(x.category)):(!category||x.category===category))&&(mode!=='saved'||favorites.includes(x.url))&&(!selectedUrls||selectedUrls.has(x.url))&&(!reviewedOnly||!!linkGate?.officialSourceReviewed(x.url))&&(threatFilter==='all'||(safety?.threatStatus(x.url)||'unknown')===threatFilter)&&(languageMode()!=='exact'||languageRank(x)===0));
    if($('atlasSort').value==='recent')r.sort((a,b)=>{
      const ai=sessionOpens.indexOf(a.x.url),bi=sessionOpens.indexOf(b.x.url);
      return (ai<0?Number.MAX_SAFE_INTEGER:ai)-(bi<0?Number.MAX_SAFE_INTEGER:bi)||(b.rank-a.rank);
@@ -169,7 +169,27 @@
  }
  $('atlasResetFlow')?.addEventListener('click',()=>{selectedFlow='';drawPaths();draw();});
  const reviewedBox=$('atlasReviewedOnly');
- reviewedBox?.addEventListener('change',()=>{reviewedOnly=!!reviewedBox.checked;limit=pageSize;draw();});
+ const threatBox=$('atlasThreatFilter');
+ reviewedBox?.addEventListener('change',()=>{reviewedOnly=!!reviewedBox.checked;if(reviewedOnly){threatFilter='all';if(threatBox)threatBox.value='all';}limit=pageSize;draw();});
+ threatBox?.addEventListener('change',()=>{threatFilter=['all','not-listed','listed','unknown'].includes(threatBox.value)?threatBox.value:'all';if(threatFilter!=='all'){reviewedOnly=false;if(reviewedBox)reviewedBox.checked=false;}limit=pageSize;draw();});
+ let filterCountRecords=null,filterCountLocale='',filterCountMinute=-1,filterCountCache=null;
+ function updateFilterCounts(){
+   const currentLocale=locale()?.locale||'en',minute=Math.floor(Date.now()/60000);
+   if(filterCountRecords!==records||filterCountLocale!==currentLocale||filterCountMinute!==minute){
+     filterCountRecords=records;filterCountLocale=currentLocale;filterCountMinute=minute;
+     const threat=safety?.threatSummary(records)||{checked:0,listed:0,unknown:records.length};
+     filterCountCache={reviewed:safety?.summary(records).reviewed||0,clear:threat.checked-threat.listed,listed:threat.listed,unknown:threat.unknown};
+   }
+   const c=filterCountCache;
+   if($('atlasReviewedLabel'))$('atlasReviewedLabel').textContent=T('只看已核对官方来源','Exact official sources only')+' ('+c.reviewed+')';
+   if($('atlasThreatLabel'))$('atlasThreatLabel').textContent=T('动态风险筛选','Dynamic risk filter');
+   if(threatBox){
+     const labels={all:T('不限风险结果','All risk results'),'not-listed':T('近期清单未命中','Recent list: no match')+' ('+c.clear+')',listed:T('风险清单命中','Warning list match')+' ('+c.listed+')',unknown:T('结果未知或过期','Unknown or expired')+' ('+c.unknown+')'};
+     for(const option of threatBox.options)option.textContent=labels[option.value]||option.value;
+   }
+   const counts=$('atlasFilterCounts');
+   if(counts)counts.textContent=T('全部 '+records.length+' · 来源核对 '+c.reviewed+' · 近期清单未命中 '+c.clear+' · 命中 '+c.listed+' · 未知 '+c.unknown+'。未命中不等于安全认证。','All '+records.length+' · source reviewed '+c.reviewed+' · recent no match '+c.clear+' · listed '+c.listed+' · unknown '+c.unknown+'. No match is not safety certification.');
+ }
  $('atlasExportFavorites')?.addEventListener('click',()=>{
    const items=records.filter(x=>favorites.includes(x.url)).map(x=>({name:x.name,url:x.url,category:x.category,description:x.description}));
    const msg=$('atlasExportStatus');
@@ -316,12 +336,14 @@
        'Preferred site language: '+target+' · '+matched+' explicitly matched, '+unknown+' unknown. Unknown sites remain visible by default; source language is not inferred from region.':
        '网页语言偏好：'+target+' · '+matched+' 条可明确匹配，'+unknown+' 条语言未注明。默认保留未知语言网址，不按国家或地区猜测。';
    }
-   renderSafetyAudit();
+   renderSafetyAudit();updateFilterCounts();
    $('resultsTitle').textContent=mode==='saved'?T('我的收藏','My favorites'):selectedFlow?(guides?.forFlow(paths.flows.find(f=>f.id===selectedFlow),locale()?.locale)?.title||selectedFlow):query?T('搜索结果','Search results'):category?trCategory(category)+(english()?' · Sites':' · 网站'):groupId?(locale()?.group(groupId)||(taxonomy.groups||[]).find(g=>g.id===groupId)?.title||'Other websites'):(english()?'Selected websites':'精选网站');
    summary.textContent=english()?
   ((query?'Matches: ':'Catalog: ')+list.length+' sites · Showing '+shown.length+' / '+records.length+
     (multiOn()&&multiCategories.size?' · Categories: '+[...multiCategories].map(trCategory).join(', '):category?' · Category: '+trCategory(category):'')+(groupId?' · topic filtered':'')):
   (query?'匹配':'目录')+' '+list.length+' 个网站 · 显示 '+shown.length+' 条 / 总目录 '+records.length+' 条'+(multiOn()&&multiCategories.size?' · 多选分类：'+[...multiCategories].join('、'):category?' · 分类：'+category:'')+(groupId?' · 当前主题分组已筛选':'');
+   if(reviewedOnly)summary.textContent+=T(' · 官方来源筛选',' · official-source filter');
+   if(threatFilter!=='all')summary.textContent+=' · '+(threatBox?.selectedOptions[0]?.textContent||threatFilter);
    const counter=$('atlasLiveCount');if(counter)counter.textContent=english()?'Curated '+records.length+' unique websites · '+paths.flows.length+' guided tasks · '+new Set(records.map(x=>x.category)).size+' categories':'已整理 '+records.length+' 个独立网址 · '+paths.flows.length+' 条任务路径 · '+new Set(records.map(x=>x.category)).size+' 个分类';
    const more=$('atlasMore'),all=$('atlasShowAll');more.textContent=T('再显示 '+Math.min(pageSize,Math.max(0,list.length-limit))+' 条 ↓','Show '+Math.min(pageSize,Math.max(0,list.length-limit))+' more ↓');
    if(all){all.hidden=list.length<=shown.length;all.textContent=T('一次显示全部 '+list.length+' 条','Show all '+list.length+' entries');}
@@ -479,7 +501,7 @@
 
  const tabs=[...document.querySelectorAll('[data-tab]')];tabs.forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.tab;limit=pageSize;tabs.forEach(t=>{let active=t===b;t.classList.toggle('active',active);t.setAttribute('aria-pressed',String(active))});draw()}));
  $('atlasClearFilters')?.addEventListener('click',()=>{
-   category='';groupId='';selectedFlow='';multiCategories.clear();mode='all';reviewedOnly=false;limit=pageSize;
+   category='';groupId='';selectedFlow='';multiCategories.clear();mode='all';reviewedOnly=false;threatFilter='all';if(threatBox)threatBox.value='all';limit=pageSize;
    for(const id of ['atlasMultiCategory','atlasReviewedOnly'])if($(id))$(id).checked=false;
    if($('atlasSiteLanguageMode'))$('atlasSiteLanguageMode').value='prefer';
    for(const t of tabs){const active=t.dataset.tab==='all';t.classList.toggle('active',active);t.setAttribute('aria-pressed',String(active));}
@@ -498,7 +520,7 @@
  $('atlasClear').addEventListener('click',()=>{clearTimeout(inputTimer);clearSearchNext();pendingNoMatchQuery='';replaceQuery('');suggestClose();input.focus()});
  $('atlasMore').addEventListener('click',()=>{limit+=pageSize;draw()});
  $('atlasShowAll')?.addEventListener('click',()=>{limit=filtered().length;draw();});
- $('atlasRandom').addEventListener('click',()=>{let entries=filtered();if(!entries.length)entries=records;const entry=entries[Math.floor(Math.random()*entries.length)];if(entry)showExternal(entry.url,entry.name)});
+ $('atlasRandom').addEventListener('click',()=>{let entries=filtered();if(!entries.length){if(reviewedOnly||threatFilter!=='all')return;entries=records;}const entry=entries[Math.floor(Math.random()*entries.length)];if(entry)showExternal(entry.url,entry.name)});
  const engineLinks=[...document.querySelectorAll('[data-search-provider]')];
  function refreshEngines(){for(const a of engineLinks){const target=linkGate?.searchEngineDestination(a.dataset.searchProvider,input.value);if(target)a.href=target;}}
  input.addEventListener('input',refreshEngines);

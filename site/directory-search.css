@@ -139,3 +139,5 @@
 /* Search result cards precede optional continuation actions on a match. */
 .atlas-search-next .atlas-next-buttons a{min-width:0;overflow-wrap:anywhere}
 @media(max-width:600px){.atlas-next-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.atlas-next-buttons a{font-size:13px;padding:8px 6px}.atlas-no-match-actions a{min-width:0}.atlas-no-match-dialog .atlas-recommend-link{width:100%;margin-top:8px}.atlas-no-match-close{display:block;width:100%;text-align:center}}
+
+#atlasThreatFilter{max-width:100%;min-width:0}#atlasFilterCounts{display:block;flex-basis:100%;line-height:1.5;overflow-wrap:anywhere}

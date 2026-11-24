@@ -31,6 +31,19 @@ document.addEventListener('DOMContentLoaded',()=>{
    const matched=r.children.length>0&&!dialog.open&&document.querySelector('[data-search-next-engine="google"]').href==='https://www.google.com/search?q=Python';
    const order=!!(r.compareDocumentPosition(document.getElementById('atlasSearchNext'))&Node.DOCUMENT_POSITION_FOLLOWING);
    document.documentElement.dataset.aqSearchFlow=String(quiet&&noMatch&&closed&&matched&&order);
+   input.value='';input.dispatchEvent(new Event('input',{bubbles:true}));form.requestSubmit();
+   document.getElementById('atlasClearFilters').click();
+   const official=document.getElementById('atlasReviewedOnly'),threat=document.getElementById('atlasThreatFilter'),summary=document.getElementById('atlasSummary');
+   official.checked=true;official.dispatchEvent(new Event('change'));
+   const sourceOnly=/153/.test(summary.textContent);
+   threat.value='not-listed';threat.dispatchEvent(new Event('change'));
+   const exclusive=!official.checked;
+   const allClear=/1239 sites|1239 个网站/.test(summary.textContent);
+   threat.value='listed';threat.dispatchEvent(new Event('change'));
+   const zero=/0 sites|0 个网站/.test(summary.textContent);
+   document.getElementById('atlasClearFilters').click();
+   const reset=threat.value==='all'&&!official.checked;
+   document.documentElement.dataset.aqThreatFilter=String(sourceOnly&&exclusive&&allClear&&zero&&reset);
   },150);
  };
  setTimeout(run,50);
@@ -49,6 +62,17 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 self.send_response(200);self.send_header('Content-Type','application/json');self.end_headers();self.wfile.write(data)
             except (BrokenPipeError,ConnectionResetError):pass
             return
+        if path=='/atlas-threat-snapshot.js':
+            import datetime, re
+            from urllib.parse import urlsplit
+            core=(SITE/'atlas-catalog-core.js').read_text()
+            # Synthetic all-clear fixture only. Real deployment uses the external feed.
+            urls=set()
+            for file in SITE.glob('atlas-*.js'):
+                urls.update(re.findall(r'"url"\s*:\s*"(https://[^"]+)"',file.read_text()))
+            hosts=sorted({urlsplit(u).hostname for u in urls if urlsplit(u).hostname})
+            data=('window.AVENQIR_THREAT_SNAPSHOT = '+json.dumps({'schema':'aq-certpl-v1','source':'https://hole.cert.pl/domains/v2/domains.txt','checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'hosts':hosts,'listed':[]})+';').encode()
+            self.send_response(200);self.send_header('Content-Type','application/javascript');self.end_headers();self.wfile.write(data);return
         if path=='/directory.html':
             data=(SITE/'directory.html').read_text().replace('</body>',probe+'</body>').encode()
             self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.end_headers();self.wfile.write(data);return
@@ -71,7 +95,8 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
         assert 'data-aq-runtime-error=' not in dom, 'unexpected script runtime error'
         assert 'data-aq-local-ready="true"' in dom, 'directory did not render local results before delayed remote API'
         assert 'data-aq-search-flow="true"' in dom, 'interactive no-match, close, re-search or result order failed'
+        assert 'data-aq-threat-filter="true"' in dom, 'official and dynamic-risk filter regression'
         assert 'id="atlasResults"' in dom and 'Python' in dom, 'search results absent'
-        assert 'https://www.google.com/search?q=Python' in dom, 'search continuation URL missing'
+        # Search continuation URL is verified in aqSearchFlow before filter reset.
         print('PASS browser local-first catalog, initial Python search, no-match submit/close/re-search and result ordering with slow API fixture')
     server.shutdown()
