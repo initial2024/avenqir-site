@@ -281,7 +281,22 @@
     'https://www.wolframalpha.com/',
     'https://www.geogebra.org/graphing',
     'https://rust-lang.org/',
-    'https://stackoverflow.com/questions'
+    'https://stackoverflow.com/questions',
+    'https://molview.org/',
+    'https://physics.info/',
+    'https://www.heavens-above.com/',
+    'https://openai.com/',
+    'https://www.anthropic.com/',
+    'https://deepmind.google/',
+    'https://x.ai/',
+    'https://mistral.ai/',
+    'https://www.deepseek.com/',
+    'https://cohere.com/',
+    'https://www.ai21.com/',
+    'https://stability.ai/',
+    'https://huggingface.co/',
+    'https://www.pewresearch.org/topic/internet-technology/',
+    'https://qwen.ai/'
   ];
   function sanitize(raw){
     if(typeof raw!=='string'||raw.length>1800||/[\u0000-\u0020\u007f\\]/.test(raw))return null;
