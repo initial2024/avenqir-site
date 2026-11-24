@@ -296,7 +296,25 @@
     'https://stability.ai/',
     'https://huggingface.co/',
     'https://www.pewresearch.org/topic/internet-technology/',
-    'https://qwen.ai/'
+    'https://qwen.ai/',
+    'https://www.ncl.edu.tw/',
+    'https://www.ctt.gov.mo/',
+    'https://www.nzpost.co.nz/',
+    'https://www.poste.it/',
+    'https://www.jreast.co.jp/',
+    'https://www.post.japanpost.jp/',
+    'https://www.usps.com/',
+    'https://www.oneservice.gov.sg/',
+    'https://www.singpost.com/',
+    'https://www.smrt.com.sg/',
+    'https://data.gov.hk/en/',
+    'https://www.dsec.gov.mo/zh-MO/',
+    'https://www.macaotourism.gov.mo/en/',
+    'https://www.dsat.gov.mo/dsat/index.aspx',
+    'https://www.post.gov.tw/post/internet/Group/default.jsp',
+    'https://www.railway.gov.tw/tra-tip-web/tip',
+    'https://www.airnewzealand.com/en-nz',
+    'https://www.trenitalia.com/it.html'
   ];
   function sanitize(raw){
     if(typeof raw!=='string'||raw.length>1800||/[\u0000-\u0020\u007f\\]/.test(raw))return null;
