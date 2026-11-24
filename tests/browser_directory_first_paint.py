@@ -7,6 +7,8 @@ SITE=pathlib.Path(__file__).resolve().parents[1]/'site'
 CHROME=shutil.which('google-chrome') or shutil.which('chromium') or shutil.which('chromium-browser')
 assert CHROME, 'Chrome/Chromium required'
 probe="""<script>
+window.addEventListener('error',e=>{document.documentElement.dataset.aqRuntimeError=(e.message||'resource error')+' '+(e.filename||'').split('/').pop()+':'+e.lineno;});
+window.addEventListener('unhandledrejection',e=>{document.documentElement.dataset.aqRejection=String(e.reason).slice(0,200);});
 document.addEventListener('DOMContentLoaded',()=>{
  const r=document.getElementById('atlasResults');
  const n=document.getElementById('atlasLiveCount');
@@ -42,6 +44,11 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
         result=subprocess.run([CHROME,'--headless','--no-sandbox','--disable-dev-shm-usage','--disable-background-networking','--disable-gpu','--no-first-run','--user-data-dir='+tmp,'--virtual-time-budget=6000','--dump-dom',url],capture_output=True,text=True,timeout=45,check=True)
         dom=result.stdout
         print('CHROME_SMOKE_ELAPSED_SECONDS=%.2f'%(time.monotonic()-start))
+        import re
+        for m in re.finditer(r'data-aq-(?:local-ready|initial-count|runtime-error|rejection)="[^"]*"',dom): print(m.group())
+        for id in ['atlasLiveCount','atlasSource','atlasSummary','atlasStartupNotice']:
+            m=re.search(r'<[^>]+id="'+id+r'"[^>]*>[^<]{0,350}',dom)
+            print(id,m.group(0) if m else 'missing')
         assert 'data-aq-local-ready="true"' in dom, 'directory did not render local results before delayed remote API'
         assert 'id="atlasResults"' in dom and 'Python' in dom, 'search results absent'
         assert 'https://www.google.com/search?q=Python' in dom, 'search continuation URL missing'
