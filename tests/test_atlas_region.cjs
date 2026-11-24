@@ -115,7 +115,7 @@ for(const tag of ['atlasRegionToggle','atlasRegionStatus','atlasRegionBody','atl
  assert.ok(html.includes('id="'+tag+'"'),'missing local region control '+tag);
 }
 assert.ok(html.indexOf('atlas-region.js?v=18')<html.indexOf('atlas-region-ui.js?v=30'));
-assert.ok(html.includes('atlas-region-ui.js?v=30') && html.indexOf('atlas-region-ui.js?v=30')<html.indexOf('directory.js?v=25'),'v9.4 region UI must precede directory runtime');
+assert.ok(html.includes('atlas-region-ui.js?v=30') && html.indexOf('atlas-region-ui.js?v=30')<html.search(/directory\\.js\\?v=[0-9]+/),'v9.4 region UI must precede directory runtime');
 assert.ok(ui.includes('optgroup'),'40-region selector needs grouping');
 assert.ok(ui.includes("root.document?.documentElement?.lang"),'region UI must match visible document language');
 assert.ok(ui.includes("return page||setting||'en'"),'explicit Traditional/Simplified document locale must override stale module locale');

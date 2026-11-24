@@ -49,7 +49,7 @@ assert.ok(directoryHtml.includes('aq-i18n.js?v=26'));
 assert.ok(directoryHtml.includes('aq-copy.js?v=26'));
 assert.ok(directoryHtml.includes('atlas-region-ui.js?v=30'));
 assert.ok(directoryHtml.includes('atlas-personalize-ui.js?v=29'));
-assert.ok(directoryHtml.indexOf('aq-i18n.js?v=26')<directoryHtml.indexOf('directory.js?v=25'),'locale engine loads before directory logic');
+assert.ok(directoryHtml.indexOf('aq-i18n.js?v=26')<directoryHtml.search(/directory\\.js\\?v=[0-9]+/),'locale engine loads before directory logic');
 assert.ok(!atlas.includes("reviewed?'官方来源已核对 · 非安全认证'"),'dynamic source badge must use locale-aware copy');
 assert.ok(!atlas.includes("?'来源已核对':'来源未核对'"),'comparison summary must use locale-aware source labels');
 assert.ok(!fs.readFileSync(path.join(site,'aq-copy.js'),'utf8').includes('fetch('));

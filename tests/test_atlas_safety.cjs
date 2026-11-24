@@ -82,7 +82,7 @@ for(const id of ['atlasSecurityTitle','atlasSecurityCounts']){
  assert.ok(html.includes('id="'+id+'"'));
 }
 assert.ok(html.indexOf('link-gate.js?v=20')<html.indexOf('atlas-safety.js?v=20'));
-assert.ok(html.indexOf('atlas-safety.js?v=20')<html.indexOf('directory.js?v=25'));
+assert.ok(html.indexOf('atlas-safety.js?v=20')<html.search(/directory\\.js\\?v=[0-9]+/));
 assert.ok(serviceWorker.includes("'./atlas-safety.js'"));
 assert.ok(script.includes('renderSafetyAudit()'));
 assert.ok(script.includes("a.removeAttribute('href')"),'blocked entries must have no direct link');
