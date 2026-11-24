@@ -1,0 +1,54 @@
+{
+  "reviewedAt": "2026-11-24T13:16:29+00:00",
+  "baseline": {
+    "commit": "2b3353b19ab25ef5fb2e7253c9adfda25e05be64",
+    "uniqueUrls": 1239,
+    "registeredUrls": 334,
+    "urlsWithHistoricalEvidence": 278
+  },
+  "current": {
+    "uniqueUrls": 1239,
+    "uniqueIds": 1239,
+    "confirmed": 1043,
+    "pending": 196,
+    "coveragePercent": 84.1808,
+    "catalogIdsAdded": 0,
+    "catalogIdsRemoved": 0,
+    "structuredConfirmations": 766
+  },
+  "changes": {
+    "previouslyUnconfirmedEntriesConfirmed": 709,
+    "independentlyVerifiedMigrations": 138,
+    "previouslyAllowlistedAddressesReplaced": 7,
+    "revokedForWrongOrInsufficientAttribution": 0
+  },
+  "historicalSpotCheck": {
+    "publisherDirectory": "https://www.gov.sg/trusted-sites/",
+    "exactCatalogueAddressesReconfirmedFromListedLinks": 70
+  },
+  "pendingReasons": {
+    "access-restricted": 75,
+    "client-redirect": 14,
+    "migration-incomplete": 45,
+    "network-inconclusive": 22,
+    "not-found": 1,
+    "ownership-evidence-insufficient": 16,
+    "product-changed": 4,
+    "service-not-readable": 19
+  },
+  "reviewFiles": [
+    "site/atlas-review-20261124-g.json",
+    "site/atlas-review-20261124-h.json",
+    "site/atlas-review-20261124-i.json",
+    "site/atlas-review-20261124-j.json",
+    "site/atlas-review-20261124-k.json",
+    "site/atlas-review-20261124-l.json",
+    "site/atlas-review-20261124-m.json",
+    "site/atlas-review-20261124-n.json"
+  ],
+  "retrievalEvidence": {
+    "retryRun": "https://github.com/initial2024/avenqir-site/actions/runs/45399257016",
+    "retriedCatalogIds": 250
+  },
+  "remainingFile": "remaining.json"
+}

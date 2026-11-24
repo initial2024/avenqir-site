@@ -50,7 +50,7 @@ assert.equal(gate.officialSourceReviewed('https://zenodo.org/'),true);
 assert.equal(gate.officialSourceReviewed('https://lookup.icann.org.evil.example/'),false);
 assert.equal(gate.officialSourceReviewed('https://zenodo.org/?next=https://evil.example'),false);
 assert.equal(gate.officialSourceReviewed('http://squoosh.app/'),false);
-assert.equal(gate.officialSourceReviewed('https://lmstudio.ai/'),false,'unreviewed resource must prompt');
+assert.equal(gate.officialSourceReviewed('https://lmstudio.ai/unreviewed-directory-test'),false,'unreviewed exact path must prompt');
 const html=fs.readFileSync(path.join(base,'directory.html'),'utf8');
 for(const name of ['atlasFlowGrid','atlasFlowStatus','atlasResetFlow','atlasReviewedOnly','atlasExportFavorites','atlasExportStatus']){
  assert.ok(html.includes('id="'+name+'"'),'missing interface element '+name);

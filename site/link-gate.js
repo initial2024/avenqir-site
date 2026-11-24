@@ -4,6 +4,23 @@
    Never accept security decisions from user-generated labels or admin data fields. */
 (function(root){
   const OFFICIAL_URLS = [
+    // Exact source evidence: atlas-review-20261124-n.json.
+    'https://cds.climate.copernicus.eu/',
+    'https://datos.gob.mx/',
+    'https://goldbook.iupac.org/',
+    'https://www.biodiversitylibrary.org/',
+    'https://www.gov.ph/',
+    'https://www.gov.tw/',
+    'https://www.legifrance.gouv.fr/',
+    'https://www.loc.gov/collections/',
+    'https://www.malaysia.gov.my/',
+    'https://www.npmjs.com/',
+    'https://www.softwareheritage.org/',
+    'https://www.un.org/',
+    'https://data.e-gov.go.jp/info/ja',
+    'https://learninglab.si.edu/',
+    'https://lmstudio.ai/',
+    'https://www.nchmf.gov.vn/kttv/',
     // Exact source evidence: atlas-review-20261124-l.json.
     'https://blog.google/security/',
     'https://cervantes.org/es',
