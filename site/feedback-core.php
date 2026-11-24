@@ -11,12 +11,12 @@ function fb_conf(): array {
 }
 function fb_ready(): bool {
     $c=fb_conf();
-    foreach (['db_host','db_name','db_user','db_password','ip_hmac_secret','setup_sha256'] as $k) {
+    foreach (['db_host','db_name','db_user','db_password','ip_hmac_secret'] as $k) {
         if (!isset($c[$k]) || !is_string($c[$k]) || trim($c[$k])==='' || str_contains($c[$k], 'REPLACE_')) return false;
     }
     return (bool)preg_match('/^[a-zA-Z0-9_]{1,64}$/D', $c['db_name']) &&
         (bool)preg_match('/^[a-zA-Z0-9_.-]{1,255}$/D', $c['db_host']) &&
-        strlen($c['ip_hmac_secret'])>=32 && preg_match('/^[0-9a-f]{64}$/D',$c['setup_sha256'])===1;
+        strlen($c['ip_hmac_secret'])>=32;
 }
 function fb_db(): PDO {
     static $pdo=null;
@@ -105,6 +105,20 @@ function fb_admin_hash(PDO $db): ?string {
         $s=$db->prepare("SELECT setting_value FROM fb_settings WHERE setting_key='admin_password' LIMIT 1");
         $s->execute();$v=$s->fetchColumn();return is_string($v)?$v:null;
     } catch (PDOException $e) {return null;}
+}
+/** The legacy admin_password setting only marks an existing installation.
+ * Never verify it as a login secret after the adm consolidation.
+ */
+function fb_submission_enabled(PDO $db):bool{
+  try{
+    $s=$db->prepare("SELECT setting_key,setting_value FROM fb_settings WHERE setting_key IN ('feedback_enabled','admin_password')");
+    $s->execute();
+    foreach($s->fetchAll() as $row){
+      if(($row['setting_key']??'')==='feedback_enabled' && ($row['setting_value']??'')==='1')return true;
+      if(($row['setting_key']??'')==='admin_password' && is_string($row['setting_value']??null) && $row['setting_value']!=='')return true;
+    }
+  }catch(PDOException $e){return false;}
+  return false;
 }
 function fb_config_message(Throwable $e): string {
     return match($e->getMessage()) {

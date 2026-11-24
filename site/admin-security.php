@@ -5,6 +5,14 @@ declare(strict_types=1);
  * Never output/record raw secrets in logs or public APIs.
  */
 const AQ_ADMIN_NAME='adm';
+/** Both private backends accept the SAME server-side authenticated adm session. */
+function aq_shared_adm_logged(?array $auth,array $session,?int $now=null):bool {
+  if(!is_array($auth)||empty($session['logged']))return false;
+  $expires=$session['until']??null;
+  $tag=$session['auth_tag']??null;
+  if(!is_numeric($expires)||(int)$expires<=($now??time())||!is_string($tag))return false;
+  return hash_equals(aq_auth_tag($auth),$tag);
+}
 function aq_auth_tag(array $auth): string {
   $base=(string)($auth['password_hash']??'');
   $rev=(string)($auth['security_rev']??'');

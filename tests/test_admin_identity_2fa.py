@@ -13,9 +13,12 @@ class AdminIdentityAndALShortcut(unittest.TestCase):
     def test_login_username_and_mfa_form(self):
         for text in ('name="username"','value="adm"','name="mfa_code"',
                      "aq_mfa_consume_login($pwd,$factor)",'AQ_ADMIN_NAME',
-                     "aq_auth_tag($auth)","mfa_begin","mfa_confirm","mfa_disable"):
+                     "aq_shared_adm_logged($auth,$_SESSION)","mfa_begin","mfa_confirm","mfa_disable"):
             self.assertIn(text,ADMIN)
         self.assertIn("PASSWORD_DEFAULT", ADMIN)
+        self.assertIn("aq_auth_tag($auth)",SECURITY)
+        self.assertIn("aq_post_login_destination()",ADMIN)
+        self.assertIn('href="feedback-admin.php"',ADMIN)
         self.assertIn("session_regenerate_id(true)",ADMIN)
         self.assertIn("session.use_strict_mode",ADMIN)
         self.assertIn("frame-ancestors 'none'",ADMIN)

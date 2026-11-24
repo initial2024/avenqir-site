@@ -8,7 +8,7 @@ fb_start_session('AVENQIR_FEEDBACK');
 $csrf=fb_csrf();
 if(!isset($_SESSION['form_since'])) $_SESSION['form_since']=time();
 $notice='';$success=false;$can_submit=false;
-try { $db=fb_db(); $can_submit=fb_admin_hash($db)!==null; }
+try { $db=fb_db(); $can_submit=fb_submission_enabled($db); }
 catch(Throwable $e) { $notice=fb_config_message($e); }
 $kind_values=['feedback'=>'网站反馈','link'=>'推荐网址','broken'=>'失效链接','contact'=>'联系站长'];
 $kind=fb_trim($_GET['type']??'feedback',30);
