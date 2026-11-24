@@ -208,7 +208,7 @@
  {
   "id": "a124",
   "name": "DeepL",
-  "url": "https://www.deepl.com/translator",
+  "url": "https://www.deepl.com/en/translator",
   "category": "实用",
   "description": "在线翻译服务；敏感材料不要直接上传"
  },
