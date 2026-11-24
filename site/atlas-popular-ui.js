@@ -157,8 +157,12 @@
   $('popularDescription').textContent=t('编辑精选 · 用途与上手体验排序','Editor picks, ordered by usefulness and ease of use');
   $('popularRandom').textContent=t('🎲 随便逛一个','🎲 Pick a site');
   $('popularNetworkNote').textContent=t('检测结果属于第三方信息，不代表绝对安全。','Third-party checks provide information and cannot guarantee safety.');
-  if(home)$('popularMore').textContent=t('去目录看完整精选','See all editor picks');
-  else $('popularIntentTitle').textContent=t('我现在想……','I want to…');
+  if(home){
+   $('popularMore').textContent=t('去目录看完整精选','See all editor picks');
+   $('popularHeroAction').textContent=t('看看大众精选','Browse popular picks');
+   $('developerToolSummary').textContent=t('开发者工具与完整工具目录','Developer tools and full toolbox');
+   $('popularTopics').setAttribute('aria-label',t('精选主题','Editor picks by topic'));
+  }else $('popularIntentTitle').textContent=t('我现在想……','I want to…');
   renderTopics();
   renderCards();
   renderIntent();

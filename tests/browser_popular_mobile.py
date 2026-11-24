@@ -39,6 +39,7 @@ const require=(condition,reason)=>{if(!condition)throw Error(reason);};
  require(h.documentElement.scrollWidth<=390&&d.documentElement.scrollWidth<=390,'page overflows the mobile viewport');
  const homeCards=h.getElementById('popularCards');
  require(homeCards.scrollWidth>homeCards.clientWidth&&homeCards.getBoundingClientRect().width<=390,'homepage cards should scroll horizontally within the screen');
+ require(h.getElementById('popularHeroAction').getAttribute('href')==='#popular','homepage must lead with an editor picks shortcut');
  const original=home.location.href;
  h.getElementById('popularRandom').click();
  const preview=h.querySelector('#popularPreview a');
