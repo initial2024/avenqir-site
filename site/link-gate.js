@@ -534,7 +534,29 @@
     'https://cursor.com/',    'https://replit.com/',    'https://bolt.new/',    'https://lovable.dev/',    'https://v0.app/',    'https://aider.chat/',    'https://elevenlabs.io/',    'https://suno.com/',    'https://www.aiva.ai/',    'https://www.midjourney.com/',    'https://ideogram.ai/',    'https://www.recraft.ai/',    'https://leonardo.ai/',    'https://www.krea.ai/',    'https://clipdrop.co/',    'https://pika.art/',    'https://hailuoai.video/',    'https://www.heygen.com/',    'https://www.synthesia.io/',    'https://www.veed.io/',    'https://www.kapwing.com/',    'https://www.tabnine.com/',    'https://runway.com/',    'https://pixverse.ai/en',
     'https://www.oxfordlearnersdictionaries.com/',    'https://learnenglish.britishcouncil.org/',    'https://www.newsinlevels.com/',    'https://www.etymonline.com/',    'https://languagetool.org/',    'https://regexr.com/',    'https://www.omnicalculator.com/',    'https://www.symbolab.com/',    'https://www.mathway.com/',    'https://ipinfo.io/',    'https://ip.sb/',    'https://www.dnsleaktest.com/',    'https://test-ipv6.com/',    'https://youglish.com/',    'https://readtheory.org/',    'https://breakingnewsenglish.com/',    'https://learningenglish.voanews.com/',    'https://readlang.com/',    'https://manybooks.net/',    'https://americanliterature.com/',    'https://www.doabooks.org/',    'https://www.sciencedaily.com/',    'https://phys.org/',    'https://www.researchrabbit.ai/',    'https://www.litmaps.com/',    'https://www.lingq.com/en/',    'https://www.royalroad.com/home',    'https://www.globalgreyebooks.com/index.html',
     'https://www.data.govt.nz/',    'https://www.istat.it/',    'https://www.rijksoverheid.nl/',    'https://www.cbs.nl/',    'https://www.government.se/',    'https://www.scb.se/',    'https://www.smhi.se/',    'https://www.ssb.no/',    'https://www.met.no/',    'https://www.nav.no/',    'https://denmark.dk/',    'https://www.dmi.dk/',    'https://www.borger.dk/',    'https://en.ilmatieteenlaitos.fi/',    'https://www.ine.es/',    'https://www.boe.es/',    'https://www.spain.info/',    'https://www.isro.gov.in/',    'https://www.nta.ac.in/',    'https://www.nationalrail.co.uk/',    'https://tfl.gov.uk/',    'https://auspost.com.au/',    'https://translink.com.au/',    'https://www.anpost.com/',    'https://www.meteoam.it/it/home',    'https://www.knmi.nl/home',    'https://www.admin.ch/de',    'https://www.ch.ch/en/',    'https://www.regjeringen.no/no/id4/',    'https://www.dst.dk/da/',    'https://www.suomi.fi/etusivu',    'https://data.norge.no/nb',    'https://www.belgium.be/en',    'https://statbel.fgov.be/en',    'https://www.aemet.es/es/portada',    'https://datos.gob.es/es/',    'https://cervantes.org/',    'https://www.renfe.com/es/es',    'https://www.viarail.ca/en',
-    'https://kubernetes.io/',    'https://prometheus.io/',    'https://grafana.com/',    'https://developer.hashicorp.com/terraform',    'https://opensource.org/',    'https://sourcehut.org/',    'https://about.gitea.com/',    'https://forgejo.org/',    'https://openssf.org/',    'https://etherpad.org/',    'https://mixkit.co/',    'https://www.mongodb.com/',    'https://traefik.io/',    'https://opencollective.com/',    'https://www.overleaf.com/',    'https://cryptpad.org/',    'https://miro.com/',    'https://www.redhat.com/en/ansible-collaborative'
+    'https://kubernetes.io/',    'https://prometheus.io/',    'https://grafana.com/',    'https://developer.hashicorp.com/terraform',    'https://opensource.org/',    'https://sourcehut.org/',    'https://about.gitea.com/',    'https://forgejo.org/',    'https://openssf.org/',    'https://etherpad.org/',    'https://mixkit.co/',    'https://www.mongodb.com/',    'https://traefik.io/',    'https://opencollective.com/',    'https://www.overleaf.com/',    'https://cryptpad.org/',    'https://miro.com/',    'https://www.redhat.com/en/ansible-collaborative',
+    'https://clinicaltrials.gov/',
+    'https://www.worldhistory.org/',
+    'https://www.historytoday.com/',
+    'https://www.perseus.tufts.edu/hopper/',
+    'https://www.bl.uk/',
+    'https://www.overheid.nl/',
+    'https://www.met.ie/',
+    'https://www.gov.pl/',
+    'https://portal.inmet.gov.br/',
+    'https://www.stats.govt.nz/',
+    'https://www.metservice.com/',
+    'https://www.meteoswiss.admin.ch/',
+    'https://opendata.swiss/de',
+    'https://www.riksdagen.se/sv/',
+    'https://stat.fi/fi',
+    'https://data.gov.be/en',
+    'https://www.cso.ie/en/index.html',
+    'https://imgw.pl/',
+    'https://www.ipma.pt/pt/index.html',
+    'https://dados.gov.pt/en',
+    'https://www.gov.pt/',
+    'https://www.gov.br/pt-br'
   ];
   function sanitize(raw){
     if(typeof raw!=='string'||raw.length>1800||/[\u0000-\u0020\u007f\\]/.test(raw))return null;

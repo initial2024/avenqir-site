@@ -3208,6 +3208,215 @@
       "method": "Observed redirect and independently inspected clean HTTPS destination",
       "reviewedOn": "2026-11-24",
       "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://clinicaltrials.gov/",
+      "source": "https://pubchem.ncbi.nlm.nih.gov/source/15362",
+      "identity": "ClinicalTrials.gov",
+      "method": "Official institutional cross-reference identifies endpoint; not proof of live availability",
+      "reviewedOn": "2026-11-24",
+      "evidence": "NIH PubChem data-source record names exact home URL; indexed three weeks ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.worldhistory.org/",
+      "source": "https://www.worldhistory.org/",
+      "identity": "World History Encyclopedia",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Readable nonprofit encyclopedia homepage, editorial and educational navigation; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.historytoday.com/",
+      "source": "https://www.historytoday.com/",
+      "identity": "History Today",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Magazine homepage and August 2026 issue; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.perseus.tufts.edu/hopper/",
+      "source": "https://www.perseus.tufts.edu/hopper/",
+      "identity": "Perseus Digital Library",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Tufts-hosted project page identifies university department and collections; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.bl.uk/",
+      "source": "https://www.bl.uk/",
+      "identity": "British Library",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "National library home, catalogue and institutional navigation; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.overheid.nl/",
+      "source": "https://www.overheid.nl/",
+      "identity": "Overheid.nl",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Government services and regulatory information portal; indexed nine months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.met.ie/",
+      "source": "https://www.met.ie/",
+      "identity": "Met Éireann",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Irish Meteorological Service homepage and radar service; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.gov.pl/",
+      "source": "https://www.gov.pl/",
+      "identity": "Poland government portal",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official ministries and public service navigation; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://portal.inmet.gov.br/",
+      "source": "https://portal.inmet.gov.br/",
+      "identity": "INMET",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Brazil national meteorological institute and ministry links; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.stats.govt.nz/",
+      "source": "https://www.gets.govt.nz/SNZ/ExternalTenderDetails.htm?id=32913939",
+      "identity": "Stats NZ",
+      "method": "Official institutional cross-reference identifies endpoint; not proof of live availability",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Government procurement notice identifies exact existing hostname; indexed last week; home snapshot script-only",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.metservice.com/",
+      "source": "https://www.treasury.govt.nz/information-and-services/commercial-portfolio-and-advice/commercial-portfolio/meteorological-service-new-zealand-limited",
+      "identity": "MetService",
+      "method": "Official institutional cross-reference identifies endpoint; not proof of live availability",
+      "reviewedOn": "2026-11-24",
+      "evidence": "NZ Treasury identifies service domain; indexed three weeks ago; home snapshot script-only",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.meteoswiss.admin.ch/",
+      "source": "https://www.aramis.admin.ch/Links/?Sprache=en-US",
+      "identity": "MeteoSwiss",
+      "method": "Official institutional cross-reference identifies endpoint; not proof of live availability",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Swiss federal administration research database identifies service domain; indexed last week",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://opendata.swiss/de",
+      "source": "https://opendata.swiss/",
+      "previousUrl": "https://opendata.swiss/",
+      "identity": "Swiss Open Government Data",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect, readable data catalogue; indexed ten months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.riksdagen.se/sv/",
+      "source": "https://www.riksdagen.se/",
+      "previousUrl": "https://www.riksdagen.se/",
+      "identity": "Swedish Parliament",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect, official parliamentary navigation; indexed seven months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://stat.fi/fi",
+      "source": "https://stat.fi/",
+      "previousUrl": "https://stat.fi/",
+      "identity": "Statistics Finland",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect, official statistics homepage; indexed seven months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://data.gov.be/en",
+      "source": "https://data.gov.be/",
+      "previousUrl": "https://data.gov.be/",
+      "identity": "Belgian Data Portal",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "English link clicked on official language-selection page; BOSA and dataset navigation; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.cso.ie/en/index.html",
+      "source": "https://www.cso.ie/",
+      "previousUrl": "https://www.cso.ie/",
+      "identity": "Central Statistics Office Ireland",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to official statistical portal; indexed five months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://imgw.pl/",
+      "source": "https://www.imgw.pl/",
+      "previousUrl": "https://www.imgw.pl/",
+      "identity": "IMGW-PIB",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to institute homepage; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.ipma.pt/pt/index.html",
+      "source": "https://www.ipma.pt/",
+      "previousUrl": "https://www.ipma.pt/",
+      "identity": "IPMA",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to Portuguese meteorological agency; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://dados.gov.pt/en",
+      "source": "https://dados.gov.pt/",
+      "previousUrl": "https://dados.gov.pt/",
+      "identity": "Portugal open data portal",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to public data catalogue; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.gov.pt/",
+      "source": "https://eportugal.gov.pt/",
+      "previousUrl": "https://eportugal.gov.pt/",
+      "identity": "Portugal public services portal",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect; official migration notice https://www.gov.pt/noticias/chegou-o-novo-portal-govpt; current portal indexed yesterday",
+      "evidenceFreshness": "see evidence; not live network verification",
+      "additionalSource": "https://www.gov.pt/noticias/chegou-o-novo-portal-govpt"
+    },
+    {
+      "url": "https://www.gov.br/pt-br",
+      "source": "https://www.gov.br/",
+      "previousUrl": "https://www.gov.br/",
+      "identity": "Brazil government portal",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to government service portal; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
     }
   ]
 }
