@@ -40,7 +40,7 @@ assert.ok(code.includes("a.href=permitted?url:'leave.html?url='"),'unreviewed co
 assert.ok(code.includes("const reviewed=!!linkGate?.officialSourceReviewed(url)"));
 assert.ok(code.includes('catalog.load().then('),'directory must load real backend + curated catalog');
 assert.ok(code.includes('renderCompare()'),'comparison is wired');
-assert.ok(code.includes('openNoMatch()'),'submit-only missing search dialog is wired');
+assert.ok(code.includes('openNoMatch(q)') && code.includes('completeSearch()') && code.includes('submitSearch(input.value)'), 'submitted no-match searches must dispatch only after current catalog is loaded');
 const page=fs.readFileSync(path.resolve(__dirname,'../site/directory.html'),'utf8');
 for(const id of ['atlasExternalDialog','atlasExternalName','atlasExternalHost','atlasExternalUrl','atlasExternalCancel','atlasExternalGo','atlasNoMatchDialog','atlasShowAll','atlasCompareBoard']){
  assert.ok(page.includes('id="'+id+'"'),id);
