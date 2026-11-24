@@ -16,10 +16,11 @@ jobs:
     timeout-minutes: 5
     environment: production
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2 (Node 24)
         with:
           persist-credentials: false
       - name: Read only the existing public association file using FTPS
+        id: disk
         env:
           FTPS_USERNAME: ${{ secrets.AVENQIR_FTPS_USERNAME }}
           FTPS_PASSWORD: ${{ secrets.AVENQIR_FTPS_PASSWORD }}
@@ -54,6 +55,7 @@ jobs:
                   except Exception: ftp.close()
           PY
       - name: Independently check direct public HTTPS without browser cookies
+        id: https
         if: always()
         run: |
           python3 - <<'PY'
@@ -82,3 +84,21 @@ jobs:
               print('DAL_HTTPS=DENY_'+type(exc).__name__)
               sys.exit(1)
           PY
+      - name: Summarize independent gates (no deployment)
+        if: always()
+        env:
+          DISK: ${{ steps.disk.outcome }}
+          HTTPS: ${{ steps.https.outcome }}
+        run: |
+          {
+            echo '## SEUS public association diagnostics'
+            echo "| Gate | Result |"
+            echo "| --- | --- |"
+            echo "| FTPS disk bytes | $DISK |"
+            echo "| Direct public HTTPS | $HTTPS |"
+            echo ''
+            if [ "$DISK" = success ] && [ "$HTTPS" != success ]; then
+              echo 'The uploaded file is correct. Public delivery remains blocked; contact hosting support. Do not re-upload or weaken authentication.'
+            fi
+            echo 'This workflow is read-only and never deploys or publishes an APK.'
+          } >> "$GITHUB_STEP_SUMMARY"
