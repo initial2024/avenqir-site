@@ -28,7 +28,7 @@ const supplied=[
 ];
 assert.equal(specialist.links.length,31,'new resources must all be distinct (not double count Desmos/Regex101)');
 assert.equal(new Set(specialist.links.map(x=>x.url)).size,specialist.links.length);
-assert.equal(catalog.catalog().length,1028,'all static curated links should now be addressable');
+assert.equal(catalog.catalog().length,1107,'all static curated links should now be addressable');
 for(const url of supplied){
  const x=catalog.catalog().find(r=>r.url===url);
  assert.ok(x,'missing user-requested destination '+url);
@@ -79,4 +79,4 @@ assert.ok(suggestions.some(x=>x.item.category==='英语阅读'),'new language ca
 assert.ok(suggestions.every(x=>x.reason),'explain every recommendation');
 assert.equal(recommend.setEnabled(false),false);
 assert.equal(fixtureStore.size,0,'turning off recommendations removes local model storage');
-console.log('PASS: 1028 deduplicated HTTPS links, 4 submitted sites, 11 usable trails, safety gating and local opt-in');
+console.log('PASS: 1107 deduplicated HTTPS links, 4 submitted sites, 11 usable trails, safety gating and local opt-in');

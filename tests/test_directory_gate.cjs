@@ -27,7 +27,7 @@ const atlas=require('../site/atlas-paths.js');
 const expansion=require('../site/atlas-expansion.js');
 const catalog=require('../site/atlas-catalog-core.js');
 const records=catalog.extras;
-assert.equal(records.length,64);
+assert.equal(records.length,143);
 assert.equal(new Set(records.map(r=>r.url)).size,records.length);
 for(const r of records){
   assert.ok(r.name&&r.category&&r.description&&r.url);

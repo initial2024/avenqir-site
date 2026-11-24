@@ -34,7 +34,7 @@ for(const x of [...legacy,...atlas.links,...expansion.links,...specialist.links,
   urls.add(u.href);
 }
 assert.equal(urls.size,catalog.catalog().length);
-assert.equal(urls.size,1028,'catalog must represent the full curated expansion');
+assert.equal(urls.size,1107,'catalog must represent the full curated expansion');
 for(const flow of atlas.flows){
  assert.ok(flow.id&&flow.title&&flow.note);
  assert.ok(flow.urls.length>=4 && flow.urls.length<=5);

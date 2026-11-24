@@ -25,7 +25,7 @@ assert.equal(everyday.links.length,60);
 assert.equal(regionalExt.links.length,140);
 assert.equal(everydayExt.links.length,112);
 assert.equal(ai.links.length,62);
-assert.equal(merged.length,1028,'combined catalog must include all new resource sources');
+assert.equal(merged.length,1107,'combined catalog must include all new resource sources');
 const actual=new Map();
 for(const item of merged){
   if(!item.region)continue;
@@ -175,4 +175,4 @@ assert.ok(!merged.some(x=>x.url==='https://english.claua.de/'),'do not disclose 
 assert.equal(gate.officialSourceReviewed('https://www.thaigov.go.th/'),false,'official-looking additions do not bypass exact-url trust');
 const transfer=fs.readFileSync(path.join(dir,'transfer-schema.js'),'utf8');
 assert.ok(!transfer.includes(region.KEY),'region choices not backed up or synced across devices');
-console.log('PASS: 1028 distinct HTTPS destinations, 40 supported countries/regions with practical local choices, opt-in on-device-only timezone hints and official external-link safeguards');
+console.log('PASS: 1107 distinct HTTPS destinations, 40 supported countries/regions with practical local choices, opt-in on-device-only timezone hints and official external-link safeguards');

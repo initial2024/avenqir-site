@@ -16,10 +16,19 @@ require(path.join(site,'atlas-regional-ext.js'));
 require(path.join(site,'atlas-everyday-ext.js'));
 const catalog=require(path.join(site,'atlas-catalog-core.js'));
 const items=catalog.catalog();
-assert.equal(items.length,1028);
+assert.equal(items.length,1107);
 const result=safety.summary(items);
-assert.deepEqual(result,{total:1028,blocked:0,caution:0,reviewed:56,pending:972},'separate structural audit from provenance review');
+assert.deepEqual(result,{total:1107,blocked:0,caution:0,reviewed:69,pending:1038},'separate structural audit from provenance review');
 assert.equal(safety.inspect('https://www.icann.org/').type,'reviewed');
+const evidence=JSON.parse(fs.readFileSync(path.join(site,'atlas-review-v101.json'),'utf8'));
+assert.equal(evidence.records.length,13);
+for(const record of evidence.records){
+ assert.equal(record.url,record.source);
+ assert.ok(items.some(item=>item.url===record.url));
+ assert.equal(gate.officialSourceReviewed(record.url),true);
+ assert.equal(gate.maySkipConfirmation(record.url,null),true);
+ assert.equal(gate.maySkipConfirmation(record.url+'?next=evil',null),false);
+}
 for(const url of ['https://www.who.int/','https://www.cdc.gov/','https://pubchem.ncbi.nlm.nih.gov/','https://www.icann.org/','https://www.ietf.org/standards/','https://www.gov.uk/','https://www.wto.org/']){
  assert.equal(gate.officialSourceReviewed(url),true,'verified source URL '+url);
 }
@@ -97,4 +106,4 @@ assert.ok(!script.includes('安全认证通过'),'must not claim certification')
 const backend={url:'https://100.74.2.3/',name:'Untrusted internal link',category:'其他',description:'test'};
 const newCounts=safety.summary([backend,...items]);
 assert.equal(newCounts.blocked,1,'backend links need identical runtime structural screening');
-console.log('PASS: 1028 locally structurally checked URLs, 56 exact source reviews, 972 pending provenance, reserved IPv4/IPv6 blocking, explicit Google risk checks; no security certification claimed');
+console.log('PASS: 1107 locally structurally checked URLs, 69 exact source reviews, 1038 pending provenance, reserved IPv4/IPv6 blocking, explicit Google risk checks; no security certification claimed');

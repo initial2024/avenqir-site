@@ -60,7 +60,21 @@
     'https://www.icann.org/',
     'https://www.ietf.org/standards/',
     'https://www.gov.uk/',
-    'https://www.wto.org/'
+    'https://www.wto.org/',
+    // Official-source search results checked 2026-11-24; not malware verdicts.
+    'https://developer.android.com/identity/sign-in/credential-manager-faq',
+    'https://developer.android.com/identity/sign-in/credential-provider',
+    'https://developer.android.com/identity/sign-in/restore-credentials-implementation',
+    'https://docs.python.org/3/',
+    'https://docs.python.org/3/tutorial/',
+    'https://docs.python.org/3/howto/',
+    'https://docs.python.org/3/faq/general.html',
+    'https://csrc.nist.gov/Publications',
+    'https://datatracker.ietf.org/',
+    'https://www.ietf.org/process/publication/',
+    'https://support.datacite.org/docs/datacite-commons',
+    'https://openlearning.mit.edu/courses-programs/mit-opencourseware',
+    'https://www.unesco.org/en/scamalert'
   ];
   function sanitize(raw){
     if(typeof raw!=='string'||raw.length>1800||/[\u0000-\u0020\u007f\\]/.test(raw))return null;
@@ -170,7 +184,8 @@
   }
   function approvalCount(storage){return storage?readApprovals(storage).length:0;}
   function maySkipConfirmation(raw,storage){
-    return !urlRisk(raw).blocked&&
+    const risk=urlRisk(raw);
+    return !risk.blocked&&!risk.forcePrompt&&
       (officialSourceReviewed(raw)||isRemembered(raw,storage));
   }
   const api=Object.freeze({sanitize,officialSourceReviewed,searchEngineDestination,urlRisk,isRemembered,remember,clearRemembered,approvalCount,maySkipConfirmation,APPROVAL_LIFETIME,OFFICIAL_URLS:Object.freeze(OFFICIAL_URLS.slice())});

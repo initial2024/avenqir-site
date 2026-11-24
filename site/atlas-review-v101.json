@@ -1,0 +1,58 @@
+{
+  "reviewDate": "2026-11-24",
+  "method": "Exact official-source search result; not a current safety verdict",
+  "records": [
+    {
+      "url": "https://developer.android.com/identity/sign-in/credential-manager-faq",
+      "source": "https://developer.android.com/identity/sign-in/credential-manager-faq"
+    },
+    {
+      "url": "https://developer.android.com/identity/sign-in/credential-provider",
+      "source": "https://developer.android.com/identity/sign-in/credential-provider"
+    },
+    {
+      "url": "https://developer.android.com/identity/sign-in/restore-credentials-implementation",
+      "source": "https://developer.android.com/identity/sign-in/restore-credentials-implementation"
+    },
+    {
+      "url": "https://docs.python.org/3/",
+      "source": "https://docs.python.org/3/"
+    },
+    {
+      "url": "https://docs.python.org/3/tutorial/",
+      "source": "https://docs.python.org/3/tutorial/"
+    },
+    {
+      "url": "https://docs.python.org/3/howto/",
+      "source": "https://docs.python.org/3/howto/"
+    },
+    {
+      "url": "https://docs.python.org/3/faq/general.html",
+      "source": "https://docs.python.org/3/faq/general.html"
+    },
+    {
+      "url": "https://csrc.nist.gov/Publications",
+      "source": "https://csrc.nist.gov/Publications"
+    },
+    {
+      "url": "https://datatracker.ietf.org/",
+      "source": "https://datatracker.ietf.org/"
+    },
+    {
+      "url": "https://www.ietf.org/process/publication/",
+      "source": "https://www.ietf.org/process/publication/"
+    },
+    {
+      "url": "https://support.datacite.org/docs/datacite-commons",
+      "source": "https://support.datacite.org/docs/datacite-commons"
+    },
+    {
+      "url": "https://openlearning.mit.edu/courses-programs/mit-opencourseware",
+      "source": "https://openlearning.mit.edu/courses-programs/mit-opencourseware"
+    },
+    {
+      "url": "https://www.unesco.org/en/scamalert",
+      "source": "https://www.unesco.org/en/scamalert"
+    }
+  ]
+}
