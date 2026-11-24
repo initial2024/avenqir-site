@@ -377,6 +377,98 @@
       "identity": "Stack Overflow Questions",
       "previousUrl": "https://stackoverflow.com/",
       "method": "Observed redirect and inspected official successor"
+    },
+    {
+      "url": "https://molview.org/",
+      "source": "https://molview.org/",
+      "identity": "MolView",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://physics.info/",
+      "source": "https://physics.info/",
+      "identity": "Physics Hypertextbook",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.heavens-above.com/",
+      "source": "https://www.heavens-above.com/",
+      "identity": "Heavens-Above",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://openai.com/",
+      "source": "https://openai.com/",
+      "identity": "OpenAI",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.anthropic.com/",
+      "source": "https://www.anthropic.com/",
+      "identity": "Anthropic",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://deepmind.google/",
+      "source": "https://deepmind.google/",
+      "identity": "Google DeepMind",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://x.ai/",
+      "source": "https://x.ai/",
+      "identity": "xAI",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://mistral.ai/",
+      "source": "https://mistral.ai/",
+      "identity": "Mistral",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.deepseek.com/",
+      "source": "https://www.deepseek.com/",
+      "identity": "DeepSeek",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://cohere.com/",
+      "source": "https://cohere.com/",
+      "identity": "Cohere",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.ai21.com/",
+      "source": "https://www.ai21.com/",
+      "identity": "AI21",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://stability.ai/",
+      "source": "https://stability.ai/",
+      "identity": "Stability AI",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://huggingface.co/",
+      "source": "https://huggingface.co/",
+      "identity": "Hugging Face",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.pewresearch.org/topic/internet-technology/",
+      "identity": "Pew Research Center",
+      "source": "https://www.pewresearch.org/internet/",
+      "previousUrl": "https://www.pewresearch.org/internet/",
+      "method": "Official old page identifies successor; destination confirmed via indexed retrieval"
+    },
+    {
+      "url": "https://qwen.ai/",
+      "identity": "Qwen",
+      "source": "https://qwenlm.github.io/",
+      "previousUrl": "https://qwenlm.github.io/",
+      "method": "Official old page identifies successor; destination confirmed via indexed retrieval"
     }
   ]
 }
