@@ -2491,6 +2491,233 @@
       "method": "Observed redirect and inspected branded destination via indexed retrieval",
       "reviewedOn": "2026-11-24",
       "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.oxfordlearnersdictionaries.com/",
+      "source": "https://www.oxfordlearnersdictionaries.com/",
+      "identity": "Oxford Learner's Dictionaries",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://learnenglish.britishcouncil.org/",
+      "source": "https://learnenglish.britishcouncil.org/",
+      "identity": "British Council LearnEnglish",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.newsinlevels.com/",
+      "source": "https://www.newsinlevels.com/",
+      "identity": "News in Levels",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.etymonline.com/",
+      "source": "https://www.etymonline.com/",
+      "identity": "Online Etymology Dictionary",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://languagetool.org/",
+      "source": "https://languagetool.org/",
+      "identity": "LanguageTool",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://regexr.com/",
+      "source": "https://regexr.com/",
+      "identity": "RegExr",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.omnicalculator.com/",
+      "source": "https://www.omnicalculator.com/",
+      "identity": "Omni Calculator",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.symbolab.com/",
+      "source": "https://www.symbolab.com/",
+      "identity": "Symbolab",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.mathway.com/",
+      "source": "https://www.mathway.com/",
+      "identity": "Mathway",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://ipinfo.io/",
+      "source": "https://ipinfo.io/",
+      "identity": "IPinfo",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://ip.sb/",
+      "source": "https://ip.sb/",
+      "identity": "IP.SB",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.dnsleaktest.com/",
+      "source": "https://www.dnsleaktest.com/",
+      "identity": "DNS Leak Test",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://test-ipv6.com/",
+      "source": "https://test-ipv6.com/",
+      "identity": "Test IPv6",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://youglish.com/",
+      "source": "https://youglish.com/",
+      "identity": "YouGlish",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://readtheory.org/",
+      "source": "https://readtheory.org/",
+      "identity": "ReadTheory",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://breakingnewsenglish.com/",
+      "source": "https://breakingnewsenglish.com/",
+      "identity": "Breaking News English",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://learningenglish.voanews.com/",
+      "source": "https://learningenglish.voanews.com/",
+      "identity": "VOA Learning English",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://readlang.com/",
+      "source": "https://readlang.com/",
+      "identity": "Readlang",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://manybooks.net/",
+      "source": "https://manybooks.net/",
+      "identity": "ManyBooks",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://americanliterature.com/",
+      "source": "https://americanliterature.com/",
+      "identity": "American Literature",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.doabooks.org/",
+      "source": "https://www.doabooks.org/",
+      "identity": "Directory of Open Access Books",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.sciencedaily.com/",
+      "source": "https://www.sciencedaily.com/",
+      "identity": "ScienceDaily",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://phys.org/",
+      "source": "https://phys.org/",
+      "identity": "Phys.org",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.researchrabbit.ai/",
+      "source": "https://www.researchrabbit.ai/",
+      "identity": "ResearchRabbit",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.litmaps.com/",
+      "source": "https://www.litmaps.com/",
+      "identity": "Litmaps",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.lingq.com/en/",
+      "source": "https://www.lingq.com/",
+      "previousUrl": "https://www.lingq.com/",
+      "identity": "LingQ",
+      "method": "Observed redirect and inspected branded destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.royalroad.com/home",
+      "source": "https://www.royalroad.com/",
+      "previousUrl": "https://www.royalroad.com/",
+      "identity": "Royal Road",
+      "method": "Observed redirect and inspected branded destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.globalgreyebooks.com/index.html",
+      "source": "https://www.globalgreyebooks.com/",
+      "previousUrl": "https://www.globalgreyebooks.com/",
+      "identity": "Global Grey Ebooks",
+      "method": "Observed redirect and inspected branded destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
     }
   ]
 }
