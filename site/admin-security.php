@@ -123,7 +123,10 @@ function aq_trust_set_cookie(string $token,int $expires):void{
     'expires'=>$expires,'path'=>'/','secure'=>true,'httponly'=>true,'samesite'=>'Strict'
   ]);
 }
-function aq_trust_register(string $password):bool{
+function aq_trust_enrollment_current(?array $auth,string $verifiedTag):bool{
+  return is_array($auth) && aq_mfa_enabled($auth) && hash_equals(aq_auth_tag($auth),$verifiedTag);
+}
+function aq_trust_register(string $password,string $verifiedTag):bool{
   // Serialize with MFA login / protected auth writes.
   $lock=@fopen(__DIR__.'/_store/.admin-mfa.lock','c');
   if($lock===false)return false;
@@ -131,7 +134,8 @@ function aq_trust_register(string $password):bool{
   $token=null;$expires=0;$ok=false;
   try{
     $latest=stored_read('auth');
-    if(!is_array($latest)||!aq_mfa_enabled($latest) ||
+    // Refuse to create new trust under a revision that was not freshly MFA-verified.
+    if(!aq_trust_enrollment_current($latest,$verifiedTag) ||
        !password_verify($password,(string)($latest['password_hash']??'')))return false;
     $now=time();$expires=$now+AQ_TRUST_TTL;
     $token=rtrim(strtr(base64_encode(random_bytes(32)),'+/','-_'),'=');
