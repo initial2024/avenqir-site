@@ -162,6 +162,9 @@ function aq_trust_clear_all():bool{
     $latest=stored_read('auth');
     if(!is_array($latest))return false;
     $latest['trusted_devices']=[];
+    // Explicit emergency revoke invalidates *all* currently authenticated
+    // sessions and trusted-browser grants, even under concurrent login.
+    $latest['security_rev']=bin2hex(random_bytes(18));
     $saved=stored_write('auth',$latest);
   }finally{
     flock($lock,LOCK_UN);fclose($lock);
