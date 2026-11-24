@@ -3417,6 +3417,432 @@
       "reviewedOn": "2026-11-24",
       "evidence": "Observed redirect to government service portal; indexed three months ago",
       "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.hko.gov.hk/",
+      "source": "https://www.hko.gov.hk/en/wservice/tsheet/pubwx.htm",
+      "identity": "Hong Kong Observatory",
+      "method": "Official institutional source identifies exact endpoint; live response may be unavailable",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official public weather service page explicitly identifies exact homepage; indexed today",
+      "evidenceFreshness": "See evidence"
+    },
+    {
+      "url": "https://www.bfs.admin.ch/",
+      "source": "https://www.bfs.admin.ch/en/new-fso-web-presence",
+      "identity": "Swiss Federal Statistical Office",
+      "method": "Official institutional source identifies exact endpoint; live response may be unavailable",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official announcement explicitly identifies institutional homepage; published four weeks ago, indexed today. Keep stable homepage rather than old language-specific redirect.",
+      "evidenceFreshness": "See evidence"
+    },
+    {
+      "url": "https://data.gov.ie/",
+      "source": "https://data.gov.ie/en_GB/faqs",
+      "identity": "Ireland Open Data Portal",
+      "method": "Official institutional source identifies exact endpoint; live response may be unavailable",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official FAQ identifies portal and recent homepage search index (yesterday); direct retrieval returned 429, live reachability not established.",
+      "evidenceFreshness": "See evidence"
+    },
+    {
+      "url": "https://www.nzta.govt.nz/",
+      "source": "https://www.nzta.govt.nz/about-us/about-this-site/website-terms-of-use",
+      "identity": "NZ Transport Agency Waka Kotahi",
+      "method": "Official institutional source identifies exact endpoint; live response may be unavailable",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official site terms and NZ Ministry of Transport cross-reference https://www.transport.govt.nz/contact-us; indexed today; root direct retrieval returned 403.",
+      "evidenceFreshness": "See evidence"
+    },
+    {
+      "url": "https://www.royalmail.com/",
+      "source": "https://www.royalmail.com/",
+      "identity": "Royal Mail",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Readable Royal Mail Group homepage with tracking and collection",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.tesco.com/",
+      "source": "https://www.tesco.com/",
+      "identity": "Tesco",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded supermarket homepage and account navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.argos.co.uk/",
+      "source": "https://www.argos.co.uk/",
+      "identity": "Argos",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded homepage, order tracking and store locator",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.rewe.de/",
+      "source": "https://www.rewe.de/",
+      "identity": "REWE",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded supermarket homepage and shopping links",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.sncf-connect.com/",
+      "source": "https://www.sncf-connect.com/",
+      "identity": "SNCF Connect",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded travel planning and rail ticket homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.laposte.fr/",
+      "source": "https://www.laposte.fr/",
+      "identity": "La Poste",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "French postal homepage with official parcel services",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.carrefour.fr/",
+      "source": "https://www.carrefour.fr/",
+      "identity": "Carrefour France",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded supermarket homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.iledefrance-mobilites.fr/",
+      "source": "https://www.iledefrance-mobilites.fr/",
+      "identity": "Île-de-France Mobilités",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official regional public transportation homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.abc.net.au/",
+      "source": "https://www.abc.net.au/",
+      "identity": "Australian Broadcasting Corporation",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "ABC homepage with institutional services and programming",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.coles.com.au/",
+      "source": "https://www.coles.com.au/",
+      "identity": "Coles",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded Australian supermarket homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.ns.nl/",
+      "source": "https://www.ns.nl/",
+      "identity": "Nederlandse Spoorwegen",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official railway trip planner and service navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.posti.fi/",
+      "source": "https://www.posti.fi/",
+      "identity": "Posti",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Finnish postal homepage and personal/business services",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.vr.fi/",
+      "source": "https://www.vr.fi/",
+      "identity": "VR",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Finnish rail ticket homepage, readable navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.postnl.nl/",
+      "source": "https://www.postnl.nl/",
+      "identity": "PostNL",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Dutch postal homepage with delivery services",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.marktplaats.nl/",
+      "source": "https://www.marktplaats.nl/",
+      "identity": "Marktplaats",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official marketplace homepage; identity only, individual listings not reviewed",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.coop.ch/",
+      "source": "https://www.coop.ch/",
+      "identity": "Coop Switzerland",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded supermarket homepage and store locator",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.postnord.se/",
+      "source": "https://www.postnord.se/",
+      "identity": "PostNord Sweden",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official Swedish delivery homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.ica.se/",
+      "source": "https://www.ica.se/",
+      "identity": "ICA",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded Swedish supermarket homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.blocket.se/",
+      "source": "https://www.blocket.se/",
+      "identity": "Blocket",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded marketplace homepage; individual listings not reviewed",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.posten.no/",
+      "source": "https://www.posten.no/",
+      "identity": "Posten Norway",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official postal homepage with tracking and delivery",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.vy.no/",
+      "source": "https://www.vy.no/",
+      "identity": "Vy",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official transportation tickets and customer service",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.finn.no/",
+      "source": "https://www.finn.no/",
+      "identity": "FINN",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded Norwegian marketplace homepage; individual listings not reviewed",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.rema.no/",
+      "source": "https://www.rema.no/",
+      "identity": "REMA 1000",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded Norwegian supermarket homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.postnord.dk/",
+      "source": "https://www.postnord.dk/",
+      "identity": "PostNord Denmark",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official Danish parcel service homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.dsb.dk/",
+      "source": "https://www.dsb.dk/",
+      "identity": "DSB",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official Danish rail ticket homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.dba.dk/",
+      "source": "https://www.dba.dk/",
+      "identity": "DBA",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded marketplace homepage; individual listings not reviewed",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://coop.dk/",
+      "source": "https://coop.dk/",
+      "identity": "Coop Denmark",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Coop Danmark A/S homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.tori.fi/",
+      "source": "https://www.tori.fi/",
+      "identity": "Tori",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded marketplace homepage; individual listings not reviewed",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.delhaize.be/",
+      "source": "https://www.delhaize.be/",
+      "identity": "Delhaize",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded Belgian grocery homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.tesco.ie/",
+      "source": "https://www.tesco.ie/",
+      "identity": "Tesco Ireland",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded Irish grocery homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.amtrak.com/home",
+      "source": "https://www.amtrak.com/",
+      "previousUrl": "https://www.amtrak.com/",
+      "identity": "Amtrak",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect; readable rail travel planning homepage",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.dhl.de/de/privatkunden.html",
+      "source": "https://www.dhl.de/",
+      "previousUrl": "https://www.dhl.de/",
+      "identity": "DHL Germany",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect; readable private-customer postal service navigation",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.deutschepost.de/de.html",
+      "source": "https://www.deutschepost.de/",
+      "previousUrl": "https://www.deutschepost.de/",
+      "identity": "Deutsche Post",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect; readable parcel and postage services",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.bvg.de/de",
+      "source": "https://www.bvg.de/",
+      "previousUrl": "https://www.bvg.de/",
+      "identity": "BVG",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect; official Berlin transportation information",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.kakaocorp.com/page/",
+      "source": "https://www.kakao.com/",
+      "previousUrl": "https://www.kakao.com/",
+      "identity": "Kakao",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed cross-domain redirect to Kakao corporate homepage with readable service navigation",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.canadapost-postescanada.ca/cpc/en/home.page",
+      "source": "https://www.canadapost-postescanada.ca/",
+      "previousUrl": "https://www.canadapost-postescanada.ca/",
+      "identity": "Canada Post",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to official English postal homepage",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.correos.es/es/es/particulares",
+      "source": "https://www.correos.es/",
+      "previousUrl": "https://www.correos.es/",
+      "identity": "Correos",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed old HTTP downgrade redirect; independently retrieved exact HTTPS consumer endpoint with readable service content",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.bol.com/nl/nl/",
+      "source": "https://www.bol.com/",
+      "previousUrl": "https://www.bol.com/",
+      "identity": "bol",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to branded Dutch shop",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.post.ch/de",
+      "source": "https://www.post.ch/",
+      "previousUrl": "https://www.post.ch/",
+      "identity": "Swiss Post",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to official postal homepage",
+      "evidenceFreshness": "Indexed approximately 5 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.ricardo.ch/de/",
+      "source": "https://www.ricardo.ch/",
+      "previousUrl": "https://www.ricardo.ch/",
+      "identity": "Ricardo",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to official marketplace homepage; individual listings not reviewed",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.verkkokauppa.com/fi/etusivu",
+      "source": "https://www.verkkokauppa.com/",
+      "previousUrl": "https://www.verkkokauppa.com/",
+      "identity": "Verkkokauppa",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to branded Finnish shop",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.bpost.be/en",
+      "source": "https://www.bpost.be/",
+      "previousUrl": "https://www.bpost.be/",
+      "identity": "bpost",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to official English postal homepage",
+      "evidenceFreshness": "Indexed approximately 5 months ago; not live availability or safety proof"
     }
   ]
 }
