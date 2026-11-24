@@ -19,7 +19,7 @@ require(path.join(site,'atlas-everyday.js'));
 require(path.join(site,'atlas-regional-ext.js'));
 require(path.join(site,'atlas-everyday-ext.js'));
 const catalog=require(path.join(site,'atlas-catalog-core.js'));
-assert.equal(catalog.catalog().length,1107,'original curated resources preserved');
+assert.equal(catalog.catalog().length,1239,'original curated resources preserved');
 assert.equal(language.LOCALES.length,40,'forty manually selectable interface locales');
 assert.equal(new Set(language.LOCALES.map(x=>x.code)).size,40);
 assert.equal(language.detect([]),'en','no detectable browser language defaults to English');
@@ -69,7 +69,7 @@ const remote=catalog.sanitize([
 ]);
 assert.equal(remote.length,2);
 const merged=catalog.catalog(remote);
-assert.equal(merged.length,1109);
+assert.equal(merged.length,1241);
 assert.equal(merged[0].category,'学术');
 assert.deepEqual(merged[0].languages,['en','ja']);
 assert.equal(merged[0].languageSource,'explicit');
@@ -106,7 +106,7 @@ const admin=fs.readFileSync(path.join(site,'admin.php'),'utf8');
 const sw=fs.readFileSync(path.join(site,'sw.js'),'utf8');
 const siteJs=fs.readFileSync(path.join(site,'site.js'),'utf8');
 for(const html of [dir,home]){
- assert.ok(html.indexOf('atlas-enrich.js?v=24')<html.indexOf('atlas-catalog-core.js?v=105'),'enrichment loads before catalog');
+ assert.ok(html.indexOf('atlas-enrich.js?v=24')<html.indexOf('atlas-catalog-core.js?v=110'),'enrichment loads before catalog');
 }
 assert.ok(dir.includes('atlasSiteLanguageMode'));
 assert.ok(dir.includes('atlasSiteLanguageHint'));

@@ -25,7 +25,7 @@ assert.equal(everyday.links.length,60);
 assert.equal(regionalExt.links.length,140);
 assert.equal(everydayExt.links.length,112);
 assert.equal(ai.links.length,62);
-assert.equal(merged.length,1107,'combined catalog must include all new resource sources');
+assert.equal(merged.length,1239,'combined catalog must include all new resource sources');
 const actual=new Map();
 for(const item of merged){
   if(!item.region)continue;
@@ -108,8 +108,8 @@ for(const source of ['atlas-ai.js','atlas-regional.js','atlas-everyday.js','atla
  assert.ok(home.includes('src="'+source+'?v=18"'),'home missing resource '+source);
  assert.ok(html.includes('src="'+source+'?v=18"'),'directory missing resource '+source);
  assert.ok(sw.includes("'./"+source+"'"),'offline worker missing '+source);
- assert.ok(html.indexOf(source+'?v=18')<html.indexOf('atlas-catalog-core.js?v=105'),'resource before catalog');
- assert.ok(home.indexOf(source+'?v=18')<home.indexOf('atlas-catalog-core.js?v=105'),'home resource before catalog');
+ assert.ok(html.indexOf(source+'?v=18')<html.indexOf('atlas-catalog-core.js?v=110'),'resource before catalog');
+ assert.ok(home.indexOf(source+'?v=18')<home.indexOf('atlas-catalog-core.js?v=110'),'home resource before catalog');
 }
 for(const tag of ['atlasRegionToggle','atlasRegionStatus','atlasRegionBody','atlasRegionSelect','atlasRegionCards','atlasRegionClear']){
  assert.ok(html.includes('id="'+tag+'"'),'missing local region control '+tag);
@@ -175,4 +175,4 @@ assert.ok(!merged.some(x=>x.url==='https://english.claua.de/'),'do not disclose 
 assert.equal(gate.officialSourceReviewed('https://www.thaigov.go.th/'),false,'official-looking additions do not bypass exact-url trust');
 const transfer=fs.readFileSync(path.join(dir,'transfer-schema.js'),'utf8');
 assert.ok(!transfer.includes(region.KEY),'region choices not backed up or synced across devices');
-console.log('PASS: 1107 distinct HTTPS destinations, 40 supported countries/regions with practical local choices, opt-in on-device-only timezone hints and official external-link safeguards');
+console.log('PASS: 1239 distinct HTTPS destinations, 40 supported countries/regions with practical local choices, opt-in on-device-only timezone hints and official external-link safeguards');

@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded',()=>{
  const r=document.getElementById('atlasResults');
  const n=document.getElementById('atlasLiveCount');
  const s=document.getElementById('atlasSource');
- document.documentElement.dataset.aqLocalReady=String(!!r&&r.children.length>0&&!!n&&!!s&&/1107|1,107/.test(n.textContent));
+ document.documentElement.dataset.aqLocalReady=String(!!r&&r.children.length>0&&!!n&&!!s&&/1239|1,239/.test(n.textContent));
  document.documentElement.dataset.aqInitialCount=String(r?.children.length||0);
  const input=document.getElementById('atlasQuery'),form=document.getElementById('atlasForm'),dialog=document.getElementById('atlasNoMatchDialog');
  const until=performance.now()+10000;

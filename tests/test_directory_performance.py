@@ -4,7 +4,7 @@ ROOT=Path(__file__).resolve().parents[1]
 class DirectoryPerformance(unittest.TestCase):
     def test_same_catalog_version(self):
         for name in ['index.html','directory.html']:
-            self.assertIn('atlas-catalog-core.js?v=105',(ROOT/'site'/name).read_text())
+            self.assertIn('atlas-catalog-core.js?v=110',(ROOT/'site'/name).read_text())
     def test_first_paint_and_cached_aggregates(self):
         s=(ROOT/'site/directory.js').read_text()
         self.assertIn('safetyRecords===records&&safetyLocale===currentLocale',s)

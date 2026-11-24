@@ -34,7 +34,7 @@ for(const x of [...legacy,...atlas.links,...expansion.links,...specialist.links,
   urls.add(u.href);
 }
 assert.equal(urls.size,catalog.catalog().length);
-assert.equal(urls.size,1107,'catalog must represent the full curated expansion');
+assert.equal(urls.size,1239,'catalog must represent the full curated expansion');
 for(const flow of atlas.flows){
  assert.ok(flow.id&&flow.title&&flow.note);
  assert.ok(flow.urls.length>=4 && flow.urls.length<=5);
@@ -56,7 +56,7 @@ for(const name of ['atlasFlowGrid','atlasFlowStatus','atlasResetFlow','atlasRevi
  assert.ok(html.includes('id="'+name+'"'),'missing interface element '+name);
 }
 assert.ok(html.indexOf('atlas-paths.js?v=16')<html.search(/directory\.js\?v=[0-9]+/));
-assert.ok(html.indexOf('atlas-specialist.js?v=16')<html.indexOf('atlas-catalog-core.js?v=105'));
+assert.ok(html.indexOf('atlas-specialist.js?v=16')<html.indexOf('atlas-catalog-core.js?v=110'));
 const sw=fs.readFileSync(path.join(base,'sw.js'),'utf8');
 assert.ok(sw.includes("'./atlas-paths.js'"),'offline addon missing');
 assert.ok(core.includes('paths.flows.find('));
