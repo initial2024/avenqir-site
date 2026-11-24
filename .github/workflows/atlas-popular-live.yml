@@ -64,7 +64,7 @@ jobs:
           output = result.stdout
           if 'slowAES.decrypt' in output and 'atlasLiveCount' not in output:
               raise SystemExit('PUBLIC_PAGE=access challenge')
-          assert 'link-gate.js?v=126' in output, 'The browser did not load the v128 directory shell'
+          assert 'link-gate.js?v=128' in output, 'The browser did not load the v128 directory shell'
           def field(element):
               found = re.search(r'<[^>]+id="'+element+r'"[^>]*>([^<]*)', output)
               assert found, 'Rendered element missing: '+element
