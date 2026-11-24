@@ -1,0 +1,126 @@
+{
+  "reviewDate": "2026-11-24",
+  "scope": "Exact destination identity from readable indexed page; not live reachability or malware certification; user-generated content is not reviewed.",
+  "records": [
+    {
+      "url": "https://www.loc.gov/",
+      "source": "https://www.loc.gov/",
+      "title": "Library of Congress",
+      "evidence": "Homepage identifies library and digital collections",
+      "method": "Exact URL indexed retrieval, same destination, readable service identity"
+    },
+    {
+      "url": "https://data.gov/",
+      "source": "https://data.gov/",
+      "title": "Data.gov",
+      "evidence": "Identifies GSA and US government open data service",
+      "method": "Exact URL indexed retrieval, same destination, readable service identity"
+    },
+    {
+      "url": "https://www.nist.gov/pml",
+      "source": "https://www.nist.gov/pml",
+      "title": "NIST Physical Measurement Laboratory",
+      "evidence": "NIST institutional page and laboratory navigation",
+      "method": "Exact URL indexed retrieval, same destination, readable service identity"
+    },
+    {
+      "url": "https://earthquake.usgs.gov/",
+      "source": "https://earthquake.usgs.gov/",
+      "title": "USGS Earthquake Hazards Program",
+      "evidence": "Named program with data and monitoring services",
+      "method": "Exact URL indexed retrieval, same destination, readable service identity"
+    },
+    {
+      "url": "https://www.photopea.com/",
+      "source": "https://www.photopea.com/",
+      "title": "Photopea",
+      "evidence": "Named product and image editor features",
+      "method": "Exact URL indexed retrieval, same destination, readable service identity"
+    },
+    {
+      "url": "https://browserleaks.com/",
+      "source": "https://browserleaks.com/",
+      "title": "BrowserLeaks",
+      "evidence": "Named service and browser testing tools",
+      "method": "Exact URL indexed retrieval, same destination, readable service identity"
+    },
+    {
+      "url": "https://dnschecker.org/",
+      "source": "https://dnschecker.org/",
+      "title": "DNS Checker",
+      "evidence": "DNS propagation checking service",
+      "method": "Exact URL indexed retrieval, same destination, readable service identity"
+    },
+    {
+      "url": "https://www.ssllabs.com/ssltest/",
+      "source": "https://www.ssllabs.com/ssltest/",
+      "title": "Qualys SSL Labs",
+      "evidence": "Named Qualys SSL Server Test",
+      "method": "Exact URL indexed retrieval, same destination, readable service identity"
+    },
+    {
+      "url": "https://time.is/",
+      "source": "https://time.is/",
+      "title": "Time.is",
+      "evidence": "Named time and timezone service",
+      "method": "Exact URL indexed retrieval, same destination, readable service identity"
+    },
+    {
+      "url": "https://haveibeenpwned.com/",
+      "source": "https://haveibeenpwned.com/",
+      "title": "Have I Been Pwned",
+      "evidence": "Named breach lookup service",
+      "method": "Exact URL indexed retrieval, same destination, readable service identity"
+    },
+    {
+      "url": "https://openlibrary.org/",
+      "source": "https://openlibrary.org/",
+      "title": "Open Library",
+      "evidence": "Named library search and collections",
+      "method": "Exact URL indexed retrieval, same destination, readable service identity"
+    },
+    {
+      "url": "https://itch.io/games/free",
+      "source": "https://itch.io/games/free",
+      "title": "itch.io",
+      "evidence": "Named platform and free games category",
+      "method": "Exact URL indexed retrieval, same destination, readable service identity"
+    },
+    {
+      "url": "https://www.chess.com/",
+      "source": "https://www.chess.com/",
+      "title": "Chess.com",
+      "evidence": "Named chess platform and learning services",
+      "method": "Exact URL indexed retrieval, same destination, readable service identity"
+    },
+    {
+      "url": "https://urlscan.io/",
+      "source": "https://urlscan.io/",
+      "title": "urlscan.io",
+      "evidence": "Named scanning platform and service descriptions",
+      "method": "Exact URL indexed retrieval, same destination, readable service identity"
+    }
+  ],
+  "excluded": [
+    {
+      "url": "https://earthobservatory.nasa.gov/",
+      "reason": "Redirect",
+      "destination": "https://science.nasa.gov/earth/earth-observatory/"
+    },
+    {
+      "url": "https://www.rsc.org/periodic-table",
+      "reason": "Redirect",
+      "destination": "https://periodic-table.rsc.org/"
+    },
+    {
+      "url": "https://www.gov.br/",
+      "reason": "Redirect",
+      "destination": "https://www.gov.br/pt-br"
+    },
+    {
+      "url": "https://data.gov.hk/",
+      "reason": "Redirect",
+      "destination": "https://data.gov.hk/en/"
+    }
+  ]
+}
