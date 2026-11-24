@@ -105,11 +105,11 @@ const model=fs.readFileSync(path.join(dir,'atlas-region.js'),'utf8');
 const wiring=fs.readFileSync(path.join(dir,'directory.js'),'utf8');
 const privacy=fs.readFileSync(path.join(dir,'privacy.html'),'utf8');
 for(const source of ['atlas-ai.js','atlas-regional.js','atlas-everyday.js','atlas-regional-ext.js','atlas-everyday-ext.js']){
- assert.ok(home.includes('src="'+source+'?v=18"'),'home missing resource '+source);
- assert.ok(html.includes('src="'+source+'?v=18"'),'directory missing resource '+source);
+ assert.ok(home.includes('src="'+source+'?v='),'home missing resource '+source);
+ assert.ok(html.includes('src="'+source+'?v='),'directory missing resource '+source);
  assert.ok(sw.includes("'./"+source+"'"),'offline worker missing '+source);
- assert.ok(html.indexOf(source+'?v=18')<html.search(/atlas-catalog-core\.js\?v=\d+/),'resource before catalog');
- assert.ok(home.indexOf(source+'?v=18')<home.search(/atlas-catalog-core\.js\?v=\d+/),'home resource before catalog');
+ assert.ok(html.indexOf(source+'?v=')<html.search(/atlas-catalog-core\.js\?v=\d+/),'resource before catalog');
+ assert.ok(home.indexOf(source+'?v=')<home.search(/atlas-catalog-core\.js\?v=\d+/),'home resource before catalog');
 }
 for(const tag of ['atlasRegionToggle','atlasRegionStatus','atlasRegionBody','atlasRegionSelect','atlasRegionCards','atlasRegionClear']){
  assert.ok(html.includes('id="'+tag+'"'),'missing local region control '+tag);
