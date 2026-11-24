@@ -1,0 +1,37 @@
+name: v116 public evidence review
+on:
+  push:
+    branches: [audit/v116-uk-registry-dal]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - run: |
+          python3 scripts/audit_directory_links.py
+          python3 scripts/list_pending_official_reviews.py --summary
+          python3 scripts/audit_v116_public_evidence.py --self-test
+          node --check site/link-gate.js
+          node tests/test_atlas_safety.cjs
+          python3 -m unittest discover -s tests -v
+  uk-registry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - run: python3 scripts/audit_v116_public_evidence.py --uk
+  direct-dal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - run: python3 scripts/audit_v116_public_evidence.py --dal

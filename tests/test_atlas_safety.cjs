@@ -18,7 +18,7 @@ const catalog=require(path.join(site,'atlas-catalog-core.js'));
 const items=catalog.catalog();
 assert.equal(items.length,1239);
 const result=safety.summary(items);
-assert.deepEqual(result,{total:1239,blocked:0,caution:0,reviewed:211,pending:1028},'separate structural audit from provenance review');
+assert.deepEqual(result,{total:1239,blocked:0,caution:0,reviewed:755,pending:484},'separate structural audit from provenance review');
 assert.equal(safety.inspect('https://www.icann.org/').type,'reviewed');
 const evidence=JSON.parse(fs.readFileSync(path.join(site,'atlas-review-v101.json'),'utf8'));
 assert.equal(evidence.records.length,13);
@@ -32,6 +32,9 @@ for(const record of evidence.records){
 const additional=JSON.parse(fs.readFileSync(path.join(site,'atlas-review-v115.json'),'utf8'));
 assert.equal(additional.records.length,22);
 for(const row of additional.records){assert.ok(items.some(x=>x.url===row.url));assert.equal(gate.officialSourceReviewed(row.url),true);assert.equal(gate.maySkipConfirmation(row.url+'?next=evil',null),false);}
+const v116=JSON.parse(fs.readFileSync(path.join(site,'atlas-review-v116.json'),'utf8'));
+assert.equal(v116.records.length,544);
+for(const row of v116.records){assert.ok(items.some(x=>x.url===row.url));assert.equal(gate.officialSourceReviewed(row.url),true);assert.equal(gate.maySkipConfirmation(row.url+'?next=evil',null),false);}
 const latest=JSON.parse(fs.readFileSync(path.join(site,'atlas-review-v114.json'),'utf8'));
 assert.equal(latest.records.length,36);
 for(const record of latest.records){assert.ok(items.some(x=>x.url===record.url));assert.equal(gate.officialSourceReviewed(record.url),true);assert.equal(gate.maySkipConfirmation(record.url+'?redirect=evil',null),false);}
@@ -104,7 +107,7 @@ const privacy=fs.readFileSync(path.join(site,'privacy.html'),'utf8');
 for(const id of ['atlasSecurityTitle','atlasSecurityCounts']){
  assert.ok(html.includes('id="'+id+'"'));
 }
-assert.ok(html.indexOf('link-gate.js?v=115')<html.indexOf('atlas-safety.js?v=115'));
+assert.ok(html.indexOf('link-gate.js?v=116')<html.indexOf('atlas-safety.js?v=115'));
 assert.ok(html.indexOf('atlas-safety.js?v=115')<html.search(/directory\.js\?v=[0-9]+/));
 assert.ok(serviceWorker.includes("'./atlas-safety.js'"));
 assert.ok(script.includes('renderSafetyAudit()'));
@@ -120,4 +123,4 @@ assert.ok(!script.includes('安全认证通过'),'must not claim certification')
 const backend={url:'https://100.74.2.3/',name:'Untrusted internal link',category:'其他',description:'test'};
 const newCounts=safety.summary([backend,...items]);
 assert.equal(newCounts.blocked,1,'backend links need identical runtime structural screening');
-console.log('PASS: 1239 locally structurally checked URLs, 211 exact source reviews, 1028 pending provenance, reserved IPv4/IPv6 blocking, explicit Google risk checks; no security certification claimed');
+console.log('PASS: 1239 locally structurally checked URLs, 755 exact source reviews, 484 pending provenance, reserved IPv4/IPv6 blocking, explicit Google risk checks; no security certification claimed');

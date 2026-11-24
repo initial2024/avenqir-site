@@ -1,0 +1,4269 @@
+{
+  "reviewDate": "2026-11-24",
+  "scope": "Exact official page identity via indexed retrieval. Excludes failed, unreadable and redirected endpoints. Not live transport or malware certification.",
+  "records": [
+    {
+      "url": "https://nodejs.org/en",
+      "source": "https://nodejs.org/en",
+      "identity": "Node.js",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.typescriptlang.org/docs/",
+      "source": "https://www.typescriptlang.org/docs/",
+      "identity": "TypeScript Documentation",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://go.dev/",
+      "source": "https://go.dev/",
+      "identity": "Go Programming Language",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://developer.android.com/",
+      "source": "https://developer.android.com/",
+      "identity": "Android Developers",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://react.dev/",
+      "source": "https://react.dev/",
+      "identity": "React",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://vuejs.org/",
+      "source": "https://vuejs.org/",
+      "identity": "Vue.js",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://svelte.dev/",
+      "source": "https://svelte.dev/",
+      "identity": "Svelte",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://pypi.org/",
+      "source": "https://pypi.org/",
+      "identity": "Python Package Index",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.loc.gov/",
+      "source": "https://www.loc.gov/",
+      "identity": "Library of Congress",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.aps.org/",
+      "source": "https://www.aps.org/",
+      "identity": "American Physical Society",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.iop.org/",
+      "source": "https://www.iop.org/",
+      "identity": "Institute of Physics",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://pdg.lbl.gov/",
+      "source": "https://pdg.lbl.gov/",
+      "identity": "Particle Data Group",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.nist.gov/pml",
+      "source": "https://www.nist.gov/pml",
+      "identity": "NIST Physical Measurement Laboratory",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.aip.org/",
+      "source": "https://www.aip.org/",
+      "identity": "American Institute of Physics",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.eso.org/public/",
+      "source": "https://www.eso.org/public/",
+      "identity": "European Southern Observatory",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.uniprot.org/",
+      "source": "https://www.uniprot.org/",
+      "identity": "UniProt",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.ebi.ac.uk/",
+      "source": "https://www.ebi.ac.uk/",
+      "identity": "EMBL-EBI",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.acs.org/",
+      "source": "https://www.acs.org/",
+      "identity": "American Chemical Society",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.ebi.ac.uk/chembl/",
+      "source": "https://www.ebi.ac.uk/chembl/",
+      "identity": "ChEMBL",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.e-stat.go.jp/",
+      "source": "https://www.e-stat.go.jp/",
+      "identity": "Japan official statistics portal",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://cir.nii.ac.jp/",
+      "source": "https://cir.nii.ac.jp/",
+      "identity": "CiNii Research",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.jstage.jst.go.jp/",
+      "source": "https://www.jstage.jst.go.jp/",
+      "identity": "J-STAGE",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.jma.go.jp/jma/index.html",
+      "source": "https://www.jma.go.jp/jma/index.html",
+      "identity": "Japan Meteorological Agency",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.jst.go.jp/",
+      "source": "https://www.jst.go.jp/",
+      "identity": "Japan Science and Technology Agency",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.stats.gov.cn/",
+      "source": "https://www.stats.gov.cn/",
+      "identity": "National Bureau of Statistics of China",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.cas.cn/",
+      "source": "https://www.cas.cn/",
+      "identity": "Chinese Academy of Sciences",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.gov.sg/",
+      "source": "https://www.gov.sg/",
+      "identity": "Singapore Government",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.singstat.gov.sg/",
+      "source": "https://www.singstat.gov.sg/",
+      "identity": "Singapore Department of Statistics",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.cwa.gov.tw/",
+      "source": "https://www.cwa.gov.tw/",
+      "identity": "Central Weather Administration",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.stat.gov.tw/",
+      "source": "https://www.stat.gov.tw/",
+      "identity": "Statistics portal",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.hkpl.gov.hk/",
+      "source": "https://www.hkpl.gov.hk/",
+      "identity": "Hong Kong Public Libraries",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.gov.mo/en/",
+      "source": "https://www.gov.mo/en/",
+      "identity": "Macao Government Portal",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.govt.nz/",
+      "source": "https://www.govt.nz/",
+      "identity": "New Zealand Government",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.apnic.net/",
+      "source": "https://www.apnic.net/",
+      "identity": "APNIC",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.audacityteam.org/",
+      "source": "https://www.audacityteam.org/",
+      "identity": "Audacity",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://commonmark.org/",
+      "source": "https://commonmark.org/",
+      "identity": "CommonMark",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://developer.chrome.com/docs/lighthouse/",
+      "source": "https://developer.chrome.com/docs/lighthouse/",
+      "identity": "Chrome Lighthouse",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://typst.app/",
+      "source": "https://typst.app/",
+      "identity": "Typst",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.torproject.org/",
+      "source": "https://www.torproject.org/",
+      "identity": "Tor Project",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://wiki.openstreetmap.org/",
+      "source": "https://wiki.openstreetmap.org/",
+      "identity": "OpenStreetMap Wiki",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.nomoreransom.org/",
+      "source": "https://www.nomoreransom.org/",
+      "identity": "No More Ransom",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://github.com/advisories",
+      "source": "https://github.com/advisories",
+      "identity": "GitHub Advisory Database",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://explore.openaire.eu/",
+      "source": "https://explore.openaire.eu/",
+      "identity": "OpenAIRE",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://speed.cloudflare.com/",
+      "source": "https://speed.cloudflare.com/",
+      "identity": "Cloudflare Speed Test",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://huggingface.co/models",
+      "source": "https://huggingface.co/models",
+      "identity": "Hugging Face Models",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://ollama.com/",
+      "source": "https://ollama.com/",
+      "identity": "Ollama",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://lmstudio.ai/",
+      "source": "https://lmstudio.ai/",
+      "identity": "LM Studio",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://computerhistory.org/",
+      "source": "https://computerhistory.org/",
+      "identity": "Computer History Museum",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.w3.org/History.html",
+      "source": "https://www.w3.org/History.html",
+      "identity": "W3C Web history",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://chem.libretexts.org/",
+      "source": "https://chem.libretexts.org/",
+      "identity": "Chemistry LibreTexts",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://gnupg.org/",
+      "source": "https://gnupg.org/",
+      "identity": "GnuPG",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://f-droid.org/",
+      "source": "https://f-droid.org/",
+      "identity": "F-Droid",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://stellarium.org/",
+      "source": "https://stellarium.org/",
+      "identity": "Stellarium",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://openlibrary.org/",
+      "source": "https://openlibrary.org/",
+      "identity": "Open Library",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.ssllabs.com/ssltest/",
+      "source": "https://www.ssllabs.com/ssltest/",
+      "identity": "Qualys SSL Labs",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://laws.e-gov.go.jp/",
+      "source": "https://laws.e-gov.go.jp/",
+      "previousUrl": "https://elaws.e-gov.go.jp/",
+      "identity": "e-Gov 法令検索",
+      "method": "Observed old URL redirect and inspected official successor"
+    },
+    {
+      "url": "https://data.e-gov.go.jp/info/ja",
+      "source": "https://data.e-gov.go.jp/info/ja",
+      "previousUrl": "https://www.data.go.jp/",
+      "identity": "e-Gov データポータル",
+      "method": "Observed old URL redirect and inspected official successor"
+    },
+    {
+      "url": "https://www.iau.org/",
+      "source": "https://www.iau.org/",
+      "identity": "International Astronomical Union",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.wolframalpha.com/",
+      "source": "https://www.wolframalpha.com/",
+      "identity": "Wolfram Alpha",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.geogebra.org/graphing",
+      "source": "https://www.geogebra.org/graphing",
+      "identity": "GeoGebra Graphing Calculator",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://rust-lang.org/",
+      "source": "https://rust-lang.org/",
+      "identity": "Rust Programming Language",
+      "previousUrl": "https://www.rust-lang.org/",
+      "method": "Observed redirect and inspected official successor"
+    },
+    {
+      "url": "https://stackoverflow.com/questions",
+      "source": "https://stackoverflow.com/questions",
+      "identity": "Stack Overflow Questions",
+      "previousUrl": "https://stackoverflow.com/",
+      "method": "Observed redirect and inspected official successor"
+    },
+    {
+      "url": "https://molview.org/",
+      "source": "https://molview.org/",
+      "identity": "MolView",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://physics.info/",
+      "source": "https://physics.info/",
+      "identity": "Physics Hypertextbook",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.heavens-above.com/",
+      "source": "https://www.heavens-above.com/",
+      "identity": "Heavens-Above",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://openai.com/",
+      "source": "https://openai.com/",
+      "identity": "OpenAI",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.anthropic.com/",
+      "source": "https://www.anthropic.com/",
+      "identity": "Anthropic",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://deepmind.google/",
+      "source": "https://deepmind.google/",
+      "identity": "Google DeepMind",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://x.ai/",
+      "source": "https://x.ai/",
+      "identity": "xAI",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://mistral.ai/",
+      "source": "https://mistral.ai/",
+      "identity": "Mistral",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.deepseek.com/",
+      "source": "https://www.deepseek.com/",
+      "identity": "DeepSeek",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://cohere.com/",
+      "source": "https://cohere.com/",
+      "identity": "Cohere",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.ai21.com/",
+      "source": "https://www.ai21.com/",
+      "identity": "AI21",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://stability.ai/",
+      "source": "https://stability.ai/",
+      "identity": "Stability AI",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://huggingface.co/",
+      "source": "https://huggingface.co/",
+      "identity": "Hugging Face",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.pewresearch.org/topic/internet-technology/",
+      "identity": "Pew Research Center",
+      "source": "https://www.pewresearch.org/internet/",
+      "previousUrl": "https://www.pewresearch.org/internet/",
+      "method": "Official old page identifies successor; destination confirmed via indexed retrieval"
+    },
+    {
+      "url": "https://qwen.ai/",
+      "identity": "Qwen",
+      "source": "https://qwenlm.github.io/",
+      "previousUrl": "https://qwenlm.github.io/",
+      "method": "Official old page identifies successor; destination confirmed via indexed retrieval"
+    },
+    {
+      "url": "https://www.ncl.edu.tw/",
+      "source": "https://www.ncl.edu.tw/",
+      "identity": "National Central Library",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.ctt.gov.mo/",
+      "source": "https://www.ctt.gov.mo/",
+      "identity": "Macao Post",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.nzpost.co.nz/",
+      "source": "https://www.nzpost.co.nz/",
+      "identity": "NZ Post",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.poste.it/",
+      "source": "https://www.poste.it/",
+      "identity": "Poste Italiane",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.jreast.co.jp/",
+      "source": "https://www.jreast.co.jp/",
+      "identity": "JR East",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.post.japanpost.jp/",
+      "source": "https://www.post.japanpost.jp/",
+      "identity": "Japan Post",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.usps.com/",
+      "source": "https://www.usps.com/",
+      "identity": "USPS",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.oneservice.gov.sg/",
+      "source": "https://www.oneservice.gov.sg/",
+      "identity": "OneService Singapore",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.singpost.com/",
+      "source": "https://www.singpost.com/",
+      "identity": "SingPost",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.smrt.com.sg/",
+      "source": "https://www.smrt.com.sg/",
+      "identity": "SMRT",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://data.gov.hk/en/",
+      "source": "https://data.gov.hk/",
+      "previousUrl": "https://data.gov.hk/",
+      "identity": "DATA.GOV.HK",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://www.dsec.gov.mo/zh-MO/",
+      "source": "https://www.dsec.gov.mo/",
+      "previousUrl": "https://www.dsec.gov.mo/",
+      "identity": "Macao Statistics and Census Service",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://www.macaotourism.gov.mo/en/",
+      "source": "https://www.macaotourism.gov.mo/",
+      "previousUrl": "https://www.macaotourism.gov.mo/",
+      "identity": "Macao Government Tourism Office",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://www.dsat.gov.mo/dsat/index.aspx",
+      "source": "https://www.dsat.gov.mo/",
+      "previousUrl": "https://www.dsat.gov.mo/",
+      "identity": "Macao Transport Bureau",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://www.post.gov.tw/post/internet/Group/default.jsp",
+      "source": "https://www.post.gov.tw/",
+      "previousUrl": "https://www.post.gov.tw/",
+      "identity": "Chunghwa Post",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://www.railway.gov.tw/tra-tip-web/tip",
+      "source": "https://www.railway.gov.tw/",
+      "previousUrl": "https://www.railway.gov.tw/",
+      "identity": "Taiwan Railway",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://www.airnewzealand.com/en-nz",
+      "source": "https://www.airnewzealand.co.nz/",
+      "previousUrl": "https://www.airnewzealand.co.nz/",
+      "identity": "Air New Zealand",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://www.trenitalia.com/it.html",
+      "source": "https://www.trenitalia.com/",
+      "previousUrl": "https://www.trenitalia.com/",
+      "identity": "Trenitalia",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://chocolatey.org/",
+      "source": "https://chocolatey.org/",
+      "identity": "Chocolatey",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://ninite.com/",
+      "source": "https://ninite.com/",
+      "identity": "Ninite",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.mathsisfun.com/",
+      "source": "https://www.mathsisfun.com/",
+      "identity": "Math is Fun",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.rapidtables.com/",
+      "source": "https://www.rapidtables.com/",
+      "identity": "RapidTables",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.chemguide.co.uk/",
+      "source": "https://www.chemguide.co.uk/",
+      "identity": "Chemguide",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://apnews.com/",
+      "source": "https://apnews.com/",
+      "identity": "Associated Press",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.reuters.com/",
+      "source": "https://www.reuters.com/",
+      "identity": "Reuters",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://arstechnica.com/",
+      "source": "https://arstechnica.com/",
+      "identity": "Ars Technica",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.theverge.com/",
+      "source": "https://www.theverge.com/",
+      "identity": "The Verge",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.wired.com/",
+      "source": "https://www.wired.com/",
+      "identity": "WIRED",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://techcrunch.com/",
+      "source": "https://techcrunch.com/",
+      "identity": "TechCrunch",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.theregister.com/",
+      "source": "https://www.theregister.com/",
+      "identity": "The Register",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.engadget.com/",
+      "source": "https://www.engadget.com/",
+      "identity": "Engadget",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://spectrum.ieee.org/",
+      "source": "https://spectrum.ieee.org/",
+      "identity": "IEEE Spectrum",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://hackaday.com/",
+      "source": "https://hackaday.com/",
+      "identity": "Hackaday",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://alternativeto.net/",
+      "source": "https://alternativeto.net/",
+      "identity": "AlternativeTo",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://dribbble.com/",
+      "source": "https://dribbble.com/",
+      "identity": "Dribbble",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://flathub.org/en",
+      "source": "https://flathub.org/en",
+      "identity": "Flathub",
+      "method": "Inspected exact official page via indexed retrieval",
+      "previousUrl": "https://flathub.org/"
+    },
+    {
+      "url": "https://www.rakuten.co.jp/",
+      "source": "https://www.rakuten.co.jp/",
+      "identity": "Rakuten",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.gov.tw/",
+      "source": "https://www.gov.tw/",
+      "identity": "我的E政府",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.yahoo.co.jp/",
+      "source": "https://www.yahoo.co.jp/",
+      "identity": "Yahoo Japan",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.fairprice.com.sg/",
+      "source": "https://www.fairprice.com.sg/",
+      "identity": "FairPrice",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.target.com/",
+      "source": "https://www.target.com/",
+      "identity": "Target",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.macau-airport.com/",
+      "source": "https://www.macau-airport.com/",
+      "identity": "Macau International Airport",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.thewarehouse.co.nz/",
+      "source": "https://www.thewarehouse.co.nz/",
+      "identity": "The Warehouse",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://data.gov.tw/",
+      "source": "https://data.gov.tw/",
+      "identity": "政府資料開放平臺",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.grab.com/sg/",
+      "source": "https://www.grab.com/sg/",
+      "identity": "Grab Singapore",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.octopus.com.hk/tc/consumer/index.html",
+      "source": "https://www.octopus.com.hk/tc/consumer/index.html",
+      "identity": "Octopus",
+      "method": "Inspected exact official page via indexed retrieval",
+      "previousUrl": "https://www.octopus.com.hk/"
+    },
+    {
+      "url": "https://pixabay.com/",
+      "source": "https://pixabay.com/",
+      "identity": "Pixabay",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.photopea.com/",
+      "source": "https://www.photopea.com/",
+      "identity": "Photopea",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://browserleaks.com/",
+      "source": "https://browserleaks.com/",
+      "identity": "BrowserLeaks",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://dnschecker.org/",
+      "source": "https://dnschecker.org/",
+      "identity": "DNSChecker",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://time.is/",
+      "source": "https://time.is/",
+      "identity": "Time.is",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://haveibeenpwned.com/",
+      "source": "https://haveibeenpwned.com/",
+      "identity": "Have I Been Pwned",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.chess.com/",
+      "source": "https://www.chess.com/",
+      "identity": "Chess.com",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.ripe.net/",
+      "source": "https://www.ripe.net/",
+      "identity": "RIPE NCC",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://iupac.org/",
+      "source": "https://iupac.org/",
+      "identity": "IUPAC",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.jigsawplanet.com/",
+      "source": "https://www.jigsawplanet.com/",
+      "identity": "Jigsaw Planet",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://skribbl.io/",
+      "source": "https://skribbl.io/",
+      "identity": "skribbl.io",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.coolmathgames.com/",
+      "source": "https://www.coolmathgames.com/",
+      "identity": "Coolmath Games",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.unitconverters.net/",
+      "source": "https://www.unitconverters.net/",
+      "identity": "UnitConverters",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.convertunits.com/",
+      "source": "https://www.convertunits.com/",
+      "identity": "ConvertUnits",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.worldtimebuddy.com/",
+      "source": "https://www.worldtimebuddy.com/",
+      "identity": "World Time Buddy",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://ticktick.com/",
+      "source": "https://ticktick.com/",
+      "identity": "TickTick",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.ilovepdf.com/",
+      "source": "https://www.ilovepdf.com/",
+      "identity": "iLovePDF",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://smallpdf.com/",
+      "source": "https://smallpdf.com/",
+      "identity": "Smallpdf",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.gbif.org/",
+      "source": "https://www.gbif.org/",
+      "identity": "GBIF",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.deepl.com/en/translator",
+      "source": "https://www.deepl.com/translator",
+      "previousUrl": "https://www.deepl.com/translator",
+      "identity": "DeepL",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://www.todoist.com/",
+      "source": "https://todoist.com/",
+      "previousUrl": "https://todoist.com/",
+      "identity": "Todoist",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://tools.pdf24.org/en/",
+      "source": "https://tools.pdf24.org/",
+      "previousUrl": "https://tools.pdf24.org/",
+      "identity": "PDF24",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://docs.docker.com/",
+      "source": "https://docs.docker.com/",
+      "identity": "Docker Docs",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://developers.cloudflare.com/",
+      "source": "https://developers.cloudflare.com/",
+      "identity": "Cloudflare Developer Docs",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://huggingface.co/datasets",
+      "source": "https://huggingface.co/datasets",
+      "identity": "Hugging Face Datasets",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://huggingface.co/spaces",
+      "source": "https://huggingface.co/spaces",
+      "identity": "Hugging Face Spaces",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://ai.google.dev/",
+      "source": "https://ai.google.dev/",
+      "identity": "Google AI for Developers",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://pytorch.org/",
+      "source": "https://pytorch.org/",
+      "identity": "PyTorch",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.tensorflow.org/",
+      "source": "https://www.tensorflow.org/",
+      "identity": "TensorFlow",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://scikit-learn.org/stable/",
+      "source": "https://scikit-learn.org/stable/",
+      "identity": "scikit-learn",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://onnx.ai/",
+      "source": "https://onnx.ai/",
+      "identity": "ONNX",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://oqmd.org/",
+      "source": "https://oqmd.org/",
+      "identity": "OQMD",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://aflow.org/",
+      "source": "https://aflow.org/",
+      "identity": "AFLOW",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.optimade.org/",
+      "source": "https://www.optimade.org/",
+      "identity": "OPTIMADE",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://pymatgen.org/",
+      "source": "https://pymatgen.org/",
+      "identity": "pymatgen",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.si.edu/openaccess",
+      "source": "https://www.si.edu/openaccess",
+      "identity": "Smithsonian Open Access",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.europeana.eu/en",
+      "source": "https://www.europeana.eu/en",
+      "identity": "Europeana",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://iep.utm.edu/",
+      "source": "https://iep.utm.edu/",
+      "identity": "Internet Encyclopedia of Philosophy",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.open.edu/openlearn/",
+      "source": "https://www.open.edu/openlearn/",
+      "identity": "OpenLearn",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.edx.org/",
+      "source": "https://www.edx.org/",
+      "identity": "edX",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://pll.harvard.edu/",
+      "source": "https://pll.harvard.edu/",
+      "identity": "Harvard Professional and Lifelong Learning",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://ed.ted.com/",
+      "source": "https://ed.ted.com/",
+      "identity": "TED-Ed",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.merriam-webster.com/",
+      "source": "https://www.merriam-webster.com/",
+      "identity": "Merriam-Webster",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://reference.wolfram.com/language/",
+      "source": "https://reference.wolfram.com/language/",
+      "identity": "Wolfram Language Documentation",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://data.gov/",
+      "source": "https://data.gov/",
+      "identity": "US Data.gov",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://fred.stlouisfed.org/",
+      "source": "https://fred.stlouisfed.org/",
+      "identity": "Federal Reserve Economic Data",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.inaturalist.org/",
+      "source": "https://www.inaturalist.org/",
+      "identity": "iNaturalist",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.itis.gov/",
+      "source": "https://www.itis.gov/",
+      "identity": "Integrated Taxonomic Information System",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.bgs.ac.uk/",
+      "source": "https://www.bgs.ac.uk/",
+      "identity": "British Geological Survey",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.earthscope.org/",
+      "source": "https://www.earthscope.org/",
+      "identity": "EarthScope",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://geology.com/",
+      "source": "https://geology.com/",
+      "identity": "Geology.com",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://volcano.si.edu/",
+      "source": "https://volcano.si.edu/",
+      "identity": "Smithsonian Global Volcanism Program",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://climate.copernicus.eu/",
+      "source": "https://climate.copernicus.eu/",
+      "identity": "Copernicus Climate Change Service",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.carbonbrief.org/",
+      "source": "https://www.carbonbrief.org/",
+      "identity": "Carbon Brief",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.unep.org/",
+      "source": "https://www.unep.org/",
+      "identity": "UN Environment Programme",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.globalcarbonproject.org/",
+      "source": "https://www.globalcarbonproject.org/",
+      "identity": "Global Carbon Project",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://climateactiontracker.org/",
+      "source": "https://climateactiontracker.org/",
+      "identity": "Climate Action Tracker",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.nhs.uk/",
+      "source": "https://www.nhs.uk/",
+      "identity": "NHS England",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.mayoclinic.org/",
+      "source": "https://www.mayoclinic.org/",
+      "identity": "Mayo Clinic",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.allaboutcircuits.com/",
+      "source": "https://www.allaboutcircuits.com/",
+      "identity": "All About Circuits",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.electronics-tutorials.ws/",
+      "source": "https://www.electronics-tutorials.ws/",
+      "identity": "Electronics Tutorials",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.ti.com/",
+      "source": "https://www.ti.com/",
+      "identity": "Texas Instruments",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.microchip.com/",
+      "source": "https://www.microchip.com/",
+      "identity": "Microchip Technology",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.arduino.cc/",
+      "source": "https://www.arduino.cc/",
+      "identity": "Arduino",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.raspberrypi.com/",
+      "source": "https://www.raspberrypi.com/",
+      "identity": "Raspberry Pi",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://nomad-lab.eu/nomad-lab/",
+      "source": "https://nomad-lab.eu/",
+      "previousUrl": "https://nomad-lab.eu/",
+      "identity": "NOMAD",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.oecd.org/en/data.html",
+      "source": "https://data.oecd.org/",
+      "previousUrl": "https://data.oecd.org/",
+      "identity": "OECD Data",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://data.imf.org/en",
+      "source": "https://data.imf.org/",
+      "previousUrl": "https://data.imf.org/",
+      "identity": "IMF Data",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://science.nasa.gov/earth/earth-observatory/",
+      "source": "https://earthobservatory.nasa.gov/",
+      "previousUrl": "https://earthobservatory.nasa.gov/",
+      "identity": "NASA Earth Observatory",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.analog.com/en/index.html",
+      "source": "https://www.analog.com/",
+      "previousUrl": "https://www.analog.com/",
+      "identity": "Analog Devices",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.st.com/content/st_com/en.html",
+      "source": "https://www.st.com/",
+      "previousUrl": "https://www.st.com/",
+      "identity": "STMicroelectronics",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://data.gov.sg/",
+      "source": "https://data.gov.sg/",
+      "identity": "Singapore Government Open Data",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.moe.gov.sg/",
+      "source": "https://www.moe.gov.sg/",
+      "identity": "Singapore Ministry of Education",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.nparks.gov.sg/",
+      "source": "https://www.nparks.gov.sg/",
+      "identity": "Singapore National Parks Board",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.govinfo.gov/",
+      "source": "https://www.govinfo.gov/",
+      "identity": "US Government Publishing Office",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.grants.gov/",
+      "source": "https://www.grants.gov/",
+      "identity": "Grants.gov",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.uspto.gov/",
+      "source": "https://www.uspto.gov/",
+      "identity": "US Patent and Trademark Office",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.ons.gov.uk/",
+      "source": "https://www.ons.gov.uk/",
+      "identity": "UK Office for National Statistics",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.metoffice.gov.uk/",
+      "source": "https://www.metoffice.gov.uk/",
+      "identity": "UK Met Office",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.data.gov.uk/",
+      "source": "https://www.data.gov.uk/",
+      "identity": "UK National Data Library",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.ukri.org/",
+      "source": "https://www.ukri.org/",
+      "identity": "UK Research and Innovation",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.britishcouncil.org/",
+      "source": "https://www.britishcouncil.org/",
+      "identity": "British Council",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.dfg.de/",
+      "source": "https://www.dfg.de/",
+      "identity": "German Research Foundation",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.bahn.de/",
+      "source": "https://www.bahn.de/",
+      "identity": "Deutsche Bahn",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://meteofrance.com/",
+      "source": "https://meteofrance.com/",
+      "identity": "Météo-France",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.data.gouv.fr/",
+      "source": "https://www.data.gouv.fr/",
+      "identity": "French public data platform",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.culture.gouv.fr/",
+      "source": "https://www.culture.gouv.fr/",
+      "identity": "French Ministry of Culture",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.legifrance.gouv.fr/",
+      "source": "https://www.legifrance.gouv.fr/",
+      "identity": "Légifrance",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.korea.kr/",
+      "source": "https://www.korea.kr/",
+      "identity": "Korea Policy Briefing",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.data.go.kr/",
+      "source": "https://www.data.go.kr/",
+      "identity": "Korean Public Data Portal",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.canada.ca/",
+      "source": "https://www.canada.ca/",
+      "identity": "Government of Canada",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.statcan.gc.ca/",
+      "source": "https://www.statcan.gc.ca/",
+      "identity": "Statistics Canada",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://weather.gc.ca/",
+      "source": "https://weather.gc.ca/",
+      "identity": "Environment Canada Weather",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.lta.gov.sg/content/ltagov/en.html",
+      "source": "https://www.lta.gov.sg/",
+      "previousUrl": "https://www.lta.gov.sg/",
+      "identity": "Singapore Land Transport Authority",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.nlb.gov.sg/main/home",
+      "source": "https://www.nlb.gov.sg/",
+      "previousUrl": "https://www.nlb.gov.sg/",
+      "identity": "Singapore National Library Board",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.bundesregierung.de/breg-de",
+      "source": "https://www.bundesregierung.de/",
+      "previousUrl": "https://www.bundesregierung.de/",
+      "identity": "German Federal Government",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.bundesbank.de/en",
+      "source": "https://www.bundesbank.de/",
+      "previousUrl": "https://www.bundesbank.de/",
+      "identity": "Deutsche Bundesbank",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.daad.de/de/",
+      "source": "https://www.daad.de/",
+      "previousUrl": "https://www.daad.de/",
+      "identity": "DAAD",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.insee.fr/fr/accueil",
+      "source": "https://www.insee.fr/",
+      "previousUrl": "https://www.insee.fr/",
+      "identity": "INSEE",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.service-public.gouv.fr/",
+      "source": "https://www.service-public.fr/",
+      "previousUrl": "https://www.service-public.fr/",
+      "identity": "French Service Public",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.cnrs.fr/fr",
+      "source": "https://www.cnrs.fr/",
+      "previousUrl": "https://www.cnrs.fr/",
+      "identity": "CNRS",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://kosis.kr/index/index.do",
+      "source": "https://kosis.kr/",
+      "previousUrl": "https://kosis.kr/",
+      "identity": "KOSIS",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.weather.go.kr/w/index.do",
+      "source": "https://www.weather.go.kr/",
+      "previousUrl": "https://www.weather.go.kr/",
+      "identity": "Korea Meteorological Administration",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.studyinkorea.go.kr/ko/main.do",
+      "source": "https://www.studyinkorea.go.kr/",
+      "previousUrl": "https://www.studyinkorea.go.kr/",
+      "identity": "Study in Korea",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://english.visitkorea.or.kr/svc/main/index.do",
+      "source": "https://english.visitkorea.or.kr/",
+      "previousUrl": "https://english.visitkorea.or.kr/",
+      "identity": "Visit Korea",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://nrc.canada.ca/en/",
+      "source": "https://nrc.canada.ca/",
+      "previousUrl": "https://nrc.canada.ca/",
+      "identity": "National Research Council Canada",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.canada.ca/en/library-archives.html",
+      "source": "https://library-archives.canada.ca/",
+      "previousUrl": "https://library-archives.canada.ca/",
+      "identity": "Library and Archives Canada",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://learninglab.si.edu/",
+      "source": "https://learninglab.si.edu/",
+      "identity": "Smithsonian Learning Lab",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.coursera.org/",
+      "source": "https://www.coursera.org/",
+      "identity": "Coursera",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.gapminder.org/",
+      "source": "https://www.gapminder.org/",
+      "identity": "Gapminder",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://datasetsearch.research.google.com/",
+      "source": "https://datasetsearch.research.google.com/",
+      "identity": "Google Dataset Search",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.wikipedia.org/",
+      "source": "https://www.wikipedia.org/",
+      "identity": "Wikipedia",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://mathigon.org/",
+      "source": "https://mathigon.org/",
+      "identity": "Mathigon",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.law.cornell.edu/",
+      "source": "https://www.law.cornell.edu/",
+      "identity": "Cornell Legal Information Institute",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.oecd.org/",
+      "source": "https://www.oecd.org/",
+      "identity": "OECD",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.bis.org/",
+      "source": "https://www.bis.org/",
+      "identity": "Bank for International Settlements",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.bankofengland.co.uk/",
+      "source": "https://www.bankofengland.co.uk/",
+      "identity": "Bank of England",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.weforum.org/",
+      "source": "https://www.weforum.org/",
+      "identity": "World Economic Forum",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://ror.org/",
+      "source": "https://ror.org/",
+      "identity": "Research Organization Registry",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.re3data.org/",
+      "source": "https://www.re3data.org/",
+      "identity": "re3data",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://datacite.org/",
+      "source": "https://datacite.org/",
+      "identity": "DataCite",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.metmuseum.org/",
+      "source": "https://www.metmuseum.org/",
+      "identity": "Metropolitan Museum of Art",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.louvre.fr/en",
+      "source": "https://www.louvre.fr/en",
+      "identity": "Louvre",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://whc.unesco.org/",
+      "source": "https://whc.unesco.org/",
+      "identity": "UNESCO World Heritage Centre",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.rijksmuseum.nl/en",
+      "source": "https://www.rijksmuseum.nl/en",
+      "identity": "Rijksmuseum",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.getty.edu/",
+      "source": "https://www.getty.edu/",
+      "identity": "Getty",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.moma.org/",
+      "source": "https://www.moma.org/",
+      "identity": "MoMA",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.vam.ac.uk/",
+      "source": "https://www.vam.ac.uk/",
+      "identity": "V&A",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.wordreference.com/",
+      "source": "https://www.wordreference.com/",
+      "identity": "WordReference",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.collinsdictionary.com/",
+      "source": "https://www.collinsdictionary.com/",
+      "identity": "Collins Dictionary",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://forvo.com/",
+      "source": "https://forvo.com/",
+      "identity": "Forvo",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.wiktionary.org/",
+      "source": "https://www.wiktionary.org/",
+      "identity": "Wiktionary",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://glosbe.com/",
+      "source": "https://glosbe.com/",
+      "identity": "Glosbe",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.dictionary.com/",
+      "source": "https://www.dictionary.com/",
+      "identity": "Dictionary.com",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://physics.stackexchange.com/",
+      "source": "https://physics.stackexchange.com/",
+      "identity": "Physics Stack Exchange",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://skyandtelescope.org/",
+      "source": "https://skyandtelescope.org/",
+      "identity": "Sky & Telescope",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://developers.openai.com/api/docs",
+      "source": "https://platform.openai.com/docs/",
+      "previousUrl": "https://platform.openai.com/docs/",
+      "identity": "OpenAI API Documentation",
+      "method": "Observed official redirect in indexed retrieval; inspected destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.hotosm.org/en/",
+      "source": "https://www.hotosm.org/",
+      "previousUrl": "https://www.hotosm.org/",
+      "identity": "Humanitarian OpenStreetMap Team",
+      "method": "Observed official redirect in indexed retrieval; inspected destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://wikisource.org/wiki/Wikisource:Main_Page",
+      "source": "https://wikisource.org/",
+      "previousUrl": "https://wikisource.org/",
+      "identity": "Wikisource",
+      "method": "Observed official redirect in indexed retrieval; inspected destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.wipo.int/portal/en/index.html",
+      "source": "https://www.wipo.int/",
+      "previousUrl": "https://www.wipo.int/",
+      "identity": "WIPO",
+      "method": "Observed official redirect in indexed retrieval; inspected destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.imf.org/en/home",
+      "source": "https://www.imf.org/",
+      "previousUrl": "https://www.imf.org/",
+      "identity": "IMF",
+      "method": "Observed official redirect in indexed retrieval; inspected destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.worldbank.org/ext/en/home",
+      "source": "https://www.worldbank.org/",
+      "previousUrl": "https://www.worldbank.org/",
+      "identity": "World Bank",
+      "method": "Observed official redirect in indexed retrieval; inspected destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.ecb.europa.eu/home/html/index.en.html",
+      "source": "https://www.ecb.europa.eu/",
+      "previousUrl": "https://www.ecb.europa.eu/",
+      "identity": "ECB",
+      "method": "Observed official redirect in indexed retrieval; inspected destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.reverso.net/text-translation",
+      "source": "https://www.reverso.net/",
+      "previousUrl": "https://www.reverso.net/",
+      "identity": "Reverso",
+      "method": "Observed official redirect in indexed retrieval; inspected destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://globalnaturewatch.org/",
+      "source": "https://www.globalforestwatch.org/",
+      "previousUrl": "https://www.globalforestwatch.org/",
+      "identity": "Global Nature Watch",
+      "method": "Observed official redirect in indexed retrieval; inspected destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old",
+      "additionalSource": "https://www.wri.org/news/release-global-forest-watch-becomes-global-nature-watch-expanding-cover-more-land-ecosystems"
+    },
+    {
+      "url": "https://orcid.org/",
+      "source": "https://info.orcid.org/brand-guidelines/",
+      "identity": "ORCID Registry",
+      "method": "Official brand guidelines explicitly identify exact registry URL; registry frontend requires JavaScript",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "official guidelines indexed yesterday"
+    },
+    {
+      "url": "https://www.postgresql.org/",
+      "source": "https://www.postgresql.org/",
+      "identity": "PostgreSQL",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "PostgreSQL relational database homepage"
+    },
+    {
+      "url": "https://mariadb.org/",
+      "source": "https://mariadb.org/",
+      "identity": "MariaDB Foundation",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Foundation homepage, documentation and project navigation"
+    },
+    {
+      "url": "https://www.sqlite.org/",
+      "source": "https://www.sqlite.org/",
+      "identity": "SQLite",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "SQLite home and documentation"
+    },
+    {
+      "url": "https://redis.io/",
+      "source": "https://redis.io/",
+      "identity": "Redis",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Redis product and platform homepage"
+    },
+    {
+      "url": "https://duckdb.org/",
+      "source": "https://duckdb.org/",
+      "identity": "DuckDB",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "DuckDB documentation and project homepage"
+    },
+    {
+      "url": "https://clickhouse.com/",
+      "source": "https://clickhouse.com/",
+      "identity": "ClickHouse",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "ClickHouse OLAP database homepage"
+    },
+    {
+      "url": "https://tailwindcss.com/",
+      "source": "https://tailwindcss.com/",
+      "identity": "Tailwind CSS",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Framework homepage and docs"
+    },
+    {
+      "url": "https://vite.dev/",
+      "source": "https://vite.dev/",
+      "identity": "Vite",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Official tooling homepage and guide"
+    },
+    {
+      "url": "https://nextjs.org/",
+      "source": "https://nextjs.org/",
+      "identity": "Next.js",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "React framework homepage and learning links"
+    },
+    {
+      "url": "https://astro.build/",
+      "source": "https://astro.build/",
+      "identity": "Astro",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Astro project homepage and docs"
+    },
+    {
+      "url": "https://nuxt.com/",
+      "source": "https://nuxt.com/",
+      "identity": "Nuxt",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Vue framework homepage and guide"
+    },
+    {
+      "url": "https://nginx.org/",
+      "source": "https://nginx.org/",
+      "identity": "nginx",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Project homepage with official documentation and downloads"
+    },
+    {
+      "url": "https://caddyserver.com/",
+      "source": "https://caddyserver.com/",
+      "identity": "Caddy",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Web server homepage and docs"
+    },
+    {
+      "url": "https://shotcut.org/",
+      "source": "https://shotcut.org/",
+      "identity": "Shotcut",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Video editor project homepage and downloads"
+    },
+    {
+      "url": "https://kdenlive.org/",
+      "source": "https://kdenlive.org/",
+      "identity": "Kdenlive",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "KDE video editor project homepage"
+    },
+    {
+      "url": "https://handbrake.fr/",
+      "source": "https://handbrake.fr/",
+      "identity": "HandBrake",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Project homepage with download and community links"
+    },
+    {
+      "url": "https://www.abs.gov.au/",
+      "source": "https://www.abs.gov.au/",
+      "identity": "Australian Bureau of Statistics",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "ABS official statistics and agency navigation"
+    },
+    {
+      "url": "https://www.bom.gov.au/",
+      "source": "https://www.bom.gov.au/",
+      "identity": "Bureau of Meteorology",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Australian weather and climate service homepage"
+    },
+    {
+      "url": "https://www.smartraveller.gov.au/",
+      "source": "https://www.smartraveller.gov.au/",
+      "identity": "Smartraveller",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Australian government consular travel advice"
+    },
+    {
+      "url": "https://www.csiro.au/",
+      "source": "https://www.csiro.au/",
+      "identity": "CSIRO",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Australian national science agency homepage"
+    },
+    {
+      "url": "https://www.ga.gov.au/",
+      "source": "https://www.ga.gov.au/",
+      "identity": "Geoscience Australia",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "National geoscience agency data and research"
+    },
+    {
+      "url": "https://travel.gc.ca/",
+      "source": "https://travel.gc.ca/",
+      "identity": "Government of Canada Travel",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Government of Canada travel portal"
+    },
+    {
+      "url": "https://www.esa.int/",
+      "source": "https://www.esa.int/",
+      "identity": "European Space Agency",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "ESA agency homepage and programmes"
+    },
+    {
+      "url": "https://royalsociety.org/",
+      "source": "https://royalsociety.org/",
+      "identity": "Royal Society",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Society homepage and fellowship resources"
+    },
+    {
+      "url": "https://www.nationalacademies.org/",
+      "source": "https://www.nationalacademies.org/",
+      "identity": "National Academies",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "National Academies of Sciences Engineering and Medicine homepage"
+    },
+    {
+      "url": "https://www.nngroup.com/",
+      "source": "https://www.nngroup.com/",
+      "identity": "Nielsen Norman Group",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "UX research and training homepage"
+    },
+    {
+      "url": "https://inclusive-components.design/",
+      "source": "https://inclusive-components.design/",
+      "identity": "Inclusive Components",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Project homepage and about links"
+    },
+    {
+      "url": "https://www.ocenaudio.com/",
+      "source": "https://www.ocenaudio.com/",
+      "identity": "ocenaudio",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Audio editor development team homepage"
+    },
+    {
+      "url": "https://www.blackmagicdesign.com/products/davinciresolve",
+      "source": "https://www.blackmagicdesign.com/products/davinciresolve",
+      "identity": "DaVinci Resolve",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Blackmagic Design product page"
+    },
+    {
+      "url": "https://www.frontendmentor.io/",
+      "source": "https://www.frontendmentor.io/",
+      "identity": "Frontend Mentor",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Project-based coding education homepage"
+    },
+    {
+      "url": "https://cssgridgarden.com/",
+      "source": "https://cssgridgarden.com/",
+      "identity": "Grid Garden",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Codepip CSS grid learning game"
+    },
+    {
+      "url": "https://lichess.org/",
+      "source": "https://lichess.org/",
+      "identity": "Lichess",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Chess service homepage; indexed result warns assets blocked"
+    },
+    {
+      "url": "https://neal.fun/",
+      "source": "https://neal.fun/",
+      "identity": "Neal.fun",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Creator's own web project homepage"
+    },
+    {
+      "url": "https://penpot.app/",
+      "source": "https://penpot.app/",
+      "identity": "Penpot",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Open source design platform homepage"
+    },
+    {
+      "url": "https://freesound.org/",
+      "source": "https://freesound.org/",
+      "identity": "Freesound",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Freesound service page with account interface"
+    },
+    {
+      "url": "https://www.privacyguides.org/",
+      "source": "https://www.privacyguides.org/",
+      "identity": "Privacy Guides",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Privacy Guides knowledge base homepage"
+    },
+    {
+      "url": "https://coveryourtracks.eff.org/",
+      "source": "https://coveryourtracks.eff.org/",
+      "identity": "EFF Cover Your Tracks",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "EFF browser tracking test homepage"
+    },
+    {
+      "url": "https://securityheaders.com/",
+      "source": "https://securityheaders.com/",
+      "identity": "Security Headers",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "HTTP header analysis service"
+    },
+    {
+      "url": "https://www.englishclub.com/",
+      "source": "https://www.englishclub.com/",
+      "identity": "EnglishClub",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "EnglishClub lessons and teaching resources"
+    },
+    {
+      "url": "https://elllo.org/",
+      "source": "https://elllo.org/",
+      "identity": "ELLLO",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "English Listening Lesson Library Online"
+    },
+    {
+      "url": "https://www.perfect-english-grammar.com/",
+      "source": "https://www.perfect-english-grammar.com/",
+      "identity": "Perfect English Grammar",
+      "method": "Inspected readable exact official page in indexed retrieval; not live security certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old",
+      "evidence": "Grammar education homepage"
+    },
+    {
+      "url": "https://www.cast.org.cn/",
+      "source": "https://www.cast.org.cn/",
+      "identity": "中国科学技术协会",
+      "evidence": "中国科协官方机构首页",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.weather.com.cn/",
+      "source": "https://www.weather.com.cn/",
+      "identity": "中国天气网",
+      "evidence": "天气服务及城市索引",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.naver.com/",
+      "source": "https://www.naver.com/",
+      "identity": "NAVER",
+      "evidence": "NAVER Korean search interface",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.india.gov.in/",
+      "source": "https://www.india.gov.in/",
+      "identity": "National Portal of India",
+      "evidence": "Government national services and datasets portal",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://mausam.imd.gov.in/",
+      "source": "https://mausam.imd.gov.in/",
+      "identity": "India Meteorological Department",
+      "evidence": "Ministry of Earth Sciences department homepage",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://ncert.nic.in/",
+      "source": "https://ncert.nic.in/",
+      "identity": "NCERT",
+      "evidence": "National education council institutional navigation",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.internethalloffame.org/",
+      "source": "https://www.internethalloffame.org/",
+      "identity": "Internet Hall of Fame",
+      "evidence": "Project homepage and Internet Society donation link",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.sciencenews.org/",
+      "source": "https://www.sciencenews.org/",
+      "identity": "Science News",
+      "evidence": "Official science journalism homepage",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.nature.com/",
+      "source": "https://www.nature.com/",
+      "identity": "Nature",
+      "evidence": "Journal homepage and publisher navigation",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.japan.travel/en/",
+      "source": "https://www.japan.travel/",
+      "previousUrl": "https://www.japan.travel/",
+      "identity": "Japan National Tourism Organization",
+      "evidence": "Official English tourism portal and language selection",
+      "method": "Observed redirect and inspected destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.data.gov.in/",
+      "source": "https://data.gov.in/",
+      "previousUrl": "https://data.gov.in/",
+      "identity": "Open Government Data Platform India",
+      "evidence": "Official portal observed redirect and dataset search interface",
+      "method": "Observed redirect and inspected destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://cursor.com/",
+      "source": "https://cursor.com/",
+      "identity": "Cursor",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://replit.com/",
+      "source": "https://replit.com/",
+      "identity": "Replit",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://bolt.new/",
+      "source": "https://bolt.new/",
+      "identity": "Bolt",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://lovable.dev/",
+      "source": "https://lovable.dev/",
+      "identity": "Lovable",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://v0.app/",
+      "source": "https://v0.app/",
+      "identity": "v0 by Vercel",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://aider.chat/",
+      "source": "https://aider.chat/",
+      "identity": "Aider",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://elevenlabs.io/",
+      "source": "https://elevenlabs.io/",
+      "identity": "ElevenLabs",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://suno.com/",
+      "source": "https://suno.com/",
+      "identity": "Suno",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.aiva.ai/",
+      "source": "https://www.aiva.ai/",
+      "identity": "AIVA",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.midjourney.com/",
+      "source": "https://www.midjourney.com/",
+      "identity": "Midjourney",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://ideogram.ai/",
+      "source": "https://ideogram.ai/",
+      "identity": "Ideogram",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.recraft.ai/",
+      "source": "https://www.recraft.ai/",
+      "identity": "Recraft",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://leonardo.ai/",
+      "source": "https://leonardo.ai/",
+      "identity": "Leonardo AI",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.krea.ai/",
+      "source": "https://www.krea.ai/",
+      "identity": "Krea",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://clipdrop.co/",
+      "source": "https://clipdrop.co/",
+      "identity": "Clipdrop",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://pika.art/",
+      "source": "https://pika.art/",
+      "identity": "Pika",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://hailuoai.video/",
+      "source": "https://hailuoai.video/",
+      "identity": "Hailuo AI",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.heygen.com/",
+      "source": "https://www.heygen.com/",
+      "identity": "HeyGen",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.synthesia.io/",
+      "source": "https://www.synthesia.io/",
+      "identity": "Synthesia",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.veed.io/",
+      "source": "https://www.veed.io/",
+      "identity": "VEED",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.kapwing.com/",
+      "source": "https://www.kapwing.com/",
+      "identity": "Kapwing",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.tabnine.com/",
+      "source": "https://www.tabnine.com/",
+      "identity": "Tabnine",
+      "method": "Inspected readable branded product page in indexed retrieval; not live safety certification",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://runway.com/",
+      "source": "https://runwayml.com/",
+      "previousUrl": "https://runwayml.com/",
+      "identity": "Runway",
+      "method": "Observed redirect and inspected branded destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://pixverse.ai/en",
+      "source": "https://pixverse.ai/",
+      "previousUrl": "https://pixverse.ai/",
+      "identity": "PixVerse",
+      "method": "Observed redirect and inspected branded destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.oxfordlearnersdictionaries.com/",
+      "source": "https://www.oxfordlearnersdictionaries.com/",
+      "identity": "Oxford Learner's Dictionaries",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://learnenglish.britishcouncil.org/",
+      "source": "https://learnenglish.britishcouncil.org/",
+      "identity": "British Council LearnEnglish",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.newsinlevels.com/",
+      "source": "https://www.newsinlevels.com/",
+      "identity": "News in Levels",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.etymonline.com/",
+      "source": "https://www.etymonline.com/",
+      "identity": "Online Etymology Dictionary",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://languagetool.org/",
+      "source": "https://languagetool.org/",
+      "identity": "LanguageTool",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://regexr.com/",
+      "source": "https://regexr.com/",
+      "identity": "RegExr",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.omnicalculator.com/",
+      "source": "https://www.omnicalculator.com/",
+      "identity": "Omni Calculator",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.symbolab.com/",
+      "source": "https://www.symbolab.com/",
+      "identity": "Symbolab",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.mathway.com/",
+      "source": "https://www.mathway.com/",
+      "identity": "Mathway",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://ipinfo.io/",
+      "source": "https://ipinfo.io/",
+      "identity": "IPinfo",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://ip.sb/",
+      "source": "https://ip.sb/",
+      "identity": "IP.SB",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.dnsleaktest.com/",
+      "source": "https://www.dnsleaktest.com/",
+      "identity": "DNS Leak Test",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://test-ipv6.com/",
+      "source": "https://test-ipv6.com/",
+      "identity": "Test IPv6",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://youglish.com/",
+      "source": "https://youglish.com/",
+      "identity": "YouGlish",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://readtheory.org/",
+      "source": "https://readtheory.org/",
+      "identity": "ReadTheory",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://breakingnewsenglish.com/",
+      "source": "https://breakingnewsenglish.com/",
+      "identity": "Breaking News English",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://learningenglish.voanews.com/",
+      "source": "https://learningenglish.voanews.com/",
+      "identity": "VOA Learning English",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://readlang.com/",
+      "source": "https://readlang.com/",
+      "identity": "Readlang",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://manybooks.net/",
+      "source": "https://manybooks.net/",
+      "identity": "ManyBooks",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://americanliterature.com/",
+      "source": "https://americanliterature.com/",
+      "identity": "American Literature",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.doabooks.org/",
+      "source": "https://www.doabooks.org/",
+      "identity": "Directory of Open Access Books",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.sciencedaily.com/",
+      "source": "https://www.sciencedaily.com/",
+      "identity": "ScienceDaily",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://phys.org/",
+      "source": "https://phys.org/",
+      "identity": "Phys.org",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.researchrabbit.ai/",
+      "source": "https://www.researchrabbit.ai/",
+      "identity": "ResearchRabbit",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.litmaps.com/",
+      "source": "https://www.litmaps.com/",
+      "identity": "Litmaps",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.lingq.com/en/",
+      "source": "https://www.lingq.com/",
+      "previousUrl": "https://www.lingq.com/",
+      "identity": "LingQ",
+      "method": "Observed redirect and inspected branded destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.royalroad.com/home",
+      "source": "https://www.royalroad.com/",
+      "previousUrl": "https://www.royalroad.com/",
+      "identity": "Royal Road",
+      "method": "Observed redirect and inspected branded destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.globalgreyebooks.com/index.html",
+      "source": "https://www.globalgreyebooks.com/",
+      "previousUrl": "https://www.globalgreyebooks.com/",
+      "identity": "Global Grey Ebooks",
+      "method": "Observed redirect and inspected branded destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.data.govt.nz/",
+      "source": "https://www.data.govt.nz/",
+      "identity": "New Zealand Government Open Data",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.istat.it/",
+      "source": "https://www.istat.it/",
+      "identity": "Istat",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.rijksoverheid.nl/",
+      "source": "https://www.rijksoverheid.nl/",
+      "identity": "Government of the Netherlands",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.cbs.nl/",
+      "source": "https://www.cbs.nl/",
+      "identity": "Statistics Netherlands",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.government.se/",
+      "source": "https://www.government.se/",
+      "identity": "Government of Sweden",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.scb.se/",
+      "source": "https://www.scb.se/",
+      "identity": "Statistics Sweden",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.smhi.se/",
+      "source": "https://www.smhi.se/",
+      "identity": "SMHI",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.ssb.no/",
+      "source": "https://www.ssb.no/",
+      "identity": "Statistics Norway",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.met.no/",
+      "source": "https://www.met.no/",
+      "identity": "Norwegian Meteorological Institute",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.nav.no/",
+      "source": "https://www.nav.no/",
+      "identity": "NAV",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://denmark.dk/",
+      "source": "https://denmark.dk/",
+      "identity": "Denmark official national portal",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.dmi.dk/",
+      "source": "https://www.dmi.dk/",
+      "identity": "Danish Meteorological Institute",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.borger.dk/",
+      "source": "https://www.borger.dk/",
+      "identity": "Borger.dk",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://en.ilmatieteenlaitos.fi/",
+      "source": "https://en.ilmatieteenlaitos.fi/",
+      "identity": "Finnish Meteorological Institute",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.ine.es/",
+      "source": "https://www.ine.es/",
+      "identity": "Spain INE",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.boe.es/",
+      "source": "https://www.boe.es/",
+      "identity": "Spain Official State Gazette",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.spain.info/",
+      "source": "https://www.spain.info/",
+      "identity": "Spain Official Tourism",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.isro.gov.in/",
+      "source": "https://www.isro.gov.in/",
+      "identity": "Indian Space Research Organisation",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.nta.ac.in/",
+      "source": "https://www.nta.ac.in/",
+      "identity": "National Testing Agency",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.nationalrail.co.uk/",
+      "source": "https://www.nationalrail.co.uk/",
+      "identity": "National Rail",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://tfl.gov.uk/",
+      "source": "https://tfl.gov.uk/",
+      "identity": "Transport for London",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://auspost.com.au/",
+      "source": "https://auspost.com.au/",
+      "identity": "Australia Post",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://translink.com.au/",
+      "source": "https://translink.com.au/",
+      "identity": "Translink Queensland",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.anpost.com/",
+      "source": "https://www.anpost.com/",
+      "identity": "An Post",
+      "method": "Inspected readable exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.meteoam.it/it/home",
+      "source": "https://www.meteoam.it/",
+      "previousUrl": "https://www.meteoam.it/",
+      "identity": "Meteo Aeronautica Militare",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://www.knmi.nl/home",
+      "source": "https://www.knmi.nl/",
+      "previousUrl": "https://www.knmi.nl/",
+      "identity": "KNMI",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://www.admin.ch/de",
+      "source": "https://www.admin.ch/",
+      "previousUrl": "https://www.admin.ch/",
+      "identity": "Swiss Federal Government",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://www.ch.ch/en/",
+      "source": "https://www.ch.ch/",
+      "previousUrl": "https://www.ch.ch/",
+      "identity": "Swiss authorities information portal",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 6 months old"
+    },
+    {
+      "url": "https://www.regjeringen.no/no/id4/",
+      "source": "https://www.regjeringen.no/",
+      "previousUrl": "https://www.regjeringen.no/",
+      "identity": "Government of Norway",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 4 months old"
+    },
+    {
+      "url": "https://www.dst.dk/da/",
+      "source": "https://www.dst.dk/",
+      "previousUrl": "https://www.dst.dk/",
+      "identity": "Statistics Denmark",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://www.suomi.fi/etusivu",
+      "source": "https://www.suomi.fi/",
+      "previousUrl": "https://www.suomi.fi/",
+      "identity": "Suomi.fi",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://data.norge.no/nb",
+      "source": "https://data.norge.no/",
+      "previousUrl": "https://data.norge.no/",
+      "identity": "Norwegian government data portal",
+      "method": "Inspected old redirect and separately retrieved stable HTTPS official endpoint",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://www.belgium.be/en",
+      "source": "https://www.belgium.be/",
+      "previousUrl": "https://www.belgium.be/",
+      "identity": "Belgium government portal",
+      "method": "Inspected old redirect and separately retrieved stable HTTPS official endpoint",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://statbel.fgov.be/en",
+      "source": "https://statbel.fgov.be/",
+      "previousUrl": "https://statbel.fgov.be/",
+      "identity": "Statbel",
+      "method": "Inspected old redirect and separately retrieved stable HTTPS official endpoint",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://www.aemet.es/es/portada",
+      "source": "https://www.aemet.es/",
+      "previousUrl": "https://www.aemet.es/",
+      "identity": "AEMET",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://datos.gob.es/es/",
+      "source": "https://datos.gob.es/",
+      "previousUrl": "https://datos.gob.es/",
+      "identity": "Spain government open data",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://cervantes.org/",
+      "source": "https://www.cervantes.es/",
+      "previousUrl": "https://www.cervantes.es/",
+      "identity": "Instituto Cervantes",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://www.renfe.com/es/es",
+      "source": "https://www.renfe.com/",
+      "previousUrl": "https://www.renfe.com/",
+      "identity": "Renfe",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://www.viarail.ca/en",
+      "source": "https://www.viarail.ca/",
+      "previousUrl": "https://www.viarail.ca/",
+      "identity": "VIA Rail",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://kubernetes.io/",
+      "source": "https://kubernetes.io/",
+      "identity": "Kubernetes",
+      "evidence": "Official container orchestration homepage and documentation",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://prometheus.io/",
+      "source": "https://prometheus.io/",
+      "identity": "Prometheus",
+      "evidence": "Project monitoring and metrics documentation",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://grafana.com/",
+      "source": "https://grafana.com/",
+      "identity": "Grafana Labs",
+      "evidence": "Observability platform, official docs and downloads",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://developer.hashicorp.com/terraform",
+      "source": "https://developer.hashicorp.com/terraform",
+      "identity": "Terraform",
+      "evidence": "HashiCorp developer documentation for infrastructure as code",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://opensource.org/",
+      "source": "https://opensource.org/",
+      "identity": "Open Source Initiative",
+      "evidence": "Nonprofit organization homepage and licensing resources",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://sourcehut.org/",
+      "source": "https://sourcehut.org/",
+      "identity": "SourceHut",
+      "evidence": "Project's software development platform",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://about.gitea.com/",
+      "source": "https://about.gitea.com/",
+      "identity": "Gitea",
+      "evidence": "Official self-hosted Git platform and documentation navigation",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://forgejo.org/",
+      "source": "https://forgejo.org/",
+      "identity": "Forgejo",
+      "evidence": "Project homepage and Codeberg e.V. stewardship",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://openssf.org/",
+      "source": "https://openssf.org/",
+      "identity": "OpenSSF",
+      "evidence": "Linux Foundation project homepage and governance",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://etherpad.org/",
+      "source": "https://etherpad.org/",
+      "identity": "Etherpad",
+      "evidence": "Project collaborative editor and official installation resources",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://mixkit.co/",
+      "source": "https://mixkit.co/",
+      "identity": "Mixkit",
+      "evidence": "Official asset catalog and Envato links",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.mongodb.com/",
+      "source": "https://www.mongodb.com/",
+      "identity": "MongoDB",
+      "evidence": "Database product homepage and documentation links",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://traefik.io/",
+      "source": "https://traefik.io/",
+      "identity": "Traefik Labs",
+      "evidence": "Official proxy and gateway product navigation",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://opencollective.com/",
+      "source": "https://opencollective.com/",
+      "identity": "Open Collective",
+      "evidence": "Platform homepage and steward organization",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.overleaf.com/",
+      "source": "https://www.overleaf.com/",
+      "identity": "Overleaf",
+      "evidence": "Official collaborative LaTeX editor homepage",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://cryptpad.org/",
+      "source": "https://cryptpad.org/",
+      "identity": "CryptPad",
+      "evidence": "Project homepage and documentation",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://miro.com/",
+      "source": "https://miro.com/",
+      "identity": "Miro",
+      "evidence": "Official workspace and product navigation",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.redhat.com/en/ansible-collaborative",
+      "source": "https://www.ansible.com/",
+      "previousUrl": "https://www.ansible.com/",
+      "identity": "Ansible Collaborative",
+      "evidence": "Old address redirected to Red Hat with marketing query; independently retrieved clean canonical official destination with Ansible documentation links",
+      "method": "Observed redirect and independently inspected clean HTTPS destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://clinicaltrials.gov/",
+      "source": "https://pubchem.ncbi.nlm.nih.gov/source/15362",
+      "identity": "ClinicalTrials.gov",
+      "method": "Official institutional cross-reference identifies endpoint; not proof of live availability",
+      "reviewedOn": "2026-11-24",
+      "evidence": "NIH PubChem data-source record names exact home URL; indexed three weeks ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.worldhistory.org/",
+      "source": "https://www.worldhistory.org/",
+      "identity": "World History Encyclopedia",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Readable nonprofit encyclopedia homepage, editorial and educational navigation; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.historytoday.com/",
+      "source": "https://www.historytoday.com/",
+      "identity": "History Today",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Magazine homepage and August 2026 issue; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.perseus.tufts.edu/hopper/",
+      "source": "https://www.perseus.tufts.edu/hopper/",
+      "identity": "Perseus Digital Library",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Tufts-hosted project page identifies university department and collections; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.bl.uk/",
+      "source": "https://www.bl.uk/",
+      "identity": "British Library",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "National library home, catalogue and institutional navigation; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.overheid.nl/",
+      "source": "https://www.overheid.nl/",
+      "identity": "Overheid.nl",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Government services and regulatory information portal; indexed nine months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.met.ie/",
+      "source": "https://www.met.ie/",
+      "identity": "Met Éireann",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Irish Meteorological Service homepage and radar service; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.gov.pl/",
+      "source": "https://www.gov.pl/",
+      "identity": "Poland government portal",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official ministries and public service navigation; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://portal.inmet.gov.br/",
+      "source": "https://portal.inmet.gov.br/",
+      "identity": "INMET",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Brazil national meteorological institute and ministry links; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.stats.govt.nz/",
+      "source": "https://www.gets.govt.nz/SNZ/ExternalTenderDetails.htm?id=32913939",
+      "identity": "Stats NZ",
+      "method": "Official institutional cross-reference identifies endpoint; not proof of live availability",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Government procurement notice identifies exact existing hostname; indexed last week; home snapshot script-only",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.metservice.com/",
+      "source": "https://www.treasury.govt.nz/information-and-services/commercial-portfolio-and-advice/commercial-portfolio/meteorological-service-new-zealand-limited",
+      "identity": "MetService",
+      "method": "Official institutional cross-reference identifies endpoint; not proof of live availability",
+      "reviewedOn": "2026-11-24",
+      "evidence": "NZ Treasury identifies service domain; indexed three weeks ago; home snapshot script-only",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.meteoswiss.admin.ch/",
+      "source": "https://www.aramis.admin.ch/Links/?Sprache=en-US",
+      "identity": "MeteoSwiss",
+      "method": "Official institutional cross-reference identifies endpoint; not proof of live availability",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Swiss federal administration research database identifies service domain; indexed last week",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://opendata.swiss/de",
+      "source": "https://opendata.swiss/",
+      "previousUrl": "https://opendata.swiss/",
+      "identity": "Swiss Open Government Data",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect, readable data catalogue; indexed ten months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.riksdagen.se/sv/",
+      "source": "https://www.riksdagen.se/",
+      "previousUrl": "https://www.riksdagen.se/",
+      "identity": "Swedish Parliament",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect, official parliamentary navigation; indexed seven months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://stat.fi/fi",
+      "source": "https://stat.fi/",
+      "previousUrl": "https://stat.fi/",
+      "identity": "Statistics Finland",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect, official statistics homepage; indexed seven months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://data.gov.be/en",
+      "source": "https://data.gov.be/",
+      "previousUrl": "https://data.gov.be/",
+      "identity": "Belgian Data Portal",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "English link clicked on official language-selection page; BOSA and dataset navigation; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.cso.ie/en/index.html",
+      "source": "https://www.cso.ie/",
+      "previousUrl": "https://www.cso.ie/",
+      "identity": "Central Statistics Office Ireland",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to official statistical portal; indexed five months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://imgw.pl/",
+      "source": "https://www.imgw.pl/",
+      "previousUrl": "https://www.imgw.pl/",
+      "identity": "IMGW-PIB",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to institute homepage; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.ipma.pt/pt/index.html",
+      "source": "https://www.ipma.pt/",
+      "previousUrl": "https://www.ipma.pt/",
+      "identity": "IPMA",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to Portuguese meteorological agency; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://dados.gov.pt/en",
+      "source": "https://dados.gov.pt/",
+      "previousUrl": "https://dados.gov.pt/",
+      "identity": "Portugal open data portal",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to public data catalogue; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.gov.pt/",
+      "source": "https://eportugal.gov.pt/",
+      "previousUrl": "https://eportugal.gov.pt/",
+      "identity": "Portugal public services portal",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect; official migration notice https://www.gov.pt/noticias/chegou-o-novo-portal-govpt; current portal indexed yesterday",
+      "evidenceFreshness": "see evidence; not live network verification",
+      "additionalSource": "https://www.gov.pt/noticias/chegou-o-novo-portal-govpt"
+    },
+    {
+      "url": "https://www.gov.br/pt-br",
+      "source": "https://www.gov.br/",
+      "previousUrl": "https://www.gov.br/",
+      "identity": "Brazil government portal",
+      "method": "Observed official redirect or official language link and inspected destination in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to government service portal; indexed three months ago",
+      "evidenceFreshness": "see evidence; not live network verification"
+    },
+    {
+      "url": "https://www.hko.gov.hk/",
+      "source": "https://www.hko.gov.hk/en/wservice/tsheet/pubwx.htm",
+      "identity": "Hong Kong Observatory",
+      "method": "Official institutional source identifies exact endpoint; live response may be unavailable",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official public weather service page explicitly identifies exact homepage; indexed today",
+      "evidenceFreshness": "See evidence"
+    },
+    {
+      "url": "https://www.bfs.admin.ch/",
+      "source": "https://www.bfs.admin.ch/en/new-fso-web-presence",
+      "identity": "Swiss Federal Statistical Office",
+      "method": "Official institutional source identifies exact endpoint; live response may be unavailable",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official announcement explicitly identifies institutional homepage; published four weeks ago, indexed today. Keep stable homepage rather than old language-specific redirect.",
+      "evidenceFreshness": "See evidence"
+    },
+    {
+      "url": "https://data.gov.ie/",
+      "source": "https://data.gov.ie/en_GB/faqs",
+      "identity": "Ireland Open Data Portal",
+      "method": "Official institutional source identifies exact endpoint; live response may be unavailable",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official FAQ identifies portal and recent homepage search index (yesterday); direct retrieval returned 429, live reachability not established.",
+      "evidenceFreshness": "See evidence"
+    },
+    {
+      "url": "https://www.nzta.govt.nz/",
+      "source": "https://www.nzta.govt.nz/about-us/about-this-site/website-terms-of-use",
+      "identity": "NZ Transport Agency Waka Kotahi",
+      "method": "Official institutional source identifies exact endpoint; live response may be unavailable",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official site terms and NZ Ministry of Transport cross-reference https://www.transport.govt.nz/contact-us; indexed today; root direct retrieval returned 403.",
+      "evidenceFreshness": "See evidence"
+    },
+    {
+      "url": "https://www.royalmail.com/",
+      "source": "https://www.royalmail.com/",
+      "identity": "Royal Mail",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Readable Royal Mail Group homepage with tracking and collection",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.tesco.com/",
+      "source": "https://www.tesco.com/",
+      "identity": "Tesco",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded supermarket homepage and account navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.argos.co.uk/",
+      "source": "https://www.argos.co.uk/",
+      "identity": "Argos",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded homepage, order tracking and store locator",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.rewe.de/",
+      "source": "https://www.rewe.de/",
+      "identity": "REWE",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded supermarket homepage and shopping links",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.sncf-connect.com/",
+      "source": "https://www.sncf-connect.com/",
+      "identity": "SNCF Connect",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded travel planning and rail ticket homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.laposte.fr/",
+      "source": "https://www.laposte.fr/",
+      "identity": "La Poste",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "French postal homepage with official parcel services",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.carrefour.fr/",
+      "source": "https://www.carrefour.fr/",
+      "identity": "Carrefour France",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded supermarket homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.iledefrance-mobilites.fr/",
+      "source": "https://www.iledefrance-mobilites.fr/",
+      "identity": "Île-de-France Mobilités",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official regional public transportation homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.abc.net.au/",
+      "source": "https://www.abc.net.au/",
+      "identity": "Australian Broadcasting Corporation",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "ABC homepage with institutional services and programming",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.coles.com.au/",
+      "source": "https://www.coles.com.au/",
+      "identity": "Coles",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded Australian supermarket homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.ns.nl/",
+      "source": "https://www.ns.nl/",
+      "identity": "Nederlandse Spoorwegen",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official railway trip planner and service navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.posti.fi/",
+      "source": "https://www.posti.fi/",
+      "identity": "Posti",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Finnish postal homepage and personal/business services",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.vr.fi/",
+      "source": "https://www.vr.fi/",
+      "identity": "VR",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Finnish rail ticket homepage, readable navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.postnl.nl/",
+      "source": "https://www.postnl.nl/",
+      "identity": "PostNL",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Dutch postal homepage with delivery services",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.marktplaats.nl/",
+      "source": "https://www.marktplaats.nl/",
+      "identity": "Marktplaats",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official marketplace homepage; identity only, individual listings not reviewed",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.coop.ch/",
+      "source": "https://www.coop.ch/",
+      "identity": "Coop Switzerland",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded supermarket homepage and store locator",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.postnord.se/",
+      "source": "https://www.postnord.se/",
+      "identity": "PostNord Sweden",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official Swedish delivery homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.ica.se/",
+      "source": "https://www.ica.se/",
+      "identity": "ICA",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded Swedish supermarket homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.blocket.se/",
+      "source": "https://www.blocket.se/",
+      "identity": "Blocket",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded marketplace homepage; individual listings not reviewed",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.posten.no/",
+      "source": "https://www.posten.no/",
+      "identity": "Posten Norway",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official postal homepage with tracking and delivery",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.vy.no/",
+      "source": "https://www.vy.no/",
+      "identity": "Vy",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official transportation tickets and customer service",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.finn.no/",
+      "source": "https://www.finn.no/",
+      "identity": "FINN",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded Norwegian marketplace homepage; individual listings not reviewed",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.rema.no/",
+      "source": "https://www.rema.no/",
+      "identity": "REMA 1000",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded Norwegian supermarket homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.postnord.dk/",
+      "source": "https://www.postnord.dk/",
+      "identity": "PostNord Denmark",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official Danish parcel service homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.dsb.dk/",
+      "source": "https://www.dsb.dk/",
+      "identity": "DSB",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official Danish rail ticket homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.dba.dk/",
+      "source": "https://www.dba.dk/",
+      "identity": "DBA",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded marketplace homepage; individual listings not reviewed",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://coop.dk/",
+      "source": "https://coop.dk/",
+      "identity": "Coop Denmark",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Coop Danmark A/S homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.tori.fi/",
+      "source": "https://www.tori.fi/",
+      "identity": "Tori",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded marketplace homepage; individual listings not reviewed",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.delhaize.be/",
+      "source": "https://www.delhaize.be/",
+      "identity": "Delhaize",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded Belgian grocery homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.tesco.ie/",
+      "source": "https://www.tesco.ie/",
+      "identity": "Tesco Ireland",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded Irish grocery homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.amtrak.com/home",
+      "source": "https://www.amtrak.com/",
+      "previousUrl": "https://www.amtrak.com/",
+      "identity": "Amtrak",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect; readable rail travel planning homepage",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.dhl.de/de/privatkunden.html",
+      "source": "https://www.dhl.de/",
+      "previousUrl": "https://www.dhl.de/",
+      "identity": "DHL Germany",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect; readable private-customer postal service navigation",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.deutschepost.de/de.html",
+      "source": "https://www.deutschepost.de/",
+      "previousUrl": "https://www.deutschepost.de/",
+      "identity": "Deutsche Post",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect; readable parcel and postage services",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.bvg.de/de",
+      "source": "https://www.bvg.de/",
+      "previousUrl": "https://www.bvg.de/",
+      "identity": "BVG",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect; official Berlin transportation information",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.kakaocorp.com/page/",
+      "source": "https://www.kakao.com/",
+      "previousUrl": "https://www.kakao.com/",
+      "identity": "Kakao",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed cross-domain redirect to Kakao corporate homepage with readable service navigation",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.canadapost-postescanada.ca/cpc/en/home.page",
+      "source": "https://www.canadapost-postescanada.ca/",
+      "previousUrl": "https://www.canadapost-postescanada.ca/",
+      "identity": "Canada Post",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to official English postal homepage",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.correos.es/es/es/particulares",
+      "source": "https://www.correos.es/",
+      "previousUrl": "https://www.correos.es/",
+      "identity": "Correos",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed old HTTP downgrade redirect; independently retrieved exact HTTPS consumer endpoint with readable service content",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.bol.com/nl/nl/",
+      "source": "https://www.bol.com/",
+      "previousUrl": "https://www.bol.com/",
+      "identity": "bol",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to branded Dutch shop",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.post.ch/de",
+      "source": "https://www.post.ch/",
+      "previousUrl": "https://www.post.ch/",
+      "identity": "Swiss Post",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to official postal homepage",
+      "evidenceFreshness": "Indexed approximately 5 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.ricardo.ch/de/",
+      "source": "https://www.ricardo.ch/",
+      "previousUrl": "https://www.ricardo.ch/",
+      "identity": "Ricardo",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to official marketplace homepage; individual listings not reviewed",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.verkkokauppa.com/fi/etusivu",
+      "source": "https://www.verkkokauppa.com/",
+      "previousUrl": "https://www.verkkokauppa.com/",
+      "identity": "Verkkokauppa",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to branded Finnish shop",
+      "evidenceFreshness": "Indexed approximately 3 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.bpost.be/en",
+      "source": "https://www.bpost.be/",
+      "previousUrl": "https://www.bpost.be/",
+      "identity": "bpost",
+      "method": "Inspected official redirect destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to official English postal homepage",
+      "evidenceFreshness": "Indexed approximately 5 months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.inegi.org.mx/",
+      "source": "https://www.inegi.org.mx/",
+      "identity": "INEGI",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Population and economic indicators, publications and official reporting services",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.banxico.org.mx/",
+      "source": "https://www.banxico.org.mx/",
+      "identity": "Banco de México",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Central bank mandate and statistical indicators",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.argentina.gob.ar/",
+      "source": "https://www.argentina.gob.ar/",
+      "identity": "Argentina government",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official state portal and public-service directory",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.indec.gob.ar/",
+      "source": "https://www.indec.gob.ar/",
+      "identity": "INDEC",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official population, society and economy statistics; institutional address",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.bcra.gob.ar/",
+      "source": "https://www.bcra.gob.ar/",
+      "identity": "BCRA",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Central bank policy, statistics and financial service navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.awwwards.com/",
+      "source": "https://www.awwwards.com/",
+      "identity": "Awwwards",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Design awards, jury and project navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.behance.net/",
+      "source": "https://www.behance.net/",
+      "identity": "Behance",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Portfolio service and Adobe corporate/privacy links",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.pexels.com/videos/",
+      "source": "https://www.pexels.com/videos/",
+      "identity": "Pexels Videos",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Video catalogue, license and support links",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://goodfirstissue.dev/",
+      "source": "https://goodfirstissue.dev/",
+      "identity": "Good First Issue",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Open-source contribution directory, DeepSource attribution",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.wikivoyage.org/",
+      "source": "https://www.wikivoyage.org/",
+      "identity": "Wikivoyage",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Multilingual travel guide portal",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.rome2rio.com/",
+      "source": "https://www.rome2rio.com/",
+      "identity": "Rome2Rio",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Travel route planning interface",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.seat61.com/",
+      "source": "https://www.seat61.com/",
+      "identity": "Seat61",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Author-operated travel guide, about and contact links",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.flightaware.com/",
+      "source": "https://www.flightaware.com/",
+      "identity": "FlightAware",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Flight tracking, institutional and product navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.alltrails.com/",
+      "source": "https://www.alltrails.com/",
+      "identity": "AllTrails",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Trail discovery service homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.komoot.com/",
+      "source": "https://www.komoot.com/",
+      "identity": "Komoot",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Route planner and official app links",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://wanderlog.com/",
+      "source": "https://wanderlog.com/",
+      "identity": "Wanderlog",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Trip planner and official app links",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.subito.it/",
+      "source": "https://www.subito.it/",
+      "identity": "Subito",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Marketplace homepage and selling navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.2dehands.be/",
+      "source": "https://www.2dehands.be/",
+      "identity": "2dehands",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Marketplace homepage with help and safety center",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.donedeal.ie/",
+      "source": "https://www.donedeal.ie/",
+      "identity": "DoneDeal",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Vehicle marketplace and dealership search",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.poczta-polska.pl/",
+      "source": "https://www.poczta-polska.pl/",
+      "identity": "Poczta Polska",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Postal services and parcel navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://allegro.pl/",
+      "source": "https://allegro.pl/",
+      "identity": "Allegro",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded marketplace homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.continente.pt/",
+      "source": "https://www.continente.pt/",
+      "identity": "Continente",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded grocery service homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.olx.pt/",
+      "source": "https://www.olx.pt/",
+      "identity": "OLX Portugal",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded classifieds and account navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.correios.com.br/",
+      "source": "https://www.correios.com.br/",
+      "identity": "Correios",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Postal service homepage and tracking/service navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://99app.com/",
+      "source": "https://99app.com/",
+      "identity": "99",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official driver, passenger and safety navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.correoargentino.com.ar/",
+      "source": "https://www.correoargentino.com.ar/",
+      "identity": "Correo Argentino",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded postal homepage",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.pedidosya.com.ar/",
+      "source": "https://www.pedidosya.com.ar/",
+      "identity": "PedidosYa",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Local food and commerce service navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.emiratespost.ae/",
+      "source": "https://www.emiratespost.ae/",
+      "identity": "Emirates Post",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded postal homepage and official account link",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.careem.com/",
+      "source": "https://www.careem.com/",
+      "identity": "Careem",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Branded transport and consumer service navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.grab.com/th/",
+      "source": "https://www.grab.com/th/",
+      "identity": "Grab Thailand",
+      "method": "Readable branded exact homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Thai localized Grab homepage and readable service navigation",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.meteo.be/en/",
+      "source": "https://www.meteo.be/",
+      "previousUrl": "https://www.meteo.be/",
+      "identity": "Royal Meteorological Institute",
+      "method": "Observed official redirect and inspected destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect; official RMI forecasts and institute description",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.italotreno.com/en",
+      "source": "https://www.italotreno.com/",
+      "previousUrl": "https://www.italotreno.com/",
+      "identity": "Italo",
+      "method": "Observed official redirect and inspected destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to branded English rail booking service",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.ctt.pt/particulares/index",
+      "source": "https://www.ctt.pt/",
+      "previousUrl": "https://www.ctt.pt/",
+      "identity": "CTT",
+      "method": "Observed official redirect and inspected destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to postal customer portal",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.noon.com/uae-en/",
+      "source": "https://www.noon.com/",
+      "previousUrl": "https://www.noon.com/",
+      "identity": "noon UAE",
+      "method": "Observed official redirect and inspected destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to UAE storefront, matching region",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://fcsc.gov.ae/",
+      "source": "https://fcsc.gov.ae/",
+      "identity": "UAE Federal Competitiveness and Statistics Centre",
+      "method": "Readable official homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Readable government statistics centre homepage and data index",
+      "evidenceFreshness": "Index: 4 months; not real-time security proof"
+    },
+    {
+      "url": "https://data.go.th/",
+      "source": "https://data.go.th/",
+      "identity": "Thailand Open Government Data",
+      "method": "Readable official homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Portal identifies itself and the Digital Government Development Agency",
+      "evidenceFreshness": "Index: 3 months; not real-time security proof"
+    },
+    {
+      "url": "https://www.tourismthailand.org/",
+      "source": "https://www.tourismthailand.org/",
+      "identity": "Tourism Authority of Thailand",
+      "method": "Readable official homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official tourism agency homepage and regional navigation",
+      "evidenceFreshness": "Index: 3 months; not real-time security proof"
+    },
+    {
+      "url": "https://data.census.gov/",
+      "source": "https://www.census.gov/data/what-is-data-census-gov/guidance-for-data-users/frequently-asked-questions/what-is-data-census-gov.html",
+      "identity": "US Census Data",
+      "method": "Official institutional reference names service; live response not established",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Census Bureau explicitly identifies its primary data platform; target JS-only in retrieval",
+      "evidenceFreshness": "Index: last month; not real-time security proof"
+    },
+    {
+      "url": "https://www.usaspending.gov/",
+      "source": "https://tfx.treasury.gov/monthly-reporting-requirements",
+      "identity": "USAspending",
+      "method": "Official institutional reference names service; live response not established",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Treasury explicitly identifies official federal spending source; target JS-only",
+      "evidenceFreshness": "Index: today; not real-time security proof"
+    },
+    {
+      "url": "https://www.gov.hk/",
+      "source": "https://www.info.gov.hk/gia/general/202610/28/P2026102800410.htm",
+      "identity": "GovHK",
+      "method": "Official institutional reference names service; live response not established",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Government announcement explicitly identifies portal managed by DPO; root retrieval timed out",
+      "evidenceFreshness": "Index: 3 weeks; not real-time security proof"
+    },
+    {
+      "url": "https://www.smg.gov.mo/",
+      "source": "https://www.gov.mo/en/preset-notice-post/arrangement-of-service-of-smg-from-20th-june-to-21st-june/?noredirect=en_US",
+      "identity": "Macao Meteorological and Geophysical Bureau",
+      "method": "Official institutional reference names service; live response not established",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Government portal explicitly identifies SMG website; root lacks readable text",
+      "evidenceFreshness": "Index: last month; not real-time security proof"
+    },
+    {
+      "url": "https://www.weather.gov.sg/",
+      "source": "https://aim-sg.caas.gov.sg/aim-content/uploads/aip/16-OCT-2025/AIP/2025-10-02-000000/html/eAIP/SG-GEN-3.5-en-GB.html?s=DD43C537E30BB9B14191ECC6AB9CE75E4D2D8B9D",
+      "identity": "Meteorological Service Singapore",
+      "method": "Official institutional reference names service; live response not established",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Civil aviation authority publication explicitly identifies exact HTTPS root; target no readable text",
+      "evidenceFreshness": "Index: today; not real-time security proof"
+    },
+    {
+      "url": "https://dane.gov.pl/",
+      "source": "https://www.gov.pl/web/cyfryzacja/portal-danych-danegovpl",
+      "identity": "Poland Open Data",
+      "method": "Official institutional reference names service; live response not established",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Ministry of Digital Affairs identifies portal; target JS-only",
+      "evidenceFreshness": "Index: today; not real-time security proof"
+    },
+    {
+      "url": "https://www.ncm.gov.ae/",
+      "source": "https://www.ncm.ae/",
+      "previousUrl": "https://www.ncm.ae/",
+      "identity": "UAE National Center of Meteorology",
+      "method": "Observed official redirect and inspected destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed cross-domain redirect to federal authority homepage, meteorology and seismic services",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.visitdubai.com/en",
+      "source": "https://www.visitdubai.com/",
+      "previousUrl": "https://www.visitdubai.com/",
+      "identity": "Visit Dubai",
+      "method": "Observed official redirect and inspected destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to official English destination, government of Dubai link",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://my.gov.au/en/services",
+      "source": "https://www.australia.gov.au/",
+      "previousUrl": "https://www.australia.gov.au/",
+      "identity": "Australian government services",
+      "method": "Observed official redirect and inspected destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed official redirect to myGov with referral query; independently retrieved clean HTTPS services endpoint",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    }
+  ]
+}

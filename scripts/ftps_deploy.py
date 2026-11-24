@@ -104,6 +104,18 @@ def upload(ftp, file, commit, target_root, root=SITE):
             if temp in remote_names(ftp):ftp.delete(temp)
         except Exception:pass
 
+def verify_remote_dal(ftp, target_root, root=SITE):
+    """Read only the public association file; never print its content or credentials."""
+    ftp.cwd(target_root)
+    ftp.cwd('.well-known')
+    expected=(root/'.well-known'/'assetlinks.json').read_bytes()
+    remote=retrieve(ftp,'assetlinks.json')
+    if not expected or sha(remote)!=sha(expected):
+        raise RuntimeError('DAL_FTPS_BYTES_MISMATCH')
+    print('DAL_FTPS_BYTES=PASS')
+    # A matching disk file does not establish public HTTPS delivery.
+    return sha(remote)
+
 def deploy_order(file, root=SITE):
     # Publish shared PHP dependencies before dependent pages, pages before
     # navigation entrypoints, and cache version last. This reduces transient
@@ -142,6 +154,7 @@ def main():
                     print('PRESERVED_LAST_THREAT_SNAPSHOT',file.name)
                     continue
             upload(ftp,file,commit,target_root)
+        verify_remote_dal(ftp,target_root)
         metadata={'schema':'avenqir-deploy-state-1','commit':commit,'deployed_at':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())}
         state=SITE/'deploy-state.json'
         try:

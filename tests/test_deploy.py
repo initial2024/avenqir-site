@@ -79,6 +79,18 @@ class DeployTests(unittest.TestCase):
         d.upload(self.ftp,asset,self.commit,self.target,self.base)
         self.assertEqual(self.ftp.files[self.target+'/new-image.webp'],b'NEW_IMAGE')
 
+    def test_public_dal_readback_is_independent_of_https(self):
+        folder=self.base/'.well-known'
+        folder.mkdir()
+        (folder/'assetlinks.json').write_bytes(b'[]')
+        remote=self.target+'/.well-known'
+        self.ftp.dirs.add(remote)
+        self.ftp.files[remote+'/assetlinks.json']=b'[]'
+        self.assertEqual(d.verify_remote_dal(self.ftp,self.target,self.base),d.sha(b'[]'))
+        self.ftp.files[remote+'/assetlinks.json']=b'<html>wrong</html>'
+        with self.assertRaisesRegex(RuntimeError,'DAL_FTPS_BYTES_MISMATCH'):
+            d.verify_remote_dal(self.ftp,self.target,self.base)
+
     def test_no_private_data_in_release(self):
         self.assertTrue(len(validate())>35)
         self.assertFalse(any('_private' in str(x) or '_store' in str(x) for x in validate()))
