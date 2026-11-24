@@ -274,7 +274,9 @@
     'https://f-droid.org/',
     'https://stellarium.org/',
     'https://openlibrary.org/',
-    'https://www.ssllabs.com/ssltest/'
+    'https://www.ssllabs.com/ssltest/',
+    'https://laws.e-gov.go.jp/',
+    'https://data.e-gov.go.jp/info/ja'
   ];
   function sanitize(raw){
     if(typeof raw!=='string'||raw.length>1800||/[\u0000-\u0020\u007f\\]/.test(raw))return null;
