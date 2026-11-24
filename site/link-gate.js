@@ -4,6 +4,21 @@
    Never accept security decisions from user-generated labels or admin data fields. */
 (function(root){
   const OFFICIAL_URLS = [
+    // Exact source identity checks: atlas-review-20261124-e.json.
+    'https://www.loc.gov/',
+    'https://data.gov/',
+    'https://www.nist.gov/pml',
+    'https://earthquake.usgs.gov/',
+    'https://www.photopea.com/',
+    'https://browserleaks.com/',
+    'https://dnschecker.org/',
+    'https://www.ssllabs.com/ssltest/',
+    'https://time.is/',
+    'https://haveibeenpwned.com/',
+    'https://openlibrary.org/',
+    'https://itch.io/games/free',
+    'https://www.chess.com/',
+    'https://urlscan.io/',
     // Scientific and technical exact sources; evidence in atlas-review-20261124-d.json.
     'https://www.wolframalpha.com/',
     'https://developer.mozilla.org/en-US/observatory',
