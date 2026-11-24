@@ -4,6 +4,24 @@
    Never accept security decisions from user-generated labels or admin data fields. */
 (function(root){
   const OFFICIAL_URLS = [
+    // Exact official page evidence in atlas-review-20261124-b.json; source identity only.
+    'https://openalex.org/',
+    'https://www.zotero.org/',
+    'https://www.wireshark.org/',
+    'https://letsencrypt.org/',
+    'https://www.eff.org/',
+    'https://openrefine.org/',
+    'https://www.ebi.ac.uk/chebi/',
+    'https://datadryad.org/',
+    'https://www.gap-system.org/',
+    'https://data.unhcr.org/',
+    'https://qgis.org/',
+    'https://www.hathitrust.org/',
+    'https://www.rdkit.org/docs/',
+    'https://cds.cern.ch/',
+    'https://www.pangaea.de/',
+    'https://osmfoundation.org/',
+    'https://blog.mozilla.org/security/',
     // 2026-11-24: exact official pages inspected; no cross-domain redirect, blocked or unreadable page promoted.
     'https://doc.rust-lang.org/book/',
     'https://git-scm.com/docs',
