@@ -694,6 +694,67 @@
       "identity": "Flathub",
       "method": "Inspected exact official page via indexed retrieval",
       "previousUrl": "https://flathub.org/"
+    },
+    {
+      "url": "https://www.rakuten.co.jp/",
+      "source": "https://www.rakuten.co.jp/",
+      "identity": "Rakuten",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.gov.tw/",
+      "source": "https://www.gov.tw/",
+      "identity": "我的E政府",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.yahoo.co.jp/",
+      "source": "https://www.yahoo.co.jp/",
+      "identity": "Yahoo Japan",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.fairprice.com.sg/",
+      "source": "https://www.fairprice.com.sg/",
+      "identity": "FairPrice",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.target.com/",
+      "source": "https://www.target.com/",
+      "identity": "Target",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.macau-airport.com/",
+      "source": "https://www.macau-airport.com/",
+      "identity": "Macau International Airport",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.thewarehouse.co.nz/",
+      "source": "https://www.thewarehouse.co.nz/",
+      "identity": "The Warehouse",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://data.gov.tw/",
+      "source": "https://data.gov.tw/",
+      "identity": "政府資料開放平臺",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.grab.com/sg/",
+      "source": "https://www.grab.com/sg/",
+      "identity": "Grab Singapore",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.octopus.com.hk/tc/consumer/index.html",
+      "source": "https://www.octopus.com.hk/tc/consumer/index.html",
+      "identity": "Octopus",
+      "method": "Inspected exact official page via indexed retrieval",
+      "previousUrl": "https://www.octopus.com.hk/"
     }
   ]
 }
