@@ -1,16 +1,31 @@
 <?php
 declare(strict_types=1);
-require __DIR__.'/server-core.php';
-require __DIR__.'/admin-security.php';
-require __DIR__.'/feedback-core.php';
-require __DIR__.'/feedback-abuse.php';
-require __DIR__.'/feedback-turnstile.php';
-fb_headers();
-if(!fb_https()) {http_response_code(403);exit;}
+// Check access using the same owner session as admin.php before loading
+// optional feedback components. Do not expose stack traces or secret values.
+header('Content-Type: text/html; charset=UTF-8');
+header('Cache-Control: no-store, private, max-age=0');
+header('X-Content-Type-Options: nosniff');
+header('Referrer-Policy: no-referrer');
+header('X-Frame-Options: DENY');
+header("Content-Security-Policy: default-src 'none'; style-src 'self'; script-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+require_once __DIR__.'/server-core.php';
+require_once __DIR__.'/admin-security.php';
+require_once __DIR__.'/feedback-core.php';
+if(!fb_https()) {http_response_code(403);exit('请通过 HTTPS 访问管理员测试中心。');}
 fb_start_session('AVENQIR_ADMIN');
-if(!aq_shared_adm_logged(stored_read('auth'),$_SESSION)){header('Location: admin.php',true,303);exit;}
+if(!aq_shared_adm_logged(stored_read('auth'),$_SESSION)){header('Location: admin.php',true,303);exit('请先登录 AVENQIR 管理后台。');}
+$_SESSION['until']=time()+1800;
+try {
+ require_once __DIR__.'/feedback-abuse.php';
+ require_once __DIR__.'/feedback-turnstile.php';
+} catch(Throwable $e) {
+ http_response_code(503);error_log('AVENQIR owner feedback protection dependency unavailable');
+ exit('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>防滥用测试暂不可用</title><p>验证模块暂不可用，请稍后刷新。</p><a href="admin.php">返回管理后台</a></html>');
+}
 if((int)($_SERVER['CONTENT_LENGTH']??0)>8192){http_response_code(413);exit;}
-$csrf=fb_csrf();$notice='';$cfg=fb_ts_config();$testSession=$_SESSION['fb_security_test']??[];
+$csrf=fb_csrf();$notice='';
+try{$cfg=fb_ts_config();}catch(Throwable $e){$cfg=['mode'=>'unavailable'];$notice='第三方验证配置暂不可读；本机测试仍可使用。';}
+$testSession=$_SESSION['fb_security_test']??[];
 if(!is_array($testSession))$testSession=[];
 if(($_SERVER['REQUEST_METHOD']??'GET')==='POST'){
  if(!fb_csrf_ok()){http_response_code(403);exit;}
@@ -52,7 +67,7 @@ $pending=$_SESSION['fb_ts_pending']??null;
 if(is_array($pending)&&($pending['expires']??0)<=time()){unset($_SESSION['fb_ts_pending']);$pending=null;}
 $widget=is_array($pending)?$pending:($cfg['mode']==='turnstile'?$cfg:null);
 if($widget!==null)fb_ts_headers();
-?><!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><title>防滥用测试 · AVENQIR</title><link rel="stylesheet" href="common.css?v=103"><link rel="stylesheet" href="theme.css"></head><body><main class="wrap owner-security-page"><h1>防滥用测试与配置</h1><a class="btn ghost" href="admin.php">返回管理后台</a><p>只限管理员。测试不会发送真实留言、消耗正式提交额度或修改正式限流计数。</p><p role="status"><?=fb_e($notice)?></p><section class="panel"><h2>本机挑战</h2><form method="post" class="stack"><input type="hidden" name="csrf" value="<?=fb_e($csrf)?>"><input type="hidden" name="human_id" value="<?=fb_e($human['id'])?>"><label><?=fb_e($human['question'])?><input name="human_answer" inputmode="numeric" autocomplete="off" maxlength="3" required></label><button name="action" value="local_test" class="btn primary">验证答案</button></form><form method="post"><input type="hidden" name="csrf" value="<?=fb_e($csrf)?>"><button name="action" value="selftest" class="btn ghost">运行限流、过期与重放自检</button></form></section>
+?><!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><title>防滥用测试 · AVENQIR</title><link rel="stylesheet" href="common.css?v=103"><link rel="stylesheet" href="theme.css"></head><body><main class="wrap owner-security-page"><h1>防滥用测试与配置</h1><p>AVENQIR · v104 · 管理员测试中心</p><a class="btn ghost" href="admin.php">返回管理后台</a><p>只限管理员。测试不会发送真实留言、消耗正式提交额度或修改正式限流计数。</p><p role="status"><?=fb_e($notice)?></p><section class="panel"><h2>本机挑战</h2><form method="post" class="stack"><input type="hidden" name="csrf" value="<?=fb_e($csrf)?>"><input type="hidden" name="human_id" value="<?=fb_e($human['id'])?>"><label><?=fb_e($human['question'])?><input name="human_answer" inputmode="numeric" autocomplete="off" maxlength="3" required></label><button name="action" value="local_test" class="btn primary">验证答案</button></form><form method="post"><input type="hidden" name="csrf" value="<?=fb_e($csrf)?>"><button name="action" value="selftest" class="btn ghost">运行限流、过期与重放自检</button></form></section>
 <section class="panel"><h2>Cloudflare Turnstile</h2><p>当前模式：<?=fb_e($cfg['mode']==='turnstile'?'已启用（高风险反馈）':($cfg['mode']==='local'?'本机算术挑战':'配置不可用'))?>。普通访问不加载第三方验证脚本。正式密钥不会出现在页面或 GitHub。</p><details><summary>配置正式密钥</summary><p>在 <a href="https://dash.cloudflare.com/" rel="noopener noreferrer" target="_blank">Cloudflare 控制台</a> 创建 Managed 小组件，允许的主机名仅填写 avenqir.bg5.net。输入 Site Key 和 Secret Key 后，必须通过真实验证才启用。</p><form method="post" class="stack" autocomplete="off"><input type="hidden" name="csrf" value="<?=fb_e($csrf)?>"><label>Site Key<input name="sitekey" required maxlength="128" autocomplete="off"></label><label>Secret Key<input name="secret" type="password" required maxlength="128" autocomplete="new-password"></label><button name="action" value="configure" class="btn primary">暂存并测试配置</button></form></details>
 <?php if($widget!==null):?><form method="post" class="stack"><input type="hidden" name="csrf" value="<?=fb_e($csrf)?>"><div class="cf-turnstile" data-sitekey="<?=fb_e($widget['sitekey'])?>" data-action="feedback_test" data-size="flexible" data-theme="auto"></div><button name="action" value="<?=is_array($pending)?'activate':'live_test'?>" class="btn primary"><?=is_array($pending)?'验证并启用':'测试正式凭证'?></button></form><script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script><?php endif;?>
 <?php if($cfg['mode']!=='local'):?><form method="post"><input type="hidden" name="csrf" value="<?=fb_e($csrf)?>"><button name="action" value="disable" class="btn ghost">停用第三方验证，恢复本机挑战</button></form><?php endif;?></section></main><script src="theme.js?v=15" defer></script></body></html>

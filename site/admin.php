@@ -1,5 +1,7 @@
 <?php
 declare(strict_types=1);
+// Explicit same-origin owner tool route; never include arbitrary requested paths.
+if(($_GET['view']??null)==='feedback-security'){require __DIR__.'/owner-feedback-security.php';exit;}
 require __DIR__.'/server-core.php';
 require __DIR__.'/admin-security.php';
 if((($_SERVER['HTTPS']??'')!=='on' && ($_SERVER['HTTPS']??'')!=='1') && (string)($_SERVER['SERVER_PORT']??'')!=='443'){
@@ -247,7 +249,7 @@ if($logged&&isset($_GET['edit']))foreach(public_links() as $r)if(($r['id']??'')=
 <?php elseif(aq_mfa_enabled($auth)):?><p class="hint">当前浏览器已获授权：仍需填写管理员密码，14 天内无需重复动态验证码。</p><?php endif; ?>
 <button class="btn primary" type="submit">登录 adm</button></form><p class="hint">HTTPS 加密 + 会话过期 + CSRF 校验；共享主机上不建议存储敏感信息。</p></section>
 <?php else:?>
-<section class="panel wide"><span class="label">OWNER ONLY · SITE STATUS</span><h2>私人站点状态</h2><p>仅在管理员会话中读取。站点地址不进入公开目录、静态代码或后台代理。请主动打开并手动确认状态。</p><nav class="owner-action-grid" aria-label="私人管理工具"><a class="btn primary" href="owner-sites.php">管理站点与软件验证</a><a class="btn ghost" href="owner-projects.php">私人 GitHub 项目</a><a class="btn ghost" href="owner-feedback-security.php">防滥用测试与配置</a></nav></section>
+<section class="panel wide"><span class="label">OWNER ONLY · SITE STATUS</span><h2>私人站点状态</h2><p>仅在管理员会话中读取。站点地址不进入公开目录、静态代码或后台代理。请主动打开并手动确认状态。</p><nav class="owner-action-grid" aria-label="私人管理工具"><a class="btn primary" href="owner-sites.php">管理站点与软件验证</a><a class="btn ghost" href="owner-projects.php">私人 GitHub 项目</a><a class="btn ghost" href="admin.php?view=feedback-security">防滥用测试与配置</a></nav></section>
 <div class="layout"><section class="panel wide"><div class="sectionhead"><div><span class="label">PUBLIC CATALOG</span><h2>当前公开网址（<?= count(public_links()) ?> 条）</h2><p>手机上点击编辑即可修改；不同设备再次打开目录会获得服务器最新数据。</p></div><a class="btn ghost" href="admin.php?export=1">下载 JSON 备份</a></div><div class="admin-list">
 <?php foreach(public_links() as $x): ?><div class="admin-item"><div><strong><?= e($x['name']) ?></strong><p><?= e($x['category']) ?> · <?= e($x['url']) ?></p></div><div class="btnrow"><a class="btn ghost mini-btn" href="admin.php?edit=<?= urlencode($x['id']) ?>#editor">编辑</a><form method="post"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= e($x['id']) ?>"><button class="btn ghost mini-btn" type="submit">删除</button></form></div></div><?php endforeach; ?>
 </div></section>
