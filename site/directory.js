@@ -53,7 +53,7 @@
  });
  externalDialog?.addEventListener('close',()=>{awaitingExternal=null;});
  const catalog=window.AVENQIR_ATLAS_CATALOG;
- if(!catalog)throw Error('目录核心未加载');
+ if(!catalog){const notice=$('atlasStartupNotice');if(notice)notice.firstChild.textContent='目录核心未加载，请使用下方重新加载入口。';return;}
  const paths=window.AVENQIR_ATLAS_PATHS||{links:[],flows:[],itemsForFlow:()=>[]};
  const guides=window.AVENQIR_ATLAS_GUIDES;
  const guideProgress=new Map();
@@ -489,6 +489,7 @@
  window.addEventListener('aq:language-change',()=>{translateCompact();drawPaths();choiceBar();draw();});
  translateCompact();revealHashPanel();
  updateApprovals();drawPaths();choiceBar();draw();
+ if($('atlasStartupNotice'))$('atlasStartupNotice').hidden=true;
  catalog.load().then(data=>{
   records=data.items;
   source.textContent=data.remote?T('在线目录 + 本地精选','Online directory + curated links'):T('内置精选目录（后台不可用）','Built-in directory (backend unavailable)');

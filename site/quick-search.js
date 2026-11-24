@@ -132,7 +132,7 @@
       });
       const local=bookmarksFor(query);
       const shortcuts=query?[{title:L('在公开网址目录搜索：','Search public directory: ')+query.slice(0,50),keywords:'local directory search',url:'directory.html#atlasResults',kind:'public',query}]:[];
-      found=[...local,...found.slice(0,Math.max(0,11-local.length)),...shortcuts].slice(0,12);
+      found=[...shortcuts,...local,...found.slice(0,Math.max(0,11-local.length))].slice(0,12);
       results.replaceChildren();
       for(const item of found){
         const a=document.createElement('a');a.className='aq-search-result';
