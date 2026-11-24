@@ -1,4 +1,6 @@
 'use strict';
+/* Retired feature: clear only the obsolete remote-browser address, never other local settings. */
+try { localStorage.removeItem('avenqir.remote-access-url.v1'); } catch (_) {}
 /* Register offline shell after page load. Offline is best-effort only. */
 if('serviceWorker' in navigator && location.protocol==='https:') {
   window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=25',{updateViaCache:'none'}).catch(()=>{}));
