@@ -35,7 +35,8 @@ document.addEventListener('DOMContentLoaded',()=>{
    document.getElementById('atlasClearFilters').click();
    const official=document.getElementById('atlasReviewedOnly'),threat=document.getElementById('atlasThreatFilter'),summary=document.getElementById('atlasSummary');
    official.checked=true;official.dispatchEvent(new Event('change'));
-   const sourceOnly=/211/.test(summary.textContent);
+   const count=window.AVENQIR_LINK_GATE.OFFICIAL_URLS.length;
+   const sourceOnly=summary.textContent.includes('Catalog: '+count+' sites')||summary.textContent.includes('目录 '+count+' 个网站');
    threat.value='not-listed';threat.dispatchEvent(new Event('change'));
    const exclusive=!official.checked;
    const allClear=/1239 sites|1239 个网站/.test(summary.textContent);
@@ -44,6 +45,31 @@ document.addEventListener('DOMContentLoaded',()=>{
    document.getElementById('atlasClearFilters').click();
    const reset=threat.value==='all'&&!official.checked;
    document.documentElement.dataset.aqThreatFilter=String(sourceOnly&&exclusive&&allClear&&zero&&reset);
+
+   const locale=document.getElementById('aqLocaleSelect');
+   locale.value='en';locale.dispatchEvent(new Event('change'));
+   const english=summary.textContent.startsWith('Catalog:');
+   locale.value='zh-Hans';locale.dispatchEvent(new Event('change'));
+   const chinese=summary.textContent.startsWith('目录');
+   const categorySearch=document.getElementById('atlasCategorySearch');
+   categorySearch.value='开发';categorySearch.dispatchEvent(new Event('input',{bubbles:true}));
+   const category=document.querySelector('.atlas-cat');
+   category?.click();
+   const categorized=summary.textContent.includes('分类：开发');
+   document.getElementById('atlasClearFilters').click();
+
+   const fixture=window.AVENQIR_ATLAS_CATALOG.catalog().find(item=>!window.AVENQIR_LINK_GATE.officialSourceReviewed(item.url));
+   input.value=fixture?.name||'';input.dispatchEvent(new Event('input',{bubbles:true}));form.requestSubmit();
+   const warned=Array.from(r.querySelectorAll('a.atlas-result-title')).find(link=>{
+    const u=new URL(link.href);
+    return u.pathname.endsWith('/leave.html')&&u.searchParams.get('url')===fixture?.url;
+   });
+   const pendingDialog=document.getElementById('atlasExternalDialog');
+   warned?.click();
+   const prompted=pendingDialog.open&&document.getElementById('atlasExternalUrl').textContent===fixture?.url;
+   if(prompted)document.getElementById('atlasExternalCancel').click();
+   document.documentElement.dataset.aqNavigation=String(english&&chinese&&categorized&&prompted&&!pendingDialog.open);
+   input.value='Python';input.dispatchEvent(new Event('input',{bubbles:true}));form.requestSubmit();
   },150);
  };
  setTimeout(run,50);
@@ -96,6 +122,7 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
         assert 'data-aq-local-ready="true"' in dom, 'directory did not render local results before delayed remote API'
         assert 'data-aq-search-flow="true"' in dom, 'interactive no-match, close, re-search or result order failed'
         assert 'data-aq-threat-filter="true"' in dom, 'official and dynamic-risk filter regression'
+        assert 'data-aq-navigation="true"' in dom, 'category, locale or third-party confirmation regression'
         assert 'id="atlasResults"' in dom and 'Python' in dom, 'search results absent'
         # Search continuation URL is verified in aqSearchFlow before filter reset.
         print('PASS browser local-first catalog, initial Python search, no-match submit/close/re-search and result ordering with slow API fixture')

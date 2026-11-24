@@ -108,8 +108,8 @@ for(const source of ['atlas-ai.js','atlas-regional.js','atlas-everyday.js','atla
  assert.ok(home.includes('src="'+source+'?v=18"'),'home missing resource '+source);
  assert.ok(html.includes('src="'+source+'?v=18"'),'directory missing resource '+source);
  assert.ok(sw.includes("'./"+source+"'"),'offline worker missing '+source);
- assert.ok(html.indexOf(source+'?v=18')<html.indexOf('atlas-catalog-core.js?v=110'),'resource before catalog');
- assert.ok(home.indexOf(source+'?v=18')<home.indexOf('atlas-catalog-core.js?v=110'),'home resource before catalog');
+ assert.ok(html.indexOf(source+'?v=18')<html.search(/atlas-catalog-core\.js\?v=\d+/),'resource before catalog');
+ assert.ok(home.indexOf(source+'?v=18')<home.search(/atlas-catalog-core\.js\?v=\d+/),'home resource before catalog');
 }
 for(const tag of ['atlasRegionToggle','atlasRegionStatus','atlasRegionBody','atlasRegionSelect','atlasRegionCards','atlasRegionClear']){
  assert.ok(html.includes('id="'+tag+'"'),'missing local region control '+tag);

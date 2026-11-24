@@ -14,7 +14,7 @@ assert.equal(gate.officialSourceReviewed('https://github.com/?next=https://evil.
 assert.equal(gate.officialSourceReviewed('https://github.com/#skip'),false);
 assert.equal(gate.officialSourceReviewed('https://a:pw@github.com/'),false);
 assert.equal(gate.officialSourceReviewed('javascript:alert(1)'),false);
-assert.equal(gate.officialSourceReviewed('https://urlscan.io/'),false);
+assert.equal(gate.officialSourceReviewed('https://urlscan.io/unreviewed-path'),false);
 assert.equal(gate.officialSourceReviewed('https://example.org/'),false);
 assert.equal(gate.sanitize('data:text/html,<script>bad</script>'),null);
 assert.equal(gate.searchEngineDestination('google',''),'https://www.google.com/');

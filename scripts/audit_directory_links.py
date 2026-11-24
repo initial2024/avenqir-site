@@ -76,13 +76,81 @@ def audit_url(raw: str) -> tuple[str, list[str]]:
     return raw, warnings
 
 
-def audit() -> dict:
-    core = (SITE / "atlas-catalog-core.js").read_text(encoding="utf-8")
+def catalog_entries() -> list[dict]:
     base = load_array("atlas-catalog-core.js", "base")
     extras = load_array("atlas-catalog-core.js", "extras")
     all_links = base + extras
     for file in SOURCES:
         all_links.extend(load_array(file, "links"))
+    return all_links
+
+
+def official_urls() -> list[str]:
+    gate = (SITE / "link-gate.js").read_text(encoding="utf-8")
+    match = re.search(r"const OFFICIAL_URLS\s*=\s*\[([\s\S]*?)\];", gate)
+    if not match:
+        raise ValueError("provenance allowlist missing")
+    return re.findall(r"'(https://[^']+)'", match.group(1))
+
+
+def audit_review_evidence(catalog: dict, reviewed: set) -> dict:
+    evidence_urls = set()
+    superseded = set()
+    structured = set()
+    for path in sorted(SITE.glob("atlas-review-*.json")):
+        document = json.loads(path.read_text(encoding="utf-8"))
+        strict = document.get("schema") == "avenqir-exact-source-review-v1"
+        for row in document["records"]:
+            url = row["url"]
+            audit_url(url)
+            if not strict:
+                evidence_urls.add(url)
+                continue
+            status = row["status"]
+            if status not in {"confirmed", "revoked", "pending"}:
+                raise ValueError(f"{path.name}: unrecognized review status for {url}")
+            if not row.get("reason") or not row.get("checkedAt"):
+                raise ValueError(f"{path.name}: missing date or decision reason for {url}")
+            if status == "revoked":
+                superseded.add(url)
+            if status != "confirmed":
+                continue
+            if url in structured or not row.get("title") or not row.get("evidence"):
+                raise ValueError(f"{path.name}: duplicate or unsupported confirmation for {url}")
+            if row["finalUrl"] != url:
+                raise ValueError(f"{path.name}: confirmation does not match final URL: {url}")
+            original = row["originalUrl"]
+            chain = row["redirectChain"]
+            if (
+                not chain or chain[0]["url"] != original or chain[-1]["url"] != url
+                or chain[-1]["status"] != row["httpStatus"]
+                or any(hop.get("location") != successor["url"] for hop, successor in zip(chain, chain[1:]))
+            ):
+                raise ValueError(f"{path.name}: invalid response chain for {url}")
+            if original != url:
+                destination = row.get("independentDestination", {})
+                if row.get("previousUrl") != original or destination.get("chain") != [{"url": url, "status": 200}]:
+                    raise ValueError(f"{path.name}: migration lacks independent exact retrieval for {url}")
+                superseded.add(original)
+            if url in catalog and (row["id"], row["category"]) != (catalog[url]["id"], catalog[url]["category"]):
+                raise ValueError(f"{path.name}: catalog identifier or category changed for {url}")
+            structured.add(url)
+            evidence_urls.add(url)
+    if superseded & reviewed:
+        raise ValueError("superseded provenance still allowlisted: " + ", ".join(sorted(superseded & reviewed)))
+    stale = evidence_urls - reviewed - superseded
+    if stale:
+        raise ValueError("unsuperseded evidence absent from allowlist: " + ", ".join(sorted(stale)))
+    return {
+        "allowlist_with_evidence": len(evidence_urls & reviewed),
+        "allowlist_without_evidence": len(reviewed - evidence_urls),
+        "structured_confirmations": len(structured & reviewed),
+    }
+
+
+def audit() -> dict:
+    core = (SITE / "atlas-catalog-core.js").read_text(encoding="utf-8")
+    all_links = catalog_entries()
     if len(all_links) < 1000:
         raise ValueError("catalog unexpectedly shrank below 1000 entries")
     urls, identifiers, cats = set(), set(), Counter()
@@ -118,18 +186,16 @@ def audit() -> dict:
         raise ValueError("country/region coverage regressed")
     if "AVENQIR_ATLAS_REGIONAL_EXT" not in core or "AVENQIR_ATLAS_EVERYDAY_EXT" not in core:
         raise ValueError("canonical browser catalog excludes extended resources")
-    gate = (SITE / "link-gate.js").read_text(encoding="utf-8")
-    match = re.search(r"const OFFICIAL_URLS\s*=\s*\[([\s\S]*?)\];", gate)
-    if not match:
-        raise ValueError("provenance allowlist missing")
-    reviewed = re.findall(r"'(https://[^']+)'", match.group(1))
+    reviewed = official_urls()
     if len(reviewed) != len(set(reviewed)):
         raise ValueError("duplicate provenance records")
     for url in reviewed:
         audit_url(url)
         if url not in urls:
             raise ValueError("provenance URL no longer in catalog: " + url)
+    evidence = audit_review_evidence({row["url"]: row for row in all_links}, set(reviewed))
     return {
+        **evidence,
         "checked": len(all_links), "unique_urls": len(urls),
         "categories": len(cats), "regions": len(regions),
         "official_exact_url_provenance": len(reviewed),

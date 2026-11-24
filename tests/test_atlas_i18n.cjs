@@ -106,7 +106,7 @@ const admin=fs.readFileSync(path.join(site,'admin.php'),'utf8');
 const sw=fs.readFileSync(path.join(site,'sw.js'),'utf8');
 const siteJs=fs.readFileSync(path.join(site,'site.js'),'utf8');
 for(const html of [dir,home]){
- assert.ok(html.indexOf('atlas-enrich.js?v=24')<html.indexOf('atlas-catalog-core.js?v=110'),'enrichment loads before catalog');
+ assert.ok(html.indexOf('atlas-enrich.js?v=24')<html.search(/atlas-catalog-core\.js\?v=\d+/),'enrichment loads before catalog');
 }
 assert.ok(dir.includes('atlasSiteLanguageMode'));
 assert.ok(dir.includes('atlasSiteLanguageHint'));

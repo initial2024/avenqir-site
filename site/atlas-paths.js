@@ -187,7 +187,7 @@
  {
   "id": "a121",
   "name": "GitHub Docs",
-  "url": "https://docs.github.com/",
+  "url": "https://docs.github.com/en",
   "category": "开发",
   "description": "GitHub 官方操作、API 与 Actions 文档"
  },
@@ -208,7 +208,7 @@
  {
   "id": "a124",
   "name": "DeepL",
-  "url": "https://www.deepl.com/translator",
+  "url": "https://www.deepl.com/en/translator",
   "category": "实用",
   "description": "在线翻译服务；敏感材料不要直接上传"
  },

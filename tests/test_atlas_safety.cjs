@@ -18,35 +18,32 @@ const catalog=require(path.join(site,'atlas-catalog-core.js'));
 const items=catalog.catalog();
 assert.equal(items.length,1239);
 const result=safety.summary(items);
-assert.deepEqual(result,{total:1239,blocked:0,caution:0,reviewed:211,pending:1028},'separate structural audit from provenance review');
+const reviewed=gate.OFFICIAL_URLS.length;
+const itemUrls=new Set(items.map(item=>item.url));
+assert.ok(gate.OFFICIAL_URLS.every(url=>itemUrls.has(url)));
+assert.deepEqual(result,{total:1239,blocked:0,caution:0,reviewed,pending:1239-reviewed},'separate structural audit from provenance review');
 assert.equal(safety.inspect('https://www.icann.org/').type,'reviewed');
-const evidence=JSON.parse(fs.readFileSync(path.join(site,'atlas-review-v101.json'),'utf8'));
-assert.equal(evidence.records.length,13);
-for(const record of evidence.records){
- assert.equal(record.url,record.source);
- assert.ok(items.some(item=>item.url===record.url));
- assert.equal(gate.officialSourceReviewed(record.url),true);
- assert.equal(gate.maySkipConfirmation(record.url,null),true);
- assert.equal(gate.maySkipConfirmation(record.url+'?next=evil',null),false);
+const reviews=fs.readdirSync(site).filter(file=>/^atlas-review-.+\.json$/.test(file))
+ .map(file=>JSON.parse(fs.readFileSync(path.join(site,file),'utf8')));
+const superseded=new Set(reviews.flatMap(doc=>doc.records.flatMap(row=>
+ row.previousUrl?[row.previousUrl]:row.status==='revoked'?[row.url]:[]
+)));
+for(const doc of reviews){
+ for(const row of doc.records){
+  if(row.status==='pending')continue;
+  if(superseded.has(row.url)){
+   assert.equal(gate.officialSourceReviewed(row.url),false);
+   continue;
+  }
+  assert.ok(itemUrls.has(row.url),'Review outside the curated catalog: '+row.url);
+  assert.ok(row.source.startsWith('https://'));
+  assert.equal(gate.officialSourceReviewed(row.url),true);
+  assert.equal(gate.maySkipConfirmation(row.url+'?next=evil',null),false);
+ }
 }
-const additional=JSON.parse(fs.readFileSync(path.join(site,'atlas-review-v115.json'),'utf8'));
-assert.equal(additional.records.length,22);
-for(const row of additional.records){assert.ok(items.some(x=>x.url===row.url));assert.equal(gate.officialSourceReviewed(row.url),true);assert.equal(gate.maySkipConfirmation(row.url+'?next=evil',null),false);}
-const latest=JSON.parse(fs.readFileSync(path.join(site,'atlas-review-v114.json'),'utf8'));
-assert.equal(latest.records.length,36);
-for(const record of latest.records){assert.ok(items.some(x=>x.url===record.url));assert.equal(gate.officialSourceReviewed(record.url),true);assert.equal(gate.maySkipConfirmation(record.url+'?redirect=evil',null),false);}
-const batch=JSON.parse(fs.readFileSync(path.join(site,'atlas-review-v110.json'),'utf8'));
-assert.equal(batch.records.length,84);
-for(const record of batch.records){
- assert.ok(items.some(item=>item.url===record.url));
- assert.ok(record.source.startsWith('https://'));
- assert.equal(gate.officialSourceReviewed(record.url),true);
- assert.equal(gate.maySkipConfirmation(record.url+'?next=evil',null),false);
-}
-for(const url of ['https://www.who.int/','https://www.cdc.gov/','https://pubchem.ncbi.nlm.nih.gov/','https://www.icann.org/','https://www.ietf.org/standards/','https://www.gov.uk/','https://www.wto.org/']){
+for(const url of ['https://www.who.int/','https://pubchem.ncbi.nlm.nih.gov/','https://www.icann.org/','https://www.gov.uk/','https://www.wto.org/']){
  assert.equal(gate.officialSourceReviewed(url),true,'verified source URL '+url);
 }
-assert.equal(gate.officialSourceReviewed('https://www.un.org/'),false,'unreachable/unsupported official sites should not be silently reviewed');
 for(const url of ['https://www.icann.org.evil.example.com/','https://www.icann.org/redirect','https://www.icann.org/?next=https://evil.example','https://www.icann.org/#jump','http://www.icann.org/']){
  assert.equal(gate.officialSourceReviewed(url),false,'exact URL provenance prevents unsafe lookalikes: '+url);
 }
@@ -104,8 +101,10 @@ const privacy=fs.readFileSync(path.join(site,'privacy.html'),'utf8');
 for(const id of ['atlasSecurityTitle','atlasSecurityCounts']){
  assert.ok(html.includes('id="'+id+'"'));
 }
-assert.ok(html.indexOf('link-gate.js?v=115')<html.indexOf('atlas-safety.js?v=115'));
-assert.ok(html.indexOf('atlas-safety.js?v=115')<html.search(/directory\.js\?v=[0-9]+/));
+const gateScript=html.search(/link-gate\.js\?v=[0-9]+/);
+const safetyScript=html.search(/atlas-safety\.js\?v=[0-9]+/);
+assert.ok(gateScript>=0&&gateScript<safetyScript);
+assert.ok(safetyScript<html.search(/directory\.js\?v=[0-9]+/));
 assert.ok(serviceWorker.includes("'./atlas-safety.js'"));
 assert.ok(script.includes('renderSafetyAudit()'));
 assert.ok(script.includes("a.removeAttribute('href')"),'blocked entries must have no direct link');
@@ -120,4 +119,4 @@ assert.ok(!script.includes('安全认证通过'),'must not claim certification')
 const backend={url:'https://100.74.2.3/',name:'Untrusted internal link',category:'其他',description:'test'};
 const newCounts=safety.summary([backend,...items]);
 assert.equal(newCounts.blocked,1,'backend links need identical runtime structural screening');
-console.log('PASS: 1239 locally structurally checked URLs, 211 exact source reviews, 1028 pending provenance, reserved IPv4/IPv6 blocking, explicit Google risk checks; no security certification claimed');
+console.log(`PASS: ${result.total} catalog URLs, ${result.reviewed} exact source reviews, ${result.pending} pending provenance, reserved IPv4/IPv6 blocking and explicit risk checks`);

@@ -55,8 +55,8 @@ const html=fs.readFileSync(path.join(base,'directory.html'),'utf8');
 for(const name of ['atlasFlowGrid','atlasFlowStatus','atlasResetFlow','atlasReviewedOnly','atlasExportFavorites','atlasExportStatus']){
  assert.ok(html.includes('id="'+name+'"'),'missing interface element '+name);
 }
-assert.ok(html.indexOf('atlas-paths.js?v=16')<html.search(/directory\.js\?v=[0-9]+/));
-assert.ok(html.indexOf('atlas-specialist.js?v=16')<html.indexOf('atlas-catalog-core.js?v=110'));
+assert.ok(html.search(/atlas-paths\.js\?v=\d+/)<html.search(/directory\.js\?v=[0-9]+/));
+assert.ok(html.indexOf('atlas-specialist.js?v=16')<html.search(/atlas-catalog-core\.js\?v=\d+/));
 const sw=fs.readFileSync(path.join(base,'sw.js'),'utf8');
 assert.ok(sw.includes("'./atlas-paths.js'"),'offline addon missing');
 assert.ok(core.includes('paths.flows.find('));
