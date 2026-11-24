@@ -298,7 +298,7 @@
      [T('需额外警惕','Extra caution'),totals.caution+'',T('参数、特殊域名或中转链接','Special domains, parameters or redirects')],
      [T('结构已阻断','Blocked structure'),totals.blocked+'',T('无法直接点击访问','Direct visit disabled')]
    ];
-   if(threat){cells.push([T('外部钓鱼清单已比对','External phishing list checked'),String(threat.checked)+' / '+totals.total,T('CERT Polska 域名级快照 · 未命中不代表安全','CERT Polska domain snapshot; no match is not a safety verdict')],[T('清单命中','Warning list matches'),String(threat.listed),T('目录内阻断直接访问','Direct navigation blocked in directory')],[T('未取得有效外部结果','External result unknown'),String(threat.unknown),threat.checkedAt||T('等待部署核验','Awaiting deployment audit')]);}
+   if(threat){cells.push([T('外部钓鱼清单已比对','External phishing list checked'),String(threat.checked)+' / '+totals.total,T('CERT Polska 域名级快照 · 未命中不代表安全','CERT Polska domain snapshot; no match is not a safety verdict')],[T('清单命中','Warning list matches'),String(threat.listed),T('目录内阻断直接访问','Direct navigation blocked in directory')],[T('未取得有效外部结果','External result unknown'),String(threat.unknown),threat.checkedAt?(threat.stale?T('上次快照已过期：','Previous snapshot expired: '):T('上次核验：','Last check: '))+threat.checkedAt:T('等待首次核验','Awaiting first audit')]);}
    wrapper.replaceChildren();
    for(const [name,value,note] of cells){
      const box=el('div','atlas-security-metric');

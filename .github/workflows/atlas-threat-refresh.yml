@@ -1,0 +1,27 @@
+name: AVENQIR / dynamic threat snapshot
+on:
+  schedule:
+    - cron: '23 */6 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: avenqir-production
+  cancel-in-progress: false
+jobs:
+  refresh:
+    if: vars.AVENQIR_DEPLOY_PAUSED != 'true' && github.repository == 'initial2024/avenqir-site' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: production
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Validate public catalog
+        run: python3 scripts/audit_directory_links.py
+      - name: Refresh only the verified public snapshot
+        env:
+          FTPS_USERNAME: ${{ secrets.AVENQIR_FTPS_USERNAME }}
+          FTPS_PASSWORD: ${{ secrets.AVENQIR_FTPS_PASSWORD }}
+        run: python3 scripts/refresh_atlas_threat_snapshot.py

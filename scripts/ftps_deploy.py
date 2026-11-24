@@ -136,6 +136,11 @@ def main():
         target_root=ftp.pwd()
         print('FTPS connected with certificate verification; target:',REMOTE)
         for file in sorted(files,key=deploy_order):
+            if file.name=='atlas-threat-snapshot.js' and b'window.AVENQIR_THREAT_SNAPSHOT = null;' in file.read_bytes():
+                ftp.cwd(target_root)
+                if file.name in remote_names(ftp):
+                    print('PRESERVED_LAST_THREAT_SNAPSHOT',file.name)
+                    continue
             upload(ftp,file,commit,target_root)
         metadata={'schema':'avenqir-deploy-state-1','commit':commit,'deployed_at':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())}
         state=SITE/'deploy-state.json'

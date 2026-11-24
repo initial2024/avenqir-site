@@ -35,13 +35,15 @@
  const checked=new Set(snapValid?snap.hosts:[]),listed=new Set(snapValid?snap.listed:[]);
  function threatStatus(raw,now=Date.now()){
   const u=gate?.sanitize(raw),ts=snapValid?Date.parse(snap.checkedAt):NaN;
-  if(!u||!Number.isFinite(ts)||ts>now+300000||now-ts>7*86400000)return 'unknown';
+  if(!u||!Number.isFinite(ts)||ts>now+300000)return 'unknown';
   const host=u.hostname.toLowerCase().replace(/\.$/,'');
-  if(!checked.has(host))return 'unknown';
-  return listed.has(host)?'listed':'not-listed';
+  // Expired negative results become unknown; known hits stay blocked until refreshed.
+  if(listed.has(host))return 'listed';
+  if(now-ts>24*3600000||!checked.has(host))return 'unknown';
+  return 'not-listed';
  }
  function threatSummary(items,now=Date.now()){
-  const out={checked:0,listed:0,unknown:0,checkedAt:snapValid?snap.checkedAt:null};
+  const out={checked:0,listed:0,unknown:0,checkedAt:snapValid?snap.checkedAt:null,stale:!snapValid||!Number.isFinite(Date.parse(snap.checkedAt))||Date.parse(snap.checkedAt)>now+300000||now-Date.parse(snap.checkedAt)>24*3600000};
   const seen=new Set();
   for(const item of items||[]){if(!item?.url||seen.has(item.url))continue;seen.add(item.url);const v=threatStatus(item.url,now);if(v==='unknown')out.unknown++;else{out.checked++;if(v==='listed')out.listed++}}
   return out;
