@@ -30,7 +30,23 @@
   if(!risk||risk.blocked||!u||u.protocol!=='https:'||u.search||u.hash)return null;
   return 'https://transparencyreport.google.com/safe-browsing/search?url='+encodeURIComponent(u.href);
  }
- const api=Object.freeze({TYPES,inspect,summary,googleStatusLink});
+ const snap=root.AVENQIR_THREAT_SNAPSHOT;
+ const snapValid=!!snap&&snap.schema==='aq-certpl-v1'&&snap.source==='https://hole.cert.pl/domains/v2/domains.txt'&&typeof snap.checkedAt==='string'&&Array.isArray(snap.hosts)&&Array.isArray(snap.listed)&&snap.hosts.length<=10000&&snap.listed.length<=snap.hosts.length;
+ const checked=new Set(snapValid?snap.hosts:[]),listed=new Set(snapValid?snap.listed:[]);
+ function threatStatus(raw,now=Date.now()){
+  const u=gate?.sanitize(raw),ts=snapValid?Date.parse(snap.checkedAt):NaN;
+  if(!u||!Number.isFinite(ts)||ts>now+300000||now-ts>7*86400000)return 'unknown';
+  const host=u.hostname.toLowerCase().replace(/\.$/,'');
+  if(!checked.has(host))return 'unknown';
+  return listed.has(host)?'listed':'not-listed';
+ }
+ function threatSummary(items,now=Date.now()){
+  const out={checked:0,listed:0,unknown:0,checkedAt:snapValid?snap.checkedAt:null};
+  const seen=new Set();
+  for(const item of items||[]){if(!item?.url||seen.has(item.url))continue;seen.add(item.url);const v=threatStatus(item.url,now);if(v==='unknown')out.unknown++;else{out.checked++;if(v==='listed')out.listed++}}
+  return out;
+ }
+ const api=Object.freeze({TYPES,inspect,summary,googleStatusLink,threatStatus,threatSummary});
  root.AVENQIR_ATLAS_SAFETY=api;
  if(typeof module==='object'&&module.exports)module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

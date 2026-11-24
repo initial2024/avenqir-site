@@ -130,7 +130,7 @@ if(($_SERVER['REQUEST_METHOD']??'GET')!=='GET'){http_response_code(405);exit;}
 if($logged)$_SESSION['until']=time()+1800;
 ?>
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AVENQIR · 通行密钥</title><link rel="stylesheet" href="common.css"><script src="passkey.js?v=4" defer></script></head>
+<title>AVENQIR · 通行密钥</title><link rel="stylesheet" href="common.css"><script src="passkey.js?v=5" defer></script></head>
 <body><main class="wrap"><section class="hero"><h1>管理员通行密钥 · Passkey</h1><p>仅限 adm。使用系统指纹、人脸或设备 PIN 验证；网站只保存公钥，不接触生物识别数据。</p><a class="btn ghost" href="admin.php">返回密码登录 / 目录管理</a></section>
 <section class="panel stack" id="pk-panel" data-csrf="<?= htmlspecialchars($_SESSION['csrf'],ENT_QUOTES,'UTF-8') ?>">
 <?php if(!$ready):?><p>需要先启用 TOTP 双重验证，并且主机支持 WebAuthn 验签。密码登录保持可用。</p>

@@ -16,8 +16,8 @@
  const externalGo=$('atlasExternalGo');
  const rememberBox=$('atlasRemember');
  let storage=null;try{storage=window.localStorage}catch{}
- const isAllowed=url=>!!linkGate?.maySkipConfirmation(url,storage);
- const dangerous=url=>linkGate?.urlRisk(url)?.blocked!==false;
+ const isAllowed=url=>safety?.threatStatus(url)!=='listed'&&!!linkGate?.maySkipConfirmation(url,storage);
+ const dangerous=url=>safety?.threatStatus(url)==='listed'||linkGate?.urlRisk(url)?.blocked!==false;
  function updateApprovals(){const n=linkGate?.approvalCount(storage)||0;const status=$('atlasApprovalCount');if(status)status.textContent=n?T('本机已记住 '+n+' 个第三方网址（30 天自动过期）','Remembered '+n+' external URLs (expire after 30 days)'):T('本机没有记住的第三方网址','No external URL preferences saved');}
  $('atlasClearApprovals')?.addEventListener('click',()=>{if(!confirm(T('清除本机所有已记住的网址选择？清除后下次访问需要重新确认。','Clear all remembered external confirmations? Links will ask again.')))return;linkGate?.clearRemembered(storage);updateApprovals();draw();});
  let awaitingExternal=null;
@@ -290,6 +290,7 @@
    if(safetyRecords!==records)safetyTotals=safety.summary(records);
    safetyRecords=records;safetyLocale=currentLocale;
    const totals=safetyTotals;
+   const threat=safety.threatSummary?.(records);
    const cells=[
      [T('已检查结构','URLs screened'),totals.total+'',T('仅验证网址规则，并非在线扫描','Structural checks only; not an online scan')],
      [T('来源已核对','Source reviewed'),totals.reviewed+'',T('精确官网来源，不等于安全认证','Exact URL provenance, not a certificate')],
@@ -297,6 +298,7 @@
      [T('需额外警惕','Extra caution'),totals.caution+'',T('参数、特殊域名或中转链接','Special domains, parameters or redirects')],
      [T('结构已阻断','Blocked structure'),totals.blocked+'',T('无法直接点击访问','Direct visit disabled')]
    ];
+   if(threat){cells.push([T('外部钓鱼清单已比对','External phishing list checked'),String(threat.checked)+' / '+totals.total,T('CERT Polska 域名级快照 · 未命中不代表安全','CERT Polska domain snapshot; no match is not a safety verdict')],[T('清单命中','Warning list matches'),String(threat.listed),T('目录内阻断直接访问','Direct navigation blocked in directory')],[T('未取得有效外部结果','External result unknown'),String(threat.unknown),threat.checkedAt||T('等待部署核验','Awaiting deployment audit')]);}
    wrapper.replaceChildren();
    for(const [name,value,note] of cells){
      const box=el('div','atlas-security-metric');
@@ -332,7 +334,7 @@
      if(x.category==='待分类')hostrow.append(el('span','atlas-auto-category',english()?'Needs categorization':'待分类'));
      else if(['high','medium'].includes(x.categorySource))hostrow.append(el('span','atlas-auto-category',english()?'Suggested category':'自动建议分类'));
      data.append(hostrow);
-     const a=el('a','atlas-result-title',x.name+' ↗');const reviewed=!!linkGate?.officialSourceReviewed(url);const permitted=isAllowed(url);a.href=permitted?url:'leave.html?url='+encodeURIComponent(url)+'&name='+encodeURIComponent(x.name);a.rel='noopener noreferrer';a.referrerPolicy='no-referrer';const rating=safety?.inspect(url);if(rating?.type==='blocked'){a.removeAttribute('href');a.setAttribute('aria-disabled','true');a.classList.add('atlas-result-blocked');}a.addEventListener('click',e=>{if(rating?.type==='blocked'){e.preventDefault();return;}
+     const a=el('a','atlas-result-title',x.name+' ↗');const reviewed=!!linkGate?.officialSourceReviewed(url);const permitted=isAllowed(url);a.href=permitted?url:'leave.html?url='+encodeURIComponent(url)+'&name='+encodeURIComponent(x.name);a.rel='noopener noreferrer';a.referrerPolicy='no-referrer';const rating=safety?.inspect(url);if(dangerous(url)){a.removeAttribute('href');a.setAttribute('aria-disabled','true');a.classList.add('atlas-result-blocked');}a.addEventListener('click',e=>{if(dangerous(url)){e.preventDefault();return;}
        if(e.button!==0||e.ctrlKey||e.metaKey||e.altKey||e.shiftKey)return;
        if(!permitted){e.preventDefault();showExternal(url,x.name);}
        else trackOpen(url);
@@ -353,6 +355,9 @@
        draw();
      });
      const cardActions=el('div','atlas-card-actions');cardActions.append(report,cmp);
+     const externalVerdict=safety?.threatStatus(url);
+     if(externalVerdict==='listed')data.append(el('small','atlas-review-unknown',T('CERT Polska 清单命中 · 目录内禁止访问','CERT Polska warning-list match · blocked in directory')));
+     else if(externalVerdict==='not-listed')data.append(el('small','atlas-review-unknown',T('CERT Polska 清单未命中 · 非安全认证','CERT Polska list: no match · not safety-certified')));
      const externalCheck=safety?.googleStatusLink(url);
      if(externalCheck){
        const check=el('a','atlas-security-lookup',T('查外部风险 ↗','Check external risk ↗'));
