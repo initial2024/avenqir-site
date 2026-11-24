@@ -61,8 +61,8 @@ assert.ok(paths.flows.find(x=>x.id==='ipdiagnose').urls.includes('https://ip.net
 assert.ok(paths.flows.find(x=>x.id==='aicheck').note.includes('误报'));
 assert.ok(html.includes('src="atlas-specialist.js?v=16"'));
 assert.ok(home.includes('src="atlas-specialist.js?v=16"'));
-assert.ok(html.indexOf('atlas-specialist.js?v=16')<html.indexOf('atlas-catalog-core.js?v=19'));
-assert.ok(home.indexOf('atlas-specialist.js?v=16')<home.indexOf('atlas-catalog-core.js?v=19'));
+assert.ok(html.indexOf('atlas-specialist.js?v=16')<html.indexOf('atlas-catalog-core.js?v=105'));
+assert.ok(home.indexOf('atlas-specialist.js?v=16')<home.indexOf('atlas-catalog-core.js?v=105'));
 assert.ok(worker.includes("'./atlas-specialist.js'"));
 assert.ok(!worker.includes("'./english.claua.de'"));
 const model=fs.readFileSync(path.join(base,'atlas-personalize.js'),'utf8');

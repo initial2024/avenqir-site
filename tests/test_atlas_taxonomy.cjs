@@ -70,8 +70,8 @@ for(const n of depthNames){
  assert.ok(dir.includes('src="'+p+'"'),'directory missing depth '+n);
  assert.ok(home.includes('src="'+p+'"'),'homepage missing depth '+n);
  assert.ok(sw.includes("'./atlas-depth-"+n+".js'"),'SW missing depth '+n);
- assert.ok(dir.indexOf(p)<dir.indexOf('atlas-catalog-core.js?v=19'),'directory scripts must preserve data before consumer order');
- assert.ok(home.indexOf(p)<home.indexOf('atlas-catalog-core.js?v=19'),'home scripts must preserve data before consumer order');
+ assert.ok(dir.indexOf(p)<dir.indexOf('atlas-catalog-core.js?v=105'),'directory scripts must preserve data before consumer order');
+ assert.ok(home.indexOf(p)<home.indexOf('atlas-catalog-core.js?v=105'),'home scripts must preserve data before consumer order');
 }
 for(const target of ['atlasGroupBar','atlasCategorySearch','atlasExpandCategories','atlasCategories','atlasTaxonomySummary']){
  assert.ok(dir.includes('id="'+target+'"'),'missing taxonomy UI control: '+target);

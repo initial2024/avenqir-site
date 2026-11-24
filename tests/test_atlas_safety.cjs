@@ -90,7 +90,7 @@ const privacy=fs.readFileSync(path.join(site,'privacy.html'),'utf8');
 for(const id of ['atlasSecurityTitle','atlasSecurityCounts']){
  assert.ok(html.includes('id="'+id+'"'));
 }
-assert.ok(html.indexOf('link-gate.js?v=20')<html.indexOf('atlas-safety.js?v=20'));
+assert.ok(html.indexOf('link-gate.js?v=105')<html.indexOf('atlas-safety.js?v=20'));
 assert.ok(html.indexOf('atlas-safety.js?v=20')<html.search(/directory\.js\?v=[0-9]+/));
 assert.ok(serviceWorker.includes("'./atlas-safety.js'"));
 assert.ok(script.includes('renderSafetyAudit()'));

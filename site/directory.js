@@ -73,7 +73,8 @@
  try{const raw=JSON.parse(sessionStorage.getItem(recentKey)||'[]');if(Array.isArray(raw))sessionOpens=raw.filter(x=>typeof x==='string').slice(0,100);}catch{}
  const multiOn=()=>!!$('atlasMultiCategory')?.checked;
  const languageMode=()=>$('atlasSiteLanguageMode')?.value||'prefer';
- const languageRank=item=>enrichment?.priority(item,locale()?.locale)||1;
+ let rankLocale='',rankCache=new WeakMap();
+ const languageRank=item=>{const current=locale()?.locale||'en';if(current!==rankLocale){rankLocale=current;rankCache=new WeakMap()}if(!rankCache.has(item))rankCache.set(item,enrichment?.priority(item,current)??1);return rankCache.get(item)};
  let localRecommendations=null;
  let regionRecommendations=null;
  function trackOpen(url){
@@ -85,7 +86,8 @@
  try{const v=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(v))favorites=v.filter(x=>typeof x==='string').slice(0,500)}catch{}
  input.value=query;
  const normalize=x=>String(x||'').toLocaleLowerCase().normalize('NFKC').trim();
- const meaningful=x=>[x.name,x.url,x.category,x.description].map(normalize);
+ const fieldCache=new WeakMap();
+ const meaningful=x=>{let fields=fieldCache.get(x);if(!fields){fields=[x.name,x.url,x.category,x.description].map(normalize);fieldCache.set(x,fields)}return fields};
  function score(x){if(!query)return 1;const terms=normalize(query).split(/\s+/).filter(Boolean);const fields=meaningful(x);
    if(!terms.every(w=>fields.some(v=>v.includes(w))||(/^[a-z]{2,20}$/.test(w)&&finder?.matches(w,[x.name,x.category]))))return -1;
    return terms.reduce((acc,t)=>acc+(fields[0]===t?12:fields[0].startsWith(t)?8:fields[0].includes(t)?6:0)+(fields[1].includes(t)?4:0)+(fields[2].includes(t)?3:0)+(fields[3].includes(t)?1:0),0);
@@ -488,13 +490,19 @@
  })||null;
  window.addEventListener('aq:language-change',()=>{translateCompact();drawPaths();choiceBar();draw();});
  translateCompact();revealHashPanel();
- updateApprovals();drawPaths();choiceBar();draw();
+ // Paint local results before optional recommendation panels or network sync.
+ draw();
+ source.textContent=T('内置目录已可用 · 同步公开数据中','Built-in catalog ready · syncing public entries');
+ const initialLocalQuery=pendingNoMatchQuery;
+ loaded=true;
+ if(initialLocalQuery){pendingNoMatchQuery='';committedQuery=initialLocalQuery;updateSearchNext(initialLocalQuery,false);scrollToResults();}
+ setTimeout(()=>{try{updateApprovals();drawPaths();choiceBar();localRecommendations?.render();regionRecommendations?.render()}catch{}},0);
  if($('atlasStartupNotice'))$('atlasStartupNotice').hidden=true;
  catalog.load().then(data=>{
-  records=data.items;
+  if(data.remote)records=data.items;
   source.textContent=data.remote?T('在线目录 + 本地精选','Online directory + curated links'):T('内置精选目录（后台不可用）','Built-in directory (backend unavailable)');
   loaded=true;choiceBar();draw();
-  if(pendingNoMatchQuery)completeSearch();else revealHashPanel();
+  if(pendingNoMatchQuery)completeSearch();else if(initialLocalQuery&&initialLocalQuery===query.trim()){pendingNoMatchQuery=initialLocalQuery;completeSearch();}else revealHashPanel();
   localRecommendations?.render();regionRecommendations?.render();drawGuide();
  }).catch(()=>{loaded=true;if(pendingNoMatchQuery)completeSearch();});
 })();

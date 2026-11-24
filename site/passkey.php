@@ -130,7 +130,7 @@ if(($_SERVER['REQUEST_METHOD']??'GET')!=='GET'){http_response_code(405);exit;}
 if($logged)$_SESSION['until']=time()+1800;
 ?>
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AVENQIR · 通行密钥</title><link rel="stylesheet" href="common.css"><script src="passkey.js?v=3" defer></script></head>
+<title>AVENQIR · 通行密钥</title><link rel="stylesheet" href="common.css"><script src="passkey.js?v=4" defer></script></head>
 <body><main class="wrap"><section class="hero"><h1>管理员通行密钥 · Passkey</h1><p>仅限 adm。使用系统指纹、人脸或设备 PIN 验证；网站只保存公钥，不接触生物识别数据。</p><a class="btn ghost" href="admin.php">返回密码登录 / 目录管理</a></section>
 <section class="panel stack" id="pk-panel" data-csrf="<?= htmlspecialchars($_SESSION['csrf'],ENT_QUOTES,'UTF-8') ?>">
 <?php if(!$ready):?><p>需要先启用 TOTP 双重验证，并且主机支持 WebAuthn 验签。密码登录保持可用。</p>
@@ -143,4 +143,4 @@ if($logged)$_SESSION['until']=time()+1800;
 <button type="button" class="btn ghost" id="pk-revoke" disabled>撤销全部通行密钥</button></form>
 <p>撤销不会删除手机密码管理器里的记录；可在系统中手动清理。现有登录会话仍遵循原有 30 分钟空闲过期规则。</p>
 <?php else:?><h2>使用通行密钥登录</h2><button type="button" class="btn primary" id="pk-login" disabled>使用通行密钥登录 · 准备验证</button><button type="button" class="btn primary" id="pk-get" disabled>打开系统通行密钥</button><p>浏览器中已经绑定过的凭证可以直接尝试使用，无需重复注册。系统必须支持该凭证提供方。没有凭证时请先用密码与 2FA 登录后登记。</p><?php endif;?>
-<p class="hint">若 Orbit 未弹出系统凭证窗口，请使用支持通行密钥的系统浏览器。新版 Orbit 可使用独立原生系统凭证通道；两个浏览器的登录会话仍然独立。动态码只能使用一次，请等新的 6 位码。</p><p role="status" id="pk-status">正在检测浏览器支持情况…</p></section></main></body></html>
+<p class="hint">若 Orbit 未弹出系统凭证窗口，请使用支持通行密钥的系统浏览器。新版 Orbit 可使用独立原生系统凭证通道；两个浏览器的登录会话仍然独立。动态码只能使用一次，请等新的 6 位码。</p><label id="pk-route-label">凭证通道（系统支持时优先使用标准 WebAuthn）<select id="pk-route"><option value="web">标准 WebAuthn（推荐）</option><option value="native">Orbit 原生凭证（备用）</option></select></label><p role="status" id="pk-status">正在检测浏览器支持情况…</p></section></main></body></html>

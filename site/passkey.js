@@ -5,10 +5,14 @@
  const buttons=['pk-register','pk-create','pk-revoke','pk-login','pk-get'].map(id=>document.getElementById(id)).filter(Boolean);
  const native=window.OrbitAvenqirPasskey;
  const nativeAvailable=window.isSecureContext&&native&&typeof native.postMessage==='function';
- const supported=window.isSecureContext&&(nativeAvailable||!!window.PublicKeyCredential&&!!navigator.credentials);
+ const webAvailable=window.isSecureContext&&!!window.PublicKeyCredential&&!!navigator.credentials;
+ const supported=window.isSecureContext&&(nativeAvailable||webAvailable);
+ const route=document.getElementById('pk-route');
+ if(route){document.getElementById('pk-route-label').hidden=!(nativeAvailable&&webAvailable);}
+ const useNative=()=>nativeAvailable&&(!webAvailable||route?.value==='native');
  const show=t=>{status.textContent=t;};
  if(!supported){show('当前浏览器不支持通行密钥。请使用系统浏览器或原密码登录。');return;}
- show(nativeAvailable?'使用 Orbit 原生系统凭证通道。':'浏览器支持 WebAuthn；实际凭证由系统提供。');
+ show(webAvailable?'使用标准 WebAuthn 凭证通道。':'使用 Orbit 原生系统凭证通道。');
  let nativePending=null;
  if(nativeAvailable)native.onmessage=event=>{
    let msg;try{msg=JSON.parse(event.data);}catch(_){return;}
@@ -26,7 +30,8 @@
    catch(e){clearTimeout(timer);nativePending=null;reject(Error('NATIVE_OTHER'));}
  });
  const getCredential=async (operation,raw)=>{
-   if(nativeAvailable){
+   if(useNative()){
+     show('正在调用 Orbit 原生凭证服务…');
      const c=await nativeCall(operation,raw.publicKey);
      if(c.type!=='public-key'||!c.rawId||!c.response)throw Error('NATIVE_INVALID');
      const r=c.response,out={id:c.rawId,clientDataJSON:r.clientDataJSON};
@@ -34,6 +39,7 @@
      else{out.authenticatorData=r.authenticatorData;out.signature=r.signature;if(r.userHandle)out.userHandle=r.userHandle;}
      return out;
    }
+   show('正在调用标准 WebAuthn 系统凭证…');
    const create=operation==='create';
    const c=create?await navigator.credentials.create(options(raw,true)):await navigator.credentials.get(options(raw,false));
    return body(c,create);

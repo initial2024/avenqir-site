@@ -21,7 +21,7 @@
  async function load(){
   const fallback=catalog();
   if(typeof fetch!=='function')return {items:fallback,remote:false};
-  const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),6500);
+  const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),2500);
   try{
     const r=await fetch('public-api.php?ts='+Date.now(),{cache:'no-store',signal:ctl.signal,credentials:'omit'});
     if(!r.ok||!(r.headers.get('content-type')||'').includes('application/json'))throw Error('public API unavailable');
