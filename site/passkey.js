@@ -3,6 +3,17 @@
  const panel=document.getElementById('pk-panel'), status=document.getElementById('pk-status');
  if(!panel||!status)return;
  const buttons=['pk-register','pk-create','pk-revoke','pk-login','pk-get'].map(id=>document.getElementById(id)).filter(Boolean);
+ const browserBridge=window.OrbitAvenqirBrowserAuth;
+ const browserEntry=document.getElementById('pk-browser-entry');
+ const browserOpen=document.getElementById('pk-browser-open');
+ const browserAvailable=window.isSecureContext&&browserBridge&&typeof browserBridge.postMessage==='function';
+ if(browserAvailable&&browserEntry&&browserOpen){
+   browserEntry.hidden=false;
+   browserOpen.addEventListener('click',()=>{
+     try{browserBridge.postMessage('OPEN_PASSKEY_PAGE');status.textContent='请选择支持通行密钥的系统浏览器。返回软件后内置登录状态不会自动改变。';}
+     catch(_){status.textContent='未能打开浏览器，请使用 Orbit 导航菜单的浏览器通行密钥入口。';}
+   });
+ }
  const native=window.OrbitAvenqirPasskey;
  const nativeAvailable=window.isSecureContext&&native&&typeof native.postMessage==='function';
  const webAvailable=window.isSecureContext&&!!window.PublicKeyCredential&&!!navigator.credentials;
