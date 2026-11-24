@@ -1,0 +1,101 @@
+{
+  "reviewDate": "2026-11-24",
+  "scope": "Direct exact page checks; readable identity and services; no redirects or challenge-only responses. Not a safety guarantee.",
+  "records": [
+    {
+      "url": "https://www.wolframalpha.com/",
+      "source": "https://www.wolframalpha.com/",
+      "method": "Direct indexed retrieval of exact project or institutional page"
+    },
+    {
+      "url": "https://developer.mozilla.org/en-US/observatory",
+      "source": "https://developer.mozilla.org/en-US/observatory",
+      "method": "Direct indexed retrieval of exact project or institutional page"
+    },
+    {
+      "url": "https://json-schema.org/",
+      "source": "https://json-schema.org/",
+      "method": "Direct indexed retrieval of exact project or institutional page"
+    },
+    {
+      "url": "https://mathworld.wolfram.com/",
+      "source": "https://mathworld.wolfram.com/",
+      "method": "Direct indexed retrieval of exact project or institutional page"
+    },
+    {
+      "url": "https://www.internetsociety.org/",
+      "source": "https://www.internetsociety.org/",
+      "method": "Direct indexed retrieval of exact project or institutional page"
+    },
+    {
+      "url": "https://projecteuler.net/",
+      "source": "https://projecteuler.net/",
+      "method": "Direct indexed retrieval of exact project or institutional page"
+    },
+    {
+      "url": "https://dnsviz.net/",
+      "source": "https://dnsviz.net/",
+      "method": "Direct indexed retrieval of exact project or institutional page"
+    },
+    {
+      "url": "https://opencitations.net/",
+      "source": "https://opencitations.net/",
+      "method": "Direct indexed retrieval of exact project or institutional page"
+    },
+    {
+      "url": "https://www.lmfdb.org/",
+      "source": "https://www.lmfdb.org/",
+      "method": "Direct indexed retrieval of exact project or institutional page"
+    },
+    {
+      "url": "https://www.sagemath.org/",
+      "source": "https://www.sagemath.org/",
+      "method": "Direct indexed retrieval of exact project or institutional page"
+    },
+    {
+      "url": "https://www.naturalearthdata.com/",
+      "source": "https://www.naturalearthdata.com/",
+      "method": "Direct indexed retrieval of exact project or institutional page"
+    },
+    {
+      "url": "https://opentopography.org/",
+      "source": "https://opentopography.org/",
+      "method": "Direct indexed retrieval of exact project or institutional page"
+    },
+    {
+      "url": "https://dataspace.copernicus.eu/",
+      "source": "https://dataspace.copernicus.eu/",
+      "method": "Direct indexed retrieval of exact project or institutional page"
+    },
+    {
+      "url": "https://www.geonames.org/",
+      "source": "https://www.geonames.org/",
+      "method": "Direct indexed retrieval of exact project or institutional page"
+    },
+    {
+      "url": "https://www.metmuseum.org/art/collection",
+      "source": "https://www.metmuseum.org/art/collection",
+      "method": "Direct indexed retrieval of exact project or institutional page"
+    },
+    {
+      "url": "https://ase-lib.org/",
+      "source": "https://ase-lib.org/",
+      "method": "Direct indexed retrieval of exact project or institutional page"
+    },
+    {
+      "url": "https://www.rhea-db.org/",
+      "source": "https://www.rhea-db.org/",
+      "method": "Direct indexed retrieval of exact project or institutional page"
+    },
+    {
+      "url": "https://eosc.eu/",
+      "source": "https://eosc.eu/",
+      "method": "Direct indexed retrieval of exact project or institutional page"
+    },
+    {
+      "url": "https://vizier.cds.unistra.fr/",
+      "source": "https://vizier.cds.unistra.fr/",
+      "method": "Direct indexed retrieval of exact project or institutional page"
+    }
+  ]
+}
