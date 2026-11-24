@@ -20,10 +20,11 @@ jobs:
         run: |
           python3 - <<'PY'
           import json, time, urllib.request
-          url = 'https://api.github.com/repos/initial2024/avenqir-site/actions/runs/45408217551'
+          url = 'https://api.github.com/repos/initial2024/avenqir-site/actions/runs/45416702538'
           for _ in range(24):
               with urllib.request.urlopen(url, timeout=12) as response:
                   run = json.load(response)
+              assert run['head_sha'] == 'd35a3c29a95c6ff7fc649071e3940637f6af6fee', run['head_sha']
               if run['status'] == 'completed':
                   assert run['conclusion'] == 'success', run['conclusion']
                   break
@@ -64,7 +65,7 @@ jobs:
           output = result.stdout
           if 'slowAES.decrypt' in output and 'atlasLiveCount' not in output:
               raise SystemExit('PUBLIC_PAGE=access challenge')
-          assert 'link-gate.js?v=128' in output, 'The browser did not load the v128 directory shell'
+          assert 'link-gate.js?v=129' in output, 'The browser did not load the v129 directory shell'
           def field(element):
               found = re.search(r'<[^>]+id="'+element+r'"[^>]*>([^<]*)', output)
               assert found, 'Rendered element missing: '+element
@@ -72,10 +73,10 @@ jobs:
           total = field('atlasLiveCount')
           count = field('atlasFilterCounts')
           assert re.search(r'(?:Curated|已整理) [\d,]+ (?:unique websites|个独立网址)', total), total
-          assert int(re.search(r'[\d,]+', total)[0].replace(',','')) >= int(curated), total
+          assert int(re.search(r'[\d,]+', total)[0].replace(',','')) == int(curated), total
           assert re.search(r'(?:source reviewed|来源核对) '+reviewed+r'\b', count), count
           assert re.search(r'id="popularCards"', output)
           print('LIVE_DIRECTORY=' + total)
           print('LIVE_SOURCE_COUNT=' + count)
-          print('LIVE_ASSET_VERSION=128')
+          print('LIVE_ASSET_VERSION=129')
           PY
