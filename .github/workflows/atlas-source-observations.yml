@@ -1,0 +1,47 @@
+name: AVENQIR public source observations
+
+on:
+  push:
+    branches: [atlas-source-observations-20261124]
+    paths:
+      - .github/workflows/atlas-source-observations.yml
+      - evidence/atlas-observation-ids.txt
+
+permissions:
+  contents: read
+
+jobs:
+  observe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        slice: [1, 2]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Observe public catalog destinations
+        env:
+          ATLAS_SLICE: ${{ matrix.slice }}
+        run: |
+          python3 - <<'PY'
+          import os, sys
+          from pathlib import Path
+          sys.path.insert(0, 'scripts')
+          import collect_atlas_source_evidence as review
+          original = review.catalog_entries
+          number = int(os.environ['ATLAS_SLICE'])
+          ids = set(Path('evidence/atlas-observation-ids.txt').read_text().splitlines()[125*(number-1):125*number])
+          review.catalog_entries = lambda: [item for item in original() if item['id'] in ids]
+          sys.argv = [review.__file__, '--state', 'atlas-state', '--export', 'atlas-batches', '--workers', '8', '--timeout', '12']
+          review.main()
+          PY
+      - name: Preserve resumable observations
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: atlas-source-observations-${{ matrix.slice }}
+          path: atlas-state/*.json
+          retention-days: 7
