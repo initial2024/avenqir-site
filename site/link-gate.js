@@ -636,7 +636,19 @@
     'https://www.meteo.be/en/',
     'https://www.italotreno.com/en',
     'https://www.ctt.pt/particulares/index',
-    'https://www.noon.com/uae-en/'
+    'https://www.noon.com/uae-en/',
+    'https://fcsc.gov.ae/',
+    'https://data.go.th/',
+    'https://www.tourismthailand.org/',
+    'https://data.census.gov/',
+    'https://www.usaspending.gov/',
+    'https://www.gov.hk/',
+    'https://www.smg.gov.mo/',
+    'https://www.weather.gov.sg/',
+    'https://dane.gov.pl/',
+    'https://www.ncm.gov.ae/',
+    'https://www.visitdubai.com/en',
+    'https://my.gov.au/en/services'
   ];
   function sanitize(raw){
     if(typeof raw!=='string'||raw.length>1800||/[\u0000-\u0020\u007f\\]/.test(raw))return null;

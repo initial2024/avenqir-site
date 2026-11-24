@@ -4153,6 +4153,117 @@
       "reviewedOn": "2026-11-24",
       "evidence": "Observed redirect to UAE storefront, matching region",
       "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://fcsc.gov.ae/",
+      "source": "https://fcsc.gov.ae/",
+      "identity": "UAE Federal Competitiveness and Statistics Centre",
+      "method": "Readable official homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Readable government statistics centre homepage and data index",
+      "evidenceFreshness": "Index: 4 months; not real-time security proof"
+    },
+    {
+      "url": "https://data.go.th/",
+      "source": "https://data.go.th/",
+      "identity": "Thailand Open Government Data",
+      "method": "Readable official homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Portal identifies itself and the Digital Government Development Agency",
+      "evidenceFreshness": "Index: 3 months; not real-time security proof"
+    },
+    {
+      "url": "https://www.tourismthailand.org/",
+      "source": "https://www.tourismthailand.org/",
+      "identity": "Tourism Authority of Thailand",
+      "method": "Readable official homepage in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Official tourism agency homepage and regional navigation",
+      "evidenceFreshness": "Index: 3 months; not real-time security proof"
+    },
+    {
+      "url": "https://data.census.gov/",
+      "source": "https://www.census.gov/data/what-is-data-census-gov/guidance-for-data-users/frequently-asked-questions/what-is-data-census-gov.html",
+      "identity": "US Census Data",
+      "method": "Official institutional reference names service; live response not established",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Census Bureau explicitly identifies its primary data platform; target JS-only in retrieval",
+      "evidenceFreshness": "Index: last month; not real-time security proof"
+    },
+    {
+      "url": "https://www.usaspending.gov/",
+      "source": "https://tfx.treasury.gov/monthly-reporting-requirements",
+      "identity": "USAspending",
+      "method": "Official institutional reference names service; live response not established",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Treasury explicitly identifies official federal spending source; target JS-only",
+      "evidenceFreshness": "Index: today; not real-time security proof"
+    },
+    {
+      "url": "https://www.gov.hk/",
+      "source": "https://www.info.gov.hk/gia/general/202610/28/P2026102800410.htm",
+      "identity": "GovHK",
+      "method": "Official institutional reference names service; live response not established",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Government announcement explicitly identifies portal managed by DPO; root retrieval timed out",
+      "evidenceFreshness": "Index: 3 weeks; not real-time security proof"
+    },
+    {
+      "url": "https://www.smg.gov.mo/",
+      "source": "https://www.gov.mo/en/preset-notice-post/arrangement-of-service-of-smg-from-20th-june-to-21st-june/?noredirect=en_US",
+      "identity": "Macao Meteorological and Geophysical Bureau",
+      "method": "Official institutional reference names service; live response not established",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Government portal explicitly identifies SMG website; root lacks readable text",
+      "evidenceFreshness": "Index: last month; not real-time security proof"
+    },
+    {
+      "url": "https://www.weather.gov.sg/",
+      "source": "https://aim-sg.caas.gov.sg/aim-content/uploads/aip/16-OCT-2025/AIP/2025-10-02-000000/html/eAIP/SG-GEN-3.5-en-GB.html?s=DD43C537E30BB9B14191ECC6AB9CE75E4D2D8B9D",
+      "identity": "Meteorological Service Singapore",
+      "method": "Official institutional reference names service; live response not established",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Civil aviation authority publication explicitly identifies exact HTTPS root; target no readable text",
+      "evidenceFreshness": "Index: today; not real-time security proof"
+    },
+    {
+      "url": "https://dane.gov.pl/",
+      "source": "https://www.gov.pl/web/cyfryzacja/portal-danych-danegovpl",
+      "identity": "Poland Open Data",
+      "method": "Official institutional reference names service; live response not established",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Ministry of Digital Affairs identifies portal; target JS-only",
+      "evidenceFreshness": "Index: today; not real-time security proof"
+    },
+    {
+      "url": "https://www.ncm.gov.ae/",
+      "source": "https://www.ncm.ae/",
+      "previousUrl": "https://www.ncm.ae/",
+      "identity": "UAE National Center of Meteorology",
+      "method": "Observed official redirect and inspected destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed cross-domain redirect to federal authority homepage, meteorology and seismic services",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://www.visitdubai.com/en",
+      "source": "https://www.visitdubai.com/",
+      "previousUrl": "https://www.visitdubai.com/",
+      "identity": "Visit Dubai",
+      "method": "Observed official redirect and inspected destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed redirect to official English destination, government of Dubai link",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
+    },
+    {
+      "url": "https://my.gov.au/en/services",
+      "source": "https://www.australia.gov.au/",
+      "previousUrl": "https://www.australia.gov.au/",
+      "identity": "Australian government services",
+      "method": "Observed official redirect and inspected destination via indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidence": "Observed official redirect to myGov with referral query; independently retrieved clean HTTPS services endpoint",
+      "evidenceFreshness": "Indexed approximately three months ago; not live availability or safety proof"
     }
   ]
 }
