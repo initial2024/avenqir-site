@@ -1239,6 +1239,272 @@
       "identity": "STMicroelectronics",
       "method": "Observed redirect and inspected official destination via indexed retrieval",
       "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://data.gov.sg/",
+      "source": "https://data.gov.sg/",
+      "identity": "Singapore Government Open Data",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.moe.gov.sg/",
+      "source": "https://www.moe.gov.sg/",
+      "identity": "Singapore Ministry of Education",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.nparks.gov.sg/",
+      "source": "https://www.nparks.gov.sg/",
+      "identity": "Singapore National Parks Board",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.govinfo.gov/",
+      "source": "https://www.govinfo.gov/",
+      "identity": "US Government Publishing Office",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.grants.gov/",
+      "source": "https://www.grants.gov/",
+      "identity": "Grants.gov",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.uspto.gov/",
+      "source": "https://www.uspto.gov/",
+      "identity": "US Patent and Trademark Office",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.ons.gov.uk/",
+      "source": "https://www.ons.gov.uk/",
+      "identity": "UK Office for National Statistics",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.metoffice.gov.uk/",
+      "source": "https://www.metoffice.gov.uk/",
+      "identity": "UK Met Office",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.data.gov.uk/",
+      "source": "https://www.data.gov.uk/",
+      "identity": "UK National Data Library",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.ukri.org/",
+      "source": "https://www.ukri.org/",
+      "identity": "UK Research and Innovation",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.britishcouncil.org/",
+      "source": "https://www.britishcouncil.org/",
+      "identity": "British Council",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.dfg.de/",
+      "source": "https://www.dfg.de/",
+      "identity": "German Research Foundation",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.bahn.de/",
+      "source": "https://www.bahn.de/",
+      "identity": "Deutsche Bahn",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://meteofrance.com/",
+      "source": "https://meteofrance.com/",
+      "identity": "Météo-France",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.data.gouv.fr/",
+      "source": "https://www.data.gouv.fr/",
+      "identity": "French public data platform",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.culture.gouv.fr/",
+      "source": "https://www.culture.gouv.fr/",
+      "identity": "French Ministry of Culture",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.legifrance.gouv.fr/",
+      "source": "https://www.legifrance.gouv.fr/",
+      "identity": "Légifrance",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.korea.kr/",
+      "source": "https://www.korea.kr/",
+      "identity": "Korea Policy Briefing",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.data.go.kr/",
+      "source": "https://www.data.go.kr/",
+      "identity": "Korean Public Data Portal",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.canada.ca/",
+      "source": "https://www.canada.ca/",
+      "identity": "Government of Canada",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.statcan.gc.ca/",
+      "source": "https://www.statcan.gc.ca/",
+      "identity": "Statistics Canada",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://weather.gc.ca/",
+      "source": "https://weather.gc.ca/",
+      "identity": "Environment Canada Weather",
+      "method": "Inspected exact official page via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.lta.gov.sg/content/ltagov/en.html",
+      "source": "https://www.lta.gov.sg/",
+      "previousUrl": "https://www.lta.gov.sg/",
+      "identity": "Singapore Land Transport Authority",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.nlb.gov.sg/main/home",
+      "source": "https://www.nlb.gov.sg/",
+      "previousUrl": "https://www.nlb.gov.sg/",
+      "identity": "Singapore National Library Board",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.bundesregierung.de/breg-de",
+      "source": "https://www.bundesregierung.de/",
+      "previousUrl": "https://www.bundesregierung.de/",
+      "identity": "German Federal Government",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.bundesbank.de/en",
+      "source": "https://www.bundesbank.de/",
+      "previousUrl": "https://www.bundesbank.de/",
+      "identity": "Deutsche Bundesbank",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.daad.de/de/",
+      "source": "https://www.daad.de/",
+      "previousUrl": "https://www.daad.de/",
+      "identity": "DAAD",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.insee.fr/fr/accueil",
+      "source": "https://www.insee.fr/",
+      "previousUrl": "https://www.insee.fr/",
+      "identity": "INSEE",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.service-public.gouv.fr/",
+      "source": "https://www.service-public.fr/",
+      "previousUrl": "https://www.service-public.fr/",
+      "identity": "French Service Public",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.cnrs.fr/fr",
+      "source": "https://www.cnrs.fr/",
+      "previousUrl": "https://www.cnrs.fr/",
+      "identity": "CNRS",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://kosis.kr/index/index.do",
+      "source": "https://kosis.kr/",
+      "previousUrl": "https://kosis.kr/",
+      "identity": "KOSIS",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.weather.go.kr/w/index.do",
+      "source": "https://www.weather.go.kr/",
+      "previousUrl": "https://www.weather.go.kr/",
+      "identity": "Korea Meteorological Administration",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.studyinkorea.go.kr/ko/main.do",
+      "source": "https://www.studyinkorea.go.kr/",
+      "previousUrl": "https://www.studyinkorea.go.kr/",
+      "identity": "Study in Korea",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://english.visitkorea.or.kr/svc/main/index.do",
+      "source": "https://english.visitkorea.or.kr/",
+      "previousUrl": "https://english.visitkorea.or.kr/",
+      "identity": "Visit Korea",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://nrc.canada.ca/en/",
+      "source": "https://nrc.canada.ca/",
+      "previousUrl": "https://nrc.canada.ca/",
+      "identity": "National Research Council Canada",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://www.canada.ca/en/library-archives.html",
+      "source": "https://library-archives.canada.ca/",
+      "previousUrl": "https://library-archives.canada.ca/",
+      "identity": "Library and Archives Canada",
+      "method": "Observed redirect and inspected official destination via indexed retrieval",
+      "reviewedOn": "2026-11-24"
     }
   ]
 }
