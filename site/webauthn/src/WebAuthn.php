@@ -20,6 +20,8 @@ class WebAuthn {
     private $_rpIdHash;
     private $_challenge;
     private $_signatureCounter;
+    // AVENQIR local extension: optional exact trusted origins, including a pinned Android app origin.
+    private $_allowedOrigins;
 
     /**
      * Initialize a new WebAuthn server
@@ -28,7 +30,8 @@ class WebAuthn {
      * @param bool $useBase64UrlEncoding true to use base64 url encoding for binary data in json objects. Default is a RFC 1342-Like serialized string.
      * @throws WebAuthnException
      */
-    public function __construct($rpName, $rpId, $useBase64UrlEncoding=false) {
+    public function __construct($rpName, $rpId, $useBase64UrlEncoding=false, array $allowedOrigins=[]) {
+        $this->_allowedOrigins = $allowedOrigins;
         $this->_rpName = $rpName;
         $this->_rpId = $rpId;
         $this->_rpIdHash = \hash('sha256', $rpId, true);
@@ -459,6 +462,10 @@ class WebAuthn {
      * @throws WebAuthnException
      */
     private function _checkOrigin($origin) {
+        // Local extension: use an exact allowlist when configured. Preserve original signed clientDataJSON.
+        if ($this->_allowedOrigins !== []) {
+            return \is_string($origin) && \in_array($origin, $this->_allowedOrigins, true);
+        }
         // https://www.w3.org/TR/webauthn/#rp-id
 
         // The origin's scheme must be https

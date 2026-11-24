@@ -3,6 +3,10 @@ declare(strict_types=1);
 // Owner-only WebAuthn adapter. The pinned library performs CBOR and signature validation.
 const AQ_PK_RP='avenqir.bg5.net';
 const AQ_PK_ORIGIN='https://avenqir.bg5.net';
+// SHA-256 of the verified Orbit Mail personal fixed signing certificate,
+// also declared in the site's Digital Asset Links. Do not trust arbitrary APK hashes.
+const AQ_PK_ANDROID_ORIGIN='android:apk-key-hash:bj5bCDe-lwgjj-xbIL2Az1GiqmOyRPGUYldAHzruBJE';
+function aq_pk_origins():array{return [AQ_PK_ORIGIN,AQ_PK_ANDROID_ORIGIN];}
 const AQ_PK_TTL=120;
 const AQ_PK_MAX=6;
 function aq_pk_require(bool $ok):void {if(!$ok)throw new RuntimeException('Passkey operation denied');}
@@ -15,11 +19,11 @@ function aq_pk_decode($raw,int $max=65536):string{
 }
 function aq_pk_engine():\ReportUri\Passkeys\WebAuthn{
   require_once __DIR__.'/webauthn/src/WebAuthn.php';
-  return new \ReportUri\Passkeys\WebAuthn('AVENQIR',AQ_PK_RP,true);
+  return new \ReportUri\Passkeys\WebAuthn('AVENQIR',AQ_PK_RP,true,aq_pk_origins());
 }
 function aq_pk_client(string $raw,string $type,string $challenge):void{
   $j=json_decode($raw,true,16,JSON_THROW_ON_ERROR);
-  aq_pk_require(is_array($j)&&($j['type']??null)===$type&&($j['origin']??null)===AQ_PK_ORIGIN
+  aq_pk_require(is_array($j)&&($j['type']??null)===$type&&in_array($j['origin']??null,aq_pk_origins(),true)
     &&($j['crossOrigin']??false)===false&&!isset($j['topOrigin'])
     &&hash_equals($challenge,aq_pk_decode($j['challenge']??null,128)));
 }
