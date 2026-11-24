@@ -66,7 +66,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         $_SESSION['until']=time()+1800;$_SESSION['fails']=0;$_SESSION['lock_until']=0;
         $trustedSaved=false;
         if($freshMfa && (string)($_POST['trust_device']??'')==='yes'){
-          $trustedSaved=aq_trust_register($pwd);
+          $trustedSaved=aq_trust_register($pwd,aq_auth_tag($verified));
         }
         go_admin($trustedSaved?'登录成功，并信任当前浏览器 14 天。':'登录成功 · adm。',
           aq_post_login_destination());
