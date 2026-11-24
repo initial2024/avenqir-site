@@ -21,7 +21,7 @@ class MobileMenuContrastTest(unittest.TestCase):
         version = re.search(r"const CACHE = 'avenqir-v([0-9]+)-static-([0-9]{8})[^']*';", sw)
         self.assertIsNotNone(version)
         self.assertGreaterEqual((int(version.group(1)), int(version.group(2))), (94, 20261123))
-        self.assertIn("avenqir-v97-static-20261124-compact", sw)
+        self.assertGreaterEqual(int(version.group(1)), 98)
         self.assertIn("'./theme.css'", sw)
 
 if __name__ == "__main__":
