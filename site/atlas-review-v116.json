@@ -345,6 +345,38 @@
       "previousUrl": "https://www.data.go.jp/",
       "identity": "e-Gov データポータル",
       "method": "Observed old URL redirect and inspected official successor"
+    },
+    {
+      "url": "https://www.iau.org/",
+      "source": "https://www.iau.org/",
+      "identity": "International Astronomical Union",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.wolframalpha.com/",
+      "source": "https://www.wolframalpha.com/",
+      "identity": "Wolfram Alpha",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.geogebra.org/graphing",
+      "source": "https://www.geogebra.org/graphing",
+      "identity": "GeoGebra Graphing Calculator",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://rust-lang.org/",
+      "source": "https://rust-lang.org/",
+      "identity": "Rust Programming Language",
+      "previousUrl": "https://www.rust-lang.org/",
+      "method": "Observed redirect and inspected official successor"
+    },
+    {
+      "url": "https://stackoverflow.com/questions",
+      "source": "https://stackoverflow.com/questions",
+      "identity": "Stack Overflow Questions",
+      "previousUrl": "https://stackoverflow.com/",
+      "method": "Observed redirect and inspected official successor"
     }
   ]
 }
