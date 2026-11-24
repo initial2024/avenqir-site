@@ -27,8 +27,11 @@ RELATION = "delegate_permission/common.get_login_creds"
 def download(url, accepted, limit=LIMIT):
     req = urllib.request.Request(url, headers={"User-Agent": "AVENQIR public provenance audit", "Accept": ", ".join(accepted)})
     with urllib.request.build_opener(NoRedirect).open(req, timeout=25) as response:
-        if response.status != 200 or response.headers.get_content_type() not in accepted:
-            raise ValueError("unexpected HTTP status or media type")
+        if response.status != 200:
+            raise ValueError("HTTP_STATUS_NOT_200")
+        media = response.headers.get_content_type()
+        if media not in accepted:
+            raise ValueError("NON_JSON_HTML" if media == "text/html" else "UNEXPECTED_MEDIA_TYPE")
         data = response.read(limit + 1)
         if not data or len(data) > limit:
             raise ValueError("empty or oversized response")
@@ -110,7 +113,7 @@ def dal_report():
         raise ValueError("no expected Android credential association")
     actual = dal_targets(download(DAL_URL, ("application/json",), 65536))
     if actual != expected:
-        raise ValueError("live credential associations differ from pinned repository file")
+        raise ValueError("DAL_PINNED_TARGET_MISMATCH")
     return {"url": DAL_URL, "directHttpJsonAndPinnedTargets": "PASS",
             "checkedAt": dt.datetime.now(dt.timezone.utc).isoformat(),
             "devicePasskeyProven": False}
@@ -159,7 +162,9 @@ def main():
         return 0
     except (ValueError, OSError, KeyError, TypeError) as exc:
         # Do not echo HTTP bodies or any local credential material.
-        print(json.dumps({"status": "DENY", "errorType": type(exc).__name__, "httpStatus": getattr(exc, "code", None)}))
+        known = {"HTTP_STATUS_NOT_200", "NON_JSON_HTML", "UNEXPECTED_MEDIA_TYPE", "DAL_PINNED_TARGET_MISMATCH"}
+        code = str(exc) if str(exc) in known else ("INVALID_JSON" if isinstance(exc, json.JSONDecodeError) else "UNCLASSIFIED")
+        print(json.dumps({"status": "DENY", "reason": code, "errorType": type(exc).__name__, "httpStatus": getattr(exc, "code", None)}))
         return 1
 
 if __name__ == "__main__":
