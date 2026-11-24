@@ -1505,6 +1505,328 @@
       "identity": "Library and Archives Canada",
       "method": "Observed redirect and inspected official destination via indexed retrieval",
       "reviewedOn": "2026-11-24"
+    },
+    {
+      "url": "https://learninglab.si.edu/",
+      "source": "https://learninglab.si.edu/",
+      "identity": "Smithsonian Learning Lab",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.coursera.org/",
+      "source": "https://www.coursera.org/",
+      "identity": "Coursera",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.gapminder.org/",
+      "source": "https://www.gapminder.org/",
+      "identity": "Gapminder",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://datasetsearch.research.google.com/",
+      "source": "https://datasetsearch.research.google.com/",
+      "identity": "Google Dataset Search",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.wikipedia.org/",
+      "source": "https://www.wikipedia.org/",
+      "identity": "Wikipedia",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://mathigon.org/",
+      "source": "https://mathigon.org/",
+      "identity": "Mathigon",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.law.cornell.edu/",
+      "source": "https://www.law.cornell.edu/",
+      "identity": "Cornell Legal Information Institute",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.oecd.org/",
+      "source": "https://www.oecd.org/",
+      "identity": "OECD",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.bis.org/",
+      "source": "https://www.bis.org/",
+      "identity": "Bank for International Settlements",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.bankofengland.co.uk/",
+      "source": "https://www.bankofengland.co.uk/",
+      "identity": "Bank of England",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.weforum.org/",
+      "source": "https://www.weforum.org/",
+      "identity": "World Economic Forum",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://ror.org/",
+      "source": "https://ror.org/",
+      "identity": "Research Organization Registry",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.re3data.org/",
+      "source": "https://www.re3data.org/",
+      "identity": "re3data",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://datacite.org/",
+      "source": "https://datacite.org/",
+      "identity": "DataCite",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.metmuseum.org/",
+      "source": "https://www.metmuseum.org/",
+      "identity": "Metropolitan Museum of Art",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.louvre.fr/en",
+      "source": "https://www.louvre.fr/en",
+      "identity": "Louvre",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://whc.unesco.org/",
+      "source": "https://whc.unesco.org/",
+      "identity": "UNESCO World Heritage Centre",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.rijksmuseum.nl/en",
+      "source": "https://www.rijksmuseum.nl/en",
+      "identity": "Rijksmuseum",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.getty.edu/",
+      "source": "https://www.getty.edu/",
+      "identity": "Getty",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.moma.org/",
+      "source": "https://www.moma.org/",
+      "identity": "MoMA",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.vam.ac.uk/",
+      "source": "https://www.vam.ac.uk/",
+      "identity": "V&A",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.wordreference.com/",
+      "source": "https://www.wordreference.com/",
+      "identity": "WordReference",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.collinsdictionary.com/",
+      "source": "https://www.collinsdictionary.com/",
+      "identity": "Collins Dictionary",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://forvo.com/",
+      "source": "https://forvo.com/",
+      "identity": "Forvo",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.wiktionary.org/",
+      "source": "https://www.wiktionary.org/",
+      "identity": "Wiktionary",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://glosbe.com/",
+      "source": "https://glosbe.com/",
+      "identity": "Glosbe",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.dictionary.com/",
+      "source": "https://www.dictionary.com/",
+      "identity": "Dictionary.com",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://physics.stackexchange.com/",
+      "source": "https://physics.stackexchange.com/",
+      "identity": "Physics Stack Exchange",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://skyandtelescope.org/",
+      "source": "https://skyandtelescope.org/",
+      "identity": "Sky & Telescope",
+      "method": "Inspected exact official page through indexed retrieval; not a live availability or safety guarantee",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://developers.openai.com/api/docs",
+      "source": "https://platform.openai.com/docs/",
+      "previousUrl": "https://platform.openai.com/docs/",
+      "identity": "OpenAI API Documentation",
+      "method": "Observed official redirect in indexed retrieval; inspected destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.hotosm.org/en/",
+      "source": "https://www.hotosm.org/",
+      "previousUrl": "https://www.hotosm.org/",
+      "identity": "Humanitarian OpenStreetMap Team",
+      "method": "Observed official redirect in indexed retrieval; inspected destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://wikisource.org/wiki/Wikisource:Main_Page",
+      "source": "https://wikisource.org/",
+      "previousUrl": "https://wikisource.org/",
+      "identity": "Wikisource",
+      "method": "Observed official redirect in indexed retrieval; inspected destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.wipo.int/portal/en/index.html",
+      "source": "https://www.wipo.int/",
+      "previousUrl": "https://www.wipo.int/",
+      "identity": "WIPO",
+      "method": "Observed official redirect in indexed retrieval; inspected destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.imf.org/en/home",
+      "source": "https://www.imf.org/",
+      "previousUrl": "https://www.imf.org/",
+      "identity": "IMF",
+      "method": "Observed official redirect in indexed retrieval; inspected destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.worldbank.org/ext/en/home",
+      "source": "https://www.worldbank.org/",
+      "previousUrl": "https://www.worldbank.org/",
+      "identity": "World Bank",
+      "method": "Observed official redirect in indexed retrieval; inspected destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.ecb.europa.eu/home/html/index.en.html",
+      "source": "https://www.ecb.europa.eu/",
+      "previousUrl": "https://www.ecb.europa.eu/",
+      "identity": "ECB",
+      "method": "Observed official redirect in indexed retrieval; inspected destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://www.reverso.net/text-translation",
+      "source": "https://www.reverso.net/",
+      "previousUrl": "https://www.reverso.net/",
+      "identity": "Reverso",
+      "method": "Observed official redirect in indexed retrieval; inspected destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old"
+    },
+    {
+      "url": "https://globalnaturewatch.org/",
+      "source": "https://www.globalforestwatch.org/",
+      "previousUrl": "https://www.globalforestwatch.org/",
+      "identity": "Global Nature Watch",
+      "method": "Observed official redirect in indexed retrieval; inspected destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot, approximately three months old",
+      "additionalSource": "https://www.wri.org/news/release-global-forest-watch-becomes-global-nature-watch-expanding-cover-more-land-ecosystems"
+    },
+    {
+      "url": "https://orcid.org/",
+      "source": "https://info.orcid.org/brand-guidelines/",
+      "identity": "ORCID Registry",
+      "method": "Official brand guidelines explicitly identify exact registry URL; registry frontend requires JavaScript",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "official guidelines indexed yesterday"
     }
   ]
 }
