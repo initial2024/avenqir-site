@@ -19,7 +19,11 @@ def validate():
         if p.is_symlink():raise ValueError(f'Symlink not allowed: {rel}')
         if p.is_dir():continue
         if not p.is_file():raise ValueError(f'Unknown file type: {rel}')
-        if any(x.lower() in FORBIDDEN or x.startswith('.') for x in rel.parts):raise ValueError(f'Protected path: {rel}')
+        # Only .well-known/assetlinks.json is allowed as a dot-prefixed public path.
+        # All other hidden folders/files (.git, .env, _private, _store) remain denied.
+        is_assetlinks=(len(rel.parts)==2 and rel.parts[0]=='.well-known' and rel.parts[1]=='assetlinks.json')
+        if not is_assetlinks and any(x.lower() in FORBIDDEN or x.startswith('.') for x in rel.parts):
+            raise ValueError(f'Protected path: {rel}')
         if p.suffix.lower() not in ALLOWED:raise ValueError(f'Unapproved type: {rel}')
         if any(x in p.name.lower() for x in ('secret','private','password','credential','backup','setup-code','key.pem')):raise ValueError(f'Sensitive-looking filename: {rel}')
         if p.stat().st_size>MAX_FILE:raise ValueError(f'Oversized file: {rel}')
