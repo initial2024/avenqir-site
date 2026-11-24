@@ -50,8 +50,12 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
       if($_SESSION['fails']>=5)$_SESSION['lock_until']=time()+300;
       $failure=true;$notice='管理员账号或密码不正确。';
     }else{
-      $verified=$auth;
-      if(aq_mfa_enabled($auth))$verified=aq_mfa_consume_login($pwd,$factor);
+      $verified=$auth;$freshMfa=false;
+      $trustedHere=aq_trust_allowed($auth,$_COOKIE);
+      if(aq_mfa_enabled($auth) && !$trustedHere){
+        $verified=aq_mfa_consume_login($pwd,$factor);
+        $freshMfa=$verified!==null;
+      }
       if($verified===null){
         $_SESSION['fails']=$fails+1;
         if($_SESSION['fails']>=5)$_SESSION['lock_until']=time()+300;
@@ -60,7 +64,12 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         session_regenerate_id(true);
         $_SESSION['logged']=true;$_SESSION['auth_tag']=aq_auth_tag($verified);
         $_SESSION['until']=time()+1800;$_SESSION['fails']=0;$_SESSION['lock_until']=0;
-        go_admin('登录成功 · adm。',aq_post_login_destination());
+        $trustedSaved=false;
+        if($freshMfa && (string)($_POST['trust_device']??'')==='yes'){
+          $trustedSaved=aq_trust_register($pwd);
+        }
+        go_admin($trustedSaved?'登录成功，并信任当前浏览器 14 天。':'登录成功 · adm。',
+          aq_post_login_destination());
       }
     }
   }elseif($act==='logout' && $logged){$_SESSION=[];session_destroy();header('Location: admin.php',true,303);exit;}
@@ -171,6 +180,16 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         }
         $failure=true;$notice='写入失败，双重验证状态未确认：'.store_failure_reason();
       }
+    }elseif($act==='revoke_trusted'){
+      $pwd=(string)($_POST['current_password']??'');
+      $factor=(string)($_POST['mfa_code']??'');
+      if(!password_verify($pwd,(string)($auth['password_hash']??''))){
+        $failure=true;$notice='密码错误，没有撤销设备。';
+      }elseif(aq_mfa_enabled($auth) && aq_mfa_consume_login($pwd,$factor)===null){
+        $failure=true;$notice='撤销设备前需重新通过 2FA，设备授权未改变。';
+      }elseif(!aq_trust_clear_all()){
+        $failure=true;$notice='无法保存撤销结果，原设备授权未改变。';
+      }else go_admin('已撤销全部受信任设备；新设备须重新验证密码与 2FA。');
     }elseif($act==='change_password'){
       $old=(string)($_POST['old_password']??'');$new=(string)($_POST['new_password']??'');$confirm=(string)($_POST['new_confirm']??'');
       if(!password_verify($old,(string)($auth['password_hash']??''))){$failure=true;$notice='原密码错误，未修改。';}
@@ -222,7 +241,10 @@ if($logged&&isset($_GET['edit']))foreach(public_links() as $r)if(($r['id']??'')=
 <section class="panel admin-form"><span class="label">SIGN IN</span><h2>管理员登录</h2><form method="post" class="stack"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><input type="hidden" name="action" value="login">
 <label>管理员账号<input type="text" name="username" value="adm" maxlength="16" autocomplete="username" autocapitalize="off" spellcheck="false" required></label>
 <label>管理员密码<input type="password" name="password" autocomplete="current-password" required></label>
-<?php if(aq_mfa_enabled($auth)):?><label>验证器动态码（6位）或一次性恢复码<input type="text" name="mfa_code" inputmode="text" autocomplete="one-time-code" maxlength="24" required></label><?php endif; ?>
+<?php if(aq_mfa_enabled($auth) && !aq_trust_allowed($auth,$_COOKIE)):?>
+<label>验证器动态码（6位）或一次性恢复码<input type="text" name="mfa_code" inputmode="text" autocomplete="one-time-code" maxlength="24" required></label>
+<label class="toggleline"><input type="checkbox" name="trust_device" value="yes"> 信任此浏览器 14 天（之后仍需管理员密码，不再重复输入 2FA）</label>
+<?php elseif(aq_mfa_enabled($auth)):?><p class="hint">当前浏览器已获授权：仍需填写管理员密码，14 天内无需重复动态验证码。</p><?php endif; ?>
 <button class="btn primary" type="submit">登录 adm</button></form><p class="hint">HTTPS 加密 + 会话过期 + CSRF 校验；共享主机上不建议存储敏感信息。</p></section>
 <?php else:?>
 <section class="panel wide" aria-label="AL private browser">
@@ -239,6 +261,15 @@ if($logged&&isset($_GET['edit']))foreach(public_links() as $r)if(($r['id']??'')=
 <section class="panel" id="editor"><span class="label">EDITOR</span><h2><?= $edit?'编辑现有条目':'新增公开网址' ?></h2><form method="post" class="stack"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><input type="hidden" name="action" value="save"><input type="hidden" name="id" value="<?= e($edit['id']??'') ?>"><label>显示名称<input name="name" maxlength="90" value="<?= e($edit['name']??'') ?>" required></label><label>完整网址<input name="url" type="url" inputmode="url" maxlength="1800" value="<?= e($edit['url']??'') ?>" placeholder="https://example.org" required></label><label>分类（可留空自动建议）<input name="category" maxlength="40" value="<?= e($edit['category']??'') ?>" placeholder="如：AI编程、科研、地图；留空自动分类"></label><p class="hint">留空后系统根据已知官方域名或明确关键词自动分类；证据不足写为“待分类”。你填写的分类始终优先，不代表该网站安全认证。</p><label>介绍<input name="description" maxlength="320" value="<?= e($edit['description']??'') ?>"></label><label>支持的页面语言（可选）<input name="languages" maxlength="100" value="<?= e(implode(',',is_array($edit['languages']??null)?$edit['languages']:[])) ?>" placeholder="en,ja,zh-Hans"></label><p class="hint">最多八种语言，用逗号分隔。只填写网页实际支持的语言；留空表示未知，不会由国家、地区或域名后缀推断。</p><button class="btn primary">保存到所有设备可见的公开目录</button></form></section>
 <section class="panel"><span class="label">BULK IMPORT</span><h2>批量快速新增</h2><p class="hint">每行：名称 | URL | 分类（可空） | 备注 | 语言代码（可空）。例如：Research | https://example.org/ | 学术 | 公开检索 | en,fr。重复 URL 自动跳过；分类留空时谨慎自动建议，无法确认则标“待分类”；仅接受合法 http(s) 地址。</p><form method="post" class="stack"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><input type="hidden" name="action" value="bulk"><textarea name="bulk" maxlength="22000" rows="9" placeholder="OpenStreetMap | https://www.openstreetmap.org/ | 地图 | 开放地图"></textarea><button class="btn primary">批量导入</button></form><p class="hint">升级网站时不要删除或覆盖 `_store/`，特别是其中的 links.php 与 auth.php。</p></section>
 <section class="panel"><span class="label">RESTORE / BACKUP</span><h2>从 JSON 备份恢复公开目录</h2><p class="hint">仅接受本后台导出的 avenqir-public-v7 格式。此操作会覆盖服务器上的全部公开网址，恢复前先导出当前数据。</p><form method="post" enctype="multipart/form-data" class="stack"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><input type="hidden" name="action" value="restore"><input type="file" name="backup" accept=".json,application/json" required><label class="toggleline"><input type="checkbox" name="confirm_restore" value="yes" required> 我确认覆盖当前全部公开目录</label><button type="submit" class="btn ghost">恢复备份 JSON</button></form></section>
+<section class="panel"><span class="label">TRUSTED BROWSERS</span><h2>受信任浏览器</h2>
+<p class="hint">首次密码＋2FA 后可选择信任当前浏览器 14 天；以后仍必须输入管理员密码。浏览器 Cookie 是可撤销的授权凭据，不使用设备指纹，也不是系统通行密钥。</p>
+<p role="status">当前有效授权：<?= aq_trust_active_count($auth) ?> 台/浏览器配置（最多 6 项）。</p>
+<?php if(aq_mfa_enabled($auth) && aq_trust_active_count($auth)>0):?>
+<form method="post" class="stack"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><input type="hidden" name="action" value="revoke_trusted">
+<label>当前管理员密码<input name="current_password" type="password" autocomplete="current-password" required></label>
+<label>当前动态验证码或恢复码<input name="mfa_code" type="text" autocomplete="one-time-code" maxlength="24" required></label>
+<button class="btn ghost" type="submit">撤销全部已授权浏览器（需密码和 2FA）</button></form><?php endif; ?>
+</section>
 <section class="panel"><span class="label">ACCOUNT / ADM / MFA</span><h2>管理员账号：adm</h2>
 <p class="hint">仅此一个目录管理员账号。原密码保持不变；TOTP 双重验证为显式绑定，未绑定不会自动要求验证码。登录保护和 Cloudflare Access 是相互独立的两层。</p>
 <?php if(aq_mfa_enabled($auth)):?>
