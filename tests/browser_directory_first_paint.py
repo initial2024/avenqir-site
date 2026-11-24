@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    document.getElementById('atlasClearFilters').click();
    const official=document.getElementById('atlasReviewedOnly'),threat=document.getElementById('atlasThreatFilter'),summary=document.getElementById('atlasSummary');
    official.checked=true;official.dispatchEvent(new Event('change'));
-   const sourceOnly=/288/.test(summary.textContent);
+   const sourceOnly=/306/.test(summary.textContent);
    threat.value='not-listed';threat.dispatchEvent(new Event('change'));
    const exclusive=!official.checked;
    const allClear=/1239 sites|1239 个网站/.test(summary.textContent);
