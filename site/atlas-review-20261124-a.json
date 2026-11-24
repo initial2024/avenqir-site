@@ -1,0 +1,136 @@
+{
+  "reviewDate": "2026-11-24",
+  "scope": "Exact destination provenance only; successful indexed retrieval, not live security certification or approval of user-generated content.",
+  "records": [
+    {
+      "url": "https://doc.rust-lang.org/book/",
+      "source": "https://doc.rust-lang.org/book/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://git-scm.com/docs",
+      "source": "https://git-scm.com/docs",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://www.first.org/",
+      "source": "https://www.first.org/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://securitytxt.org/",
+      "source": "https://securitytxt.org/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://www.arin.net/",
+      "source": "https://www.arin.net/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://docs.octave.org/",
+      "source": "https://docs.octave.org/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://cran.r-project.org/manuals.html",
+      "source": "https://cran.r-project.org/manuals.html",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://arrow.apache.org/docs/",
+      "source": "https://arrow.apache.org/docs/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://opentelemetry.io/docs/",
+      "source": "https://opentelemetry.io/docs/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://docs.kicad.org/",
+      "source": "https://docs.kicad.org/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://numpy.org/doc/",
+      "source": "https://numpy.org/doc/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://docs.scipy.org/doc/scipy/",
+      "source": "https://docs.scipy.org/doc/scipy/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://developer.android.com/",
+      "source": "https://developer.android.com/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://react.dev/",
+      "source": "https://react.dev/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://vuejs.org/",
+      "source": "https://vuejs.org/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://svelte.dev/",
+      "source": "https://svelte.dev/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://pypi.org/",
+      "source": "https://pypi.org/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://docs.docker.com/",
+      "source": "https://docs.docker.com/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://developers.cloudflare.com/",
+      "source": "https://developers.cloudflare.com/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://vercel.com/docs",
+      "source": "https://vercel.com/docs",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://www.typescriptlang.org/docs/",
+      "source": "https://www.typescriptlang.org/docs/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://go.dev/",
+      "source": "https://go.dev/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://data.worldbank.org/",
+      "source": "https://data.worldbank.org/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://data.who.int/",
+      "source": "https://data.who.int/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://ilostat.ilo.org/",
+      "source": "https://ilostat.ilo.org/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    },
+    {
+      "url": "https://unstats.un.org/sdgs/",
+      "source": "https://unstats.un.org/sdgs/",
+      "method": "Inspected exact official project, institution or documentation page in indexed retrieval"
+    }
+  ]
+}
