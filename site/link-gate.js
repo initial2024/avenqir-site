@@ -332,7 +332,17 @@
     'https://hackaday.com/',
     'https://alternativeto.net/',
     'https://dribbble.com/',
-    'https://flathub.org/en'
+    'https://flathub.org/en',
+    'https://www.rakuten.co.jp/',
+    'https://www.gov.tw/',
+    'https://www.yahoo.co.jp/',
+    'https://www.fairprice.com.sg/',
+    'https://www.target.com/',
+    'https://www.macau-airport.com/',
+    'https://www.thewarehouse.co.nz/',
+    'https://data.gov.tw/',
+    'https://www.grab.com/sg/',
+    'https://www.octopus.com.hk/tc/consumer/index.html'
   ];
   function sanitize(raw){
     if(typeof raw!=='string'||raw.length>1800||/[\u0000-\u0020\u007f\\]/.test(raw))return null;
