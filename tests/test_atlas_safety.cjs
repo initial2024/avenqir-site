@@ -14,14 +14,15 @@ require(path.join(site,'atlas-regional.js'));
 require(path.join(site,'atlas-everyday.js'));
 require(path.join(site,'atlas-regional-ext.js'));
 require(path.join(site,'atlas-everyday-ext.js'));
+const popularLinks=require(path.join(site,'atlas-popular-links.js'));
 const catalog=require(path.join(site,'atlas-catalog-core.js'));
 const items=catalog.catalog();
-assert.equal(items.length,1239);
+assert.equal(items.length,1239+popularLinks.links.length);
 const result=safety.summary(items);
 const reviewed=gate.OFFICIAL_URLS.length;
 const itemUrls=new Set(items.map(item=>item.url));
 assert.ok(gate.OFFICIAL_URLS.every(url=>itemUrls.has(url)));
-assert.deepEqual(result,{total:1239,blocked:0,caution:0,reviewed,pending:1239-reviewed},'separate structural audit from provenance review');
+assert.deepEqual(result,{total:items.length,blocked:0,caution:0,reviewed,pending:items.length-reviewed},'separate structural audit from provenance review');
 assert.equal(safety.inspect('https://www.icann.org/').type,'reviewed');
 const reviews=fs.readdirSync(site).filter(file=>/^atlas-review-.+\.json$/.test(file))
  .map(file=>JSON.parse(fs.readFileSync(path.join(site,file),'utf8')));

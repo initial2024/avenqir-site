@@ -16,6 +16,7 @@ require(path.join(base,'atlas-regional-ext.js'));
 require(path.join(base,'atlas-everyday-ext.js'));
 const paths=require(path.join(base,'atlas-paths.js'));
 const gate=require(path.join(base,'link-gate.js'));
+const popularLinks=require(path.join(base,'atlas-popular-links.js'));
 const catalog=require(path.join(base,'atlas-catalog-core.js'));
 const home=fs.readFileSync(path.join(base,'index.html'),'utf8');
 const html=fs.readFileSync(path.join(base,'directory.html'),'utf8');
@@ -28,7 +29,7 @@ const supplied=[
 ];
 assert.equal(specialist.links.length,31,'new resources must all be distinct (not double count Desmos/Regex101)');
 assert.equal(new Set(specialist.links.map(x=>x.url)).size,specialist.links.length);
-assert.equal(catalog.catalog().length,1239,'all static curated links should now be addressable');
+assert.equal(catalog.catalog().length,1239+popularLinks.links.length,'all static curated links should now be addressable');
 for(const url of supplied){
  const x=catalog.catalog().find(r=>r.url===url);
  assert.ok(x,'missing user-requested destination '+url);
@@ -79,4 +80,4 @@ assert.ok(suggestions.some(x=>x.item.category==='英语阅读'),'new language ca
 assert.ok(suggestions.every(x=>x.reason),'explain every recommendation');
 assert.equal(recommend.setEnabled(false),false);
 assert.equal(fixtureStore.size,0,'turning off recommendations removes local model storage');
-console.log('PASS: 1239 deduplicated HTTPS links, 4 submitted sites, 11 usable trails, safety gating and local opt-in');
+console.log('PASS: Deduplicated HTTPS links, 4 submitted sites, 11 usable trails, safety gating and local opt-in');

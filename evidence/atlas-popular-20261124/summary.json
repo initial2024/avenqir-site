@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "commit": "97c5c5412f884fe334d3aaf7df83174bd7f07165",
+    "uniqueUrls": 1239,
+    "confirmed": 1043
+  },
+  "current": {
+    "catalogUrls": 1337,
+    "uniqueUrls": 1337,
+    "addedVerifiedUrls": 98,
+    "confirmed": 1141,
+    "pending": 196,
+    "coveragePercent": 85.3403,
+    "editorPicks": 100,
+    "homepagePicks": 16,
+    "intentEntrypoints": 12
+  },
+  "candidateReview": {
+    "observed": 144,
+    "excluded": 46,
+    "collectionRun": "https://github.com/initial2024/avenqir-site/actions/runs/45403752113",
+    "acceptedEvidence": "site/atlas-review-20261124-popular.json",
+    "excludedCandidates": "candidates.json"
+  },
+  "remainingFromBaseline": "evidence/atlas-source-review-20261124/remaining.json"
+}

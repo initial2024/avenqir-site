@@ -22,7 +22,7 @@ SOURCES = (
     "atlas-paths.js", "atlas-expansion.js", "atlas-specialist.js",
     "atlas-depth-a.js", "atlas-depth-b.js", "atlas-depth-c.js", "atlas-depth-d.js",
     "atlas-ai.js", "atlas-regional.js", "atlas-everyday.js",
-    "atlas-regional-ext.js", "atlas-everyday-ext.js",
+    "atlas-regional-ext.js", "atlas-everyday-ext.js", "atlas-popular-links.js",
 )
 SHORTENERS = {"bit.ly", "tinyurl.com", "t.co", "is.gd", "cutt.ly", "rb.gy", "shorturl.at"}
 BAD_SUFFIX = (".localhost", ".local", ".internal", ".test", ".invalid", ".example")

@@ -523,7 +523,6 @@
  $('atlasClear').addEventListener('click',()=>{clearTimeout(inputTimer);clearSearchNext();pendingNoMatchQuery='';replaceQuery('');suggestClose();input.focus()});
  $('atlasMore').addEventListener('click',()=>{limit+=pageSize;draw()});
  $('atlasShowAll')?.addEventListener('click',()=>{limit=filtered().length;draw();});
- $('atlasRandom').addEventListener('click',()=>{let entries=filtered();if(!entries.length){if(reviewedOnly||threatFilter!=='all')return;entries=records;}const entry=entries[Math.floor(Math.random()*entries.length)];if(entry)showExternal(entry.url,entry.name)});
  const engineLinks=[...document.querySelectorAll('[data-search-provider]')];
  function refreshEngines(){for(const a of engineLinks){const target=linkGate?.searchEngineDestination(a.dataset.searchProvider,input.value);if(target)a.href=target;}}
  input.addEventListener('input',refreshEngines);

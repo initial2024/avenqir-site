@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded',()=>{
  const r=document.getElementById('atlasResults');
  const n=document.getElementById('atlasLiveCount');
  const s=document.getElementById('atlasSource');
- document.documentElement.dataset.aqLocalReady=String(!!r&&r.children.length>0&&!!n&&!!s&&/1239|1,239/.test(n.textContent));
+ const total=window.AVENQIR_ATLAS_CATALOG.catalog().length;
+ document.documentElement.dataset.aqLocalReady=String(!!r&&r.children.length>0&&!!n&&!!s&&n.textContent.replaceAll(',','').includes(String(total)));
  document.documentElement.dataset.aqInitialCount=String(r?.children.length||0);
  const input=document.getElementById('atlasQuery'),form=document.getElementById('atlasForm'),dialog=document.getElementById('atlasNoMatchDialog');
  const until=performance.now()+10000;
@@ -39,7 +40,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    const sourceOnly=summary.textContent.includes('Catalog: '+count+' sites')||summary.textContent.includes('目录 '+count+' 个网站');
    threat.value='not-listed';threat.dispatchEvent(new Event('change'));
    const exclusive=!official.checked;
-   const allClear=/1239 sites|1239 个网站/.test(summary.textContent);
+   const allClear=summary.textContent.includes('Catalog: '+total+' sites')||summary.textContent.includes('目录 '+total+' 个网站');
    threat.value='listed';threat.dispatchEvent(new Event('change'));
    const zero=/0 sites|0 个网站/.test(summary.textContent);
    document.getElementById('atlasClearFilters').click();

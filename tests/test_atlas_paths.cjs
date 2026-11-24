@@ -19,12 +19,13 @@ const regional=require(path.join(base,'atlas-regional.js'));
 const everyday=require(path.join(base,'atlas-everyday.js'));
 const regionalExt=require(path.join(base,'atlas-regional-ext.js'));
 const everydayExt=require(path.join(base,'atlas-everyday-ext.js'));
+const popularLinks=require(path.join(base,'atlas-popular-links.js'));
 const catalog=require(path.join(base,'atlas-catalog-core.js'));
 const legacy=[...catalog.base,...catalog.extras];
 assert.equal(atlas.links.length,32);
 assert.equal(atlas.flows.length,11);
 const urls=new Set();
-for(const x of [...legacy,...atlas.links,...expansion.links,...specialist.links,...depthA.links,...depthB.links,...depthC.links,...depthD.links,...ai.links,...regional.links,...everyday.links,...regionalExt.links,...everydayExt.links]){
+for(const x of [...legacy,...atlas.links,...expansion.links,...specialist.links,...depthA.links,...depthB.links,...depthC.links,...depthD.links,...ai.links,...regional.links,...everyday.links,...regionalExt.links,...everydayExt.links,...popularLinks.links]){
   assert.ok(x.name&&x.category&&x.description,'missing description for '+x.id);
   const u=new URL(x.url);
   assert.equal(u.protocol,'https:','HTTPS-only public catalog entry');
@@ -34,7 +35,7 @@ for(const x of [...legacy,...atlas.links,...expansion.links,...specialist.links,
   urls.add(u.href);
 }
 assert.equal(urls.size,catalog.catalog().length);
-assert.equal(urls.size,1239,'catalog must represent the full curated expansion');
+assert.equal(urls.size,1239+popularLinks.links.length,'catalog must represent the full curated expansion');
 for(const flow of atlas.flows){
  assert.ok(flow.id&&flow.title&&flow.note);
  assert.ok(flow.urls.length>=4 && flow.urls.length<=5);
