@@ -64,7 +64,7 @@ jobs:
           output = result.stdout
           if 'slowAES.decrypt' in output and 'atlasLiveCount' not in output:
               raise SystemExit('PUBLIC_PAGE=access challenge')
-          assert 'link-gate.js?v=126' in output, 'The browser did not load the v126 directory shell'
+          assert 'link-gate.js?v=126' in output, 'The browser did not load the v128 directory shell'
           def field(element):
               found = re.search(r'<[^>]+id="'+element+r'"[^>]*>([^<]*)', output)
               assert found, 'Rendered element missing: '+element
@@ -77,5 +77,5 @@ jobs:
           assert re.search(r'id="popularCards"', output)
           print('LIVE_DIRECTORY=' + total)
           print('LIVE_SOURCE_COUNT=' + count)
-          print('LIVE_ASSET_VERSION=126')
+          print('LIVE_ASSET_VERSION=128')
           PY
