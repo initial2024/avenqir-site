@@ -755,6 +755,141 @@
       "identity": "Octopus",
       "method": "Inspected exact official page via indexed retrieval",
       "previousUrl": "https://www.octopus.com.hk/"
+    },
+    {
+      "url": "https://pixabay.com/",
+      "source": "https://pixabay.com/",
+      "identity": "Pixabay",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.photopea.com/",
+      "source": "https://www.photopea.com/",
+      "identity": "Photopea",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://browserleaks.com/",
+      "source": "https://browserleaks.com/",
+      "identity": "BrowserLeaks",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://dnschecker.org/",
+      "source": "https://dnschecker.org/",
+      "identity": "DNSChecker",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://time.is/",
+      "source": "https://time.is/",
+      "identity": "Time.is",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://haveibeenpwned.com/",
+      "source": "https://haveibeenpwned.com/",
+      "identity": "Have I Been Pwned",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.chess.com/",
+      "source": "https://www.chess.com/",
+      "identity": "Chess.com",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.ripe.net/",
+      "source": "https://www.ripe.net/",
+      "identity": "RIPE NCC",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://iupac.org/",
+      "source": "https://iupac.org/",
+      "identity": "IUPAC",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.jigsawplanet.com/",
+      "source": "https://www.jigsawplanet.com/",
+      "identity": "Jigsaw Planet",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://skribbl.io/",
+      "source": "https://skribbl.io/",
+      "identity": "skribbl.io",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.coolmathgames.com/",
+      "source": "https://www.coolmathgames.com/",
+      "identity": "Coolmath Games",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.unitconverters.net/",
+      "source": "https://www.unitconverters.net/",
+      "identity": "UnitConverters",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.convertunits.com/",
+      "source": "https://www.convertunits.com/",
+      "identity": "ConvertUnits",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.worldtimebuddy.com/",
+      "source": "https://www.worldtimebuddy.com/",
+      "identity": "World Time Buddy",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://ticktick.com/",
+      "source": "https://ticktick.com/",
+      "identity": "TickTick",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.ilovepdf.com/",
+      "source": "https://www.ilovepdf.com/",
+      "identity": "iLovePDF",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://smallpdf.com/",
+      "source": "https://smallpdf.com/",
+      "identity": "Smallpdf",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.gbif.org/",
+      "source": "https://www.gbif.org/",
+      "identity": "GBIF",
+      "method": "Inspected exact official page via indexed retrieval"
+    },
+    {
+      "url": "https://www.deepl.com/en/translator",
+      "source": "https://www.deepl.com/translator",
+      "previousUrl": "https://www.deepl.com/translator",
+      "identity": "DeepL",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://www.todoist.com/",
+      "source": "https://todoist.com/",
+      "previousUrl": "https://todoist.com/",
+      "identity": "Todoist",
+      "method": "Observed redirect and inspected official destination"
+    },
+    {
+      "url": "https://tools.pdf24.org/en/",
+      "source": "https://tools.pdf24.org/",
+      "previousUrl": "https://tools.pdf24.org/",
+      "identity": "PDF24",
+      "method": "Observed redirect and inspected official destination"
     }
   ]
 }
