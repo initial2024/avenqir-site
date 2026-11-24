@@ -1,0 +1,941 @@
+{
+  "schema": "avenqir-exact-source-review-v1",
+  "reviewDate": "2026-11-24",
+  "scope": "Follow-up on the 196 pending catalog URLs. Publisher corroboration is recorded separately from direct availability.",
+  "records": [
+    {
+      "id": "rex122",
+      "name": "TÜİK",
+      "category": "数据",
+      "originalUrl": "https://www.tuik.gov.tr/",
+      "url": "https://www.tuik.gov.tr/",
+      "finalUrl": "https://www.tuik.gov.tr/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.tuik.gov.tr/",
+          "status": 200
+        }
+      ],
+      "title": "Türkiye İstatistik Kurumu (TÜİK)",
+      "checkedAt": "2026-11-24T14:08:24+00:00",
+      "status": "confirmed",
+      "reason": "The page names Türkiye İstatistik Kurumu and exposes its statistics, population register and national data portals.",
+      "source": "https://www.tuik.gov.tr/",
+      "evidence": {
+        "pageDescription": "Türkiye İstatistik Kurumu (TÜİK) merkezi Ankara olmak üzere 26 Bölge Müdürlüğü'nden oluşan bir devlet kurumudur.",
+        "pageExcerpt": "Türkiye İstatistik Kurumu (TÜİK) \"Türkiye'nin Bilgi Kaynağı\" Loading... Ara İSTATİSTİKLER PORTALLAR PORTALLAR Coğrafi İstatistik Portalı Veri Portalı Nüfus İstatistikleri Portalı Resmi İstatistik"
+      }
+    },
+    {
+      "id": "exd045",
+      "name": "bpost",
+      "category": "实用",
+      "originalUrl": "https://www.bpost.be/",
+      "url": "https://www.bpost.be/en",
+      "finalUrl": "https://www.bpost.be/en",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.bpost.be/",
+          "status": 301,
+          "location": "https://www.bpost.be/en"
+        },
+        {
+          "url": "https://www.bpost.be/en",
+          "status": 200
+        }
+      ],
+      "title": "Bpost will see to it | Bpost",
+      "checkedAt": "2026-11-24T14:08:15+00:00",
+      "status": "confirmed",
+      "reason": "The bpost root redirects to the English storefront. An independent request returned the bpost homepage with its parcel, shipping, and post-office tools.",
+      "previousUrl": "https://www.bpost.be/",
+      "independentDestination": {
+        "checked_at": "2026-11-24T14:08:18+00:00",
+        "final_url": "https://www.bpost.be/en",
+        "status": 200,
+        "chain": [
+          {
+            "url": "https://www.bpost.be/en",
+            "status": 200
+          }
+        ]
+      },
+      "source": "https://www.bpost.be/en",
+      "evidence": {
+        "heading": "Welcome to Bpost Psst … St Nicholas is waiting for your letter",
+        "pageDescription": "Take care of all your postal needs and send parcels online. It's so quick and easy! You'll find all prices, shipping options,",
+        "pageExcerpt": "Bpost will see to it | Bpost 0000 Skip to main content Toggle navigation × The benefits of a bpost account? You"
+      }
+    },
+    {
+      "id": "rg88092",
+      "name": "CSIC",
+      "category": "科研",
+      "originalUrl": "https://www.csic.es/",
+      "url": "https://www.csic.es/es",
+      "finalUrl": "https://www.csic.es/es",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.csic.es/",
+          "status": 301,
+          "location": "https://www.csic.es/es"
+        },
+        {
+          "url": "https://www.csic.es/es",
+          "status": 200
+        }
+      ],
+      "title": "Consejo Superior de Investigaciones Científicas",
+      "checkedAt": "2026-11-24T14:08:30+00:00",
+      "status": "confirmed",
+      "reason": "The CSIC root redirects to the Spanish-language institutional homepage. A separate request identified the same research council and displayed its institutional and organizational navigation.",
+      "previousUrl": "https://www.csic.es/",
+      "independentDestination": {
+        "checked_at": "2026-11-24T14:08:34+00:00",
+        "final_url": "https://www.csic.es/es",
+        "status": 200,
+        "chain": [
+          {
+            "url": "https://www.csic.es/es",
+            "status": 200
+          }
+        ]
+      },
+      "source": "https://www.csic.es/es",
+      "evidence": {
+        "heading": "Consejo Superior de Investigaciones Científicas",
+        "pageDescription": "El Consejo Superior de Investigaciones Científicas (CSIC) es una Agencia Estatal para la investigación científica y el desarrollo tecnológico, con personalidad jurídica",
+        "pageExcerpt": "Consejo Superior de Investigaciones Científicas Skip to main content Menú auxiliar Actualidad Agenda Agenda de eventos Agenda institucional Ciencia abierta Sede Electrónica"
+      }
+    },
+    {
+      "id": "dA010",
+      "name": "ChemSpider",
+      "category": "化学",
+      "originalUrl": "https://www.chemspider.com/",
+      "url": "https://www.chemspider.com/",
+      "finalUrl": "https://www.chemspider.com/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.chemspider.com/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:43:34+00:00",
+      "status": "confirmed",
+      "reason": "The publisher's legal terms identify the exact ChemSpider homepage as a Royal Society of Chemistry website. Direct retrieval was restricted.",
+      "observationIssue": "HTTP 403",
+      "retrieval": "publisher-reference",
+      "source": "https://www.rsc.org/help-and-legal/terms-of-use",
+      "evidence": {
+        "publisherPageTitle": "Terms of use",
+        "exactDestination": "https://www.chemspider.com/",
+        "publisherEvidence": "The scope of the terms names www.chemspider.com alongside the Royal Society of Chemistry's own site.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "dA019",
+      "name": "Reuters",
+      "category": "新闻",
+      "originalUrl": "https://www.reuters.com/",
+      "url": "https://www.reuters.com/",
+      "finalUrl": "https://www.reuters.com/",
+      "httpStatus": 401,
+      "redirectChain": [
+        {
+          "url": "https://www.reuters.com/",
+          "status": 401
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T13:02:00+00:00",
+      "status": "confirmed",
+      "reason": "The parent company's investor communication attributes the precise Reuters homepage to the Reuters news agency. The destination returned HTTP 401.",
+      "observationIssue": "HTTP 401",
+      "retrieval": "publisher-reference",
+      "source": "https://investors.thomsonreuters.com/static-files/83c31803-3281-45e5-ba38-9c77dabe0294",
+      "evidence": {
+        "publisherPageTitle": "About Reuters",
+        "exactDestination": "https://www.reuters.com/",
+        "publisherEvidence": "A Thomson Reuters investor release identifies Reuters and its public website at www.reuters.com in the About Reuters section.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "dA022",
+      "name": "France 24",
+      "category": "新闻",
+      "originalUrl": "https://www.france24.com/",
+      "url": "https://www.france24.com/",
+      "finalUrl": "https://www.france24.com/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.france24.com/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:43:35+00:00",
+      "status": "confirmed",
+      "reason": "France Médias Monde identifies France 24 as its news channel and links the exact catalog address.",
+      "observationIssue": "HTTP 403",
+      "retrieval": "publisher-reference",
+      "source": "https://www.francemediasmonde.com/fr/nos-medias/france-24/",
+      "evidence": {
+        "publisherPageTitle": "France 24 - France Médias Monde",
+        "exactDestination": "https://www.france24.com/",
+        "publisherEvidence": "The parent publisher's service profile contains a homepage link to https://www.france24.com/.",
+        "referenceAccess": "direct",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "dA029",
+      "name": "ROR 机构登记",
+      "category": "科研",
+      "originalUrl": "https://ror.org/",
+      "url": "https://ror.org/",
+      "finalUrl": "https://ror.org/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://ror.org/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:43:36+00:00",
+      "status": "confirmed",
+      "reason": "The Research Organization Registry's maintained public GitHub organization lists the exact ROR project homepage.",
+      "observationIssue": "HTTP 403",
+      "retrieval": "publisher-reference",
+      "source": "https://github.com/ror-community",
+      "evidence": {
+        "publisherPageTitle": "ROR · GitHub",
+        "exactDestination": "https://ror.org/",
+        "publisherEvidence": "The registry's project organization lists https://ror.org/ as its website and hosts the registry's app and data repositories.",
+        "referenceAccess": "direct",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "dA056",
+      "name": "Gemini",
+      "category": "AI交流",
+      "originalUrl": "https://gemini.google.com/",
+      "url": "https://gemini.google.com/",
+      "finalUrl": "https://gemini.google.com/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://gemini.google.com/",
+          "status": 200
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T14:08:04+00:00",
+      "status": "confirmed",
+      "reason": "Google's Gemini launch announcement identifies Gemini's browser service at the precise catalog entry. Direct retrieval did not expose an HTML title.",
+      "observationIssue": "no HTML title",
+      "retrieval": "publisher-reference",
+      "source": "https://blog.google/products-and-platforms/products/gemini/bard-gemini-advanced-app/",
+      "evidence": {
+        "publisherPageTitle": "Google Bard is now Gemini: How to try Ultra 1.0 and new mobile app",
+        "exactDestination": "https://gemini.google.com/",
+        "publisherEvidence": "Google says Bard is now Gemini and identifies gemini.google.com as its browser chat service.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "dA063",
+      "name": "Google Earth",
+      "category": "地图",
+      "originalUrl": "https://earth.google.com/web/",
+      "url": "https://earth.google.com/web/",
+      "finalUrl": "https://earth.google.com/web/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://earth.google.com/web/",
+          "status": 200
+        }
+      ],
+      "title": "Google Earth",
+      "checkedAt": "2026-11-24T14:08:04+00:00",
+      "status": "confirmed",
+      "reason": "Google's Earth Outreach tutorial explicitly directs readers to the listed Google Earth web app. The direct client reported that it could not render the app.",
+      "retrieval": "publisher-reference",
+      "source": "https://www.google.com/earth/outreach/learn/create-a-map-or-story-in-google-earth-web/",
+      "evidence": {
+        "publisherPageTitle": "Create a map or story in Google Earth Web – Google Earth Outreach",
+        "exactDestination": "https://earth.google.com/web/",
+        "publisherEvidence": "The first project-creation step links https://earth.google.com/web as the browser app.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "dB049",
+      "name": "BASE 学术搜索",
+      "category": "学术",
+      "originalUrl": "https://www.base-search.net/",
+      "url": "https://www.base-search.net/",
+      "finalUrl": "https://www.base-search.net/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.base-search.net/",
+          "status": 200
+        }
+      ],
+      "title": "Making sure you're not a bot!",
+      "checkedAt": "2026-11-24T13:02:01+00:00",
+      "status": "confirmed",
+      "reason": "Bielefeld University Library directs off-campus users to the exact BASE search homepage.",
+      "retrieval": "publisher-reference",
+      "source": "https://www.uni-bielefeld.de/ub/search/help/catalog/",
+      "evidence": {
+        "publisherPageTitle": "Hilfe zum Katalog.plus! - Universitätsbibliothek - Universität Bielefeld",
+        "exactDestination": "https://www.base-search.net/",
+        "publisherEvidence": "University library help identifies www.base-search.net as the free, off-campus access point for BASE.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "dB072",
+      "name": "OER Commons",
+      "category": "教育",
+      "originalUrl": "https://www.oercommons.org/",
+      "url": "https://www.oercommons.org/",
+      "finalUrl": "https://www.oercommons.org/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.oercommons.org/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:43:45+00:00",
+      "status": "confirmed",
+      "reason": "ISKME identifies itself as the creator of OER Commons and names the exact www homepage. Direct retrieval was restricted.",
+      "observationIssue": "HTTP 403",
+      "retrieval": "publisher-reference",
+      "source": "https://www.iskme.org/projects/oer-commons/",
+      "evidence": {
+        "publisherPageTitle": "OER Commons · ISKME",
+        "exactDestination": "https://www.oercommons.org/",
+        "publisherEvidence": "The project profile names www.oercommons.org and describes the public education resource library that ISKME created.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "dC021",
+      "name": "GBIF 全球生物多样性",
+      "category": "生物",
+      "originalUrl": "https://www.gbif.org/",
+      "url": "https://www.gbif.org/",
+      "finalUrl": "https://www.gbif.org/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.gbif.org/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:43:46+00:00",
+      "status": "confirmed",
+      "reason": "GBIF's own publisher guidelines name the precise GBIF homepage. Direct retrieval of the homepage was restricted.",
+      "observationIssue": "HTTP 403",
+      "retrieval": "publisher-reference",
+      "source": "https://docs.gbif.org/documentation-guidelines/en/gbif-documentation-guidelines.en.pdf",
+      "evidence": {
+        "publisherPageTitle": "GBIF Documentation Guidelines",
+        "exactDestination": "https://www.gbif.org/",
+        "publisherEvidence": "The official guidelines identify GBIF as the publisher and give https://www.gbif.org/ as its website.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "dC059",
+      "name": "DPLA",
+      "category": "人文历史",
+      "originalUrl": "https://dp.la/",
+      "url": "https://dp.la/",
+      "finalUrl": "https://dp.la/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://dp.la/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:43:49+00:00",
+      "status": "confirmed",
+      "reason": "A Library of Congress handbook names the Digital Public Library of America and cites the exact site. Direct retrieval of the homepage was restricted.",
+      "observationIssue": "HTTP 403",
+      "retrieval": "publisher-reference",
+      "source": "https://tile.loc.gov/storage-services/master/gdc/gdcebookspublic/20/24/38/80/03/2024388003/2024388003.pdf",
+      "evidence": {
+        "publisherPageTitle": "Handbook for European Studies Librarians",
+        "exactDestination": "https://dp.la/",
+        "publisherEvidence": "The Library of Congress handbook's resource list names the Digital Public Library of America at https://dp.la.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "ai88012",
+      "name": "Meta AI",
+      "category": "AI官网",
+      "originalUrl": "https://www.meta.ai/",
+      "url": "https://www.meta.ai/",
+      "finalUrl": "https://www.meta.ai/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.meta.ai/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:43:30+00:00",
+      "status": "confirmed",
+      "reason": "Meta Help identifies the exact browser entry point for interacting with the Meta AI assistant. The direct homepage returned HTTP 403.",
+      "observationIssue": "HTTP 403",
+      "retrieval": "publisher-reference",
+      "source": "https://www.meta.com/help/artificial-intelligence/943942350800511/",
+      "evidence": {
+        "publisherPageTitle": "How to start a chat with Meta AI",
+        "exactDestination": "https://www.meta.ai/",
+        "publisherEvidence": "Meta's help center identifies www.meta.ai as the place to start a browser chat with its assistant.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "every060",
+      "name": "Metro de Madrid",
+      "category": "旅游出行",
+      "originalUrl": "https://www.metromadrid.es/",
+      "url": "https://www.metromadrid.es/",
+      "finalUrl": "https://www.metromadrid.es/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.metromadrid.es/",
+          "status": 200
+        }
+      ],
+      "title": "Acceso no disponible | Metro de Madrid",
+      "checkedAt": "2026-11-24T14:08:14+00:00",
+      "status": "confirmed",
+      "reason": "The regional government identifies the exact Metro de Madrid homepage in its service announcement. The destination itself reported unavailable access.",
+      "retrieval": "publisher-reference",
+      "source": "https://www.comunidad.madrid/noticias/2022/02/01/comunidad-madrid-hace-efectivo-cambio-nombre-estacion-metro-atocha-renfe-atocha",
+      "evidence": {
+        "publisherPageTitle": "La Comunidad de Madrid hace efectivo el cambio de nombre de la estación de metro Atocha Renfe por Atocha",
+        "exactDestination": "https://www.metromadrid.es/",
+        "publisherEvidence": "The Madrid government announcement names www.metromadrid.es as Metro de Madrid's website for passenger information.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "n025",
+      "name": "Google Colab",
+      "category": "AI",
+      "originalUrl": "https://colab.research.google.com/",
+      "url": "https://colab.research.google.com/",
+      "finalUrl": "https://colab.research.google.com/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://colab.research.google.com/",
+          "status": 200
+        }
+      ],
+      "title": "Google Colab",
+      "checkedAt": "2026-11-24T14:08:18+00:00",
+      "status": "confirmed",
+      "reason": "Google Skills sends lab users to the exact Google Colab address. The direct Colab response displayed the service title and a sign-in entry.",
+      "retrieval": "publisher-reference",
+      "source": "https://support.google.com/qwiklabs/answer/16671106",
+      "evidence": {
+        "publisherPageTitle": "Launch a lab with Google Colab - Google Skills Help",
+        "exactDestination": "https://colab.research.google.com/",
+        "publisherEvidence": "The lab instructions link the words colab.research.google.com to https://colab.research.google.com/.",
+        "referenceAccess": "direct",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "n067",
+      "name": "freeCodeCamp",
+      "category": "教育",
+      "originalUrl": "https://www.freecodecamp.org/",
+      "url": "https://www.freecodecamp.org/",
+      "finalUrl": "https://www.freecodecamp.org/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.freecodecamp.org/",
+          "status": 200
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T14:08:19+00:00",
+      "status": "confirmed",
+      "reason": "The freeCodeCamp GitHub organization links the exact website and maintains the free curriculum. The direct response lacked an HTML title.",
+      "observationIssue": "no HTML title",
+      "retrieval": "publisher-reference",
+      "source": "https://github.com/freeCodeCamp",
+      "evidence": {
+        "publisherPageTitle": "freeCodeCamp.org · GitHub",
+        "exactDestination": "https://www.freecodecamp.org/",
+        "publisherEvidence": "The project's GitHub profile lists https://www.freecodecamp.org and hosts the curriculum source.",
+        "referenceAccess": "direct",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "n078",
+      "name": "Canva",
+      "category": "创作",
+      "originalUrl": "https://www.canva.com/",
+      "url": "https://www.canva.com/",
+      "finalUrl": "https://www.canva.com/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.canva.com/",
+          "status": 200
+        }
+      ],
+      "title": "Unsupported client – Canva",
+      "checkedAt": "2026-11-24T14:08:20+00:00",
+      "status": "confirmed",
+      "reason": "Canva's terms identify the company and link to the exact Canva homepage. The direct response reported an unsupported client.",
+      "retrieval": "publisher-reference",
+      "source": "https://www.canva.com/policies/terms-of-use/",
+      "evidence": {
+        "publisherPageTitle": "Terms of Use",
+        "exactDestination": "https://www.canva.com/",
+        "publisherEvidence": "Canva's legal terms define the Canva service and provide a Home link to https://www.canva.com/.",
+        "referenceAccess": "direct",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "rex008",
+      "name": "香港天文台",
+      "category": "环境气候",
+      "originalUrl": "https://www.hko.gov.hk/",
+      "url": "https://www.hko.gov.hk/",
+      "finalUrl": "https://www.hko.gov.hk/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.hko.gov.hk/",
+          "status": 200
+        }
+      ],
+      "title": "Hong Kong Observatory",
+      "checkedAt": "2026-11-24T14:08:20+00:00",
+      "status": "confirmed",
+      "reason": "The Hong Kong Observatory explicitly lists the catalog URL as one of its published website entry addresses. The direct response indicates client-side navigation.",
+      "observationIssue": "page indicates a client-side redirect",
+      "retrieval": "publisher-reference",
+      "source": "https://www.hko.gov.hk/en/wservice/tsheet/pubwx.htm",
+      "evidence": {
+        "publisherPageTitle": "The Public Weather Service｜Hong Kong Observatory(HKO)｜Our Services",
+        "exactDestination": "https://www.hko.gov.hk/",
+        "publisherEvidence": "The Observatory's explanation of the Internet public-weather service lists https://www.hko.gov.hk/ as its website.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "rg88020",
+      "name": "Singapore Weather",
+      "category": "实用",
+      "originalUrl": "https://www.weather.gov.sg/",
+      "url": "https://www.weather.gov.sg/",
+      "finalUrl": null,
+      "httpStatus": null,
+      "redirectChain": [],
+      "title": null,
+      "checkedAt": "2026-11-24T14:08:26+00:00",
+      "status": "confirmed",
+      "reason": "Meteorological Service Singapore's launch announcement names its precise public portal. The latest direct DNS check was inconclusive.",
+      "observationIssue": "gaierror",
+      "retrieval": "publisher-reference",
+      "source": "https://www.weather.gov.sg/meteorological-service-singapore-launches-one-stop-weather-information-website/",
+      "evidence": {
+        "publisherPageTitle": "Meteorological Service Singapore Launches One-Stop Weather Information Website - Weather Information Portal",
+        "exactDestination": "https://www.weather.gov.sg/",
+        "publisherEvidence": "The service announcement describes the consolidated public forecasts and identifies www.weather.gov.sg as the portal.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "rg88052",
+      "name": "Gallica",
+      "category": "阅读",
+      "originalUrl": "https://gallica.bnf.fr/",
+      "url": "https://gallica.bnf.fr/",
+      "finalUrl": "https://gallica.bnf.fr/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://gallica.bnf.fr/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:45:00+00:00",
+      "status": "confirmed",
+      "reason": "The Bibliothèque nationale de France cites its Gallica digital library at the precise catalog homepage. Direct retrieval of that homepage was restricted.",
+      "observationIssue": "HTTP 403",
+      "retrieval": "publisher-reference",
+      "source": "https://www.bnf.fr/sites/default/files/2024-02/Bibliographie_Coll%C3%A9giens_HGEmc_salle_J.pdf",
+      "evidence": {
+        "publisherPageTitle": "Bibliographie Collégiens HGEmc, salle J",
+        "exactDestination": "https://gallica.bnf.fr/",
+        "publisherEvidence": "The national library's bibliography identifies https://gallica.bnf.fr as its Gallica public online library.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "v101-27",
+      "name": "CVE",
+      "category": "安全",
+      "originalUrl": "https://www.cve.org/",
+      "url": "https://www.cve.org/",
+      "finalUrl": "https://www.cve.org/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.cve.org/",
+          "status": 200
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T14:08:32+00:00",
+      "status": "confirmed",
+      "reason": "CISA documentation identifies the precise CVE Program address, corroborated by the program's repository organization. Direct retrieval did not expose a page title.",
+      "observationIssue": "no HTML title",
+      "retrieval": "publisher-reference",
+      "source": "https://www.cisa.gov/sites/default/files/2023-04/minimum-requirements-for-vex-508c.pdf",
+      "evidence": {
+        "publisherPageTitle": "Minimum Requirements for Vulnerability Exploitability eXchange (VEX)",
+        "exactDestination": "https://www.cve.org/",
+        "publisherEvidence": "CISA's document references the Common Vulnerabilities and Exposures program at https://www.cve.org/.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "v101-50",
+      "name": "Harvard Dataverse",
+      "category": "学术",
+      "originalUrl": "https://dataverse.harvard.edu/",
+      "url": "https://dataverse.harvard.edu/",
+      "finalUrl": "https://dataverse.harvard.edu/",
+      "httpStatus": 202,
+      "redirectChain": [
+        {
+          "url": "https://dataverse.harvard.edu/",
+          "status": 202
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T13:02:27+00:00",
+      "status": "confirmed",
+      "reason": "Harvard FAS Research Computing explicitly links to the Harvard Dataverse service homepage. The destination returned HTTP 202 during the direct check.",
+      "observationIssue": "HTTP 202",
+      "retrieval": "publisher-reference",
+      "source": "https://docs.rc.fas.harvard.edu/kb/virtual-machines/",
+      "evidence": {
+        "publisherPageTitle": "Virtual Machines & Virtual Hosting – FASRC DOCS",
+        "exactDestination": "https://dataverse.harvard.edu/",
+        "publisherEvidence": "The Harvard service list labels https://dataverse.harvard.edu as Harvard Dataverse hosting for datasets.",
+        "referenceAccess": "direct",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "v101-58",
+      "name": "SymPy",
+      "category": "数学",
+      "originalUrl": "https://www.sympy.org/",
+      "url": "https://www.sympy.org/",
+      "finalUrl": "https://www.sympy.org/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.sympy.org/",
+          "status": 200
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T14:08:32+00:00",
+      "status": "confirmed",
+      "reason": "The SymPy project documentation names the project's exact website. The homepage response indicated client-side navigation.",
+      "observationIssue": "page indicates a client-side redirect",
+      "retrieval": "publisher-reference",
+      "source": "https://docs.sympy.org/latest/contributing/documentation-style-guide.html",
+      "evidence": {
+        "publisherPageTitle": "Documentation Style Guide - SymPy 1.14.0 documentation",
+        "exactDestination": "https://www.sympy.org/",
+        "publisherEvidence": "The documentation's link roles table explicitly lists the SymPy website as https://www.sympy.org/.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "v101-78",
+      "name": "Espacenet",
+      "category": "实用",
+      "originalUrl": "https://worldwide.espacenet.com/",
+      "url": "https://worldwide.espacenet.com/",
+      "finalUrl": "https://worldwide.espacenet.com/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://worldwide.espacenet.com/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T13:02:28+00:00",
+      "status": "confirmed",
+      "reason": "The European Patent Office identifies the precise Espacenet homepage in its resource book. Direct retrieval of the homepage was restricted.",
+      "observationIssue": "HTTP 403",
+      "retrieval": "publisher-reference",
+      "source": "https://link.epo.org/web/espacenet_resourcebook_v3.0_en.pdf",
+      "evidence": {
+        "publisherPageTitle": "Espacenet Resource Book",
+        "exactDestination": "https://worldwide.espacenet.com/",
+        "publisherEvidence": "The operator's guide specifies https://worldwide.espacenet.com as the Espacenet homepage.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "v101-79",
+      "name": "J-PlatPat",
+      "category": "实用",
+      "originalUrl": "https://www.j-platpat.inpit.go.jp/",
+      "url": "https://www.j-platpat.inpit.go.jp/",
+      "finalUrl": null,
+      "httpStatus": null,
+      "redirectChain": [],
+      "title": null,
+      "checkedAt": "2026-11-24T14:08:32+00:00",
+      "status": "confirmed",
+      "reason": "INPIT's official J-PlatPat launch notice links the exact patent-information portal address. Direct DNS resolution was inconclusive.",
+      "observationIssue": "gaierror",
+      "retrieval": "publisher-reference",
+      "source": "https://www.inpit.go.jp/j-platpat_info/othersinfo/oshirase00001.html",
+      "evidence": {
+        "publisherPageTitle": "［INPIT］特許情報プラットフォーム(J-PlatPat)開始のお知らせ",
+        "exactDestination": "https://www.j-platpat.inpit.go.jp/",
+        "publisherEvidence": "The official notice names the J-PlatPat service and links https://www.j-platpat.inpit.go.jp/.",
+        "referenceAccess": "direct",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "v110-86",
+      "name": "Julia Documentation",
+      "category": "数学",
+      "originalUrl": "https://docs.julialang.org/",
+      "url": "https://docs.julialang.org/",
+      "finalUrl": "https://docs.julialang.org/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://docs.julialang.org/",
+          "status": 200
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T14:08:33+00:00",
+      "status": "confirmed",
+      "reason": "The Julia language's source repository links the exact official documentation entry. The direct endpoint advertises a client-side redirect into the manual.",
+      "observationIssue": "page indicates a client-side redirect",
+      "retrieval": "publisher-reference",
+      "source": "https://github.com/JuliaLang/julia",
+      "evidence": {
+        "publisherPageTitle": "GitHub - JuliaLang/julia: The Julia Programming Language · GitHub",
+        "exactDestination": "https://docs.julialang.org/",
+        "publisherEvidence": "The Julia source repository's Resources section identifies https://docs.julialang.org as its documentation site.",
+        "referenceAccess": "direct",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "rg88029",
+      "name": "Grants.gov",
+      "category": "科研",
+      "originalUrl": "https://www.grants.gov/",
+      "url": "https://www.grants.gov/",
+      "finalUrl": "https://www.grants.gov/",
+      "httpStatus": 503,
+      "redirectChain": [
+        {
+          "url": "https://www.grants.gov/",
+          "status": 503
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T14:08:27+00:00",
+      "status": "confirmed",
+      "reason": "The US Administration for Community Living links to the exact federal grant portal. Direct retrieval returned HTTP 503.",
+      "observationIssue": "HTTP 503",
+      "retrieval": "publisher-reference",
+      "source": "https://acl.gov/grants/applying-grants/how-apply",
+      "evidence": {
+        "publisherPageTitle": "How to Apply for a Competitive Grant",
+        "exactDestination": "https://www.grants.gov/",
+        "publisherEvidence": "The federal agency's application instructions identify and link to www.grants.gov as the central access point for its grant opportunities.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "rg88075",
+      "name": "data.gov.au",
+      "category": "数据",
+      "originalUrl": "https://data.gov.au/",
+      "url": "https://data.gov.au/",
+      "finalUrl": "https://data.gov.au/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://data.gov.au/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T12:45:03+00:00",
+      "status": "confirmed",
+      "reason": "An official Australian council agency information guide cites the precise Australian government open-data portal. Direct retrieval was restricted.",
+      "observationIssue": "HTTP 403",
+      "retrieval": "publisher-reference",
+      "source": "https://www.esc.nsw.gov.au/__data/assets/pdf_file/0004/137794/Agency-Information-Guide-Adopted-Dec-2024.pdf",
+      "evidence": {
+        "publisherPageTitle": "Agency Information Guide",
+        "exactDestination": "https://data.gov.au/",
+        "publisherEvidence": "The public agency information guide lists Data.gov.au at https://data.gov.au among government information services.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "rex039",
+      "name": "瑞典开放数据",
+      "category": "数据",
+      "originalUrl": "https://www.dataportal.se/",
+      "url": "https://www.dataportal.se/",
+      "finalUrl": "https://www.dataportal.se/",
+      "httpStatus": 200,
+      "redirectChain": [
+        {
+          "url": "https://www.dataportal.se/",
+          "status": 200
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T14:08:20+00:00",
+      "status": "confirmed",
+      "reason": "Sweden's Agency for Digital Government identifies the precise national data portal. The direct response did not expose an HTML title.",
+      "observationIssue": "no HTML title",
+      "retrieval": "publisher-reference",
+      "source": "https://www.digg.se/download/18.300b1765192c579aded28e35/1730390064648/Bilaga%202%20Kompletterande%20underlag%20Digg%202024-1332.pdf",
+      "evidence": {
+        "publisherPageTitle": "Kompletterande underlag",
+        "exactDestination": "https://www.dataportal.se/",
+        "publisherEvidence": "The agency's report explains its work with open and shared data and names https://www.dataportal.se/ as the public portal.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "exd046",
+      "name": "Belgian Train",
+      "category": "旅游出行",
+      "originalUrl": "https://www.belgiantrain.be/",
+      "url": "https://www.belgiantrain.be/",
+      "finalUrl": "https://www.belgiantrain.be/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.belgiantrain.be/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T13:02:11+00:00",
+      "status": "confirmed",
+      "reason": "The Belgian public rail operator identifies and links its exact Belgian Train homepage. Direct retrieval of the homepage returned HTTP 403.",
+      "observationIssue": "HTTP 403",
+      "retrieval": "publisher-reference",
+      "source": "https://www.belgiantrain.be/en/support/customer-service/responsible-disclosure",
+      "evidence": {
+        "publisherPageTitle": "Responsible disclosure · SNCB-NMBS",
+        "exactDestination": "https://www.belgiantrain.be/",
+        "publisherEvidence": "The transport operator's publication lists and links www.belgiantrain.be as an SNCB-NMBS website.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    },
+    {
+      "id": "exd026",
+      "name": "SBB 瑞士铁路",
+      "category": "旅游出行",
+      "originalUrl": "https://www.sbb.ch/",
+      "url": "https://www.sbb.ch/",
+      "finalUrl": "https://www.sbb.ch/",
+      "httpStatus": 403,
+      "redirectChain": [
+        {
+          "url": "https://www.sbb.ch/",
+          "status": 403
+        }
+      ],
+      "title": null,
+      "checkedAt": "2026-11-24T13:02:11+00:00",
+      "status": "confirmed",
+      "reason": "SBB's own travel information names the precise SBB website as the online timetable entry. Direct retrieval of the homepage returned HTTP 403.",
+      "observationIssue": "HTTP 403",
+      "retrieval": "publisher-reference",
+      "source": "https://www.sbb.ch/en/travel-information/individual-needs/travelling-reduced-mobility/easy-language.html",
+      "evidence": {
+        "publisherPageTitle": "Accessible travel in easy language · SBB",
+        "exactDestination": "https://www.sbb.ch/",
+        "publisherEvidence": "The Swiss Federal Railways passenger guide directs customers to the SBB.ch timetable and names www.sbb.ch.",
+        "referenceAccess": "public-index",
+        "referenceReviewedAt": "2026-11-24T14:16:53+00:00"
+      }
+    }
+  ]
+}

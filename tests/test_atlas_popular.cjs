@@ -40,8 +40,11 @@ for(const [id,,,ids] of model.tasks){
  const mounted=ids.filter(key=>byId.has(key));
  assert.ok(mounted.length>=3&&mounted.length<=8,id);
 }
-const pending=byId.get('n078');
+const pending={...byId.get('dA055'),randomSafe:true};
+assert.ok(pending.entry);
 assert.equal(model.access(pending.entry.url,gate,safety).confirmed,false);
+const canva=byId.get('n078');
+assert.equal(model.access(canva.entry.url,gate,safety).confirmed,true);
 const ready=byId.get('r11');
 assert.equal(model.access(ready.entry.url,gate,safety).confirmed,true);
 const bad={entry:{url:'https://127.0.0.1/'},randomSafe:true};
