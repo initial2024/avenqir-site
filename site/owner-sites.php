@@ -26,6 +26,13 @@ function aq_owner_url($raw):?string {
 }
 if(($_SERVER['REQUEST_METHOD']??'GET')==='POST'){
  if(!is_string($_POST['csrf']??null)||!hash_equals($_SESSION['csrf'],$_POST['csrf'])){http_response_code(403);exit;}
+ $dir=__DIR__.'/_store';
+ if(!store_init($dir)){http_response_code(503);exit('Storage unavailable');}
+ $lock=@fopen($dir.'/.owner-sites.lock','c');
+ if($lock===false||!@flock($lock,LOCK_EX|LOCK_NB)){if(is_resource($lock))fclose($lock);http_response_code(503);exit('Please retry');}
+ $data=stored_read('owner_sites')??['owner'=>$owner,'items'=>[]];
+ if(($data['owner']??null)!==$owner || !is_array($data['items']??null)){http_response_code(403);exit;}
+ $items=$data['items'];
  $action=$_POST['action']??'';$id=is_string($_POST['id']??null)?$_POST['id']:'';
  $ok=false;
  if($action==='add'&&count($items)<12){
@@ -40,7 +47,9 @@ if(($_SERVER['REQUEST_METHOD']??'GET')==='POST'){
    break;
   }
  }
- if($ok&&stored_write('owner_sites',['owner'=>$owner,'items'=>$items])){header('Location: owner-sites.php',true,303);exit;}
+ $saved=$ok&&stored_write('owner_sites',['owner'=>$owner,'items'=>$items]);
+ flock($lock,LOCK_UN);fclose($lock);
+ if($saved){header('Location: owner-sites.php',true,303);exit;}
  $notice='操作未保存：请检查输入、容量或存储状态。';$items=$data['items'];
 }
 ?><!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>私人站点 · AVENQIR</title><link rel="stylesheet" href="common.css"></head><body><main class="wrap"><h1>私人站点状态</h1><a class="btn ghost" href="admin.php">返回管理后台</a><p>账号绑定 · 仅管理员可见。不会发起服务器代理、自动探测、定时保活或访问第三方 API。状态是管理员手动记录，不是监控结果。</p>

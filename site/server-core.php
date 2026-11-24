@@ -13,7 +13,7 @@ function store_failure_reason(): string {
   return (string)($GLOBALS['AVENQIR_STORAGE_ERROR'] ?? '原因未知');
 }
 function store_path(string $name): string {
-  if (!in_array($name, ['auth', 'links', 'passkeys', 'owner_sites'], true)) {
+  if (!in_array($name, ['auth', 'links', 'passkeys', 'owner_sites', 'status_quota'], true)) {
     throw new InvalidArgumentException('Invalid storage key');
   }
   return __DIR__.'/_store/'.$name.'.php';
