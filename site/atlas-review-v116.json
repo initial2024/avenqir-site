@@ -3045,6 +3045,169 @@
       "method": "Observed redirect and inspected official destination via indexed retrieval",
       "reviewedOn": "2026-11-24",
       "evidenceFreshness": "indexed snapshot approximately 3 months old"
+    },
+    {
+      "url": "https://kubernetes.io/",
+      "source": "https://kubernetes.io/",
+      "identity": "Kubernetes",
+      "evidence": "Official container orchestration homepage and documentation",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://prometheus.io/",
+      "source": "https://prometheus.io/",
+      "identity": "Prometheus",
+      "evidence": "Project monitoring and metrics documentation",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://grafana.com/",
+      "source": "https://grafana.com/",
+      "identity": "Grafana Labs",
+      "evidence": "Observability platform, official docs and downloads",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://developer.hashicorp.com/terraform",
+      "source": "https://developer.hashicorp.com/terraform",
+      "identity": "Terraform",
+      "evidence": "HashiCorp developer documentation for infrastructure as code",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://opensource.org/",
+      "source": "https://opensource.org/",
+      "identity": "Open Source Initiative",
+      "evidence": "Nonprofit organization homepage and licensing resources",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://sourcehut.org/",
+      "source": "https://sourcehut.org/",
+      "identity": "SourceHut",
+      "evidence": "Project's software development platform",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://about.gitea.com/",
+      "source": "https://about.gitea.com/",
+      "identity": "Gitea",
+      "evidence": "Official self-hosted Git platform and documentation navigation",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://forgejo.org/",
+      "source": "https://forgejo.org/",
+      "identity": "Forgejo",
+      "evidence": "Project homepage and Codeberg e.V. stewardship",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://openssf.org/",
+      "source": "https://openssf.org/",
+      "identity": "OpenSSF",
+      "evidence": "Linux Foundation project homepage and governance",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://etherpad.org/",
+      "source": "https://etherpad.org/",
+      "identity": "Etherpad",
+      "evidence": "Project collaborative editor and official installation resources",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://mixkit.co/",
+      "source": "https://mixkit.co/",
+      "identity": "Mixkit",
+      "evidence": "Official asset catalog and Envato links",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.mongodb.com/",
+      "source": "https://www.mongodb.com/",
+      "identity": "MongoDB",
+      "evidence": "Database product homepage and documentation links",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://traefik.io/",
+      "source": "https://traefik.io/",
+      "identity": "Traefik Labs",
+      "evidence": "Official proxy and gateway product navigation",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://opencollective.com/",
+      "source": "https://opencollective.com/",
+      "identity": "Open Collective",
+      "evidence": "Platform homepage and steward organization",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.overleaf.com/",
+      "source": "https://www.overleaf.com/",
+      "identity": "Overleaf",
+      "evidence": "Official collaborative LaTeX editor homepage",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://cryptpad.org/",
+      "source": "https://cryptpad.org/",
+      "identity": "CryptPad",
+      "evidence": "Project homepage and documentation",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://miro.com/",
+      "source": "https://miro.com/",
+      "identity": "Miro",
+      "evidence": "Official workspace and product navigation",
+      "method": "Inspected readable exact official page in indexed retrieval",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
+    },
+    {
+      "url": "https://www.redhat.com/en/ansible-collaborative",
+      "source": "https://www.ansible.com/",
+      "previousUrl": "https://www.ansible.com/",
+      "identity": "Ansible Collaborative",
+      "evidence": "Old address redirected to Red Hat with marketing query; independently retrieved clean canonical official destination with Ansible documentation links",
+      "method": "Observed redirect and independently inspected clean HTTPS destination",
+      "reviewedOn": "2026-11-24",
+      "evidenceFreshness": "indexed snapshot approximately three months old"
     }
   ]
 }
