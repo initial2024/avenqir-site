@@ -1,8 +1,8 @@
 "use strict";
 /* AVENQIR v9.4 offline shell. No private documents, PHP, or API records cached. */
-const CACHE = 'avenqir-v94-static-20261123h';
+const CACHE = 'avenqir-v95-static-20261124-owner';
 const ASSETS = [
-  './index.html','./appearance.html','./directory.html','./directory.js','./atlas-paths.js','./atlas-expansion.js','./atlas-specialist.js','./atlas-depth-a.js','./atlas-depth-b.js','./atlas-depth-c.js','./atlas-depth-d.js','./atlas-ai.js','./atlas-regional.js','./atlas-everyday.js','./atlas-regional-ext.js','./atlas-everyday-ext.js','./atlas-taxonomy.js','./atlas-region.js','./atlas-region-ui.js','./atlas-catalog-core.js','./atlas-safety.js','./atlas-guides.js','./atlas-find.js','./atlas-enrich.js','./aq-i18n.js','./aq-copy.js','./orbit-bridge.js','./orbit-bridge.html','./remote-workspace.html','./atlas-summary.js','./atlas-personalize.js','./atlas-personalize-ui.js','./directory-search.css','./directory-seed.json','./leave.html','./leave.js',
+  './index.html','./appearance.html','./directory.html','./directory.js','./atlas-paths.js','./atlas-expansion.js','./atlas-specialist.js','./atlas-depth-a.js','./atlas-depth-b.js','./atlas-depth-c.js','./atlas-depth-d.js','./atlas-ai.js','./atlas-regional.js','./atlas-everyday.js','./atlas-regional-ext.js','./atlas-everyday-ext.js','./atlas-taxonomy.js','./atlas-region.js','./atlas-region-ui.js','./atlas-catalog-core.js','./atlas-safety.js','./atlas-guides.js','./atlas-find.js','./atlas-enrich.js','./aq-i18n.js','./aq-copy.js','./orbit-bridge.js','./orbit-bridge.html','./atlas-summary.js','./atlas-personalize.js','./atlas-personalize-ui.js','./directory-search.css','./directory-seed.json','./leave.html','./leave.js',
   './module-switcher.js','./quick-search.js','./site.js','./common.css','./theme.js','./theme.css','./link-gate.js',
   './bookmarks.html','./bookmarks.js','./netscape-format.js','./notes.html','./notes.js','./notes-enhance.js',
   './transfer.html','./transfer-schema.js','./device-transfer.js','./feedback-pref.js',
@@ -51,7 +51,7 @@ self.addEventListener('activate',event=>{
 self.addEventListener('fetch',event=>{
   const req=event.request, u=new URL(req.url);
   if(req.method!=='GET' || u.origin!==self.location.origin ||
-     u.pathname.endsWith('.php') || u.pathname.includes('/_private/') ||
+     u.pathname.endsWith('.php') || u.pathname.endsWith('/remote-workspace.html') || u.pathname.includes('/_private/') ||
      u.pathname.includes('/_store/') || u.pathname.includes('/admin') ||
      u.pathname.endsWith('/probe.txt') || u.searchParams.has('check'))return;
   const html=req.mode==='navigate'||u.pathname.endsWith('.html')||u.pathname.endsWith('/');

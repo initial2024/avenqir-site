@@ -1,6 +1,6 @@
 'use strict';
 const $=id=>document.getElementById(id),repoKey='avenqir_v4_repos',cacheKey='avenqir_v4_ghcache';
-const defaults=['u2584604327-a11y/dshe','initial2024/orbit-admin-android','initial2024/Local-Dream-Android-Enhanced-Edition','initial2024/game','initial2024/text'];
+const defaults=[];
 const read=(k,f)=>{try{return JSON.parse(localStorage.getItem(k))??f}catch{return f}};
 let repos=read(repoKey,defaults);if(!Array.isArray(repos))repos=defaults;
 let cache=read(cacheKey,{});if(!cache||typeof cache!=='object')cache={};

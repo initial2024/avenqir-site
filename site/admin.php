@@ -247,14 +247,7 @@ if($logged&&isset($_GET['edit']))foreach(public_links() as $r)if(($r['id']??'')=
 <?php elseif(aq_mfa_enabled($auth)):?><p class="hint">当前浏览器已获授权：仍需填写管理员密码，14 天内无需重复动态验证码。</p><?php endif; ?>
 <button class="btn primary" type="submit">登录 adm</button></form><p class="hint">HTTPS 加密 + 会话过期 + CSRF 校验；共享主机上不建议存储敏感信息。</p></section>
 <?php else:?>
-<section class="panel wide" aria-label="AL private browser">
-<div class="sectionhead"><div><span class="label">OWNER ONLY · AL SANDBOX</span>
-<h2>adm 的 AL 私人浏览器入口</h2>
-<p>打开你在本机保存的 Cloudflare Access 远程浏览器地址；首次需到 AVENQIR 的私人入口保存。访问仍由 Cloudflare Access 身份认证和 VNC 密码保护，不能绕过登录。</p></div></div>
-<div class="btnrow"><a id="adminAlDirect" class="btn primary" href="remote-workspace.html" target="_blank" rel="noopener noreferrer">打开 AL 私人浏览器</a>
-<a class="btn ghost" href="remote-workspace.html" target="_blank" rel="noopener noreferrer">设置 / 检查 AL 连接</a></div>
-<p class="hint" id="adminAlState">如果尚未配置、AL 未运行或 Cloudflare Access 未放行，该入口不会自动连通。</p>
-</section>
+<section class="panel wide"><span class="label">OWNER ONLY · SITE STATUS</span><h2>私人站点状态</h2><p>仅在管理员会话中读取。站点地址不进入公开目录、静态代码或后台代理。请主动打开并手动确认状态。</p><a class="btn primary" href="owner-sites.php">管理我的站点与软件验证</a></section>
 <div class="layout"><section class="panel wide"><div class="sectionhead"><div><span class="label">PUBLIC CATALOG</span><h2>当前公开网址（<?= count(public_links()) ?> 条）</h2><p>手机上点击编辑即可修改；不同设备再次打开目录会获得服务器最新数据。</p></div><a class="btn ghost" href="admin.php?export=1">下载 JSON 备份</a></div><div class="admin-list">
 <?php foreach(public_links() as $x): ?><div class="admin-item"><div><strong><?= e($x['name']) ?></strong><p><?= e($x['category']) ?> · <?= e($x['url']) ?></p></div><div class="btnrow"><a class="btn ghost mini-btn" href="admin.php?edit=<?= urlencode($x['id']) ?>#editor">编辑</a><form method="post"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= e($x['id']) ?>"><button class="btn ghost mini-btn" type="submit">删除</button></form></div></div><?php endforeach; ?>
 </div></section>
@@ -303,4 +296,4 @@ if($logged&&isset($_GET['edit']))foreach(public_links() as $r)if(($r['id']??'')=
 <?php if(aq_mfa_enabled($auth)):?><label>动态码或一次性恢复码<input type="text" name="mfa_code" maxlength="24" autocomplete="one-time-code" required></label><?php endif; ?>
 <button type="submit" class="btn ghost">修改密码并退出登录</button></form></section></div>
 <form method="post" class="admin-logout"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><input type="hidden" name="action" value="logout"><button class="btn ghost">退出管理后台</button></form>
-<?php endif; ?></main><?php if($logged):?><script src="admin-al-link.js?v=1" defer></script><?php endif; ?></body></html>
+<?php endif; ?></main></body></html>
