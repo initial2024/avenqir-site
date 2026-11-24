@@ -1,0 +1,91 @@
+{
+  "reviewDate": "2026-11-24",
+  "scope": "Exact destination source identity only; indexed retrieval, not live safety certification. Redirects, access errors and empty or challenge-only pages were excluded.",
+  "records": [
+    {
+      "url": "https://openalex.org/",
+      "source": "https://openalex.org/",
+      "method": "Inspected exact official institution or project page; readable identity or description; no redirected URL in retrieval result"
+    },
+    {
+      "url": "https://www.zotero.org/",
+      "source": "https://www.zotero.org/",
+      "method": "Inspected exact official institution or project page; readable identity or description; no redirected URL in retrieval result"
+    },
+    {
+      "url": "https://www.wireshark.org/",
+      "source": "https://www.wireshark.org/",
+      "method": "Inspected exact official institution or project page; readable identity or description; no redirected URL in retrieval result"
+    },
+    {
+      "url": "https://letsencrypt.org/",
+      "source": "https://letsencrypt.org/",
+      "method": "Inspected exact official institution or project page; readable identity or description; no redirected URL in retrieval result"
+    },
+    {
+      "url": "https://www.eff.org/",
+      "source": "https://www.eff.org/",
+      "method": "Inspected exact official institution or project page; readable identity or description; no redirected URL in retrieval result"
+    },
+    {
+      "url": "https://openrefine.org/",
+      "source": "https://openrefine.org/",
+      "method": "Inspected exact official institution or project page; readable identity or description; no redirected URL in retrieval result"
+    },
+    {
+      "url": "https://www.ebi.ac.uk/chebi/",
+      "source": "https://www.ebi.ac.uk/chebi/",
+      "method": "Inspected exact official institution or project page; readable identity or description; no redirected URL in retrieval result"
+    },
+    {
+      "url": "https://datadryad.org/",
+      "source": "https://datadryad.org/",
+      "method": "Inspected exact official institution or project page; readable identity or description; no redirected URL in retrieval result"
+    },
+    {
+      "url": "https://www.gap-system.org/",
+      "source": "https://www.gap-system.org/",
+      "method": "Inspected exact official institution or project page; readable identity or description; no redirected URL in retrieval result"
+    },
+    {
+      "url": "https://data.unhcr.org/",
+      "source": "https://data.unhcr.org/",
+      "method": "Inspected exact official institution or project page; readable identity or description; no redirected URL in retrieval result"
+    },
+    {
+      "url": "https://qgis.org/",
+      "source": "https://qgis.org/",
+      "method": "Inspected exact official institution or project page; readable identity or description; no redirected URL in retrieval result"
+    },
+    {
+      "url": "https://www.hathitrust.org/",
+      "source": "https://www.hathitrust.org/",
+      "method": "Inspected exact official institution or project page; readable identity or description; no redirected URL in retrieval result"
+    },
+    {
+      "url": "https://www.rdkit.org/docs/",
+      "source": "https://www.rdkit.org/docs/",
+      "method": "Inspected exact official institution or project page; readable identity or description; no redirected URL in retrieval result"
+    },
+    {
+      "url": "https://cds.cern.ch/",
+      "source": "https://cds.cern.ch/",
+      "method": "Inspected exact official institution or project page; readable identity or description; no redirected URL in retrieval result"
+    },
+    {
+      "url": "https://www.pangaea.de/",
+      "source": "https://www.pangaea.de/",
+      "method": "Inspected exact official institution or project page; readable identity or description; no redirected URL in retrieval result"
+    },
+    {
+      "url": "https://osmfoundation.org/",
+      "source": "https://osmfoundation.org/",
+      "method": "Inspected exact official institution or project page; readable identity or description; no redirected URL in retrieval result"
+    },
+    {
+      "url": "https://blog.mozilla.org/security/",
+      "source": "https://blog.mozilla.org/security/",
+      "method": "Inspected exact official institution or project page; readable identity or description; no redirected URL in retrieval result"
+    }
+  ]
+}
