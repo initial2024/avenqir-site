@@ -97,7 +97,7 @@ function fb_csrf(): string {
     return $_SESSION['csrf'];
 }
 function fb_csrf_ok(): bool {
-    $a=fb_csrf();$b=(string)($_POST['csrf']??'');
+    $a=fb_csrf();$b=is_string($_POST['csrf']??null)?$_POST['csrf']:'';
     return $b!=='' && hash_equals($a,$b);
 }
 function fb_admin_hash(PDO $db): ?string {
