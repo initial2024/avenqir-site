@@ -110,3 +110,11 @@
 :root[data-aq-theme="eye"] .search-body .atlas-flow-card strong{color:#53442b}
 @media(max-width:850px){.atlas-flow-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:560px){.atlas-flows{padding:15px 12px}.atlas-flow-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.atlas-flow-card{min-height:142px;padding:11px}.atlas-flows-heading{flex-direction:column;align-items:flex-start;gap:7px}.atlas-discovery-tools{align-items:flex-start}}
+
+/* Compact discovery: optional sections are native accessible disclosures. */
+.atlas-compact-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 14px}
+.atlas-compact-panel{border:1px solid currentColor;border-color:#8ca1b54d;border-radius:12px;min-width:0;padding:0 10px}
+.atlas-compact-panel>summary{cursor:pointer;padding:11px 2px;font-size:13px;font-weight:650;min-height:44px;box-sizing:border-box;overflow-wrap:anywhere}
+.atlas-compact-panel[open]{grid-column:1/-1}.atlas-compact-panel>section{margin:0 0 10px}.atlas-compact-panel>section h2{scroll-margin-top:110px}
+#resultsTitle{scroll-margin-top:100px}
+@media(max-width:600px){.atlas-compact-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.atlas-compact-panel>summary{font-size:12px}.search-hero{padding:20px 5px 13px}.atlas-aside{display:grid;grid-template-columns:1fr}.atlas-side-card{padding:12px}}

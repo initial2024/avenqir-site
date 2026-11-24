@@ -63,6 +63,8 @@
  const input=$('atlasQuery'),results=$('atlasResults'),cats=$('atlasCategories'),summary=$('atlasSummary'),source=$('atlasSource'),suggest=$('atlasSuggestions');
  const combine=catalog.combine;
  let records=catalog.catalog(), query=(params.get('q')||quickQuery||'').slice(0,140),category='',mode='all',limit=24,loaded=false,selectedFlow='',reviewedOnly=false,groupId='',expandedCategories=false;
+ const pageSize=window.matchMedia?.('(max-width: 600px)').matches?12:24;
+ limit=pageSize;
  const key='avenqir.link-atlas.favorites.v8';let favorites=[],compareUrls=[];let pendingNoMatchQuery=query.trim();
  const multiCategories=new Set();
  const recentKey='avenqir.atlas.session-opens.v90';
@@ -147,7 +149,7 @@
      b.append(el('span','atlas-flow-icon',f.icon),el('strong','',localized?.title||f.title),el('small','',localized?.subtitle||f.subtitle));
      const note=el('span','atlas-flow-note',english()?'Follow each step; check external sources before using them.':f.note);b.append(note);
      b.addEventListener('click',()=>{
-       selectedFlow=selectedFlow===f.id?'':f.id;category='';multiCategories.clear();groupId='';mode='all';query='';input.value='';limit=24;
+       selectedFlow=selectedFlow===f.id?'':f.id;category='';multiCategories.clear();groupId='';mode='all';query='';input.value='';limit=pageSize;
        const u=new URL(location.href);u.searchParams.delete('q');history.replaceState(null,'',u.pathname+u.search+u.hash);
        document.querySelectorAll('[data-tab]').forEach(t=>{const active=t.dataset.tab==='all';t.classList.toggle('active',active);t.setAttribute('aria-pressed',String(active));});
        refreshEngines();suggestClose();drawPaths();choiceBar();draw();
@@ -161,7 +163,7 @@
  }
  $('atlasResetFlow')?.addEventListener('click',()=>{selectedFlow='';drawPaths();draw();});
  const reviewedBox=$('atlasReviewedOnly');
- reviewedBox?.addEventListener('change',()=>{reviewedOnly=!!reviewedBox.checked;limit=24;draw();});
+ reviewedBox?.addEventListener('change',()=>{reviewedOnly=!!reviewedBox.checked;limit=pageSize;draw();});
  $('atlasExportFavorites')?.addEventListener('click',()=>{
    const items=records.filter(x=>favorites.includes(x.url)).map(x=>({name:x.name,url:x.url,category:x.category,description:x.description}));
    const msg=$('atlasExportStatus');
@@ -193,7 +195,7 @@
        button.setAttribute('aria-pressed',String(groupId===id));
        button.append(el('span','atlas-group-icon',iconText),el('strong','',(locale()?.group(id)||label)+' · '+count),el('small','',locale()?.group(id,'description')||desc));
        button.addEventListener('click',()=>{
-         groupId=id;category='';multiCategories.clear();selectedFlow='';limit=24;
+         groupId=id;category='';multiCategories.clear();selectedFlow='';limit=pageSize;
          if($('atlasCategorySearch'))$('atlasCategorySearch').value='';
          expandedCategories=false;choiceBar();drawPaths();draw();
          $('atlasResults').scrollIntoView({behavior:'smooth',block:'start'});
@@ -227,7 +229,7 @@
          else if(multiCategories.has(name))multiCategories.delete(name);
          else multiCategories.add(name);
        }else{category=name;multiCategories.clear();}
-       selectedFlow='';limit=24;choiceBar();drawPaths();draw();$('atlasResults').scrollIntoView({behavior:'smooth',block:'start'});
+       selectedFlow='';limit=pageSize;choiceBar();drawPaths();draw();$('atlasResults').scrollIntoView({behavior:'smooth',block:'start'});
      });
      cats.append(button);
    };
@@ -246,7 +248,7 @@
      categories.slice(0,16).forEach(([name,count])=>{
        let button=el('button','',trCategory(name)+' · '+count);button.type='button';
        button.addEventListener('click',()=>{
-         groupId=taxonomy.groupFor(name)||'other';category=name;multiCategories.clear();if($('atlasMultiCategory'))$('atlasMultiCategory').checked=false;expandedCategories=true;limit=24;
+         groupId=taxonomy.groupFor(name)||'other';category=name;multiCategories.clear();if($('atlasMultiCategory'))$('atlasMultiCategory').checked=false;expandedCategories=true;limit=pageSize;
          if(inputCategory)inputCategory.value='';
          choiceBar();draw();
          window.scrollTo({top:Math.max(0,$('atlasResults').getBoundingClientRect().top+window.scrollY-150),behavior:'smooth'});
@@ -259,16 +261,16 @@
    if(multiOn()&&category)multiCategories.add(category);
    else if(!multiOn()&&multiCategories.size){category=[...multiCategories][0];multiCategories.clear();}
    else if(!multiOn())multiCategories.clear();
-   limit=24;choiceBar();draw();
+   limit=pageSize;choiceBar();draw();
  });
  $('atlasExpandCategories')?.addEventListener('click',()=>{
    expandedCategories=!expandedCategories;choiceBar();
  });
  $('atlasCategorySearch')?.addEventListener('input',()=>{
-   groupId='';category='';multiCategories.clear();selectedFlow='';expandedCategories=true;limit=24;
+   groupId='';category='';multiCategories.clear();selectedFlow='';expandedCategories=true;limit=pageSize;
    choiceBar();drawPaths();draw();
  });
- function replaceQuery(v){query=v.slice(0,140);input.value=query;limit=24;draw();const u=new URL(location.href);query?u.searchParams.set('q',query):u.searchParams.delete('q');history.replaceState(null,'',u.pathname+u.search+u.hash)}
+ function replaceQuery(v){query=v.slice(0,140);input.value=query;limit=pageSize;draw();const u=new URL(location.href);query?u.searchParams.set('q',query):u.searchParams.delete('q');history.replaceState(null,'',u.pathname+u.search+u.hash)}
  function suggestClose(){suggest.hidden=true;suggest.replaceChildren()}
  function suggestions(){const q=normalize(input.value);suggest.replaceChildren();if(q.length<2){suggestClose();return}
    const matched=records.filter(r=>meaningful(r).some(v=>v.includes(q))).slice(0,5);if(!matched.length){suggestClose();return}
@@ -306,7 +308,7 @@
     (multiOn()&&multiCategories.size?' · Categories: '+[...multiCategories].map(trCategory).join(', '):category?' · Category: '+trCategory(category):'')+(groupId?' · topic filtered':'')):
   (query?'匹配':'目录')+' '+list.length+' 个网站 · 显示 '+shown.length+' 条 / 总目录 '+records.length+' 条'+(multiOn()&&multiCategories.size?' · 多选分类：'+[...multiCategories].join('、'):category?' · 分类：'+category:'')+(groupId?' · 当前主题分组已筛选':'');
    const counter=$('atlasLiveCount');if(counter)counter.textContent=english()?'Curated '+records.length+' unique websites · '+paths.flows.length+' guided tasks · '+new Set(records.map(x=>x.category)).size+' categories':'已整理 '+records.length+' 个独立网址 · '+paths.flows.length+' 条任务路径 · '+new Set(records.map(x=>x.category)).size+' 个分类';
-   const more=$('atlasMore'),all=$('atlasShowAll');more.textContent=T('再显示 '+Math.min(24,Math.max(0,list.length-limit))+' 条 ↓','Show '+Math.min(24,Math.max(0,list.length-limit))+' more ↓');
+   const more=$('atlasMore'),all=$('atlasShowAll');more.textContent=T('再显示 '+Math.min(pageSize,Math.max(0,list.length-limit))+' 条 ↓','Show '+Math.min(pageSize,Math.max(0,list.length-limit))+' more ↓');
    if(all){all.hidden=list.length<=shown.length;all.textContent=T('一次显示全部 '+list.length+' 条','Show all '+list.length+' entries');}
    for(const x of shown){const url=safeUrl(x.url);if(!url)continue;const host=new URL(url).hostname;
      const card=el('article','atlas-result');const icon=el('div','atlas-result-icon',x.name.slice(0,1).toLocaleUpperCase());icon.setAttribute('aria-hidden','true');
@@ -381,6 +383,12 @@
    try{await navigator.clipboard.writeText(text);if(status)status.textContent=T('已复制 '+lines.length+' 条对比摘要。','Copied '+lines.length+' comparison entries.');}
    catch{if(status)status.textContent=T('此浏览器禁止复制，请检查站点权限。','Clipboard access was denied by this browser.');}
  });
+ function revealHashPanel(){
+   let id;try{id=decodeURIComponent(location.hash.slice(1))}catch{return;}
+   const target=id&&$(id);const panel=target?.closest('details.atlas-compact-panel');if(panel){panel.open=true;requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));}
+ }
+ function translateCompact(){for(const s of document.querySelectorAll('[data-compact-en]')){if(!s.dataset.compactCn)s.dataset.compactCn=s.textContent;s.textContent=T(s.dataset.compactCn,s.dataset.compactEn);}}
+ window.addEventListener('hashchange',revealHashPanel);
  function scrollToResults(){
    const target=$('resultsTitle');if(!target)return;
    target.setAttribute('tabindex','-1');target.focus({preventScroll:true});
@@ -414,21 +422,21 @@
  $('atlasNoMatchClose')?.addEventListener('click',()=>{const d=$('atlasNoMatchDialog');if(d.close)d.close();else d.removeAttribute('open');});
  $('atlasNoMatchDialog')?.addEventListener('click',e=>{const d=$('atlasNoMatchDialog');if(e.target===d){if(d.close)d.close();else d.removeAttribute('open');}});
 
- const tabs=[...document.querySelectorAll('[data-tab]')];tabs.forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.tab;limit=24;tabs.forEach(t=>{let active=t===b;t.classList.toggle('active',active);t.setAttribute('aria-pressed',String(active))});draw()}));
+ const tabs=[...document.querySelectorAll('[data-tab]')];tabs.forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.tab;limit=pageSize;tabs.forEach(t=>{let active=t===b;t.classList.toggle('active',active);t.setAttribute('aria-pressed',String(active))});draw()}));
  $('atlasClearFilters')?.addEventListener('click',()=>{
-   category='';groupId='';selectedFlow='';multiCategories.clear();mode='all';reviewedOnly=false;limit=24;
+   category='';groupId='';selectedFlow='';multiCategories.clear();mode='all';reviewedOnly=false;limit=pageSize;
    for(const id of ['atlasMultiCategory','atlasReviewedOnly'])if($(id))$(id).checked=false;
    if($('atlasSiteLanguageMode'))$('atlasSiteLanguageMode').value='prefer';
    for(const t of tabs){const active=t.dataset.tab==='all';t.classList.toggle('active',active);t.setAttribute('aria-pressed',String(active));}
    choiceBar();drawPaths();draw();scrollToResults();
  });
  $('atlasSort').addEventListener('change',draw);
- $('atlasSiteLanguageMode')?.addEventListener('change',()=>{limit=24;draw();});
- input.addEventListener('input',()=>{pendingNoMatchQuery='';query=input.value.slice(0,140);limit=24;draw();suggestions()});
+ $('atlasSiteLanguageMode')?.addEventListener('change',()=>{limit=pageSize;draw();});
+ input.addEventListener('input',()=>{pendingNoMatchQuery='';query=input.value.slice(0,140);limit=pageSize;draw();suggestions()});
  input.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!suggest.hidden){suggestClose()}else{replaceQuery('')}e.preventDefault()}});
  $('atlasForm').addEventListener('submit',e=>{e.preventDefault();submitSearch(input.value);});
  $('atlasClear').addEventListener('click',()=>{replaceQuery('');suggestClose();input.focus()});
- $('atlasMore').addEventListener('click',()=>{limit+=24;draw()});
+ $('atlasMore').addEventListener('click',()=>{limit+=pageSize;draw()});
  $('atlasShowAll')?.addEventListener('click',()=>{limit=filtered().length;draw();});
  $('atlasRandom').addEventListener('click',()=>{let entries=filtered();if(!entries.length)entries=records;const entry=entries[Math.floor(Math.random()*entries.length)];if(entry)showExternal(entry.url,entry.name)});
  const engineLinks=[...document.querySelectorAll('[data-search-provider]')];
@@ -446,12 +454,13 @@
   items:()=>records,favorites:()=>favorites,open:showExternal,
   reviewed:url=>!!linkGate?.officialSourceReviewed(url)
  })||null;
- window.addEventListener('aq:language-change',()=>{drawPaths();choiceBar();draw();});
+ window.addEventListener('aq:language-change',()=>{translateCompact();drawPaths();choiceBar();draw();});
+ translateCompact();revealHashPanel();
  updateApprovals();drawPaths();choiceBar();draw();
  catalog.load().then(data=>{
   records=data.items;
   source.textContent=data.remote?T('在线目录 + 本地精选','Online directory + curated links'):T('内置精选目录（后台不可用）','Built-in directory (backend unavailable)');
   loaded=true;choiceBar();draw();localRecommendations?.render();regionRecommendations?.render();drawGuide();
-  if(pendingNoMatchQuery)completeSearch();
+  if(pendingNoMatchQuery)completeSearch();else revealHashPanel();
  });
 })();

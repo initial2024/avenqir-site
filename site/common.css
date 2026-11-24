@@ -95,3 +95,5 @@ body{overflow-x:hidden;background:radial-gradient(circle at 70% 0%,#17405844,tra
 .aq-all-tools[open] summary{margin-bottom:16px}
 @media(max-width:790px){.aq-primary-links{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:420px){.aq-primary-link{padding:13px 11px}.aq-primary-link strong{font-size:13px}.aq-primary-link span{font-size:11px}}
+
+.aq-compact-home>summary{cursor:pointer;font-weight:650;min-height:44px;display:list-item;padding:10px 0;box-sizing:border-box}.aq-compact-home>section{padding:8px 0;border:0;background:transparent;box-shadow:none}.aq-compact-home:not([open]){padding-block:5px}
