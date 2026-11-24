@@ -314,7 +314,25 @@
     'https://www.post.gov.tw/post/internet/Group/default.jsp',
     'https://www.railway.gov.tw/tra-tip-web/tip',
     'https://www.airnewzealand.com/en-nz',
-    'https://www.trenitalia.com/it.html'
+    'https://www.trenitalia.com/it.html',
+    'https://chocolatey.org/',
+    'https://ninite.com/',
+    'https://www.mathsisfun.com/',
+    'https://www.rapidtables.com/',
+    'https://www.chemguide.co.uk/',
+    'https://apnews.com/',
+    'https://www.reuters.com/',
+    'https://arstechnica.com/',
+    'https://www.theverge.com/',
+    'https://www.wired.com/',
+    'https://techcrunch.com/',
+    'https://www.theregister.com/',
+    'https://www.engadget.com/',
+    'https://spectrum.ieee.org/',
+    'https://hackaday.com/',
+    'https://alternativeto.net/',
+    'https://dribbble.com/',
+    'https://flathub.org/en'
   ];
   function sanitize(raw){
     if(typeof raw!=='string'||raw.length>1800||/[\u0000-\u0020\u007f\\]/.test(raw))return null;
