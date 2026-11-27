@@ -360,7 +360,7 @@
   byId('homeLang').textContent=navigator.language||'—';
   byId('homeBrowser').textContent=browser||'—';
   function updateViewport(){
-    const dimensions=document.documentElement.clientWidth+'×'+window.innerHeight;
+    const dimensions=window.innerWidth+'×'+window.innerHeight;
     byId('homeView').textContent=dimensions+' CSS px';
     summary.textContent=[zone,navigator.language,dimensions,browser].filter(Boolean).join(' · ');
     summary.title=summary.textContent;
