@@ -55,6 +55,8 @@ jobs:
           node tests/test_recommendations_v138.cjs
           node tests/test_local_organize.cjs
           node tests/test_atlas_release.cjs
+          node scripts/train_atlas_embedding.cjs --check
+          node tests/test_atlas_semantic.cjs
           node tests/test_transfer_v90.cjs
           node tests/test_orbit_bridge.cjs
           node tests/test_i18n_v91.cjs

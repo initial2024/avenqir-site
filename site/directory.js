@@ -122,10 +122,13 @@
  function initialsMatch(item,term){if(!finder||!/^[a-z]{2,20}$/.test(term))return false;let values=initialsCache.get(item);if(!values){values=[finder.initials(item.name),finder.initials(item.category)];initialsCache.set(item,values)}return values.some(v=>v.includes(term));}
  const fieldCache=new WeakMap();
  const meaningful=x=>{let fields=fieldCache.get(x);if(!fields){fields=[x.name,x.url,x.category,x.description].map(normalize);fieldCache.set(x,fields)}return fields};
- let termsQuery=null,termsCache=[];
- function score(x){if(!query)return 1;if(termsQuery!==query){termsQuery=query;termsCache=normalize(query).split(/\s+/).filter(Boolean)}const terms=termsCache;const fields=meaningful(x);
-   if(!terms.every(w=>fields.some(v=>v.includes(w))||initialsMatch(x,w)))return -1;
-   return terms.reduce((acc,t)=>acc+(fields[0]===t?12:fields[0].startsWith(t)?8:fields[0].includes(t)?6:0)+(fields[1].includes(t)?4:0)+(fields[2].includes(t)?3:0)+(fields[3].includes(t)?1:0),0);
+ const searchModel=window.AVENQIR_ATLAS_SEARCH;
+ let termsQuery=null,prepared=null,lexicalCache=new WeakMap();
+ const semantic=window.AVENQIR_SEMANTIC_DOWNLOAD?.mount(()=>{draw();if(query&&filtered().length){const d=$('atlasNoMatchDialog');if(d?.open)d.close();if(committedQuery===query)updateSearchNext(query,false);}},T);
+ function score(x){if(!query)return 1;if(termsQuery!==query){termsQuery=query;prepared=searchModel?.prepare(query);lexicalCache=new WeakMap();}let rank=lexicalCache.get(x);
+   if(rank===undefined){const fields=meaningful(x);rank=prepared?searchModel.rank(prepared,fields,t=>initialsMatch(x,t)):normalize(fields.join(' ')).includes(normalize(query))?20:-1;lexicalCache.set(x,rank);}
+   if(rank>=0)return rank;
+   return dangerous(x.url)?-1:semantic?.scores(query,records)?.get(x.url)??-1;
  }
  function matchingGroup(x){
    if(!groupId)return true;
@@ -423,7 +426,7 @@
        if(e.button!==0||e.ctrlKey||e.metaKey||e.altKey||e.shiftKey)return;
        if(!isAllowed(url)){e.preventDefault();showExternal(url,x.name);}
        else trackOpen(url);
-     });a.addEventListener('auxclick',e=>{if(!recheck()){e.preventDefault();return;}if(e.button===1&&isAllowed(url))trackOpen(url);});data.append(a);
+     });a.addEventListener('auxclick',e=>{if(!recheck()){e.preventDefault();return;}if(e.button===1&&isAllowed(url))trackOpen(url);});data.append(a);if(query&&lexicalCache.get(x)<0&&semantic?.active())data.append(el('small','atlas-semantic-match',T('语义近似匹配','Semantic match')));
      if(sourceUI)data.append(sourceUI.external(url,permitted));
      if(english()&&/[\u3400-\u9fff]/.test(x.description||'')){
        const detail=el('details','atlas-original-desc'),caption=el('summary','',T('查看原始简介','Original description (Chinese) · expand'));
@@ -549,6 +552,7 @@
    clearSearchNext();
    replaceQuery(value.trim());suggestClose();input.blur();
    pendingNoMatchQuery=query.trim();rememberSearch(pendingNoMatchQuery);
+   if(pendingNoMatchQuery)semantic?.offer();
    if(loaded)completeSearch();
    else {committedQuery=pendingNoMatchQuery;updateSearchNext(committedQuery,false);scrollToResults();}
  }
@@ -562,6 +566,7 @@
    try{if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');}catch{dialog.setAttribute('open','');}
  }
 
+ $('atlasNoMatchSemantic')?.addEventListener('click',()=>{const d=$('atlasNoMatchDialog');if(d?.open)d.close();semantic?.show();});
  $('atlasNoMatchClose')?.addEventListener('click',()=>{const d=$('atlasNoMatchDialog');if(d.close)d.close();else d.removeAttribute('open');});
  $('atlasNoMatchDialog')?.addEventListener('click',e=>{const d=$('atlasNoMatchDialog');if(e.target===d){if(d.close)d.close();else d.removeAttribute('open');}});
 
@@ -626,7 +631,7 @@
  window.addEventListener('offline',()=>{remoteReady=false;source.textContent=T('当前离线 · 已加载目录仍可浏览','Offline · loaded directory remains available');});
  const initialLocalQuery=pendingNoMatchQuery;
  // Local results are usable immediately; the no-match verdict waits for the bounded public sync.
- if(initialLocalQuery){committedQuery=initialLocalQuery;updateSearchNext(initialLocalQuery,false);scrollToResults();}
+ if(initialLocalQuery){committedQuery=initialLocalQuery;updateSearchNext(initialLocalQuery,false);scrollToResults();semantic?.offer();}
  requestAnimationFrame(()=>setTimeout(()=>{try{updateApprovals();drawPaths();choiceBar();mountOptionalRecommendations()}catch{}},0));
  if($('atlasStartupNotice'))$('atlasStartupNotice').hidden=true;
  catalog.load().then(data=>{
