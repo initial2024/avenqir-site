@@ -50,7 +50,8 @@ function edit(x){$('editId').value=x.id;$('linkName').value=x.name;$('linkUrl').
 function clearForm(){$('linkForm').reset();$('editId').value='';$('saveLink').textContent=T('保存网址','Save bookmark')}
 $('cancelEdit').addEventListener('click',clearForm);
 $('linkForm').addEventListener('submit',e=>{e.preventDefault();const url=safeUrl($('linkUrl').value),name=safeText($('linkName').value,80),category=safeText($('linkCategory').value,32),note=safeText($('linkNote').value,250),tags=organize.tags($('linkTags').value),id=$('editId').value;if(!url||!name||!category){status(T('名称、分类、网址不能为空；网址必须以 http 或 https 开头。','Name, category and a valid HTTP/HTTPS URL are required.'));return}
-if(links.some(x=>x.url===url&&x.id!==id)){status(T('这个网址已经收藏过了。','This URL is already saved.'));return}
+const original=id?links.find(x=>x.id===id):null;
+if((!original||original.url!==url)&&links.some(x=>x.url===url&&x.id!==id)){status(T('这个网址已经收藏过了。','This URL is already saved.'));return}
 if(!id&&links.length>=200){status(T('收藏上限 200 条，请先删除旧网址。','Maximum 200 bookmarks. Remove older entries first.'));return}
 if(id){const x=links.find(x=>x.id===id);if(!x){status(T('原条目已不存在。','The original bookmark no longer exists.'));return}Object.assign(x,{name,url,category,note,tags,custom:true,at:Date.now()});status(T('已更新：','Updated: ')+name)}else{links.unshift({id:newId(),name,url,category,note,tags,custom:true,fav:false,todo:false,at:Date.now()});status(T('已添加：','Added: ')+name)}
 persist();clearForm();render();});
