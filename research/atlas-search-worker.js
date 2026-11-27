@@ -20,7 +20,7 @@ self.onmessage=e=>{
    state=null;epoch++;
    const model=typeof m.model==='string'?globalThis.AVENQIR_RESEARCH_CODEC.deserialize(m.model):m.model;
    validModel(model);
-   const baseline=embed.create(m.baseline),items=loadCatalog(m.items);
+   const baseline=embed.create({schema:'aq-domain-embedding-1',bins:model.bins,classes:model.classes.slice(0,28)}),items=loadCatalog(m.items);
    state={model,baseline,items};
    self.postMessage({type:'ready',id:m.id,epoch,count:items.length});return;
   }
