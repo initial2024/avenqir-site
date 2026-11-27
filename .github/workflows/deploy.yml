@@ -56,6 +56,7 @@ jobs:
           node tests/test_local_organize.cjs
           node tests/test_atlas_release.cjs
           node scripts/train_atlas_embedding.cjs --check
+          if test -f scripts/research_atlas_embedding_v2.cjs; then node scripts/research_atlas_embedding_v2.cjs --check; fi
           node tests/test_atlas_semantic.cjs
           node tests/test_transfer_v90.cjs
           node tests/test_orbit_bridge.cjs
