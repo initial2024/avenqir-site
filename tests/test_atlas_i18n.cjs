@@ -70,7 +70,7 @@ const remote=catalog.sanitize([
 ]);
 assert.equal(remote.length,2);
 const merged=catalog.catalog(remote);
-assert.equal(merged.length,1241+popularLinks.links.length);
+assert.equal(merged.length,catalog.catalog().length+remote.length);
 assert.equal(merged[0].category,'学术');
 assert.deepEqual(merged[0].languages,['en','ja']);
 assert.equal(merged[0].languageSource,'explicit');
