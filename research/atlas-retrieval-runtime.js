@@ -68,7 +68,10 @@ function compound(q){
 }
 
 function intent(q,model){
- if(!q||q.length>512||constraints.test(q)||incompatible.test(q)||compound(q))return null;
+ if(!q||q.length>512||constraints.test(q)||incompatible.test(q)||compound(q)||multilingual.negated(q))return null;
+ // Do not broaden a conjunction between independently recognizable tasks to OR.
+ const normalized=multilingual.normalize(q);
+ for(const [, , ,join] of multilingual.negativeFrames){const sep=join.normalize('NFKC').toLowerCase();const at=normalized.indexOf(sep);if(at<=0)continue;const left=normalized.slice(0,at).trim(),right=normalized.slice(at+sep.length).trim();const a=multilingual.resolve(left).id||topics.resolve(left),b=multilingual.resolve(right).id||topics.resolve(right);if(a&&b&&a!==b)return null;}
  const wrapped=topics.unwrap(q);
  const body=wrapped&&(multilingual.resolve(wrapped).id||topics.resolve(wrapped))?wrapped:q;
  const alias=multilingual.resolve(body);if(alias.blocked||multilingual.hasConstraint(multilingual.normalize(q)))return null;
