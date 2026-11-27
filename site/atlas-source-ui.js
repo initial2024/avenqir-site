@@ -62,7 +62,7 @@
     return [...staticRows,...addedRows];
   }
   const byURL=rows=>new Map(rows.filter(item=>item.kind==='website'&&gate?.sanitize(item.url)).map(item=>[new URL(item.url).href,item]));
-  let urlIndex=new Map(), metrics=null, statsRequest=null, metricsDays=7, localRatings=null, localMetrics=null;
+  let urlIndex=new Map(), metrics=null, statsRequest=null, connectivityEpoch=0, metricsDays=7, localRatings=null, localMetrics=null;
   // The built-in catalog already exists synchronously on home/directory. Use it for fast click handlers.
   try{for(const x of window.AVENQIR_ATLAS_CATALOG?.catalog()||[]){const u=gate?.sanitize(x.url);if(u&&/^[a-zA-Z0-9-]{1,40}$/.test(x.id))urlIndex.set(u.href,{id:x.id,url:u.href,title:[x.name,x.name],kind:'website',category:x.category});}}catch{}
   function readLocal(){const m=window.AVENQIR_RECOMMENDATIONS;if(!m)return;try{localRatings=m.clean(JSON.parse(localStorage.getItem(m.KEY)));}catch{localRatings=m.empty();}localMetrics=m.score(localRatings,metricsDays);}
@@ -75,9 +75,11 @@
     if(statsRequest)return statsRequest.then(()=>!force&&metricsDays===days?metrics:refreshRatings(force,days));
     if(metrics!==null&&!force&&metricsDays===days)return Promise.resolve(metrics);
     metricsDays=days;readLocal();
+    const epoch=connectivityEpoch;
     statsRequest=Promise.all([bundledCatalog(),addedCatalog(force),fetch('recommendations-api.php?days='+days,{cache:'no-store',signal:AbortSignal.timeout?.(7000)}).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([base,remote,data])=>{
       for(const [url,item] of byURL([...remote,...base]))urlIndex.set(url,item);
-      metrics=data?.ok&&data.items&&typeof data.items==='object'?data.items:null;
+      if(epoch!==connectivityEpoch)return metrics;
+      metrics=data?.ok&&data.items&&typeof data.items==='object'&&!Array.isArray(data.items)?data.items:null;
       window.dispatchEvent(new CustomEvent('aq:ratings-updated'));
       return metrics;
     }).finally(()=>{statsRequest=null;});
@@ -122,5 +124,5 @@
   notice();
   window.addEventListener('aq:language-change',()=>{notice();updateRatingLinks();});
   window.addEventListener('online',()=>{if(document.querySelector('[data-rec-view],#atlasResults,[data-popular-view]')){addedAt=1;refreshRatings(true).catch(()=>{});}});
-  window.addEventListener('offline',()=>{metrics=null;readLocal();window.dispatchEvent(new CustomEvent('aq:ratings-updated'));});
+  window.addEventListener('offline',()=>{connectivityEpoch++;metrics=null;readLocal();window.dispatchEvent(new CustomEvent('aq:ratings-updated'));});
 })();

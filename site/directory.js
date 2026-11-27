@@ -71,7 +71,13 @@
  const pageSize=window.matchMedia?.('(max-width: 600px)').matches?12:24;
  limit=pageSize;
  const key='avenqir.link-atlas.favorites.v8';let favorites=[],compareUrls=[];let pendingNoMatchQuery=query.trim();
- const multiCategories=new Set();
+ const multiCategories=new Set(), selectedTags=new Set();
+ let publicTags=null;
+ function tagIndex(){if(!publicTags&&window.AVENQIR_ATLAS_TAGS&&window.AVENQIR_ATLAS_POPULAR)publicTags=window.AVENQIR_ATLAS_TAGS.build(catalog.catalog(),window.AVENQIR_ATLAS_POPULAR_PICKS||[],window.AVENQIR_ATLAS_POPULAR);return publicTags;}
+ function tagLabel(key){const labels=tagIndex()?.labels.get(key);return labels?T(...labels):key;}
+ function tagsMatch(x){return !selectedTags.size||!!tagIndex()?.matches(x.url,selectedTags);}
+ function renderTags(){const root=$('atlasTagChips'),index=tagIndex();if(!root||!index)return;const counts=new Map();for(const x of records){if(score(x)<0||(mode==='saved'&&!favorites.includes(x.url)))continue;for(const key of index.forURL(x.url))counts.set(key,(counts.get(key)||0)+1);}const focus=document.activeElement?.dataset.atlasTag;root.replaceChildren();for(const [key,n] of counts){const b=el('button','atlas-quick-category',tagLabel(key)+' · '+n);b.type='button';b.dataset.atlasTag=key;b.setAttribute('aria-pressed',String(selectedTags.has(key)));b.addEventListener('click',()=>{if(selectedTags.has(key))selectedTags.delete(key);else selectedTags.add(key);limit=pageSize;draw();});root.append(b);}for(const key of selectedTags){if(counts.has(key))continue;const b=el('button','atlas-quick-category',tagLabel(key)+' · 0');b.type='button';b.dataset.atlasTag=key;b.setAttribute('aria-pressed','true');b.addEventListener('click',()=>{selectedTags.delete(key);draw();});root.append(b);}if(focus)[...root.children].find(b=>b.dataset.atlasTag===focus)?.focus({preventScroll:true});$('atlasTagSummary').textContent=T('场景与主题标签','Task & topic tags')+(selectedTags.size?' · '+selectedTags.size:'');}
+ $('atlasTagsClear')?.addEventListener('click',()=>{selectedTags.clear();limit=pageSize;draw();});
  const organize=window.AVENQIR_LOCAL_ORGANIZE;
  const historyKey='avenqir.atlas.search-history.v1',historyOpt='avenqir.atlas.search-history.enabled.v1';
  const historyToggle=$('atlasHistoryEnabled'),historyList=$('atlasHistoryList');
@@ -129,7 +135,7 @@
  function quickCategories(){
    const bar=$('atlasQuickCategories');if(!bar)return;
    const counts=new Map();
-   for(const item of records){if(score(item)<0||(mode==='saved'&&!favorites.includes(item.url)))continue;counts.set(item.category,(counts.get(item.category)||0)+1);}
+   for(const item of records){if(score(item)<0||!tagsMatch(item)||(mode==='saved'&&!favorites.includes(item.url)))continue;counts.set(item.category,(counts.get(item.category)||0)+1);}
    const sorted=[...counts].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
    const active=multiOn()?null:category;
    const entries=sorted.slice(0,10);if(active&&!entries.some(([n])=>n===active))entries.unshift([active,counts.get(active)||0]);
@@ -144,7 +150,7 @@
  }
  function highlight(node,value){const text=String(value||'');const terms=query.trim().split(/\s+/).filter(Boolean).sort((a,b)=>b.length-a.length);if(!terms.length){node.textContent=text;return;}const lower=text.toLowerCase();let start=0;while(start<text.length){let hit=-1,term='';for(const t of terms){const i=lower.indexOf(t.toLowerCase(),start);if(i>=0&&(hit<0||i<hit)){hit=i;term=t;}}if(hit<0){node.append(document.createTextNode(text.slice(start)));break;}if(hit>start)node.append(document.createTextNode(text.slice(start,hit)));node.append(el('mark','atlas-match',text.slice(hit,hit+term.length)));start=hit+term.length;}}
  function filtered(){const flow=paths.flows.find(f=>f.id===selectedFlow);const selectedUrls=flow?new Set(flow.urls):null;
-   let r=records.map(x=>({x,rank:score(x)})).filter(({x,rank})=>rank>=0&&matchingGroup(x)&&(multiOn()?(!multiCategories.size||multiCategories.has(x.category)):(!category||x.category===category))&&(mode!=='saved'||favorites.includes(x.url))&&(!selectedUrls||selectedUrls.has(x.url))&&(sourceFilter==='all'||Boolean(linkGate?.officialSourceReviewed(x.url))===(sourceFilter==='reviewed'))&&(threatFilter==='all'||(safety?.threatStatus(x.url)||'unknown')===threatFilter)&&(languageMode()!=='exact'||languageRank(x)===0));
+   let r=records.map(x=>({x,rank:score(x)})).filter(({x,rank})=>rank>=0&&tagsMatch(x)&&matchingGroup(x)&&(multiOn()?(!multiCategories.size||multiCategories.has(x.category)):(!category||x.category===category))&&(mode!=='saved'||favorites.includes(x.url))&&(!selectedUrls||selectedUrls.has(x.url))&&(sourceFilter==='all'||Boolean(linkGate?.officialSourceReviewed(x.url))===(sourceFilter==='reviewed'))&&(threatFilter==='all'||(safety?.threatStatus(x.url)||'unknown')===threatFilter)&&(languageMode()!=='exact'||languageRank(x)===0));
    if($('atlasSort').value==='recent')r.sort((a,b)=>{
      const ai=sessionOpens.indexOf(a.x.url),bi=sessionOpens.indexOf(b.x.url);
      return (ai<0?Number.MAX_SAFE_INTEGER:ai)-(bi<0?Number.MAX_SAFE_INTEGER:bi)||(b.rank-a.rank);
@@ -381,7 +387,7 @@
    }
  }
  let languageStatsRecords=null,languageStatsLocale='';
- function draw(){syncDirectoryURL();const list=filtered(), shown=list.slice(0,limit);quickCategories();results.replaceChildren();$('atlasEmpty').hidden=list.length!==0;const hint=$('atlasFilteredHint');if(hint)hint.hidden=!(query&&list.length===0&&records.some(x=>score(x)>=0));
+ function draw(){syncDirectoryURL();const list=filtered(), shown=list.slice(0,limit);renderTags();quickCategories();results.replaceChildren();$('atlasEmpty').hidden=list.length!==0;const hint=$('atlasFilteredHint');if(hint)hint.hidden=!(query&&list.length===0&&records.some(x=>score(x)>=0));
    const languageHint=$('atlasSiteLanguageHint'),target=locale()?.locale||'en';
    if(languageHint&&(languageStatsRecords!==records||languageStatsLocale!==target)){
      languageStatsRecords=records;languageStatsLocale=target;
@@ -396,6 +402,7 @@
   ((query?'Matches: ':'Catalog: ')+list.length+' sites · Showing '+shown.length+' / '+records.length+
     (multiOn()&&multiCategories.size?' · Categories: '+[...multiCategories].map(trCategory).join(', '):category?' · Category: '+trCategory(category):'')+(groupId?' · topic filtered':'')):
   (query?'匹配':'目录')+' '+list.length+' 个网站 · 显示 '+shown.length+' 条 / 总目录 '+records.length+' 条'+(multiOn()&&multiCategories.size?' · 多选分类：'+[...multiCategories].join('、'):category?' · 分类：'+category:'')+(groupId?' · 当前主题分组已筛选':'');
+   if(selectedTags.size)summary.textContent+=' · '+[...selectedTags].map(tagLabel).join(' / ');
    if(sourceFilter!=='all')summary.textContent+=' · '+(sourceBox?.selectedOptions[0]?.textContent||sourceFilter);
    if(threatFilter!=='all')summary.textContent+=' · '+(threatBox?.selectedOptions[0]?.textContent||threatFilter);
    const counter=$('atlasLiveCount');if(counter)counter.textContent=english()?'Curated '+records.length+' unique websites · '+paths.flows.length+' guided tasks · '+new Set(records.map(x=>x.category)).size+' categories':'已整理 '+records.length+' 个独立网址 · '+paths.flows.length+' 条任务路径 · '+new Set(records.map(x=>x.category)).size+' 个分类';
@@ -561,7 +568,7 @@
  const tabs=[...document.querySelectorAll('[data-tab]')];tabs.forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.tab;limit=pageSize;tabs.forEach(t=>{let active=t===b;t.classList.toggle('active',active);t.setAttribute('aria-pressed',String(active))});draw()}));
  $('atlasClearFilters')?.addEventListener('click',()=>{
    const resetURL=new URL(location.href);resetURL.searchParams.delete('category');history.replaceState(null,'',resetURL.pathname+resetURL.search+resetURL.hash);
-   category='';groupId='';selectedFlow='';multiCategories.clear();mode='all';sourceFilter='all';if(sourceBox)sourceBox.value='all';threatFilter='all';if(threatBox)threatBox.value='all';limit=pageSize;
+   category='';groupId='';selectedFlow='';multiCategories.clear();selectedTags.clear();mode='all';sourceFilter='all';if(sourceBox)sourceBox.value='all';threatFilter='all';if(threatBox)threatBox.value='all';limit=pageSize;
    for(const id of ['atlasMultiCategory','atlasReviewedOnly'])if($(id))$(id).checked=false;
    if($('atlasSiteLanguageMode'))$('atlasSiteLanguageMode').value='prefer';
    for(const t of tabs){const active=t.dataset.tab==='all';t.classList.toggle('active',active);t.setAttribute('aria-pressed',String(active));}
@@ -614,17 +621,21 @@
  // Paint local results before optional recommendation panels or network sync.
  draw();
  source.textContent=T('内置目录已可用 · 同步公开数据中','Built-in catalog ready · syncing public entries');
+ let catalogSyncing=true,remoteReady=false;
+ window.addEventListener('online',async()=>{if(catalogSyncing||remoteReady)return;catalogSyncing=true;try{const data=await catalog.load();if(data.remote){records=data.items;remoteReady=true;source.textContent=T('在线目录 + 本地精选','Online directory + curated links');choiceBar();if(!document.querySelector('dialog[open]'))draw();localRecommendations?.render();regionRecommendations?.render();}}finally{catalogSyncing=false;}});
+ window.addEventListener('offline',()=>{remoteReady=false;source.textContent=T('当前离线 · 已加载目录仍可浏览','Offline · loaded directory remains available');});
  const initialLocalQuery=pendingNoMatchQuery;
  // Local results are usable immediately; the no-match verdict waits for the bounded public sync.
  if(initialLocalQuery){committedQuery=initialLocalQuery;updateSearchNext(initialLocalQuery,false);scrollToResults();}
  requestAnimationFrame(()=>setTimeout(()=>{try{updateApprovals();drawPaths();choiceBar();mountOptionalRecommendations()}catch{}},0));
  if($('atlasStartupNotice'))$('atlasStartupNotice').hidden=true;
  catalog.load().then(data=>{
+  catalogSyncing=false;remoteReady=data.remote;
   if(data.remote)records=data.items;
   const invalidCategory=category&&!records.some(x=>x.category===category);if(invalidCategory)category='';
   source.textContent=data.remote?T('在线目录 + 本地精选','Online directory + curated links'):T('内置精选目录（后台不可用）','Built-in directory (backend unavailable)');
   loaded=true;if(data.remote){choiceBar();draw();}else if(invalidCategory){choiceBar();draw();}
   if(pendingNoMatchQuery)completeSearch();else revealHashPanel();
   localRecommendations?.render();regionRecommendations?.render();drawGuide();
- }).catch(()=>{loaded=true;if(pendingNoMatchQuery)completeSearch();});
+ }).catch(()=>{catalogSyncing=false;loaded=true;if(pendingNoMatchQuery)completeSearch();});
 })();

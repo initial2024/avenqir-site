@@ -216,7 +216,7 @@
   }
   // One compact dialog shared by directory, home picks and the standalone rating center.
   let quickBusy=false;
-  function openQuickRating(item,trigger){
+  function openQuickRating(item,trigger,initialStars=0){
     if(quickBusy||!item||!destination(item))return false;
     if(typeof HTMLDialogElement==='undefined'||!HTMLDialogElement.prototype.showModal)return false;
     if(document.querySelector('dialog[open]'))return false;
@@ -234,7 +234,7 @@
     updateAggregate();
     const meta=element('p',t('评价使用体验，不代表安全认证。','Rate usability, not safety.'));
     const group=element('div');group.className='aq-quick-stars';group.setAttribute('role','group');group.setAttribute('aria-label',t('选择星级','Choose stars'));
-    let selected=getLocal().ratings[item.id]?.stars||0;
+    let selected=Number.isInteger(initialStars)&&initialStars>=1&&initialStars<=5?initialStars:(getLocal().ratings[item.id]?.stars||0);
     const description=element('p');description.className='aq-quick-choice';description.setAttribute('aria-live','polite');
     const submit=element('button',t('保存评价','Save rating'));submit.type='button';submit.className='aq-quick-primary';
     const clear=element('button',t('清除评分','Clear rating'));clear.type='button';
@@ -330,7 +330,9 @@
       rateButton.addEventListener('click',()=>{if(openQuickRating(item,rateButton)){box.remove();reminder=null;}});
       later.addEventListener('click',dismissReturn);
       off.addEventListener('click',()=>{write(RETURN_OFF,'1');dismissReturn();});
-      controls.append(rateButton,later,off);box.append(controls);document.body.append(box);reminder=box;
+      const shortcuts=element('div');shortcuts.className='aq-return-stars';shortcuts.setAttribute('role','group');shortcuts.setAttribute('aria-label',t('预选星级，不会自动提交','Preselect rating; no automatic submission'));
+      for(let i=1;i<=5;i++){const b=element('button',i+'★');b.type='button';b.setAttribute('aria-label',t('预选 '+i+' 星','Preselect '+i+' stars'));b.addEventListener('click',()=>{if(openQuickRating(item,b,i)){box.remove();reminder=null;}});shortcuts.append(b);}
+      controls.append(rateButton,later,off);box.append(controls,shortcuts);document.body.append(box);reminder=box;
     }finally{returnCheckRunning=false;}
   }
   window.addEventListener('pagehide',markDeparture);
@@ -530,7 +532,7 @@
   }
   window.addEventListener('aq:language-change',()=>{localize();if(rows.length)render();});
   window.addEventListener('online',()=>{indexes=null;if(full||panel.open)refresh();});
-  window.addEventListener('offline',()=>{stats=null;if(rows.length)render();});
+  window.addEventListener('offline',()=>{fetchVersion++;stats=null;if(rows.length)render();});
   localize();
   if(!full){
     panel.addEventListener('toggle',()=>{if(panel.open)refresh();});

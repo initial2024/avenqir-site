@@ -29,6 +29,7 @@ CORE=(
     'directory.html',
     'directory.js',
     'directory-search.css',
+    'atlas-tags.js',
     'recommendations.html',
     'recommendations.js',
     'recommendations-model.js',
