@@ -60,11 +60,10 @@
    link.rel='noopener noreferrer';
    link.referrerPolicy='no-referrer';
    link.setAttribute('aria-label',t('访问 '+entry.name,'Open '+entry.name));
-   link.addEventListener('click',event=>{
-    const access=model.access(entry.url,gate,safety);
-    if(access.blocked)event.preventDefault();
-    else if(direct&&event.button===0&&!event.ctrlKey&&!event.metaKey&&!event.shiftKey&&!event.altKey)sourceUI?.noteVisit(entry.url);
-   });
+   const recheck=()=>{if(model.access(entry.url,gate,safety).blocked){link.removeAttribute('href');return false;}link.href=gate.maySkipConfirmation(entry.url,storage)?entry.url:'leave.html?url='+encodeURIComponent(entry.url)+'&name='+encodeURIComponent(entry.name);return true;};
+   for(const event of ['pointerdown','focus','contextmenu'])link.addEventListener(event,recheck);
+   const visit=event=>{if(!recheck())event.preventDefault();else if(gate.maySkipConfirmation(entry.url,storage)&&event.button===0&&!event.ctrlKey&&!event.metaKey&&!event.shiftKey&&!event.altKey)sourceUI?.noteVisit(entry.url);};
+   link.addEventListener('click',visit);link.addEventListener('auxclick',visit);
    footer.append(link);
   }
   const rate=sourceUI?.ratingLink(entry.url);

@@ -1,0 +1,32 @@
+"use strict";
+const assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
+const tags=require('../site/atlas-tags.js');
+const index=tags.build([{id:'a',url:'https://example.org/'},{id:'b',url:'https://example.net/'}],[{id:'a',topic:'study'}],{topics:[['study','','学习','Study']],tasks:[['papers','论文','Papers',['a','b']]]});
+assert.ok(index.matches('https://example.org/',new Set(['topic:study','task:papers'])));
+assert.ok(!index.matches('https://example.net/',new Set(['topic:study','task:papers'])));
+assert.equal(index.forURL('https://unlisted.example/').length,0);
+const scope='https://example.org/',handlers={},stored=new Map();
+const cache={put:async(k,v)=>stored.set(k,v),match:async k=>stored.get(k)};
+let response=new Response('ok');
+const context={URL,Request,Response,self:{registration:{scope},location:{origin:'https://example.org'},addEventListener:(k,f)=>handlers[k]=f},caches:{open:async()=>cache},fetch:async()=>response.clone()};
+vm.createContext(context);vm.runInContext(fs.readFileSync(require.resolve('../site/sw.js'),'utf8'),context);
+async function run(){
+ const key=vm.runInContext("canonical('https://example.org/directory.html?q=private')",context);
+ assert.equal(key,scope+'directory.html');
+ assert.equal(vm.runInContext("canonical('https://example.org/owner-traffic.php')",context),null);
+ assert.equal(vm.runInContext("canonical('https://example.org/unknown.html')",context),null);
+ assert.equal(await context.responseValid('/directory.js',new Response('<html>slowAES.decrypt /aes.js</html>')),false);
+ assert.equal(await context.responseValid('/directory-seed.json',new Response('invalid')),false);
+ assert.equal(await context.safeCache(cache,key,new Response('clean page')),true);
+ assert.deepEqual([...stored.keys()],[scope+'directory.html']);
+ let pending;
+ handlers.fetch({request:new Request(scope+'owner-traffic.php'),respondWith:p=>pending=p});assert.equal(pending,undefined);
+ response=new Response('slowAES.decrypt /aes.js');
+ handlers.fetch({request:new Request(scope+'directory.html?q=private'),respondWith:p=>pending=p,waitUntil:()=>{}});
+ assert.equal(await(await pending).text(),'clean page');
+ stored.clear();
+ handlers.fetch({request:new Request(scope+'directory.html'),respondWith:p=>pending=p,waitUntil:()=>{}});
+ assert.equal(await(await pending).text(),'slowAES.decrypt /aes.js');
+ console.log('PASS editorial tag intersection, canonical cache keys, private route exclusion and cold challenge recovery');
+}
+run().catch(e=>{console.error(e);process.exitCode=1;});

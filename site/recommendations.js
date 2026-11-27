@@ -35,7 +35,7 @@
   let positioned=false;
   if(full&&pick)panel.classList.add('rec-focused');
   let rows=[];
-  let indexes=null;
+  let indexes=null,indexedAt=0;
   let resolvedItems=new Map();
   const sessionClicks=new Map();
   let stats=null;
@@ -115,11 +115,18 @@
     anchor.href=href;
     anchor.rel='noopener noreferrer';
     anchor.referrerPolicy='no-referrer';
-    if(item.kind==='website'&&!href.startsWith('leave.html'))anchor.addEventListener('click',event=>{if(event.button===0&&!event.ctrlKey&&!event.metaKey&&!event.shiftKey&&!event.altKey&&destination(item))sourceUI.noteVisit(item.url);});
+    if(item.kind==='website'){
+      const recheck=()=>{const target=destination(item);if(!target){anchor.removeAttribute('href');return false;}anchor.href=target;return true;};
+      for(const event of ['pointerdown','focus','contextmenu'])anchor.addEventListener(event,recheck);
+      const visit=event=>{if(!recheck()){event.preventDefault();return;}if(!destination(item).startsWith('leave.html')&&event.button===0&&!event.ctrlKey&&!event.metaKey&&!event.shiftKey&&!event.altKey)sourceUI.noteVisit(item.url);};
+      anchor.addEventListener('click',visit);anchor.addEventListener('auxclick',visit);
+    }
     return anchor;
   }
   function loadCatalog(){
+    if(indexes&&indexedAt&&Date.now()-indexedAt>=30000)indexes=null;
     if(!indexes){
+      indexedAt=0;
       indexes=sourceUI.catalog().then(payload=>{
         const seen=new Set();
         rows=payload.filter(item=>{
@@ -128,7 +135,7 @@
           return true;
         });
         resolvedItems=new Map(rows.map(item=>[item.id,item]));
-        return resolvedItems;
+        indexedAt=Date.now();return resolvedItems;
       }).catch(()=>{
         indexes=null;
         return new Map();
@@ -209,7 +216,7 @@
   }
   // One compact dialog shared by directory, home picks and the standalone rating center.
   let quickBusy=false;
-  function openQuickRating(item,trigger){
+  function openQuickRating(item,trigger,initialStars=0){
     if(quickBusy||!item||!destination(item))return false;
     if(typeof HTMLDialogElement==='undefined'||!HTMLDialogElement.prototype.showModal)return false;
     if(document.querySelector('dialog[open]'))return false;
@@ -227,7 +234,7 @@
     updateAggregate();
     const meta=element('p',t('评价使用体验，不代表安全认证。','Rate usability, not safety.'));
     const group=element('div');group.className='aq-quick-stars';group.setAttribute('role','group');group.setAttribute('aria-label',t('选择星级','Choose stars'));
-    let selected=getLocal().ratings[item.id]?.stars||0;
+    let selected=Number.isInteger(initialStars)&&initialStars>=1&&initialStars<=5?initialStars:(getLocal().ratings[item.id]?.stars||0);
     const description=element('p');description.className='aq-quick-choice';description.setAttribute('aria-live','polite');
     const submit=element('button',t('保存评价','Save rating'));submit.type='button';submit.className='aq-quick-primary';
     const clear=element('button',t('清除评分','Clear rating'));clear.type='button';
@@ -241,6 +248,7 @@
       [...group.children].forEach((b,i)=>{b.textContent=i<selected?'★':'☆';b.setAttribute('aria-pressed',String(selected===i+1));});
       description.textContent=selected?t(['','很差','不太好用','一般','好用','非常推荐'][selected],['','Poor','Not useful','Average','Useful','Highly recommended'][selected]):t('请选择1–5星','Choose 1–5 stars');
       submit.disabled=!selected||quickBusy;
+      submit.textContent=publicVote.checked?t('保存并公开','Save & publish'):t('仅保存本机','Save on device');
       clear.disabled=quickBusy||!getLocal().ratings[item.id]&&!read(TOKEN);
     };
     for(let i=1;i<=5;i++){
@@ -269,9 +277,10 @@
         feedback.textContent=t(removing?'已撤回公开评分。':'已提交公开评分。',removing?'Public rating withdrawn.':'Public rating submitted.');
         await sourceUI.refreshRatings(true);
         if(full)await refresh();
-      }catch(error){feedback.textContent=t('公开提交失败，本机评分已保存；可重试。','Public submission failed; local rating saved. Try again.');}
+      }catch(error){feedback.textContent=error.message==='limit'?t('已达公开评价频率限制；本机修改已保存。','Public rating limit reached; local change saved.'):t('公开提交失败，本机修改已保存；可重试。','Public submission failed; local change saved. Try again.');}
       finally{disable(false);}
     }
+    publicVote.addEventListener('change',sync);
     submit.addEventListener('click',()=>save(false));
     clear.addEventListener('click',()=>save(true));
     cancel.addEventListener('click',()=>dialog.close());
@@ -321,7 +330,9 @@
       rateButton.addEventListener('click',()=>{if(openQuickRating(item,rateButton)){box.remove();reminder=null;}});
       later.addEventListener('click',dismissReturn);
       off.addEventListener('click',()=>{write(RETURN_OFF,'1');dismissReturn();});
-      controls.append(rateButton,later,off);box.append(controls);document.body.append(box);reminder=box;
+      const shortcuts=element('div');shortcuts.className='aq-return-stars';shortcuts.setAttribute('role','group');shortcuts.setAttribute('aria-label',t('预选星级，不会自动提交','Preselect rating; no automatic submission'));
+      for(let i=1;i<=5;i++){const b=element('button',i+'★');b.type='button';b.setAttribute('aria-label',t('预选 '+i+' 星','Preselect '+i+' stars'));b.addEventListener('click',()=>{if(openQuickRating(item,b,i)){box.remove();reminder=null;}});shortcuts.append(b);}
+      controls.append(rateButton,later,off);box.append(controls,shortcuts);document.body.append(box);reminder=box;
     }finally{returnCheckRunning=false;}
   }
   window.addEventListener('pagehide',markDeparture);
@@ -520,8 +531,8 @@
     return;
   }
   window.addEventListener('aq:language-change',()=>{localize();if(rows.length)render();});
-  window.addEventListener('online',()=>{if(full||panel.open)refresh();});
-  window.addEventListener('offline',()=>{stats=null;if(rows.length)render();});
+  window.addEventListener('online',()=>{indexes=null;if(full||panel.open)refresh();});
+  window.addEventListener('offline',()=>{fetchVersion++;stats=null;if(rows.length)render();});
   localize();
   if(!full){
     panel.addEventListener('toggle',()=>{if(panel.open)refresh();});
@@ -592,7 +603,7 @@
         write(SHARE,'0');
         remove(TOKEN);
         say(t('已撤回公开评分并关闭参与。','Public ratings removed and sharing turned off.'));
-        await refresh();
+        await refresh();sourceUI.refreshRatings(true);
       }catch{say(t('暂时无法撤回，原匿名代号仍保留，可稍后重试。','Could not withdraw ratings. The browser identifier has been kept so you can retry.'));}
     }
     render();

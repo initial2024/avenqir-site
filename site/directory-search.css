@@ -198,3 +198,7 @@
 .search-body[data-atlas-density=compact] .aq-source-badges{gap:4px;margin-block:3px}
 .search-body .atlas-result:focus-within{outline:2px solid var(--ui-link,#2563eb);outline-offset:2px;border-radius:8px}
 @media(max-width:600px){.atlas-sticky-search{padding:4px 0}.atlas-quick-links{gap:8px}.search-body .directory-main{padding-inline:10px}.search-body .atlas-content{padding:10px}.search-body .atlas-tabs{gap:4px}.search-body .atlas-tabs .atlas-tab{min-height:44px;padding:4px 6px;font-size:12px}.search-body .atlas-tabs #atlasSort{max-width:110px}.search-body .atlas-tabs .atlas-spacer{display:none}.atlas-quick-category{min-height:44px}.atlas-quick-links a,.atlas-quick-links button{min-height:36px}.search-body .atlas-result-title{max-width:100%}}
+
+.atlas-search-history{margin:6px 0;padding:6px;border:1px solid #8ca1b544;border-radius:8px}.atlas-search-history summary{cursor:pointer;min-height:36px}.atlas-search-history label{display:flex;gap:6px;align-items:center;min-height:44px;font-size:12px}.atlas-search-history label input{width:18px;height:18px;flex:none}.atlas-search-history small{display:block;font-size:11px}.atlas-secondary-actions input{width:100%;min-width:0}.atlas-secondary-actions button{min-height:44px}
+
+.atlas-tag-chips{display:flex;flex-wrap:wrap;gap:5px;margin:5px 0}.atlas-tag-chips button{min-height:44px;white-space:normal;text-align:left}.atlas-tag-chips button[aria-pressed=true]{border-width:2px}

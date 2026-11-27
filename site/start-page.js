@@ -312,7 +312,8 @@
       save(densityKey,input.value);
     });
   }
-  settingsToggle.addEventListener('click',()=>settings.showModal());
+  function showStorageUsage(){let usage=null;try{usage=window.AVENQIR_LOCAL_ORGANIZE?.usage(localStorage);}catch{}const out=byId('startStorageUsage');if(out)out.textContent=usage?t('本站本地数据估算：'+(usage.bytes/1024).toFixed(1)+' KiB（'+usage.keys+' 项，不含缓存）','Estimated site local storage: '+(usage.bytes/1024).toFixed(1)+' KiB ('+usage.keys+' entries, excluding cache)'):t('本地存储暂不可读','Local storage unavailable');}
+  settingsToggle.addEventListener('click',()=>{showStorageUsage();settings.showModal();});
   settings.addEventListener('close',()=>settingsToggle.focus());
   byId('startCommandSearch').addEventListener('click',()=>{
     const shortcut=byId('aqQuickSearch');
@@ -338,7 +339,7 @@
     }
     byId('startLocal').title=translated(labels.localHelp);
     query.placeholder=translated(labels.placeholder);
-    render();
+    showStorageUsage();render();
   }
   window.addEventListener('aq:language-change',localize);
   localize();

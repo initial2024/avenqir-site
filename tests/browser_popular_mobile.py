@@ -15,7 +15,7 @@ assert CHROME, "Chrome/Chromium required"
 
 FIXTURE = """<!doctype html><title>AVENQIR 390×844 checks</title>
 <style>iframe{display:block;border:0;width:390px;height:844px}</style>
-<iframe id="home" src="/index.html"></iframe><iframe id="directory" src="/directory.html"></iframe>
+<iframe id="home" src="/index.html"></iframe><iframe id="directory" src="/directory.html"></iframe><iframe id="bookmarks" src="/bookmarks.html"></iframe>
 <script>
 const waitFor=(predicate)=>new Promise((resolve,reject)=>{
  const start=performance.now();
@@ -86,6 +86,7 @@ const require=(condition,reason)=>{if(!condition)throw Error(reason);};
  require(!h.getElementById('startEmpty').hidden,'favorites must have a dedicated empty state');
  h.getElementById('startSettingsToggle').click();
  require(h.getElementById('startSettings').open,'home settings must open as a dialog');
+ require(h.getElementById('startStorageUsage').textContent.includes('KiB'),'local storage estimate missing');
  await waitFor(()=>h.querySelector('#startSettings #aqLocaleSelect'));
  const compact=h.querySelector('[name="startDensity"][value="compact"]');
  require(compact.checked&&h.body.dataset.startDensity==='compact','fresh mobile default must be compact');
@@ -136,7 +137,8 @@ const require=(condition,reason)=>{if(!condition)throw Error(reason);};
  directory.dispatchEvent(new directory.Event('focus'));
  await waitFor(()=>d.querySelector('.aq-return-rating'));
  require(d.querySelector('.aq-return-rating').textContent.includes('GitHub'),'return reminder must target the exact public item');
- d.querySelector('.aq-return-rating button').click();
+ d.querySelector('.aq-return-stars button:nth-child(4)').click();
+ require(d.querySelector('.aq-quick-rating .aq-quick-stars button:nth-child(4)').getAttribute('aria-pressed')==='true','return shortcut must preselect stars');
  require(d.querySelector('.aq-quick-rating[open]')&&directory.location.href===beforeRatingURL,'return reminder should open inline rating');
  d.querySelector('.aq-quick-rating').close();
  require(!directory.sessionStorage.getItem('avenqir.rating.return.v1'),'reminder must be consumed');
@@ -156,6 +158,44 @@ const require=(condition,reason)=>{if(!condition)throw Error(reason);};
  d.querySelector('#atlasQuickCategories button[data-quick-category=""]').click();
  require(!new URL(directory.location.href).searchParams.has('category'),'all clears category');
  require(d.querySelector('.atlas-card-more:not([open])'),'card secondary actions must be collapsed');
+ const tag=d.querySelector('#atlasTagChips button[data-atlas-tag="task:papers"]');require(tag,'editorial task tags missing');tag.click();
+ require(d.querySelector('#atlasTagChips button[data-atlas-tag="task:papers"]').getAttribute('aria-pressed')==='true','tag must be active');
+ require(d.getElementById('atlasSummary').textContent.includes('论文')||d.getElementById('atlasSummary').textContent.includes('papers'),'tag summary missing');
+ require(d.querySelectorAll('#atlasResults article').length>0,'paper tag must have results');
+ d.getElementById('atlasTagsClear').click();
+ require([...d.querySelectorAll('.atlas-secondary-actions button')].some(b=>b.textContent.includes('复制')||b.textContent.includes('Copy')),'copy URL action missing');
+ require(!d.getElementById('atlasHistoryEnabled').checked,'search history defaults off');
+ d.getElementById('atlasHistoryEnabled').click();
+ require(directory.localStorage.getItem('avenqir.atlas.search-history.enabled.v1')==='1','history opt-in missing');
+ const search=d.getElementById('atlasQuery');search.value='GitHub';d.getElementById('atlasForm').dispatchEvent(new directory.Event('submit',{bubbles:true,cancelable:true}));
+ require(JSON.parse(directory.localStorage.getItem('avenqir.atlas.search-history.v1'))[0]==='GitHub','committed search history missing');
+ d.getElementById('atlasHistoryEnabled').click();
+ require(!directory.localStorage.getItem('avenqir.atlas.search-history.enabled.v1')&&!directory.localStorage.getItem('avenqir.atlas.search-history.v1'),'history opt-out must erase records');
+ const bookmarks=document.getElementById('bookmarks').contentWindow;
+ const bk=bookmarks.document;
+ await waitFor(()=>bk.querySelectorAll('#bookmarkGrid .link-card').length>=2);
+ require(bk.documentElement.scrollWidth<=390,'bookmarks mobile overflow');
+ const originalRows=JSON.parse(bookmarks.localStorage.getItem('avenqir_v6_bookmarks'));
+ bk.getElementById('sortLinks').value='manual';bk.getElementById('sortLinks').dispatchEvent(new bookmarks.Event('change'));
+ bk.querySelector('#bookmarkGrid .link-card [data-bookmark-move="down"]').click();
+ const reordered=JSON.parse(bookmarks.localStorage.getItem('avenqir_v6_bookmarks'));
+ require(reordered[0].id===originalRows[1].id&&reordered[1].id===originalRows[0].id,'manual order not persisted');
+ const oldCategory=reordered[0].category;bookmarks.confirm=()=>true;
+ bk.getElementById('bookmarkCategoryFrom').value=oldCategory;bk.getElementById('bookmarkCategoryTo').value='QA fixture';bk.getElementById('bookmarkCategoryMove').click();
+ const moved=JSON.parse(bookmarks.localStorage.getItem('avenqir_v6_bookmarks'));
+ require(moved.length===reordered.length&&moved[0].category==='QA fixture'&&!moved.some(x=>x.category===oldCategory),'category rename must preserve all bookmarks');
+ require(bk.getElementById('exportMarkdown'),'Markdown export missing');
+ bk.getElementById('bookmarkCategoryFrom').value='QA fixture';bk.getElementById('bookmarkCategoryToggle').click();
+ require(![...bk.querySelectorAll('#bookmarkGrid .link-card')].some(c=>c.dataset.bookmarkId===moved[0].id),'hidden category leaked into list');
+ bk.getElementById('bookmarkShowHidden').click();require([...bk.querySelectorAll('#bookmarkGrid .link-card')].some(c=>c.dataset.bookmarkId===moved[0].id),'hidden categories must be recoverable');
+ bk.getElementById('bookmarkCategoryFrom').value='QA fixture';bk.getElementById('bookmarkCategoryToggle').click();
+ bk.getElementById('editId').value=moved[0].id;bk.getElementById('linkName').value=moved[0].name;bk.getElementById('linkUrl').value=moved[0].url;bk.getElementById('linkCategory').value=moved[0].category;bk.getElementById('linkNote').value=moved[0].note;bk.getElementById('linkTags').value='QA, 学习, QA';
+ bk.getElementById('linkForm').dispatchEvent(new bookmarks.Event('submit',{bubbles:true,cancelable:true}));
+ require(JSON.parse(bookmarks.localStorage.getItem('avenqir_v6_bookmarks'))[0].tags.join(',')==='QA,学习','tags must be saved and deduplicated');
+ bk.querySelector('[data-bookmark-tag="QA"]').click();require(bk.querySelectorAll('#bookmarkGrid .link-card').length===1,'tag filter must select matching entry');
+ bookmarks.localStorage.setItem('avenqir_v6_bookmarks','[]');bookmarks.location.reload();
+ await waitFor(()=>bookmarks.document.querySelector('#bookmarkGrid .empty-state'));
+ require(!bookmarks.document.querySelector('#bookmarkGrid .link-card'),'explicit empty bookmarks must not repopulate defaults');
  directory.AVENQIR_I18N.set('en');
  require(d.getElementById('popularTitle').textContent.includes('Editor picks'),'editor title was not retranslated');
  directory.AVENQIR_I18N.set('zh-Hans');

@@ -34,6 +34,7 @@
           typeof x.name !== 'string' || !x.name.trim() || x.name.length > 80 ||
           typeof x.category !== 'string' || !x.category.trim() || x.category.length > 32 ||
           typeof x.note !== 'string' || x.note.length > 250 ||
+          (x.tags !== undefined && (!Array.isArray(x.tags)||x.tags.length>8||new Set(x.tags).size!==x.tags.length||x.tags.some(t=>typeof t!=='string'||!t.trim()||t!==t.trim()||t.length>24||/[\u0000-\u001f\u007f]/.test(t)))) ||
           !safeURL(x.url) || !validNum(x.at, 1, 1e15) ||
           typeof x.fav !== 'boolean' || typeof x.todo !== 'boolean' ||
           typeof x.custom !== 'boolean') return false;
