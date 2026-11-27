@@ -1,6 +1,6 @@
 "use strict";
 // Research only. The caller must verify the bytes and obtain consent before init.
-importScripts('../site/atlas-domain-embedding.js','atlas-model-codec.js','atlas-multilingual-intents.js','atlas-multilingual-topics.js','atlas-retrieval-runtime.js');
+importScripts('../site/atlas-domain-embedding.js','atlas-model-codec.js','atlas-unicode-runtime.js','atlas-multilingual-intents.js','atlas-multilingual-topics.js','atlas-retrieval-runtime.js');
 const embed=globalThis.AVENQIR_DOMAIN_EMBEDDING, retrieval=globalThis.AVENQIR_RESEARCH_RETRIEVAL;
 let state=null,epoch=0;
 function validModel(model){
@@ -18,10 +18,17 @@ self.onmessage=e=>{
  try{
   if(m.type==='init'){
    state=null;epoch++;
-   const model=typeof m.model==='string'?globalThis.AVENQIR_RESEARCH_CODEC.deserialize(m.model):m.model;
+   const codec=globalThis.AVENQIR_RESEARCH_CODEC;let model,unicode=null;
+   if(typeof m.model==='string'){
+    const raw=JSON.parse(m.model);
+    if(raw.schema==='aq-semantic-bundle-2'){
+     model=codec.deserialize(JSON.stringify(raw.domain));validModel(model);
+     unicode=globalThis.AVENQIR_RESEARCH_UNICODE.create(codec.deserialize(JSON.stringify(raw.unicode)),model.classes.map(x=>x[0]));
+    }else model=codec.deserialize(m.model);
+   }else model=m.model;
    validModel(model);
    const baseline=embed.create({schema:'aq-domain-embedding-1',bins:model.bins,classes:model.classes.slice(0,28)}),items=loadCatalog(m.items);
-   state={session:retrieval.createSession(items,model,embed.features,baseline)};
+   state={session:retrieval.createSession(items,model,embed.features,baseline,unicode)};
    self.postMessage({type:'ready',id:m.id,epoch,count:items.length});return;
   }
   if(m.type==='clear'){state=null;epoch++;self.postMessage({type:'cleared',id:m.id,epoch});return;}
