@@ -1,7 +1,7 @@
 "use strict";
 (function(root){
 // Exact, local multilingual task phrases. Not a general translation system.
-const tasks=["qr-create","regex-test","flowchart","timer","image-compress","dns-lookup","tls-check","whois","ip-lookup","network-speed","json-edit","html-validate","css-validate","citation","doi-lookup","text-translate","word-dictionary"];
+const tasks=["qr-create","regex-test","flowchart","timer","image-compress","dns-lookup","tls-check","whois","ip-lookup","network-speed","json-edit","html-validate","css-validate","citation","doi-lookup","text-translate","word-dictionary","pdf-view","dns-propagation","url-risk","webrtc","meeting-zone","typing","palette","font-pair","public-books","web-performance","currency"];
 const rows=[
   [
     "en",
@@ -21,7 +21,18 @@ const rows=[
     "generate a bibliography",
     "look up a DOI",
     "translate a paragraph",
-    "look up a word"
+    "look up a word",
+    "preview a PDF",
+    "check DNS propagation",
+    "check a malicious link",
+    "test WebRTC leaks",
+    "plan a meeting across time zones",
+    "practice touch typing",
+    "choose a color palette",
+    "pair heading and body fonts",
+    "read public domain ebooks",
+    "measure page loading performance",
+    "convert currencies"
   ],
   [
     "zh-Hans",
@@ -41,7 +52,18 @@ const rows=[
     "生成参考文献",
     "检索DOI",
     "翻译段落",
-    "查询词义"
+    "查询词义",
+    "预览PDF",
+    "检查DNS传播",
+    "检测恶意链接",
+    "检查WebRTC泄漏",
+    "跨时区安排会议",
+    "练习盲打",
+    "选择配色方案",
+    "搭配标题正文字体",
+    "阅读公版电子书",
+    "检测网页加载性能",
+    "货币换算"
   ],
   [
     "zh-Hant",
@@ -61,7 +83,18 @@ const rows=[
     "產生參考文獻",
     "查詢DOI",
     "翻譯段落",
-    "查詢詞義"
+    "查詢詞義",
+    "預覽PDF",
+    "檢查DNS傳播",
+    "檢測惡意連結",
+    "檢查WebRTC洩漏",
+    "跨時區安排會議",
+    "練習盲打",
+    "選擇配色方案",
+    "搭配標題正文字型",
+    "閱讀公版電子書",
+    "檢測網頁載入效能",
+    "貨幣換算"
   ],
   [
     "ja",
@@ -81,7 +114,18 @@ const rows=[
     "参考文献を作成",
     "DOIを検索",
     "段落を翻訳",
-    "単語の意味を調べる"
+    "単語の意味を調べる",
+    "PDFをプレビュー",
+    "DNS伝播を確認",
+    "悪意のあるリンクを検査",
+    "WebRTC漏洩を検査",
+    "時差を考慮して会議を調整",
+    "タッチタイピングを練習",
+    "カラーパレットを選ぶ",
+    "見出しと本文のフォントを組み合わせる",
+    "著作権切れの電子書籍を読む",
+    "ページ読み込み性能を測定",
+    "通貨を換算"
   ],
   [
     "ko",
@@ -101,7 +145,18 @@ const rows=[
     "참고문헌 생성",
     "DOI 조회",
     "문단 번역",
-    "단어 뜻 검색"
+    "단어 뜻 검색",
+    "PDF 미리보기",
+    "DNS 전파 확인",
+    "악성 링크 검사",
+    "WebRTC 유출 검사",
+    "시간대가 다른 회의 일정 조정",
+    "터치 타이핑 연습",
+    "색상 팔레트 선택",
+    "제목과 본문 글꼴 조합",
+    "퍼블릭 도메인 전자책 읽기",
+    "페이지 로딩 성능 측정",
+    "통화 환산"
   ],
   [
     "fr",
@@ -121,7 +176,18 @@ const rows=[
     "générer une bibliographie",
     "rechercher un DOI",
     "traduire un paragraphe",
-    "chercher le sens d'un mot"
+    "chercher le sens d'un mot",
+    "prévisualiser un PDF",
+    "vérifier la propagation DNS",
+    "vérifier un lien malveillant",
+    "tester les fuites WebRTC",
+    "planifier une réunion entre fuseaux horaires",
+    "pratiquer la dactylographie",
+    "choisir une palette de couleurs",
+    "associer les polices de titre et de texte",
+    "lire des livres numériques du domaine public",
+    "mesurer les performances de chargement de page",
+    "convertir des devises"
   ],
   [
     "de",
@@ -141,7 +207,18 @@ const rows=[
     "Literaturverzeichnis erstellen",
     "DOI nachschlagen",
     "Absatz übersetzen",
-    "Wortbedeutung nachschlagen"
+    "Wortbedeutung nachschlagen",
+    "PDF in der Vorschau ansehen",
+    "DNS-Verbreitung prüfen",
+    "bösartigen Link prüfen",
+    "WebRTC-Lecks testen",
+    "Besprechung über Zeitzonen planen",
+    "Zehnfingersystem üben",
+    "Farbpalette auswählen",
+    "Überschriften- und Textschriften kombinieren",
+    "gemeinfreie E-Books lesen",
+    "Seitenladeleistung messen",
+    "Währungen umrechnen"
   ],
   [
     "es",
@@ -161,7 +238,18 @@ const rows=[
     "generar una bibliografía",
     "buscar un DOI",
     "traducir un párrafo",
-    "buscar el significado de una palabra"
+    "buscar el significado de una palabra",
+    "previsualizar un PDF",
+    "comprobar la propagación DNS",
+    "comprobar un enlace malicioso",
+    "probar fugas de WebRTC",
+    "planificar una reunión entre zonas horarias",
+    "practicar mecanografía",
+    "elegir una paleta de colores",
+    "combinar fuentes de título y texto",
+    "leer libros electrónicos de dominio público",
+    "medir el rendimiento de carga de página",
+    "convertir monedas"
   ],
   [
     "pt",
@@ -181,7 +269,18 @@ const rows=[
     "gerar uma bibliografia",
     "buscar um DOI",
     "traduzir um parágrafo",
-    "buscar significado de uma palavra"
+    "buscar significado de uma palavra",
+    "pré-visualizar um PDF",
+    "verificar a propagação DNS",
+    "verificar um link malicioso",
+    "testar vazamentos de WebRTC",
+    "agendar reunião entre fusos horários",
+    "praticar digitação",
+    "escolher uma paleta de cores",
+    "combinar fontes de título e texto",
+    "ler livros digitais de domínio público",
+    "medir desempenho de carregamento da página",
+    "converter moedas"
   ],
   [
     "it",
@@ -201,7 +300,18 @@ const rows=[
     "generare una bibliografia",
     "cercare un DOI",
     "tradurre un paragrafo",
-    "cercare il significato di una parola"
+    "cercare il significato di una parola",
+    "visualizzare in anteprima un PDF",
+    "controllare la propagazione DNS",
+    "controllare un link malevolo",
+    "verificare perdite WebRTC",
+    "pianificare una riunione tra fusi orari",
+    "esercitarsi nella dattilografia",
+    "scegliere una tavolozza di colori",
+    "abbinare caratteri di titolo e testo",
+    "leggere ebook di pubblico dominio",
+    "misurare le prestazioni di caricamento della pagina",
+    "convertire valute"
   ],
   [
     "nl",
@@ -221,7 +331,18 @@ const rows=[
     "bibliografie genereren",
     "DOI opzoeken",
     "alinea vertalen",
-    "woordbetekenis opzoeken"
+    "woordbetekenis opzoeken",
+    "een PDF vooraf bekijken",
+    "DNS-propagatie controleren",
+    "een schadelijke link controleren",
+    "WebRTC-lekken testen",
+    "een vergadering over tijdzones plannen",
+    "blind typen oefenen",
+    "een kleurenpalet kiezen",
+    "lettertypen voor kop en tekst combineren",
+    "publiekdomeinboeken lezen",
+    "laadprestaties van een pagina meten",
+    "valuta omrekenen"
   ],
   [
     "sv",
@@ -241,7 +362,18 @@ const rows=[
     "skapa en bibliografi",
     "slå upp DOI",
     "översätta ett stycke",
-    "slå upp ett ord"
+    "slå upp ett ord",
+    "förhandsgranska en PDF",
+    "kontrollera DNS-spridning",
+    "kontrollera en skadlig länk",
+    "testa WebRTC-läckor",
+    "planera ett möte över tidszoner",
+    "öva fingersättning",
+    "välja en färgpalett",
+    "kombinera typsnitt för rubrik och brödtext",
+    "läsa upphovsrättsfria e-böcker",
+    "mäta sidans laddningsprestanda",
+    "omvandla valutor"
   ],
   [
     "no",
@@ -261,7 +393,18 @@ const rows=[
     "lage en bibliografi",
     "slå opp DOI",
     "oversette et avsnitt",
-    "slå opp et ord"
+    "slå opp et ord",
+    "forhåndsvise en PDF",
+    "sjekke DNS-spredning",
+    "sjekke en skadelig lenke",
+    "teste WebRTC-lekkasjer",
+    "planlegge møte på tvers av tidssoner",
+    "øve på touchmetoden",
+    "velge en fargepalett",
+    "kombinere skrifttyper for overskrift og brødtekst",
+    "lese e-bøker i det fri",
+    "måle sidens lasteytelse",
+    "konvertere valuta"
   ],
   [
     "da",
@@ -281,7 +424,18 @@ const rows=[
     "oprette en bibliografi",
     "slå DOI op",
     "oversætte et afsnit",
-    "slå et ord op"
+    "slå et ord op",
+    "forhåndsvise en PDF",
+    "kontrollere DNS-udbredelse",
+    "kontrollere et skadeligt link",
+    "teste WebRTC-lækager",
+    "planlægge møde på tværs af tidszoner",
+    "øve blindskrift",
+    "vælge en farvepalet",
+    "kombinere skrifttyper til overskrift og brødtekst",
+    "læse e-bøger uden ophavsret",
+    "måle sidens indlæsningsydelse",
+    "omregne valuta"
   ],
   [
     "fi",
@@ -301,7 +455,18 @@ const rows=[
     "luoda lähdeluettelo",
     "hakea DOI",
     "kääntää kappale",
-    "etsiä sanan merkitys"
+    "etsiä sanan merkitys",
+    "esikatsella PDF-tiedostoa",
+    "tarkistaa DNS-leviäminen",
+    "tarkistaa haitallinen linkki",
+    "testata WebRTC-vuotoja",
+    "suunnitella kokous eri aikavyöhykkeillä",
+    "harjoitella kymmensormijärjestelmää",
+    "valita väripaletti",
+    "yhdistää otsikon ja leipätekstin fontit",
+    "lukea tekijänoikeudesta vapaita e-kirjoja",
+    "mitata sivun lataussuorituskyky",
+    "muuntaa valuuttoja"
   ],
   [
     "pl",
@@ -321,7 +486,18 @@ const rows=[
     "wygenerować bibliografię",
     "wyszukać DOI",
     "przetłumaczyć akapit",
-    "sprawdzić znaczenie słowa"
+    "sprawdzić znaczenie słowa",
+    "wyświetlić podgląd PDF",
+    "sprawdzić propagację DNS",
+    "sprawdzić złośliwy link",
+    "przetestować wycieki WebRTC",
+    "zaplanować spotkanie w różnych strefach czasowych",
+    "ćwiczyć pisanie bezwzrokowe",
+    "wybrać paletę kolorów",
+    "dopasować fonty nagłówka i tekstu",
+    "czytać ebooki z domeny publicznej",
+    "zmierzyć wydajność ładowania strony",
+    "przeliczyć waluty"
   ],
   [
     "cs",
@@ -341,7 +517,18 @@ const rows=[
     "vytvořit bibliografii",
     "vyhledat DOI",
     "přeložit odstavec",
-    "vyhledat význam slova"
+    "vyhledat význam slova",
+    "zobrazit náhled PDF",
+    "zkontrolovat šíření DNS",
+    "zkontrolovat škodlivý odkaz",
+    "otestovat úniky WebRTC",
+    "naplánovat schůzku napříč časovými pásmy",
+    "procvičovat psaní všemi deseti",
+    "vybrat paletu barev",
+    "zkombinovat písma nadpisu a textu",
+    "číst elektronické knihy ve veřejné doméně",
+    "změřit výkon načítání stránky",
+    "převést měny"
   ],
   [
     "sk",
@@ -361,7 +548,18 @@ const rows=[
     "vytvoriť bibliografiu",
     "vyhľadať DOI",
     "preložiť odsek",
-    "vyhľadať význam slova"
+    "vyhľadať význam slova",
+    "zobraziť náhľad PDF",
+    "skontrolovať šírenie DNS",
+    "skontrolovať škodlivý odkaz",
+    "otestovať úniky WebRTC",
+    "naplánovať stretnutie naprieč časovými pásmami",
+    "precvičovať písanie všetkými desiatimi",
+    "vybrať paletu farieb",
+    "skombinovať písma nadpisu a textu",
+    "čítať elektronické knihy vo verejnej doméne",
+    "zmerať výkon načítania stránky",
+    "previesť meny"
   ],
   [
     "hu",
@@ -381,7 +579,18 @@ const rows=[
     "bibliográfia létrehozása",
     "DOI keresése",
     "bekezdés fordítása",
-    "szó jelentésének keresése"
+    "szó jelentésének keresése",
+    "PDF előnézete",
+    "DNS-terjedés ellenőrzése",
+    "rosszindulatú hivatkozás ellenőrzése",
+    "WebRTC-szivárgás tesztelése",
+    "megbeszélés tervezése időzónák között",
+    "tízujjas gépelés gyakorlása",
+    "színpaletta kiválasztása",
+    "címsor és törzsszöveg betűtípusainak párosítása",
+    "közkincs e-könyvek olvasása",
+    "oldalbetöltési teljesítmény mérése",
+    "valuták átváltása"
   ],
   [
     "ro",
@@ -401,7 +610,18 @@ const rows=[
     "generează o bibliografie",
     "caută un DOI",
     "tradu un paragraf",
-    "caută sensul unui cuvânt"
+    "caută sensul unui cuvânt",
+    "previzualizează un PDF",
+    "verifică propagarea DNS",
+    "verifică un link malițios",
+    "testează scurgerile WebRTC",
+    "planifică o întâlnire între fusuri orare",
+    "exersează tastarea fără a privi tastatura",
+    "alege o paletă de culori",
+    "combină fonturile pentru titlu și text",
+    "citește cărți electronice din domeniul public",
+    "măsoară performanța încărcării paginii",
+    "convertește valute"
   ],
   [
     "bg",
@@ -421,7 +641,18 @@ const rows=[
     "създаване на библиография",
     "търсене на DOI",
     "превод на абзац",
-    "търсене на значение на дума"
+    "търсене на значение на дума",
+    "преглед на PDF",
+    "проверка на разпространението на DNS",
+    "проверка на злонамерена връзка",
+    "проверка за течове на WebRTC",
+    "планиране на среща между часови зони",
+    "упражняване на машинопис",
+    "избор на цветова палитра",
+    "съчетаване на шрифтове за заглавие и текст",
+    "четене на електронни книги в обществено достояние",
+    "измерване на скоростта на зареждане на страница",
+    "преобразуване на валути"
   ],
   [
     "hr",
@@ -441,7 +672,18 @@ const rows=[
     "izraditi bibliografiju",
     "pretražiti DOI",
     "prevesti odlomak",
-    "potražiti značenje riječi"
+    "potražiti značenje riječi",
+    "pretpregled PDF-a",
+    "provjeriti širenje DNS-a",
+    "provjeriti zlonamjernu poveznicu",
+    "testirati curenje WebRTC-a",
+    "planirati sastanak kroz vremenske zone",
+    "vježbati slijepo tipkanje",
+    "odabrati paletu boja",
+    "kombinirati fontove naslova i teksta",
+    "čitati e-knjige u javnom vlasništvu",
+    "izmjeriti performanse učitavanja stranice",
+    "pretvoriti valute"
   ],
   [
     "sr",
@@ -461,7 +703,18 @@ const rows=[
     "napraviti bibliografiju",
     "pretražiti DOI",
     "prevesti pasus",
-    "potražiti značenje reči"
+    "potražiti značenje reči",
+    "pregledati PDF",
+    "proveriti širenje DNS-a",
+    "proveriti zlonamernu vezu",
+    "testirati curenje WebRTC-a",
+    "planirati sastanak kroz vremenske zone",
+    "vežbati slepo kucanje",
+    "izabrati paletu boja",
+    "upariti fontove naslova i teksta",
+    "čitati e-knjige u javnom domenu",
+    "izmeriti performanse učitavanja stranice",
+    "pretvoriti valute"
   ],
   [
     "sl",
@@ -481,7 +734,18 @@ const rows=[
     "ustvariti bibliografijo",
     "poiskati DOI",
     "prevesti odstavek",
-    "poiskati pomen besede"
+    "poiskati pomen besede",
+    "predogled PDF",
+    "preveriti širjenje DNS",
+    "preveriti zlonamerno povezavo",
+    "preizkusiti uhajanje WebRTC",
+    "načrtovati sestanek med časovnimi pasovi",
+    "vaditi slepo tipkanje",
+    "izbrati barvno paleto",
+    "združiti pisave naslova in besedila",
+    "brati e-knjige v javni domeni",
+    "izmeriti zmogljivost nalaganja strani",
+    "pretvoriti valute"
   ],
   [
     "el",
@@ -501,7 +765,18 @@ const rows=[
     "δημιουργία βιβλιογραφίας",
     "αναζήτηση DOI",
     "μετάφραση παραγράφου",
-    "αναζήτηση σημασίας λέξης"
+    "αναζήτηση σημασίας λέξης",
+    "προεπισκόπηση PDF",
+    "έλεγχος διάδοσης DNS",
+    "έλεγχος κακόβουλου συνδέσμου",
+    "δοκιμή διαρροών WebRTC",
+    "προγραμματισμός συνάντησης μεταξύ ζωνών ώρας",
+    "εξάσκηση τυφλής πληκτρολόγησης",
+    "επιλογή παλέτας χρωμάτων",
+    "συνδυασμός γραμματοσειρών τίτλου και κειμένου",
+    "ανάγνωση ηλεκτρονικών βιβλίων δημόσιου τομέα",
+    "μέτρηση απόδοσης φόρτωσης σελίδας",
+    "μετατροπή νομισμάτων"
   ],
   [
     "ru",
@@ -521,7 +796,18 @@ const rows=[
     "создать библиографию",
     "найти DOI",
     "перевести абзац",
-    "узнать значение слова"
+    "узнать значение слова",
+    "предпросмотр PDF",
+    "проверить распространение DNS",
+    "проверить вредоносную ссылку",
+    "проверить утечки WebRTC",
+    "запланировать встречу в разных часовых поясах",
+    "тренировать слепую печать",
+    "выбрать цветовую палитру",
+    "подобрать шрифты заголовка и текста",
+    "читать электронные книги общественного достояния",
+    "измерить производительность загрузки страницы",
+    "конвертировать валюты"
   ],
   [
     "uk",
@@ -541,7 +827,18 @@ const rows=[
     "створити бібліографію",
     "знайти DOI",
     "перекласти абзац",
-    "дізнатися значення слова"
+    "дізнатися значення слова",
+    "попередній перегляд PDF",
+    "перевірити поширення DNS",
+    "перевірити шкідливе посилання",
+    "перевірити витоки WebRTC",
+    "запланувати зустріч у різних часових поясах",
+    "тренувати сліпий друк",
+    "вибрати палітру кольорів",
+    "підібрати шрифти заголовка й тексту",
+    "читати електронні книги суспільного надбання",
+    "виміряти продуктивність завантаження сторінки",
+    "конвертувати валюти"
   ],
   [
     "tr",
@@ -561,7 +858,18 @@ const rows=[
     "kaynakça oluştur",
     "DOI ara",
     "paragraf çevir",
-    "kelime anlamını ara"
+    "kelime anlamını ara",
+    "PDF önizlemesi yap",
+    "DNS yayılımını kontrol et",
+    "zararlı bağlantıyı kontrol et",
+    "WebRTC sızıntılarını test et",
+    "saat dilimleri arasında toplantı planla",
+    "on parmak yazma alıştırması yap",
+    "renk paleti seç",
+    "başlık ve metin yazı tiplerini eşleştir",
+    "kamu malı e-kitapları oku",
+    "sayfa yükleme performansını ölç",
+    "para birimlerini dönüştür"
   ],
   [
     "ar",
@@ -581,7 +889,18 @@ const rows=[
     "إنشاء قائمة مراجع",
     "البحث عن DOI",
     "ترجمة فقرة",
-    "البحث عن معنى كلمة"
+    "البحث عن معنى كلمة",
+    "معاينة ملف PDF",
+    "فحص انتشار DNS",
+    "فحص رابط ضار",
+    "اختبار تسرب WebRTC",
+    "تخطيط اجتماع عبر المناطق الزمنية",
+    "التدرب على الكتابة باللمس",
+    "اختيار لوحة ألوان",
+    "تنسيق خطوط العنوان والنص",
+    "قراءة كتب إلكترونية في الملكية العامة",
+    "قياس أداء تحميل الصفحة",
+    "تحويل العملات"
   ],
   [
     "he",
@@ -601,7 +920,18 @@ const rows=[
     "יצירת ביבליוגרפיה",
     "חיפוש DOI",
     "תרגום פסקה",
-    "חיפוש משמעות מילה"
+    "חיפוש משמעות מילה",
+    "תצוגה מקדימה של PDF",
+    "בדיקת התפשטות DNS",
+    "בדיקת קישור זדוני",
+    "בדיקת דליפות WebRTC",
+    "תכנון פגישה באזורי זמן שונים",
+    "תרגול הקלדה עיוורת",
+    "בחירת לוח צבעים",
+    "התאמת גופנים לכותרת ולטקסט",
+    "קריאת ספרים אלקטרוניים בנחלת הכלל",
+    "מדידת ביצועי טעינת הדף",
+    "המרת מטבעות"
   ],
   [
     "fa",
@@ -621,7 +951,18 @@ const rows=[
     "ساخت فهرست منابع",
     "جستجوی DOI",
     "ترجمه یک پاراگراف",
-    "جستجوی معنی کلمه"
+    "جستجوی معنی کلمه",
+    "پیش نمایش PDF",
+    "بررسی انتشار DNS",
+    "بررسی پیوند مخرب",
+    "آزمایش نشت WebRTC",
+    "برنامه ریزی جلسه در مناطق زمانی مختلف",
+    "تمرین تایپ ده انگشتی",
+    "انتخاب پالت رنگ",
+    "ترکیب فونت عنوان و متن",
+    "خواندن کتاب های الکترونیکی مالکیت عمومی",
+    "سنجش عملکرد بارگذاری صفحه",
+    "تبدیل ارز"
   ],
   [
     "hi",
@@ -641,7 +982,18 @@ const rows=[
     "संदर्भ सूची बनाएं",
     "DOI खोजें",
     "अनुच्छेद का अनुवाद करें",
-    "शब्द का अर्थ खोजें"
+    "शब्द का अर्थ खोजें",
+    "PDF का पूर्वावलोकन करें",
+    "DNS प्रसार जांचें",
+    "हानिकारक लिंक जांचें",
+    "WebRTC लीक जांचें",
+    "अलग समय क्षेत्रों में बैठक तय करें",
+    "टच टाइपिंग का अभ्यास करें",
+    "रंग पैलेट चुनें",
+    "शीर्षक और मुख्य पाठ के फ़ॉन्ट मिलाएं",
+    "सार्वजनिक डोमेन की ईबुक पढ़ें",
+    "पेज लोड प्रदर्शन मापें",
+    "मुद्रा परिवर्तित करें"
   ],
   [
     "bn",
@@ -661,7 +1013,18 @@ const rows=[
     "গ্রন্থপঞ্জি তৈরি করুন",
     "DOI খুঁজুন",
     "অনুচ্ছেদ অনুবাদ করুন",
-    "শব্দের অর্থ খুঁজুন"
+    "শব্দের অর্থ খুঁজুন",
+    "PDF পূর্বরূপ দেখুন",
+    "DNS বিস্তার পরীক্ষা করুন",
+    "ক্ষতিকর লিংক পরীক্ষা করুন",
+    "WebRTC লিক পরীক্ষা করুন",
+    "বিভিন্ন সময় অঞ্চলে সভা পরিকল্পনা করুন",
+    "টাচ টাইপিং অনুশীলন করুন",
+    "রঙের প্যালেট বেছে নিন",
+    "শিরোনাম ও মূল লেখার ফন্ট মেলান",
+    "পাবলিক ডোমেইনের ইবুক পড়ুন",
+    "পৃষ্ঠা লোডের কর্মক্ষমতা মাপুন",
+    "মুদ্রা রূপান্তর করুন"
   ],
   [
     "ur",
@@ -681,7 +1044,18 @@ const rows=[
     "حوالہ جات کی فہرست بنائیں",
     "DOI تلاش کریں",
     "پیراگراف کا ترجمہ کریں",
-    "لفظ کا مطلب تلاش کریں"
+    "لفظ کا مطلب تلاش کریں",
+    "PDF کا پیش منظر دیکھیں",
+    "DNS پھیلاؤ چیک کریں",
+    "نقصان دہ لنک چیک کریں",
+    "WebRTC لیک چیک کریں",
+    "مختلف ٹائم زونز میں میٹنگ طے کریں",
+    "ٹچ ٹائپنگ کی مشق کریں",
+    "رنگوں کا پیلیٹ منتخب کریں",
+    "عنوان اور متن کے فونٹ ملائیں",
+    "عوامی ملکیت کی ای بکس پڑھیں",
+    "صفحہ لوڈ کی کارکردگی ناپیں",
+    "کرنسی تبدیل کریں"
   ],
   [
     "th",
@@ -701,7 +1075,18 @@ const rows=[
     "สร้างบรรณานุกรม",
     "ค้นหา DOI",
     "แปลย่อหน้า",
-    "ค้นหาความหมายของคำ"
+    "ค้นหาความหมายของคำ",
+    "ดูตัวอย่าง PDF",
+    "ตรวจสอบการเผยแพร่ DNS",
+    "ตรวจสอบลิงก์อันตราย",
+    "ทดสอบการรั่วไหล WebRTC",
+    "วางแผนประชุมข้ามเขตเวลา",
+    "ฝึกพิมพ์สัมผัส",
+    "เลือกชุดสี",
+    "จับคู่ฟอนต์หัวเรื่องและเนื้อหา",
+    "อ่านอีบุ๊กสาธารณสมบัติ",
+    "วัดประสิทธิภาพการโหลดหน้าเว็บ",
+    "แปลงสกุลเงิน"
   ],
   [
     "vi",
@@ -721,7 +1106,18 @@ const rows=[
     "tạo danh mục tài liệu tham khảo",
     "tra cứu DOI",
     "dịch đoạn văn",
-    "tra nghĩa của từ"
+    "tra nghĩa của từ",
+    "xem trước PDF",
+    "kiểm tra sự lan truyền DNS",
+    "kiểm tra liên kết độc hại",
+    "kiểm tra rò rỉ WebRTC",
+    "lên lịch họp qua các múi giờ",
+    "luyện gõ phím mười ngón",
+    "chọn bảng màu",
+    "phối phông chữ tiêu đề và nội dung",
+    "đọc sách điện tử thuộc phạm vi công cộng",
+    "đo hiệu suất tải trang",
+    "chuyển đổi tiền tệ"
   ],
   [
     "id",
@@ -741,7 +1137,18 @@ const rows=[
     "buat daftar pustaka",
     "cari DOI",
     "terjemahkan paragraf",
-    "cari arti kata"
+    "cari arti kata",
+    "pratinjau PDF",
+    "periksa propagasi DNS",
+    "periksa tautan berbahaya",
+    "uji kebocoran WebRTC",
+    "jadwalkan rapat lintas zona waktu",
+    "latih mengetik sepuluh jari",
+    "pilih palet warna",
+    "padukan font judul dan teks",
+    "baca buku elektronik domain publik",
+    "ukur kinerja pemuatan halaman",
+    "konversi mata uang"
   ],
   [
     "ms",
@@ -761,7 +1168,18 @@ const rows=[
     "jana bibliografi",
     "cari DOI",
     "terjemah perenggan",
-    "cari makna perkataan"
+    "cari makna perkataan",
+    "pratonton PDF",
+    "semak penyebaran DNS",
+    "semak pautan berbahaya",
+    "uji kebocoran WebRTC",
+    "jadualkan mesyuarat merentas zon waktu",
+    "latih menaip sentuh",
+    "pilih palet warna",
+    "padankan fon tajuk dan teks",
+    "baca e-buku domain awam",
+    "ukur prestasi pemuatan halaman",
+    "tukar mata wang"
   ],
   [
     "fil",
@@ -781,7 +1199,18 @@ const rows=[
     "gumawa ng bibliograpiya",
     "hanapin ang DOI",
     "isalin ang talata",
-    "hanapin ang kahulugan ng salita"
+    "hanapin ang kahulugan ng salita",
+    "tingnan ang preview ng PDF",
+    "suriin ang DNS propagation",
+    "suriin ang mapaminsalang link",
+    "subukan ang WebRTC leaks",
+    "magplano ng pulong sa iba't ibang time zone",
+    "magsanay ng touch typing",
+    "pumili ng color palette",
+    "ipares ang font ng pamagat at teksto",
+    "magbasa ng public domain ebooks",
+    "sukatin ang page loading performance",
+    "mag-convert ng mga pera"
   ],
   [
     "af",
@@ -801,7 +1230,18 @@ const rows=[
     "skep 'n bibliografie",
     "soek DOI",
     "vertaal 'n paragraaf",
-    "soek die betekenis van 'n woord"
+    "soek die betekenis van 'n woord",
+    "bekyk 'n PDF-voorskou",
+    "kontroleer DNS-verspreiding",
+    "kontroleer 'n kwaadwillige skakel",
+    "toets WebRTC-lekkasies",
+    "beplan 'n vergadering oor tydsones",
+    "oefen blindtik",
+    "kies 'n kleurpalet",
+    "kombineer opskrif- en tekslettertipes",
+    "lees e-boeke in die openbare domein",
+    "meet bladsylaaiprestasie",
+    "skakel geldeenhede om"
   ]
 ];
 const localeConstraints=[
