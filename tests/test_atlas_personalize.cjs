@@ -54,6 +54,14 @@ assert.ok(!picks.some(x=>x.item.url==='https://science.example/1'),'existing fav
 assert.ok(!picks.some(x=>x.item.category==='休闲'),'no unsupported interests');
 assert.ok(picks.every(x=>typeof x.reason==='string'&&x.reason.length>5));
 assert.deepEqual(model.recommend(fixture,['https://science.example/1'],4).map(x=>x.item.url),picks.map(x=>x.item.url),'stable daily order');
+
+const extra=[...fixture,{url:'javascript:alert(1)',category:'材料',name:'invalid'},{url:'https://user:pass@science.example/',category:'材料',name:'credentials'},{url:'http://science.example/plain',category:'材料',name:'insecure'}];
+const safe=model.recommend(extra,[],99,{allowed:x=>x.url!=='https://science.example/2',priority:()=>1000});
+assert.ok(safe.length<=10);assert.ok(safe.every(x=>x.item.url.startsWith('https://')&&!x.item.url.includes('@')&&x.item.url!=='https://science.example/2'));
+assert.deepEqual(model.recommend(fixture,[],0),[]);
+assert.deepEqual(model.recommend(fixture,[],6,{allowed:()=>false}),[]);
+const diverse=model.recommend(fixture,[],3);
+assert.ok(new Set(diverse.slice(0,2).map(x=>new URL(x.item.url).hostname)).size===2,'prefer distinct hosts');
 day+=61;
 const expired=model.read();
 assert.equal(expired.activity['材料'],undefined,'old click data must expire');
