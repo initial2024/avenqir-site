@@ -17,7 +17,7 @@ const model=require(path.join(site,'atlas-popular.js'));
 const full=model.pool(catalog);
 const byId=new Map(full.map(pick=>[pick.entry.id,pick]));
 const urls=new Set(catalog.map(entry=>new URL(entry.url).href));
-assert.equal(catalog.length,1239+newLinks.length);
+assert.equal(catalog.length,1240+newLinks.length);
 assert.equal(catalog.length,urls.size);
 assert.ok(newLinks.length>=80&&newLinks.length<=150);
 assert.ok(newLinks.every(entry=>gate.officialSourceReviewed(entry.url)&&safety.inspect(entry.url).type==='reviewed'));
@@ -75,3 +75,10 @@ for(const page of ['index.html','directory.html']){
  assert.ok(html.indexOf('atlas-safety.js?')<html.indexOf('atlas-popular-ui.js?'));
 }
 console.log('PASS Popular picks, duplicate prevention, intent coverage, exact evidence and random exclusions');
+
+const requested=catalog.find(x=>x.id==='user-ip-fs-kg');
+assert.equal(requested.url,'https://ip.fs.kg/');
+assert.equal(requested.category,'网络');
+assert.equal(gate.officialSourceReviewed(requested.url),false);
+assert.equal(gate.maySkipConfirmation(requested.url,{getItem:()=>null}),false);
+assert.ok(recommendationTargets.some(x=>x.id===requested.id&&x.url===requested.url));

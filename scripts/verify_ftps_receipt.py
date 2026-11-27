@@ -30,6 +30,8 @@ CORE=(
     'directory.js',
     'directory-search.css',
     'atlas-tags.js',
+    'atlas-catalog-core.js',
+    'recommendations-catalog.json',
     'recommendations.html',
     'recommendations.js',
     'recommendations-model.js',
