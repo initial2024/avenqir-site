@@ -36,3 +36,6 @@ if('serviceWorker' in navigator && isSecureContext && /^https?:$/.test(location.
 })();
 
 
+
+/* First-party aggregate statistics: only public allowlisted pages, opt-in. */
+(()=>{if(!['','index.html','directory.html','recommendations.html','bookmarks.html','notes.html','fun.html','daily.html','tools.html','check.html','transfer.html','appearance.html','privacy.html','health.html','projects.html','domains.html','logs.html','orbit-bridge.html','disclaimer.html'].includes(location.pathname.split('/').pop()))return;const script=document.createElement('script');script.src='./traffic.js?v=140';script.defer=true;document.head.append(script);})();
