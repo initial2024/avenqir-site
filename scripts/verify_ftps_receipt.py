@@ -21,6 +21,7 @@ CORE=(
     'index.html',
     'directory.html',
     'directory.js',
+    'directory-search.css',
     'recommendations.html',
     'recommendations.js',
     'recommendations-model.js',
