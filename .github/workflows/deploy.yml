@@ -50,6 +50,7 @@ jobs:
           node tests/test_atlas_safety.cjs
           node tests/test_atlas_i18n.cjs
           node tests/test_atlas_popular.cjs
+          node tests/test_recommendations_v138.cjs
           node tests/test_transfer_v90.cjs
           node tests/test_orbit_bridge.cjs
           node tests/test_i18n_v91.cjs

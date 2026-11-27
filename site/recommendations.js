@@ -24,10 +24,16 @@
   const clearFilter=panel?.querySelector('#recClearFilter');
   const prev=panel?.querySelector('#recPrevious');
   const next=panel?.querySelector('#recNext');
-  const pageSize=8;
+  const scope=panel?.querySelector('#recScope');
+  const sourceFilter=panel?.querySelector('#recSource');
+  const basis=panel?.querySelector('#recBasis');
+  const editorOrder=new Map((window.AVENQIR_ATLAS_POPULAR_PICKS||[]).map((item,i)=>[item.id,i]));
+  const editorRank=id=>editorOrder.get(id)??Number.MAX_SAFE_INTEGER;
+  const pageSize=4;
   let page=0;
   let pick=new URLSearchParams(location.search).get('pick');
   let positioned=false;
+  if(full&&pick)panel.classList.add('rec-focused');
   let rows=[];
   let indexes=null;
   let stats=null;
@@ -49,7 +55,7 @@
     find:'Search by name, domain or category',type:'Type',all:'All types',
     tool:'AVENQIR tools',website:'Third-party sites',clearFilter:'Browse all',
     previous:'Previous page',next:'Next page',
-    manageSharing:'Participation settings',
+    manageSharing:'Participation settings',scope:'Data scope',publicScope:'Public totals',localScope:'This device',source:'Source',allSources:'All sources',reviewed:'Source checked',pending:'Source pending',editor:'Editor picks',mine:'Rated by me',
   };
   const labels=[...document.querySelectorAll('[data-rec-label]')].map(node=>[node,node.textContent]);
   function localize(){for(const [node,original] of labels)node.textContent=t(original,english[node.dataset.recLabel]);}
@@ -158,11 +164,12 @@
   }
   function summarize(item,localData){
     const value=stats?.[item.id];
-    if(!stats){
+    if(scope?.value==='local'){
       const personal=localData.ratings[item.id]?.stars;
       return personal?t('我的评分 '+personal+'/5','My rating '+personal+'/5'):
         t('暂无我的评分','No personal rating');
     }
+    if(!stats)return t('公开数据暂不可用','Public data unavailable');
     const n=value?.count||0;
     return n>=5?t(value.average+' / 5 · '+n+' 个评分',value.average+' / 5 · '+n+' ratings'):
       n?t('评分较少 · '+n+' 个评分','Small sample · '+n+' ratings'):
@@ -201,8 +208,12 @@
     const title=element('h2');
     title.append(link(item));
     const info=element('p',summarize(item,localData));
-    const metric=(stats||localView)[item.id];
-    if(metric?.score!==null&&Number.isInteger(metric?.score))info.append(' · '+t('推荐指数 ','Recommendation ')+metric.score);
+    const isLocal=scope?.value==='local';
+    const metric=(isLocal?localView:stats)?.[item.id];
+    const score=model.displayScore(metric,isLocal);
+    if(score!==null)info.append(' · '+t(isLocal?'本机指数 ':'公开推荐指数 ',isLocal?'Device index ':'Public recommendation ')+score);
+    if(metric?.clicks>0)info.append(' · '+t(metric.clicks+' 次入口点击',metric.clicks+' entry opens'));
+    if(editorOrder.has(item.id))info.append(' · '+t('编辑精选','Editor pick'));
     const group=element('div');
     group.className='rec-stars';
     group.setAttribute('role','group');
@@ -235,7 +246,18 @@
     const detail=element('small',messages.get(item.id));
     detail.className='rec-rating-feedback';
     detail.setAttribute('role','status');
-    article.append(title,source,info,myRating,group,clear,detail);
+    const controls=element('details');
+    controls.className='rec-rate-details';
+    controls.open=!!pick||pending.has(item.id)||messages.has(item.id);
+    const summary=element('summary',personal?t('我的评分：'+personal+'/5 · 修改','My rating: '+personal+'/5 · Edit'):t('评价这个'+(item.kind==='tool'?'工具':'网址'),'Rate this '+(item.kind==='tool'?'tool':'site')));
+    controls.append(summary,myRating,group,clear,detail);
+    if(item.kind==='website'){
+      const feedback=element('a',t('文字反馈 / 报告失效','Feedback / Report a broken link'));
+      feedback.href='feedback.php?type=feedback&url='+encodeURIComponent(item.url)+'#write';
+      feedback.className='rec-feedback-link';
+      controls.append(feedback);
+    }
+    article.append(title,source,info,controls);
     return article;
   }
   function render(){
@@ -247,7 +269,10 @@
     panel.querySelector('[data-rec-mode]').textContent=stats?
       t('仅统计自愿参与者打开入口和提交评分的次数。','Counts reflect opted-in opens and ratings.'):
       t('显示当前浏览器的记录。','Showing activity saved in this browser.');
-    const values=stats||localView;
+    const isLocal=full?scope.value==='local':!stats;
+    const values=isLocal?localView:(stats||{});
+    panel.querySelector('[data-rec-title]').textContent=isLocal?t('近期热门 · 本机','Trending · This device'):t('近期热门 · 公开','Trending · Public');
+    panel.querySelector('[data-rec-mode]').textContent=isLocal?t('仅本机入口点击记录。','Device entry opens only.'):stats?t('仅统计自愿参与者的入口点击；不是全网热度。','Opted-in entry opens only, not web-wide popularity.'):t('公开数据暂不可用。','Public data unavailable.');
     const hottest=[...rows].filter(item=>values[item.id]?.clicks>0)
       .sort((a,b)=>values[b.id].clicks-values[a.id].clicks).slice(0,5);
     trend.replaceChildren(...hottest.map(item=>{
@@ -264,19 +289,24 @@
     local.checked=read(LOCAL)==='1';
     revoke.disabled=!read(TOKEN);
     const choice=sort.value;
+    basis.textContent=isLocal?t('本机指数依据你的评分和近期入口点击；不代表其他用户。','Device index uses your ratings and recent entry opens, not other users.'):t('公开星级为累计评分，至少5份才显示均值和推荐指数；热度按选定时段。暂无数据时仅列编辑精选，不虚构分数。','Public ratings are cumulative; at least five are needed for averages and recommendation scores. Opens use the selected period. Unrated editor picks have no invented scores.');
     const titleCompare=(a,b)=>name(a).localeCompare(name(b));
     const terms=query.value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
     const ordered=rows.filter(item=>{
       if(pick&&item.id!==pick)return false;
       if(type.value!=='all'&&item.kind!==type.value)return false;
+      if(sourceFilter.value!=='all'&&(item.kind!=='website'||Boolean(window.AVENQIR_LINK_GATE?.officialSourceReviewed(item.url))!==(sourceFilter.value==='reviewed')))return false;
+      if(choice==='editor'&&!editorOrder.has(item.id))return false;
+      if(choice==='mine'&&!localData.ratings[item.id])return false;
       const text=[...item.title,item.category||'',item.url].join(' ').toLocaleLowerCase();
       return terms.every(term=>text.includes(term));
     }).sort((a,b)=>{
       if(choice==='name')return titleCompare(a,b);
+      if(choice==='editor')return editorRank(a.id)-editorRank(b.id)||titleCompare(a,b);
       const x=values[a.id],y=values[b.id];
-      const byRating=(stats?(y?.average||0)-(x?.average||0):(localData.ratings[b.id]?.stars||0)-(localData.ratings[a.id]?.stars||0));
-      const primary=choice==='rating'?byRating:choice==='popular'?(y?.clicks||0)-(x?.clicks||0):(y?.score||0)-(x?.score||0);
-      return primary||titleCompare(a,b);
+      const byRating=isLocal?(localData.ratings[b.id]?.stars||0)-(localData.ratings[a.id]?.stars||0):model.publicAverage(y)-model.publicAverage(x);
+      const primary=choice==='mine'?(localData.ratings[b.id]?.updatedAt||0)-(localData.ratings[a.id]?.updatedAt||0):choice==='rating'?byRating:choice==='popular'?(y?.clicks||0)-(x?.clicks||0):(model.displayScore(y,isLocal)??-1)-(model.displayScore(x,isLocal)??-1);
+      return primary||editorRank(a.id)-editorRank(b.id)||titleCompare(a,b);
     });
     const active=document.activeElement;
     const lastTool=active?.closest('[data-rec-tool]')?.dataset.recTool;
@@ -284,10 +314,15 @@
     const clearing=active?.classList.contains('rec-clear-rating');
     const lastPage=Math.max(0,Math.ceil(ordered.length/pageSize)-1);
     page=Math.min(page,lastPage);
-    list.replaceChildren(...ordered.slice(page*pageSize,(page+1)*pageSize).map(item=>makeCard(item,localView,localData)));
-    if(!ordered.length)list.append(element('p',t('没有匹配的条目。试试名称或域名。','No matches. Try a name or a domain.')));
+    const openIds=new Set([...list.querySelectorAll('article:has(.rec-rate-details[open])')].map(card=>card.dataset.recTool));
+    list.replaceChildren(...ordered.slice(page*pageSize,(page+1)*pageSize).map(item=>{
+      const card=makeCard(item,localView,localData);
+      if(openIds.has(item.id))card.querySelector('details').open=true;
+      return card;
+    }));
+    if(!ordered.length)list.append(element('p',pick?t('该网址暂不可评价，可能已下架、被拦截或目录尚未同步。可返回全部列表。','This entry cannot be rated right now. It may be removed, blocked or not yet synchronized. Browse all entries.'):t('没有匹配的条目。试试名称或域名。','No matches. Try a name or a domain.')));
     count.textContent=t(`${ordered.length} 个条目 · 第 ${page+1} / ${lastPage+1} 页`,`${ordered.length} entries · Page ${page+1} of ${lastPage+1}`);
-    clearFilter.hidden=!pick&&!query.value&&type.value==='all';
+    clearFilter.hidden=!pick&&!query.value&&type.value==='all'&&sourceFilter.value==='all'&&!['editor','mine'].includes(choice);
     prev.disabled=page===0;
     next.disabled=page===lastPage;
     panel.querySelector('.rec-pagination').hidden=lastPage===0;
@@ -299,7 +334,8 @@
     if(pick&&!positioned&&ordered.length){
       positioned=true;
       const first=list.querySelector('.rec-stars button');
-      first?.focus();
+      first?.focus({preventScroll:true});
+      list.scrollIntoView({block:'nearest'});
     }
   }
   async function recordOpen(id,url){
@@ -342,22 +378,26 @@
   function clearPick(){
     if(!pick)return;
     pick=null;
+    panel.classList.remove('rec-focused');
     const url=new URL(location.href);
     url.searchParams.delete('pick');
     history.replaceState(null,'',url.pathname+url.search+url.hash);
   }
-  for(const control of [query,type]){
+  for(const control of [query,type,sourceFilter]){
     control.addEventListener(control===query?'input':'change',()=>{
       clearPick();
       page=0;
       render();
     });
   }
-  sort.addEventListener('change',()=>{page=0;render();});
+  sort.addEventListener('change',()=>{clearPick();page=0;render();});
+  scope.addEventListener('change',()=>{page=0;render();});
   clearFilter.addEventListener('click',()=>{
     clearPick();
     query.value='';
     type.value='all';
+    sourceFilter.value='all';
+    sort.value='recommended';
     page=0;
     render();
     query.focus();

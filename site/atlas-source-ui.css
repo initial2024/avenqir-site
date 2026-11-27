@@ -36,3 +36,7 @@
 }
 .aq-source-rate[hidden] {display:none}
 .aq-source-rate:focus-visible {outline:2px solid currentColor;outline-offset:2px}
+
+.aq-source-pending,.aq-source-caution{color:#8a510b;border-color:currentColor}
+:root[data-aq-theme="dark"] :is(.aq-source-pending,.aq-source-caution){color:#ffd18a}
+.aq-source-direct{border-color:transparent;background:transparent;color:inherit;opacity:.85}

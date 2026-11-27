@@ -54,7 +54,9 @@
       return [id,{clicks:counts[id]||0,score:Math.round(100*(.7*(rating||0)/5+.3*activity))}];
     }));
   }
-  const api=Object.freeze({KEY,DAY,valid,empty,clean,merge,score});
+  function publicAverage(metric){return Number.isInteger(metric?.count)&&metric.count>=5&&Number.isFinite(metric.average)&&metric.average>=1&&metric.average<=5?metric.average:0;}
+  function displayScore(metric,isLocal){return (isLocal||publicAverage(metric)>0)&&Number.isInteger(metric?.score)&&metric.score>=0&&metric.score<=100?metric.score:null;}
+  const api=Object.freeze({KEY,DAY,valid,empty,clean,merge,score,publicAverage,displayScore});
   root.AVENQIR_RECOMMENDATIONS=api;
   if(typeof module==='object'&&module.exports)module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

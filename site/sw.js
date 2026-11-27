@@ -1,6 +1,6 @@
 "use strict";
 /* AVENQIR v9.4 offline shell. No private documents, PHP, or API records cached. */
-const CACHE = 'avenqir-v137-static-20261127-source-ratings';
+const CACHE = 'avenqir-v138-static-20261127-compact-ratings';
 const ASSETS = [
   './index.html','./appearance.html','./directory.html','./directory.js','./directory-search-actions.js','./atlas-paths.js','./atlas-expansion.js','./atlas-specialist.js','./atlas-depth-a.js','./atlas-depth-b.js','./atlas-depth-c.js','./atlas-depth-d.js','./atlas-ai.js','./atlas-regional.js','./atlas-everyday.js','./atlas-regional-ext.js','./atlas-everyday-ext.js','./atlas-taxonomy.js','./atlas-region.js','./atlas-region-ui.js','./atlas-popular-links.js','./atlas-popular-picks.js','./atlas-popular.js','./atlas-popular-ui.js','./atlas-popular.css','./atlas-source-ui.js','./atlas-source-ui.css','./atlas-catalog-core.js','./atlas-threat-snapshot.js','./atlas-registry-snapshot.js','./atlas-safety.js','./atlas-guides.js','./atlas-find.js','./atlas-enrich.js','./aq-i18n.js','./aq-copy.js','./orbit-bridge.js','./orbit-bridge.html','./atlas-summary.js','./atlas-personalize.js','./atlas-personalize-ui.js','./directory-search.css','./directory-seed.json','./leave.html','./leave.js',
   './module-switcher.js','./module-picker.css','./quick-search.js','./start-page.js','./start-page.css','./recommendations.html','./recommendations.css','./recommendations-catalog.json','./recommendations-model.js','./recommendations.js','./site.js','./common.css','./theme.js','./theme.css','./link-gate.js',
