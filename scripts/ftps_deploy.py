@@ -112,7 +112,7 @@ def deploy_order(file, root=SITE):
     if rel == 'sw.js': priority=4
     elif rel in ('admin.php','index.html','directory.html'): priority=3
     elif rel in ('feedback.php','owner-feedback-security.php'): priority=2
-    elif rel.endswith(('.js','.css','.json')) or rel.startswith('webauthn/') or rel in ('server-core.php','feedback-core.php','feedback-abuse.php','feedback-turnstile.php','admin-security.php'): priority=0
+    elif rel.endswith(('.js','.css','.json')) or rel.startswith('webauthn/') or rel in ('server-core.php','feedback-core.php','feedback-abuse.php','feedback-turnstile.php','admin-security.php','traffic-core.php'): priority=0
     else: priority=1
     return priority,rel
 

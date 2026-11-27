@@ -45,6 +45,7 @@ jobs:
           php tests/test_unified_admin_session.php
           php tests/test_trusted_browser.php
           php tests/test_passkey_crypto.php
+          php tests/test_traffic.php
       - name: Validate JavaScript and PHP syntax
         shell: bash
         run: |

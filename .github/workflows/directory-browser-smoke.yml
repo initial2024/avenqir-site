@@ -1,5 +1,7 @@
 name: AVENQIR directory browser smoke
 on:
+  pull_request:
+    branches: [main]
   push:
     branches: [main]
     paths: ['site/index.html','site/directory*','site/atlas-*','tests/browser_directory_first_paint.py','tests/browser_popular_mobile.py','.github/workflows/directory-browser-smoke.yml']

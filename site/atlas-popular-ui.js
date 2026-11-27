@@ -61,7 +61,9 @@
    link.referrerPolicy='no-referrer';
    link.setAttribute('aria-label',t('访问 '+entry.name,'Open '+entry.name));
    link.addEventListener('click',event=>{
-    if(model.access(entry.url,gate,safety).blocked)event.preventDefault();
+    const access=model.access(entry.url,gate,safety);
+    if(access.blocked)event.preventDefault();
+    else if(direct&&event.button===0&&!event.ctrlKey&&!event.metaKey&&!event.shiftKey&&!event.altKey)sourceUI?.noteVisit(entry.url);
    });
    footer.append(link);
   }

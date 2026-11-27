@@ -29,6 +29,7 @@
     if(remember?.checked&&again.rememberable){
       try{gate.remember(safe.href,window.localStorage)}catch{}
     }
+    source?.noteVisit(safe.href);
     location.assign(safe.href);
   });
 })();

@@ -97,6 +97,41 @@ const require=(condition,reason)=>{if(!condition)throw Error(reason);};
  const pendingCard=intent.querySelector('[data-pick-id="dA055"]');
  require(pendingCard.querySelector('.aq-source-pending')&&pendingCard.querySelector('.aq-source-prompt'),'source and confirmation must have different badges');
  await waitFor(()=>Boolean(pendingCard.querySelector('.aq-source-rate[href*="pick=dA055"]')));
+ const rateButton=pendingCard.querySelector('.aq-source-rate');
+ const beforeRatingURL=directory.location.href;
+ const beforeRatingScroll=directory.scrollY;
+ rateButton.click();
+ const dialog=d.querySelector('.aq-quick-rating[open]');
+ require(dialog&&directory.location.href===beforeRatingURL,'rating must open in place');
+ require(dialog.getBoundingClientRect().width<=390,'rating dialog exceeds mobile width');
+ const stars=dialog.querySelectorAll('.aq-quick-stars button');
+ require(stars.length===5,'five rating controls required');
+ stars[3].click();
+ require(!dialog.querySelector('.aq-quick-share input').checked,'public sharing must default off');
+ dialog.querySelector('.aq-quick-primary').click();
+ require(JSON.parse(directory.localStorage.getItem('avenqir.recommendations.local.v1')).ratings.dA055.stars===4,'local rating not saved');
+ require(dialog.querySelector('.aq-quick-feedback').textContent.includes('本机')||dialog.querySelector('.aq-quick-feedback').textContent.includes('locally'),'local-only result missing');
+ require(rateButton.textContent.includes('4★'),'directory rating label not refreshed');
+ dialog.close();
+ require(directory.location.href===beforeRatingURL&&Math.abs(directory.scrollY-beforeRatingScroll)<=2,'rating must preserve URL and scrolling');
+ require(d.querySelector('#atlasSort option[value="rating"]')&&d.querySelector('#atlasSort option[value="recommended"]'),'directory ranking choices missing');
+ await waitFor(()=>directory.AVENQIR_ATLAS_SOURCE_UI.ratingsAvailable());
+ require(directory.AVENQIR_ATLAS_SOURCE_UI.average('https://github.com/')===4.6,'public aggregate must join exact URL');
+ require(directory.AVENQIR_ATLAS_SOURCE_UI.average('https://developer.mozilla.org/zh-CN/')===0,'small samples must not rank');
+ d.getElementById('atlasSort').value='rating';
+ d.getElementById('atlasSort').dispatchEvent(new directory.Event('change'));
+ await waitFor(()=>d.querySelector('#atlasResults .atlas-result-title')?.textContent.includes('GitHub'));
+ directory.sessionStorage.setItem('avenqir.rating.return.v1',JSON.stringify({id:'r1',at:Date.now()-9000,departed:true}));
+ directory.dispatchEvent(new directory.Event('focus'));
+ await waitFor(()=>d.querySelector('.aq-return-rating'));
+ require(d.querySelector('.aq-return-rating').textContent.includes('GitHub'),'return reminder must target the exact public item');
+ d.querySelector('.aq-return-rating button').click();
+ require(d.querySelector('.aq-quick-rating[open]')&&directory.location.href===beforeRatingURL,'return reminder should open inline rating');
+ d.querySelector('.aq-quick-rating').close();
+ require(!directory.sessionStorage.getItem('avenqir.rating.return.v1'),'reminder must be consumed');
+ d.getElementById('atlasSort').value='relevance';
+ d.getElementById('atlasSort').dispatchEvent(new directory.Event('change'));
+
  d.querySelector('[data-popular-topic="network"]').click();
  require(!d.getElementById('popularNetworkNote').hidden,'network information notice missing');
  d.querySelector('[data-popular-topic="all"]').click();
@@ -129,6 +164,13 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.send_header("Content-Type", "text/html; charset=utf-8")
         elif path == "/public-api.php":
             payload = b'{"ok":true,"items":[]}'
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+        elif path == "/recommendations-api.php":
+            if "catalog=added" in self.path:
+                payload = b'{"ok":true,"items":[]}'
+            else:
+                payload = b'{"ok":true,"items":{"r1":{"count":6,"average":4.6,"score":86},"r2":{"count":1,"average":null,"score":null}}}'
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
         elif path.endswith(".php"):

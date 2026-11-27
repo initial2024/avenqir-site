@@ -61,6 +61,7 @@ jobs:
           php tests/test_unified_admin_session.php
           php tests/test_trusted_browser.php
           php tests/test_passkey_crypto.php
+          php tests/test_traffic.php
       - name: Check PHP and JavaScript syntax
         shell: bash
         run: |
