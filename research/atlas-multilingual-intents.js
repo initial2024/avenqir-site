@@ -326,11 +326,11 @@ const rows=[
 ];
 
 const normalize=q=>String(q||'').normalize('NFKC').toLowerCase().replace(/[’‘]/g,"'").replace(/[\u200c\u200d]/g,' ').replace(/\s+/gu,' ').trim().replace(/[.!?。！？؟]+$/u,'').trim();
-const index=new Map();
-for(const [locale,...phrases] of rows)phrases.forEach((phrase,i)=>{const k=normalize(phrase),existing=index.get(k);if(existing&&existing!==tasks[i])throw Error('alias collision');index.set(k,tasks[i]);});
+const index=new Map(),strict=new Set();
+for(const [locale,...phrases] of rows)phrases.forEach((phrase,i)=>{const k=normalize(phrase),existing=index.get(k);if(existing&&existing!==tasks[i])throw Error('alias collision');index.set(k,tasks[i]);if(!['en','zh-Hans','ja'].includes(locale))strict.add(k);});
 function resolve(q){const n=normalize(q);const id=index.get(n);if(id)return {id,blocked:false};if(n.length>512)return {id:null,blocked:true};
  // Added conditions or additional requests are not supported by exact aliases.
- for(const phrase of index.keys())if(n.includes(phrase))return {id:null,blocked:true};
+ for(const phrase of strict)if(n.includes(phrase))return {id:null,blocked:true};
  return {id:null,blocked:false};
 }
 const api=Object.freeze({tasks,locales:Object.freeze(rows.map(x=>x[0])),rows:Object.freeze(rows.map(x=>Object.freeze(x))),resolve,normalize});
