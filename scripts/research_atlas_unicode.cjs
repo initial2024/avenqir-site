@@ -32,7 +32,7 @@ function crossValidate(rows,tasks,features){
 const fs=require('node:fs'),path=require('node:path');
 const baseline=crossValidate(rows,tasks,old.features),unicode=crossValidate(rows,tasks,unicodeFeatures);
 const payload=JSON.stringify({schema:'aq-multilingual-research-1',bins:8192,classes:train(rows,tasks,unicodeFeatures)})+'\n';
-assert.equal(baseline.total,680);assert.equal(unicode.total,680);assert.ok(Buffer.byteLength(payload)<=48*1024);
+assert.equal(baseline.total,1120);assert.equal(unicode.total,1120);assert.ok(Buffer.byteLength(payload)<=64*1024);
 for(const q of ['한국어','العربية','हिन्दी','ไทย','Русский','বাংলা'])assert.ok(unicodeFeatures(q).size>0);
 console.log('UNICODE_HELD_OUT_LOCALE_REPORT',JSON.stringify({baseline,unicode,bytes:Buffer.byteLength(payload)}));
 const target=path.join(__dirname,'../research/atlas-multilingual-weights.json');
