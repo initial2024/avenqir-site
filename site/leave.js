@@ -8,6 +8,8 @@
   const name=(params.get('name')||'').trim().slice(0,90);
   const go=$('leaveContinue'),remember=$('leaveRemember'),row=$('leaveRememberRow');
   const threat=window.AVENQIR_ATLAS_SAFETY;
+  const source=window.AVENQIR_ATLAS_SOURCE_UI;
+  if(source)$('leaveSource').append(source.external(raw,false));
   if(!safe||!risk||risk.blocked||threat?.threatStatus(raw)==='listed'){
     $('leaveName').textContent='网址已拒绝';
     $('leaveHost').textContent=threat?.threatStatus(raw)==='listed'?'外部钓鱼警告清单命中':risk?.reason||'仅允许有效的 http/https 网址';

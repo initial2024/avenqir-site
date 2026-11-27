@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__.'/feedback-core.php';
+require_once __DIR__.'/server-core.php';
 require_once __DIR__.'/recommendations-core.php';
 
 header('Content-Type: application/json; charset=utf-8');
@@ -17,6 +18,11 @@ $method=$_SERVER['REQUEST_METHOD']??'';
 try {
     $catalog=rec_catalog();
     if ($method==='GET') {
+        if (($_GET['catalog']??null)==='added') {
+            $added=array_filter($catalog,static fn(array $row): bool=>str_starts_with($row['id'],'pub-'));
+            rec_reply(['ok'=>true,'items'=>array_values($added)]);
+            return;
+        }
         $window=filter_input(INPUT_GET,'days',FILTER_VALIDATE_INT)??7;
         if (!in_array($window,[7,30,90],true)) {rec_reply(['ok'=>false],400);return;}
         rec_reply(['ok'=>true,'days'=>$window,'items'=>(object)rec_stats(fb_db(),$catalog,time(),$window)]);

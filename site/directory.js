@@ -5,6 +5,7 @@
  const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=String(text);return n};
  const linkGate=window.AVENQIR_LINK_GATE;
  const safety=window.AVENQIR_ATLAS_SAFETY;
+ const sourceUI=window.AVENQIR_ATLAS_SOURCE_UI;
  const finder=window.AVENQIR_ATLAS_FIND;
  const searchActions=window.AVENQIR_SEARCH_ACTIONS;
  const enrichment=window.AVENQIR_ATLAS_ENRICH;
@@ -36,11 +37,14 @@
    $('atlasExternalName').textContent=String(name||u.hostname).slice(0,90);
    $('atlasExternalHost').textContent=T('访问域名：','Destination host: ')+u.hostname;
    $('atlasExternalUrl').textContent=href;
+   const notice=$('atlasExternalNotice');
+   if(sourceUI&&notice)notice.replaceChildren(sourceUI.external(href,false),
+     T('外链由第三方运营，请核对目标网址。','This website is operated by a third party. Check the destination URL.'));
    if(externalDialog&&typeof externalDialog.showModal==='function'){
      externalDialog.showModal();
      $('atlasExternalCancel').focus();
    }else{
-     if(confirm(T('即将前往未核验第三方域名 '+u.hostname+'。本站不保证该网站安全，确认继续访问？','Leaving for unverified third-party domain '+u.hostname+'. This site cannot guarantee safety. Continue?'))){trackOpen(href);window.location.assign(href);}
+     if(confirm(T('即将前往第三方域名 '+u.hostname+'。请核对目标网址，是否继续？','Leaving for the third-party domain '+u.hostname+'. Check the destination. Continue?'))){trackOpen(href);window.location.assign(href);}
      awaitingExternal=null;
    }
  }
@@ -63,7 +67,7 @@
  const params=new URLSearchParams(location.search);
  const input=$('atlasQuery'),results=$('atlasResults'),cats=$('atlasCategories'),summary=$('atlasSummary'),source=$('atlasSource'),suggest=$('atlasSuggestions');
  const combine=catalog.combine;
- let records=catalog.catalog(), query=(params.get('q')||quickQuery||'').slice(0,140),category='',mode='all',limit=24,loaded=false,selectedFlow='',reviewedOnly=false,threatFilter='all',groupId='',expandedCategories=false;
+ let records=catalog.catalog(), query=(params.get('q')||quickQuery||'').slice(0,140),category='',mode='all',limit=24,loaded=false,selectedFlow='',sourceFilter='all',threatFilter='all',groupId='',expandedCategories=false;
  const pageSize=window.matchMedia?.('(max-width: 600px)').matches?12:24;
  limit=pageSize;
  const key='avenqir.link-atlas.favorites.v8';let favorites=[],compareUrls=[];let pendingNoMatchQuery=query.trim();
@@ -82,6 +86,7 @@
    if(item)localRecommendations?.recordOpen(item.category);
    sessionOpens=[url,...sessionOpens.filter(x=>x!==url)].slice(0,100);
    try{sessionStorage.setItem(recentKey,JSON.stringify(sessionOpens));}catch{}
+   window.dispatchEvent(new CustomEvent('aq:website-open',{detail:url}));
  }
  try{const v=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(v))favorites=v.filter(x=>typeof x==='string').slice(0,500)}catch{}
  input.value=query;
@@ -101,7 +106,7 @@
    return taxonomy.groupFor(x.category)===groupId;
  }
  function filtered(){const flow=paths.flows.find(f=>f.id===selectedFlow);const selectedUrls=flow?new Set(flow.urls):null;
-   let r=records.map(x=>({x,rank:score(x)})).filter(({x,rank})=>rank>=0&&matchingGroup(x)&&(multiOn()?(!multiCategories.size||multiCategories.has(x.category)):(!category||x.category===category))&&(mode!=='saved'||favorites.includes(x.url))&&(!selectedUrls||selectedUrls.has(x.url))&&(!reviewedOnly||!!linkGate?.officialSourceReviewed(x.url))&&(threatFilter==='all'||(safety?.threatStatus(x.url)||'unknown')===threatFilter)&&(languageMode()!=='exact'||languageRank(x)===0));
+   let r=records.map(x=>({x,rank:score(x)})).filter(({x,rank})=>rank>=0&&matchingGroup(x)&&(multiOn()?(!multiCategories.size||multiCategories.has(x.category)):(!category||x.category===category))&&(mode!=='saved'||favorites.includes(x.url))&&(!selectedUrls||selectedUrls.has(x.url))&&(sourceFilter==='all'||Boolean(linkGate?.officialSourceReviewed(x.url))===(sourceFilter==='reviewed'))&&(threatFilter==='all'||(safety?.threatStatus(x.url)||'unknown')===threatFilter)&&(languageMode()!=='exact'||languageRank(x)===0));
    if($('atlasSort').value==='recent')r.sort((a,b)=>{
      const ai=sessionOpens.indexOf(a.x.url),bi=sessionOpens.indexOf(b.x.url);
      return (ai<0?Number.MAX_SAFE_INTEGER:ai)-(bi<0?Number.MAX_SAFE_INTEGER:bi)||(b.rank-a.rank);
@@ -168,10 +173,10 @@
    drawGuide();
  }
  $('atlasResetFlow')?.addEventListener('click',()=>{selectedFlow='';drawPaths();draw();});
- const reviewedBox=$('atlasReviewedOnly');
+ const sourceBox=$('atlasSourceFilter');
  const threatBox=$('atlasThreatFilter');
- reviewedBox?.addEventListener('change',()=>{reviewedOnly=!!reviewedBox.checked;if(reviewedOnly){threatFilter='all';if(threatBox)threatBox.value='all';}limit=pageSize;draw();});
- threatBox?.addEventListener('change',()=>{threatFilter=['all','not-listed','listed','unknown'].includes(threatBox.value)?threatBox.value:'all';if(threatFilter!=='all'){reviewedOnly=false;if(reviewedBox)reviewedBox.checked=false;}limit=pageSize;draw();});
+ sourceBox?.addEventListener('change',()=>{sourceFilter=sourceBox.value;limit=pageSize;draw();});
+ threatBox?.addEventListener('change',()=>{threatFilter=['all','not-listed','listed','unknown'].includes(threatBox.value)?threatBox.value:'all';limit=pageSize;draw();});
  let filterCountRecords=null,filterCountLocale='',filterCountMinute=-1,filterCountCache=null;
  function updateFilterCounts(){
    const currentLocale=locale()?.locale||'en',minute=Math.floor(Date.now()/60000);
@@ -179,10 +184,14 @@
      filterCountRecords=records;filterCountLocale=currentLocale;filterCountMinute=minute;
      const threat=safety?.threatSummary(records)||{checked:0,listed:0,unknown:records.length};
      const registry=records.filter(x=>safety?.registryEvidence(x.url)).length;
-     filterCountCache={reviewed:safety?.summary(records).reviewed||0,clear:threat.checked-threat.listed,listed:threat.listed,unknown:threat.unknown,registry};
+     filterCountCache={reviewed:records.filter(x=>linkGate?.officialSourceReviewed(x.url)).length,clear:threat.checked-threat.listed,listed:threat.listed,unknown:threat.unknown,registry};
    }
    const c=filterCountCache;
-   if($('atlasReviewedLabel'))$('atlasReviewedLabel').textContent=T('只看已核对官方来源','Exact official sources only')+' ('+c.reviewed+')';
+   if($('atlasSourceFilterLabel'))$('atlasSourceFilterLabel').textContent=T('来源状态','Source status');
+   if(sourceBox){
+     const labels={all:T('全部来源','All sources'),reviewed:T('来源已核对','Source checked')+' ('+c.reviewed+')',pending:T('来源待核对','Source pending')+' ('+(records.length-c.reviewed)+')'};
+     for(const option of sourceBox.options)option.textContent=labels[option.value];
+   }
    if($('atlasThreatLabel'))$('atlasThreatLabel').textContent=T('动态风险筛选','Dynamic risk filter');
    if(threatBox){
      const labels={all:T('不限风险结果','All risk results'),'not-listed':T('近期清单未命中','Recent list: no match')+' ('+c.clear+')',listed:T('风险清单命中','Warning list match')+' ('+c.listed+')',unknown:T('结果未知或过期','Unknown or expired')+' ('+c.unknown+')'};
@@ -343,7 +352,7 @@
   ((query?'Matches: ':'Catalog: ')+list.length+' sites · Showing '+shown.length+' / '+records.length+
     (multiOn()&&multiCategories.size?' · Categories: '+[...multiCategories].map(trCategory).join(', '):category?' · Category: '+trCategory(category):'')+(groupId?' · topic filtered':'')):
   (query?'匹配':'目录')+' '+list.length+' 个网站 · 显示 '+shown.length+' 条 / 总目录 '+records.length+' 条'+(multiOn()&&multiCategories.size?' · 多选分类：'+[...multiCategories].join('、'):category?' · 分类：'+category:'')+(groupId?' · 当前主题分组已筛选':'');
-   if(reviewedOnly)summary.textContent+=T(' · 官方来源筛选',' · official-source filter');
+   if(sourceFilter!=='all')summary.textContent+=' · '+(sourceBox?.selectedOptions[0]?.textContent||sourceFilter);
    if(threatFilter!=='all')summary.textContent+=' · '+(threatBox?.selectedOptions[0]?.textContent||threatFilter);
    const counter=$('atlasLiveCount');if(counter)counter.textContent=english()?'Curated '+records.length+' unique websites · '+paths.flows.length+' guided tasks · '+new Set(records.map(x=>x.category)).size+' categories':'已整理 '+records.length+' 个独立网址 · '+paths.flows.length+' 条任务路径 · '+new Set(records.map(x=>x.category)).size+' 个分类';
    const more=$('atlasMore'),all=$('atlasShowAll');more.textContent=T('再显示 '+Math.min(pageSize,Math.max(0,list.length-limit))+' 条 ↓','Show '+Math.min(pageSize,Math.max(0,list.length-limit))+' more ↓');
@@ -357,13 +366,12 @@
      if(x.category==='待分类')hostrow.append(el('span','atlas-auto-category',english()?'Needs categorization':'待分类'));
      else if(['high','medium'].includes(x.categorySource))hostrow.append(el('span','atlas-auto-category',english()?'Suggested category':'自动建议分类'));
      data.append(hostrow);
-     const a=el('a','atlas-result-title',x.name+' ↗');const reviewed=!!linkGate?.officialSourceReviewed(url);const permitted=isAllowed(url);a.href=permitted?url:'leave.html?url='+encodeURIComponent(url)+'&name='+encodeURIComponent(x.name);a.rel='noopener noreferrer';a.referrerPolicy='no-referrer';const rating=safety?.inspect(url);if(dangerous(url)){a.removeAttribute('href');a.setAttribute('aria-disabled','true');a.classList.add('atlas-result-blocked');}a.addEventListener('click',e=>{if(dangerous(url)){e.preventDefault();return;}
+     const a=el('a','atlas-result-title',x.name+' ↗');const permitted=isAllowed(url);a.href=permitted?url:'leave.html?url='+encodeURIComponent(url)+'&name='+encodeURIComponent(x.name);a.rel='noopener noreferrer';a.referrerPolicy='no-referrer';if(dangerous(url)){a.textContent=x.name;a.removeAttribute('href');a.setAttribute('aria-disabled','true');a.classList.add('atlas-result-blocked');}a.addEventListener('click',e=>{if(dangerous(url)){e.preventDefault();return;}
        if(e.button!==0||e.ctrlKey||e.metaKey||e.altKey||e.shiftKey)return;
        if(!permitted){e.preventDefault();showExternal(url,x.name);}
        else trackOpen(url);
      });data.append(a);
-     const riskCopy=english()?({blocked:'Blocked by URL rules',caution:'Extra caution required',reviewed:'Exact source checked · NOT safety-certified',pending:'Source unverified · confirm before leaving'}[rating?.type]||'Source unverified'):rating?.label;
-     data.append(el('small',reviewed?'atlas-review-ok':'atlas-review-unknown',riskCopy||(reviewed?T('官方来源已核对 · 非安全认证','Exact source checked · not safety-certified'):permitted?T('本机已记住（来源未核对）','Remembered on this device (source unverified)'):T('第三方来源待核对 · 点击后确认','Unverified third-party source · confirm before leaving'))));
+     if(sourceUI)data.append(sourceUI.external(url,permitted));
      if(english()&&/[\u3400-\u9fff]/.test(x.description||'')){
        const detail=el('details','atlas-original-desc'),caption=el('summary','',T('查看原始简介','Original description (Chinese) · expand'));
        detail.append(caption,el('p','atlas-result-desc',x.description));data.append(detail);
@@ -378,6 +386,8 @@
        draw();
      });
      const cardActions=el('div','atlas-card-actions');cardActions.append(report,cmp);
+     const rate=sourceUI?.ratingLink(url);
+     if(rate)cardActions.append(rate);
      const reg=safety?.registryEvidence(url);
      if(reg)data.append(el('small','atlas-review-unknown',T('美国政府域名登记归属：','US federal domain registration: ')+reg.organization+T(' · 非精确网址安全核验',' · not exact URL safety verification')));
      const externalVerdict=safety?.threatStatus(url);
@@ -504,7 +514,7 @@
 
  const tabs=[...document.querySelectorAll('[data-tab]')];tabs.forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.tab;limit=pageSize;tabs.forEach(t=>{let active=t===b;t.classList.toggle('active',active);t.setAttribute('aria-pressed',String(active))});draw()}));
  $('atlasClearFilters')?.addEventListener('click',()=>{
-   category='';groupId='';selectedFlow='';multiCategories.clear();mode='all';reviewedOnly=false;threatFilter='all';if(threatBox)threatBox.value='all';limit=pageSize;
+   category='';groupId='';selectedFlow='';multiCategories.clear();mode='all';sourceFilter='all';if(sourceBox)sourceBox.value='all';threatFilter='all';if(threatBox)threatBox.value='all';limit=pageSize;
    for(const id of ['atlasMultiCategory','atlasReviewedOnly'])if($(id))$(id).checked=false;
    if($('atlasSiteLanguageMode'))$('atlasSiteLanguageMode').value='prefer';
    for(const t of tabs){const active=t.dataset.tab==='all';t.classList.toggle('active',active);t.setAttribute('aria-pressed',String(active));}

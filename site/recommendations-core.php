@@ -3,7 +3,57 @@ declare(strict_types=1);
 
 function rec_catalog(): array {
     $data=json_decode((string)file_get_contents(__DIR__.'/recommendations-catalog.json'),true,512,JSON_THROW_ON_ERROR);
-    return array_column($data,null,'id');
+    $seen=[];
+    $result=[];
+    $listed=rec_listed_hosts();
+    foreach ($data as $item) {
+        if ($item['kind']==='website') {
+            $seen[rec_url_key($item['url'])]=true;
+            if (isset($listed[rec_host($item['url'])])) continue;
+        }
+        $result[$item['id']]=$item;
+    }
+    foreach (public_links() as $row) {
+        $url=$row['url']??'';
+        $name=$row['name']??'';
+        if (!is_string($url)||!is_string($name)||$name===''||!filter_var($url,FILTER_VALIDATE_URL)) continue;
+        $parts=parse_url($url);
+        $host=rec_host($url);
+        if (!in_array(strtolower($parts['scheme']??''),['http','https'],true)||!str_contains($host,'.')||
+            isset($parts['user'])||isset($parts['pass'])||isset($listed[$host])||
+            filter_var($host,FILTER_VALIDATE_IP)&&!filter_var($host,FILTER_VALIDATE_IP,FILTER_FLAG_NO_PRIV_RANGE|FILTER_FLAG_NO_RES_RANGE)) continue;
+        $key=rec_url_key($url);
+        if (isset($seen[$key])) continue;
+        $seen[$key]=true;
+        $id='pub-'.substr(hash('sha256',$key),0,32);
+        $result[$id]=['id'=>$id,'title'=>[$name,$name],'url'=>$url,'category'=>$row['category']??'','kind'=>'website'];
+    }
+    return $result;
+}
+
+function rec_host(string $url): string {
+    return strtolower(rtrim((string)parse_url($url,PHP_URL_HOST),'.'));
+}
+
+function rec_url_key(string $url): string {
+    $parts=parse_url($url);
+    $scheme=strtolower($parts['scheme']??'');
+    $port=$parts['port']??null;
+    if (($scheme==='https'&&$port===443)||($scheme==='http'&&$port===80)) $port=null;
+    return $scheme.'://'.rec_host($url).($port?':'.$port:'').($parts['path']??'/').
+        (isset($parts['query'])?'?'.$parts['query']:'').(isset($parts['fragment'])?'#'.$parts['fragment']:'');
+}
+
+function rec_listed_hosts(): array {
+    $script=(string)file_get_contents(__DIR__.'/atlas-threat-snapshot.js');
+    if (!preg_match('/AVENQIR_THREAT_SNAPSHOT\s*=\s*(\{.*\});/s',$script,$matches)) return [];
+    $snapshot=json_decode($matches[1],true);
+    if (($snapshot['schema']??null)!=='aq-certpl-v1'||
+        ($snapshot['source']??null)!=='https://hole.cert.pl/domains/v2/domains.txt'||
+        !is_array($snapshot['listed']??null)) return [];
+    $checkedAt=strtotime($snapshot['checkedAt']??'');
+    if ($checkedAt===false||$checkedAt>time()+300) return [];
+    return array_fill_keys(array_filter($snapshot['listed'],'is_string'),true);
 }
 
 function rec_token($value): bool {

@@ -23,13 +23,23 @@
 .rec-preferences label {min-height:44px;display:flex;align-items:center;gap:.55rem}
 .rec-preferences input {width:18px;height:18px;accent-color:var(--start-accent);margin:0}
 .rec-sort {margin:1rem 0 .65rem}
-.rec-main select {min-height:44px;border:1px solid var(--start-line);border-radius:.55rem;padding:.35rem;color:var(--start-text);background:var(--start-quiet)}
+.rec-main :is(select,input[type="search"]) {min-height:44px;border:1px solid var(--start-line);border-radius:.55rem;padding:.35rem;color:var(--start-text);background:var(--start-quiet);margin:0;max-width:100%}
+.rec-participation,.rec-pagination {display:flex;align-items:center;flex-wrap:wrap;justify-content:space-between;gap:.4rem;margin:.65rem 0}
+.rec-participation {font-size:.9rem;color:var(--start-muted)}
+.rec-filters {display:flex;flex-wrap:wrap;gap:.45rem;align-items:end}
+.rec-filters label {display:grid;gap:.2rem;min-width:0}
+.rec-filters .rec-find {flex:1 1 16rem}
+.rec-filters .rec-find input {width:100%}
+.rec-count {color:var(--start-muted);font-size:.85rem;margin:.6rem 0}
 .rec-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem}
 .rec-grid article {min-width:0;display:flex;flex-direction:column}
 .rec-grid h2 a {display:flex;align-items:center;min-height:44px;overflow-wrap:anywhere}
-.rec-grid small {margin-top:auto;color:var(--start-muted)}
+.rec-grid .rec-my-rating {margin-top:auto}
+.rec-rating-feedback {color:var(--start-muted);font-size:.83rem}
+.rec-rating-feedback:empty {display:none}
+.rec-clear-rating {align-self:start;min-height:44px;padding:0 .45rem;border:0;background:transparent;color:var(--start-accent);text-decoration:underline;cursor:pointer}
 .rec-stars {display:flex;flex-wrap:wrap;gap:.2rem;padding:.18rem 0}
-.rec-stars button {display:grid;place-items:center;width:38px;height:38px;padding:0;border:1px solid var(--start-line);border-radius:.36rem;background:var(--start-quiet);color:var(--start-accent);font:1.15rem/1 system-ui;cursor:pointer}
+.rec-stars button {display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid var(--start-line);border-radius:.36rem;background:var(--start-quiet);color:var(--start-accent);font:1.15rem/1 system-ui;cursor:pointer}
 .rec-stars button[aria-pressed="true"],.rec-stars button:hover {border-color:var(--start-accent);background:var(--start-tint)}
 .rec-status:empty {display:none}
 .rec-status {padding:.55rem 0;color:var(--start-text)}

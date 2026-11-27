@@ -54,15 +54,18 @@ assert.equal(model.drawRandom([bad,pending,ready],gate,safety,null,()=>0),ready)
 assert.equal(model.drawRandom([ready],gate,null,null,()=>0),null);
 assert.equal(model.access('https://www.khanacademy.org/?sample=1',gate,safety).confirmed,false);
 const recommendationTargets=require(path.join(site,'recommendations-catalog.json'));
+assert.equal(recommendationTargets.filter(item=>item.kind==='website').length,catalog.length);
 assert.equal(new Set(recommendationTargets.map(item=>item.id)).size,recommendationTargets.length);
+const siteById=new Map(catalog.map(item=>[item.id,new URL(item.url).href]));
 for(const item of recommendationTargets){
  if(item.kind==='website'){
-  assert.equal(byId.get(item.id)?.entry.url,item.url);
-  assert.equal(model.access(item.url,gate,safety).confirmed,true);
+  assert.equal(siteById.get(item.id),item.url);
+  assert.equal(gate.urlRisk(item.url).blocked,false);
  }else{
   assert.ok(fs.existsSync(path.join(site,item.url.split('#')[0])));
  }
 }
+require('node:child_process').execFileSync(process.execPath,[path.join(site,'../scripts/build_recommendations_catalog.cjs'),'--check']);
 for(const page of ['index.html','directory.html']){
  const html=fs.readFileSync(path.join(site,page),'utf8');
  for(const asset of ['atlas-popular-links','atlas-popular-picks','atlas-popular','atlas-popular-ui']){

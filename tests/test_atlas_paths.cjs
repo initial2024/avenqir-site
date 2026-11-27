@@ -53,7 +53,7 @@ assert.equal(gate.officialSourceReviewed('https://zenodo.org/?next=https://evil.
 assert.equal(gate.officialSourceReviewed('http://squoosh.app/'),false);
 assert.equal(gate.officialSourceReviewed('https://lmstudio.ai/unreviewed-directory-test'),false,'unreviewed exact path must prompt');
 const html=fs.readFileSync(path.join(base,'directory.html'),'utf8');
-for(const name of ['atlasFlowGrid','atlasFlowStatus','atlasResetFlow','atlasReviewedOnly','atlasExportFavorites','atlasExportStatus']){
+for(const name of ['atlasFlowGrid','atlasFlowStatus','atlasResetFlow','atlasSourceFilter','atlasExportFavorites','atlasExportStatus']){
  assert.ok(html.includes('id="'+name+'"'),'missing interface element '+name);
 }
 assert.ok(html.search(/atlas-paths\.js\?v=\d+/)<html.search(/directory\.js\?v=[0-9]+/));
@@ -62,7 +62,7 @@ const sw=fs.readFileSync(path.join(base,'sw.js'),'utf8');
 assert.ok(sw.includes("'./atlas-paths.js'"),'offline addon missing');
 assert.ok(core.includes('paths.flows.find('));
 assert.ok(core.includes('atlasExportFavorites'));
-assert.ok(core.includes('reviewedOnly'));
+assert.ok(core.includes('sourceFilter'));
 assert.ok(!core.includes('window.open('),'never require pop-up windows');
 const favKey='avenqir.link-atlas.favorites.v8';
 const favs=['https://jupyter.org/try','https://zenodo.org/'];

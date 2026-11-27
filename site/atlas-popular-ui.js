@@ -9,6 +9,7 @@
  const picksById=new Map(entries.map(pick=>[pick.entry.id,pick]));
  const gate=window.AVENQIR_LINK_GATE;
  const safety=window.AVENQIR_ATLAS_SAFETY;
+ const sourceUI=window.AVENQIR_ATLAS_SOURCE_UI;
  const home=section.dataset.popularView==='home';
  let storage=null;
  try{storage=window.localStorage;}catch{}
@@ -51,14 +52,11 @@
   attrs.append(el('li','',region?t('地区或内容限制','Regional or content limits'):t('未记录地区限制','No known regional limit')));
   const filesText=files?t('文件可能上传至第三方服务器处理。','Files may be uploaded to a third-party server for processing.'):t('无需上传文件','No file upload required');
   attrs.append(el('li','',filesText));
-  const provenance=el('span','aq-pick-provenance',status.blocked?
-   t('当前已拦截','Currently blocked'):status.confirmed?
-   t('精确网址来源已核对','Exact source checked'):t('来源待核对','Source pending'));
+  const direct=!status.blocked&&gate.maySkipConfirmation(entry.url,storage);
   const footer=el('div','aq-pick-footer');
-  footer.append(provenance);
   if(!status.blocked){
    const link=el('a','aq-pick-link',t('访问网站','Open site'));
-   link.href=gate.maySkipConfirmation(entry.url,storage)?entry.url:'leave.html?url='+encodeURIComponent(entry.url)+'&name='+encodeURIComponent(entry.name);
+   link.href=direct?entry.url:'leave.html?url='+encodeURIComponent(entry.url)+'&name='+encodeURIComponent(entry.name);
    link.rel='noopener noreferrer';
    link.referrerPolicy='no-referrer';
    link.setAttribute('aria-label',t('访问 '+entry.name,'Open '+entry.name));
@@ -67,7 +65,11 @@
    });
    footer.append(link);
   }
-  article.append(meta,heading,details,why,attrs,footer);
+  const rate=sourceUI?.ratingLink(entry.url);
+  if(rate)footer.append(rate);
+  article.append(meta,heading,details,why,attrs);
+  if(sourceUI)article.append(sourceUI.external(entry.url,direct));
+  article.append(footer);
   return article;
  }
  function showPreview(pick){

@@ -12,7 +12,7 @@
   function valid(value){
     return object(value)&&value.version===1&&Array.isArray(value.clicks)&&value.clicks.length<=MAX_CLICKS&&
       value.clicks.every(row=>object(row)&&idValid(row.toolId)&&stamp(row.ts))&&object(value.ratings)&&
-      Object.keys(value.ratings).length<=160&&Object.entries(value.ratings).every(([id,row])=>
+      Object.keys(value.ratings).length<=2000&&Object.entries(value.ratings).every(([id,row])=>
         idValid(id)&&object(row)&&stars(row.stars)&&stamp(row.updatedAt));
   }
   function normalize(clicks,ratings,now){

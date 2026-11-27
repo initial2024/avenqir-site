@@ -1,27 +1,39 @@
 "use strict";
 (()=>{
   const model=window.AVENQIR_RECOMMENDATIONS;
+  const sourceUI=window.AVENQIR_ATLAS_SOURCE_UI;
   const panel=document.querySelector('[data-rec-view]');
-  if(!model||!panel)return;
+  if(!model||!sourceUI)return;
 
-  const full=panel.dataset.recView==='full';
+  const full=panel?.dataset.recView==='full';
   const LOCAL='avenqir.recommendations.history.v1';
   const SHARE='avenqir.recommendations.share.v1';
   const TOKEN='avenqir.recommendations.token.v1';
   const endpoint='recommendations-api.php';
-  const trend=panel.querySelector('[data-rec-trend]');
-  const status=panel.querySelector('[data-rec-status]');
-  const sort=panel.querySelector('#recSort');
-  const windowSelect=panel.querySelector('#recWindow');
-  const list=panel.querySelector('#recCards');
-  const share=panel.querySelector('#recShare');
-  const local=panel.querySelector('#recLocal');
-  const revoke=panel.querySelector('#recRevoke');
+  const trend=panel?.querySelector('[data-rec-trend]');
+  const status=panel?.querySelector('[data-rec-status]');
+  const sort=panel?.querySelector('#recSort');
+  const windowSelect=panel?.querySelector('#recWindow');
+  const list=panel?.querySelector('#recCards');
+  const share=panel?.querySelector('#recShare');
+  const local=panel?.querySelector('#recLocal');
+  const revoke=panel?.querySelector('#recRevoke');
+  const query=panel?.querySelector('#recQuery');
+  const type=panel?.querySelector('#recType');
+  const count=panel?.querySelector('#recCount');
+  const clearFilter=panel?.querySelector('#recClearFilter');
+  const prev=panel?.querySelector('#recPrevious');
+  const next=panel?.querySelector('#recNext');
+  const pageSize=8;
+  let page=0;
+  let pick=new URLSearchParams(location.search).get('pick');
+  let positioned=false;
   let rows=[];
   let indexes=null;
   let stats=null;
   let fetchVersion=0;
   const pending=new Set();
+  const messages=new Map();
   const t=(zh,en)=>(window.AVENQIR_I18N?.locale||document.documentElement.lang).startsWith('zh')?zh:en;
   const name=item=>t(...item.title);
   const english={
@@ -34,10 +46,14 @@
     privacy:'Privacy policy',list:'Tools and websites',sort:'Sort',recommended:'Recommendation',
     rating:'Highest rated',popular:'Most opened',name:'Name A–Z',confirm:'Confirm',
     cancel:'Cancel',apply:'Confirm',open:'Tools and ratings',
+    find:'Search by name, domain or category',type:'Type',all:'All types',
+    tool:'AVENQIR tools',website:'Third-party sites',clearFilter:'Browse all',
+    previous:'Previous page',next:'Next page',
+    manageSharing:'Participation settings',
   };
   const labels=[...document.querySelectorAll('[data-rec-label]')].map(node=>[node,node.textContent]);
   function localize(){for(const [node,original] of labels)node.textContent=t(original,english[node.dataset.recLabel]);}
-  const say=message=>{status.textContent=message;};
+  const say=message=>{if(status)status.textContent=message;};
   function read(key){
     try{return localStorage.getItem(key);}
     catch{return null;}
@@ -77,7 +93,7 @@
     if(item.kind!=='website')return null;
     const gate=window.AVENQIR_LINK_GATE;
     const safety=window.AVENQIR_ATLAS_SAFETY;
-    if(!gate||!safety||safety.inspect(item.url).type!=='reviewed'||!gate.officialSourceReviewed(item.url))return null;
+    if(!gate||!safety||gate.urlRisk(item.url).blocked||safety.threatStatus(item.url)==='listed')return null;
     let storage=null;
     try{storage=window.localStorage;}catch{}
     return gate.maySkipConfirmation(item.url,storage)?item.url:
@@ -95,11 +111,13 @@
   }
   function loadCatalog(){
     if(!indexes){
-      indexes=fetch('recommendations-catalog.json').then(response=>{
-        if(!response.ok)throw Error('catalog');
-        return response.json();
-      }).then(payload=>{
-        rows=payload.filter(item=>destination(item));
+      indexes=sourceUI.catalog().then(payload=>{
+        const seen=new Set();
+        rows=payload.filter(item=>{
+          if(!destination(item)||seen.has(item.url))return false;
+          seen.add(item.url);
+          return true;
+        });
         return new Map(rows.map(item=>[item.id,item]));
       }).catch(()=>{
         indexes=null;
@@ -153,23 +171,24 @@
   async function rate(id,stars){
     if(pending.has(id))return;
     const data=getLocal();
-    const removing=stars===data.ratings[id]?.stars;
+    const removing=stars===null;
     if(removing)delete data.ratings[id];
     else data.ratings[id]={stars,updatedAt:Date.now()};
     if(!write(model.KEY,JSON.stringify(data)))return;
     if(read(SHARE)!=='1'){
-      say(removing?t('已清除我的评分。','Personal rating removed.'):t('评分已保存在本机。','Rating saved on this device.'));
+      messages.set(id,removing?t('已清除我的评分。','Personal rating removed.'):t('评分已保存在本机。','Rating saved on this device.'));
       render();
       return;
     }
     pending.add(id);
+    messages.set(id,t('正在更新公开评分…','Updating public rating…'));
     render();
     try{
       await post(removing?'remove':'rate',id,removing?null:stars);
-      say(removing?t('已撤回公开评分。','Public rating removed.'):t('已参与公开评分。','Public rating submitted.'));
+      messages.set(id,removing?t('已撤回公开评分。','Public rating removed.'):t('已参与公开评分。','Public rating submitted.'));
       await refresh();
     }catch(error){
-      say(error.message==='limit'?t('公开操作达到频率限制。本机设置已保存。','Public rate limit reached. Your local change was saved.'):
+      messages.set(id,error.message==='limit'?t('公开操作达到频率限制。本机设置已保存。','Public rate limit reached. Your local change was saved.'):
         t('公开服务暂不可用。本机设置已保存。','Public service unavailable. Your local change was saved.'));
     }finally{
       pending.delete(id);
@@ -189,6 +208,7 @@
     group.setAttribute('role','group');
     group.setAttribute('aria-label',t('我的评分：','My rating: ')+name(item));
     const personal=localData.ratings[item.id]?.stars||0;
+    const source=item.kind==='tool'?sourceUI.badge('tool'):sourceUI.external(item.url,!destination(item).startsWith('leave.html'));
     for(let stars=1;stars<=5;stars++){
       const button=element('button',stars<=personal?'★':'☆');
       button.type='button';
@@ -204,7 +224,18 @@
       event.preventDefault();
       rate(item.id,Number(event.key));
     });
-    article.append(title,info,element('small',t('我的评分','My rating')),group);
+    const myRating=element('p',personal?t('我的评分 '+personal+'/5','My rating '+personal+'/5'):t('我的评分','My rating'));
+    myRating.className='rec-my-rating';
+    const clear=element('button',t('清除我的评分','Clear my rating'));
+    clear.className='rec-clear-rating';
+    clear.type='button';
+    clear.hidden=!personal;
+    clear.disabled=pending.has(item.id);
+    clear.addEventListener('click',()=>rate(item.id,null));
+    const detail=element('small',messages.get(item.id));
+    detail.className='rec-rating-feedback';
+    detail.setAttribute('role','status');
+    article.append(title,source,info,myRating,group,clear,detail);
     return article;
   }
   function render(){
@@ -227,33 +258,54 @@
     if(!hottest.length)trend.append(element('li',t('暂时没有足够的打开记录。','There is no activity to rank yet.')));
     if(!full)return;
     share.checked=read(SHARE)==='1';
+    panel.querySelector('#recSharingMode').textContent=share.checked?
+      t('当前评分会同时参与公开汇总。','New ratings also contribute to the public totals.'):
+      t('评分默认保存在本机。','Ratings are saved on this device.');
     local.checked=read(LOCAL)==='1';
     revoke.disabled=!read(TOKEN);
     const choice=sort.value;
     const titleCompare=(a,b)=>name(a).localeCompare(name(b));
-    const pick=new URLSearchParams(location.search).get('pick');
-    const ordered=[...rows].sort((a,b)=>{
+    const terms=query.value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+    const ordered=rows.filter(item=>{
+      if(pick&&item.id!==pick)return false;
+      if(type.value!=='all'&&item.kind!==type.value)return false;
+      const text=[...item.title,item.category||'',item.url].join(' ').toLocaleLowerCase();
+      return terms.every(term=>text.includes(term));
+    }).sort((a,b)=>{
       if(choice==='name')return titleCompare(a,b);
       const x=values[a.id],y=values[b.id];
       const byRating=(stats?(y?.average||0)-(x?.average||0):(localData.ratings[b.id]?.stars||0)-(localData.ratings[a.id]?.stars||0));
       const primary=choice==='rating'?byRating:choice==='popular'?(y?.clicks||0)-(x?.clicks||0):(y?.score||0)-(x?.score||0);
-      return (b.id===pick)-(a.id===pick)||primary||titleCompare(a,b);
+      return primary||titleCompare(a,b);
     });
     const active=document.activeElement;
     const lastTool=active?.closest('[data-rec-tool]')?.dataset.recTool;
     const lastStar=active?.dataset.recStar;
-    list.replaceChildren(...ordered.map(item=>makeCard(item,localView,localData)));
-    if(lastTool&&lastStar)list.querySelector('[data-rec-tool="'+lastTool+'"] [data-rec-star="'+lastStar+'"]')?.focus({preventScroll:true});
+    const clearing=active?.classList.contains('rec-clear-rating');
+    const lastPage=Math.max(0,Math.ceil(ordered.length/pageSize)-1);
+    page=Math.min(page,lastPage);
+    list.replaceChildren(...ordered.slice(page*pageSize,(page+1)*pageSize).map(item=>makeCard(item,localView,localData)));
+    if(!ordered.length)list.append(element('p',t('没有匹配的条目。试试名称或域名。','No matches. Try a name or a domain.')));
+    count.textContent=t(`${ordered.length} 个条目 · 第 ${page+1} / ${lastPage+1} 页`,`${ordered.length} entries · Page ${page+1} of ${lastPage+1}`);
+    clearFilter.hidden=!pick&&!query.value&&type.value==='all';
+    prev.disabled=page===0;
+    next.disabled=page===lastPage;
+    panel.querySelector('.rec-pagination').hidden=lastPage===0;
+    if(lastTool&&(lastStar||clearing)){
+      const tile=list.querySelector('[data-rec-tool="'+lastTool+'"]');
+      const control=tile?.querySelector(lastStar?'[data-rec-star="'+lastStar+'"]':'.rec-clear-rating:not([hidden])');
+      (control||tile?.querySelector('.rec-stars button'))?.focus({preventScroll:true});
+    }
+    if(pick&&!positioned&&ordered.length){
+      positioned=true;
+      const first=list.querySelector('.rec-stars button');
+      first?.focus();
+    }
   }
-  async function record(event){
-    if(event.defaultPrevented||!(event.target instanceof Element))return;
-    if(event.type==='auxclick'&&event.button!==1)return;
+  async function recordOpen(id,url){
     if(read(LOCAL)!=='1'&&read(SHARE)!=='1')return;
-    const anchor=event.target.closest('a[data-rec-open],a.start-card,a.aq-pick-link');
-    if(!anchor)return;
     const map=await loadCatalog();
-    const id=anchor.dataset.recOpen||anchor.closest('[data-pick-id]')?.dataset.pickId||
-      rows.find(item=>item.kind==='tool'&&item.url===anchor.getAttribute('href'))?.id;
+    id=id||rows.find(item=>item.url===url)?.id;
     if(!map.has(id))return;
     if(read(LOCAL)==='1'){
       const state=getLocal();
@@ -262,8 +314,21 @@
     }
     if(read(SHARE)==='1')post('click',id).catch(()=>{});
   }
+  function record(event){
+    if(event.defaultPrevented||!(event.target instanceof Element))return;
+    if(event.type==='auxclick'&&event.button!==1)return;
+    const anchor=event.target.closest('a[data-rec-open],a.start-card,a.aq-pick-link');
+    if(!anchor)return;
+    const pick=anchor.closest('[data-pick-id]');
+    recordOpen(anchor.dataset.recOpen||pick?.dataset.pickId,anchor.getAttribute('href'));
+  }
   document.addEventListener('click',record);
   document.addEventListener('auxclick',record);
+  window.addEventListener('aq:website-open',event=>recordOpen(null,event.detail));
+  if(!panel){
+    if(read(SHARE)==='1'||read(LOCAL)==='1')loadCatalog();
+    return;
+  }
   window.addEventListener('aq:language-change',()=>{localize();if(rows.length)render();});
   window.addEventListener('online',()=>{if(full||panel.open)refresh();});
   window.addEventListener('offline',()=>{stats=null;if(rows.length)render();});
@@ -274,7 +339,39 @@
     return;
   }
   if(windowSelect)windowSelect.addEventListener('change',refresh);
-  if(sort)sort.addEventListener('change',render);
+  function clearPick(){
+    if(!pick)return;
+    pick=null;
+    const url=new URL(location.href);
+    url.searchParams.delete('pick');
+    history.replaceState(null,'',url.pathname+url.search+url.hash);
+  }
+  for(const control of [query,type]){
+    control.addEventListener(control===query?'input':'change',()=>{
+      clearPick();
+      page=0;
+      render();
+    });
+  }
+  sort.addEventListener('change',()=>{page=0;render();});
+  clearFilter.addEventListener('click',()=>{
+    clearPick();
+    query.value='';
+    type.value='all';
+    page=0;
+    render();
+    query.focus();
+  });
+  for(const [button,offset] of [[prev,-1],[next,1]])button.addEventListener('click',()=>{
+    page+=offset;
+    render();
+    list.querySelector('article h2 a')?.focus();
+  });
+  panel.querySelector('#recManageSharing').addEventListener('click',()=>{
+    const settings=panel.querySelector('.rec-preferences');
+    settings.open=true;
+    share.focus();
+  });
   local.addEventListener('change',()=>{write(LOCAL,local.checked?'1':'0');render();});
   share.addEventListener('change',()=>{
     if(!share.checked)write(SHARE,'0');

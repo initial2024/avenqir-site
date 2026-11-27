@@ -34,18 +34,20 @@ document.addEventListener('DOMContentLoaded',()=>{
    document.documentElement.dataset.aqSearchFlow=String(quiet&&noMatch&&closed&&matched&&order);
    input.value='';input.dispatchEvent(new Event('input',{bubbles:true}));form.requestSubmit();
    document.getElementById('atlasClearFilters').click();
-   const official=document.getElementById('atlasReviewedOnly'),threat=document.getElementById('atlasThreatFilter'),summary=document.getElementById('atlasSummary');
-   official.checked=true;official.dispatchEvent(new Event('change'));
+   const official=document.getElementById('atlasSourceFilter'),threat=document.getElementById('atlasThreatFilter'),summary=document.getElementById('atlasSummary');
+   official.value='reviewed';official.dispatchEvent(new Event('change'));
    const count=window.AVENQIR_LINK_GATE.OFFICIAL_URLS.length;
    const sourceOnly=summary.textContent.includes('Catalog: '+count+' sites')||summary.textContent.includes('目录 '+count+' 个网站');
    threat.value='not-listed';threat.dispatchEvent(new Event('change'));
-   const exclusive=!official.checked;
-   const allClear=summary.textContent.includes('Catalog: '+total+' sites')||summary.textContent.includes('目录 '+total+' 个网站');
+   const together=official.value==='reviewed'&&(summary.textContent.includes('Catalog: '+count+' sites')||summary.textContent.includes('目录 '+count+' 个网站'));
+   official.value='pending';official.dispatchEvent(new Event('change'));
+   const pending=summary.textContent.includes('Catalog: '+(total-count)+' sites')||summary.textContent.includes('目录 '+(total-count)+' 个网站');
+   const pendingBadge=!!r.querySelector('.aq-source-pending');
    threat.value='listed';threat.dispatchEvent(new Event('change'));
    const zero=/0 sites|0 个网站/.test(summary.textContent);
    document.getElementById('atlasClearFilters').click();
-   const reset=threat.value==='all'&&!official.checked;
-   document.documentElement.dataset.aqThreatFilter=String(sourceOnly&&exclusive&&allClear&&zero&&reset);
+   const reset=threat.value==='all'&&official.value==='all';
+   document.documentElement.dataset.aqThreatFilter=String(sourceOnly&&together&&pending&&pendingBadge&&zero&&reset);
 
    const locale=document.getElementById('aqLocaleSelect');
    locale.value='en';locale.dispatchEvent(new Event('change'));
