@@ -1,6 +1,6 @@
 "use strict";
 // Research only. The caller must verify the bytes and obtain consent before init.
-importScripts('../site/atlas-domain-embedding.js','atlas-multilingual-intents.js','atlas-retrieval-runtime.js');
+importScripts('../site/atlas-domain-embedding.js','atlas-model-codec.js','atlas-multilingual-intents.js','atlas-retrieval-runtime.js');
 const embed=globalThis.AVENQIR_DOMAIN_EMBEDDING, retrieval=globalThis.AVENQIR_RESEARCH_RETRIEVAL;
 let state=null,epoch=0;
 function validModel(model){
@@ -18,9 +18,10 @@ self.onmessage=e=>{
  try{
   if(m.type==='init'){
    state=null;epoch++;
-   validModel(m.model);
+   const model=typeof m.model==='string'?globalThis.AVENQIR_RESEARCH_CODEC.deserialize(m.model):m.model;
+   validModel(model);
    const baseline=embed.create(m.baseline),items=loadCatalog(m.items);
-   state={model:m.model,baseline,items};
+   state={model,baseline,items};
    self.postMessage({type:'ready',id:m.id,epoch,count:items.length});return;
   }
   if(m.type==='clear'){state=null;epoch++;self.postMessage({type:'cleared',id:m.id,epoch});return;}
