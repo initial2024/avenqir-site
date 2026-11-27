@@ -54,7 +54,7 @@ self.addEventListener('activate',event=>{
 });
 self.addEventListener('fetch',event=>{
   const req=event.request,u=new URL(req.url);
-  if(req.method!=='GET'||u.origin!==self.location.origin||u.searchParams.has('check'))return;
+  if(req.method!=='GET'||u.origin!==self.location.origin||u.searchParams.has('check')||u.pathname.endsWith('.php')||u.pathname.endsWith('/remote-workspace.html')||u.pathname.includes('/_private/')||u.pathname.includes('/_store/')||u.pathname.includes('/admin')||u.pathname.endsWith('/probe.txt'))return;
   const key=canonical(req.url);if(!key)return;
   const html=key.endsWith('.html');
   const cached=async()=>{const cache=await caches.open(CACHE);return await cache.match(key);};
