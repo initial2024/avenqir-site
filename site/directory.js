@@ -390,7 +390,7 @@
    }
  }
  let languageStatsRecords=null,languageStatsLocale='';
- function draw(){syncDirectoryURL();const list=filtered(), shown=list.slice(0,limit);renderTags();quickCategories();results.replaceChildren();$('atlasEmpty').hidden=list.length!==0||!!semantic?.pending?.(query,records);const hint=$('atlasFilteredHint');if(hint)hint.hidden=!(query&&list.length===0&&records.some(x=>score(x)>=0));
+ function draw(){syncDirectoryURL();if(!query)semantic?.scores('',records);const list=filtered(), shown=list.slice(0,limit);renderTags();quickCategories();results.replaceChildren();$('atlasEmpty').hidden=list.length!==0||!!semantic?.pending?.(query,records);const hint=$('atlasFilteredHint');if(hint)hint.hidden=!(query&&list.length===0&&records.some(x=>score(x)>=0));
    const languageHint=$('atlasSiteLanguageHint'),target=locale()?.locale||'en';
    if(languageHint&&(languageStatsRecords!==records||languageStatsLocale!==target)){
      languageStatsRecords=records;languageStatsLocale=target;
