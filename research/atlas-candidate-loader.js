@@ -1,0 +1,75 @@
+"use strict";
+// Research only: the production directory does not load this module.
+(function(root){
+ const CACHE='avenqir-semantic-model-v2-candidate';
+ const MIME=new Set(['application/json','application/octet-stream','text/plain','text/json']);
+ function create(specs,env=root){
+  if(!Array.isArray(specs)||!specs.length||specs.length>4)throw Error('manifest');
+  const manifest=specs.map(s=>{const u=new URL(s.file,env.location.href);
+   if(u.origin!==env.location.origin||u.username||u.password||u.hash||!Number.isInteger(s.bytes)||s.bytes<1||s.bytes>512*1024||!/^[a-f0-9]{64}$/.test(s.sha256))throw Error('manifest');
+   return {...s,url:u.href};});
+  if(new Set(manifest.map(s=>s.url)).size!==manifest.length)throw Error('manifest');
+  let running=false,controller=null,revision=0,active=null;
+  const total=manifest.reduce((n,s)=>n+s.bytes,0);
+  async function verify(bytes,s){
+   if(bytes.byteLength!==s.bytes)throw Error('integrity');
+   if(!env.crypto?.subtle)throw Error('crypto_unavailable');
+   const hash=[...new Uint8Array(await env.crypto.subtle.digest('SHA-256',bytes))].map(x=>x.toString(16).padStart(2,'0')).join('');
+   if(hash!==s.sha256)throw Error('integrity');
+   try{return new TextDecoder('utf-8',{fatal:true}).decode(bytes);}catch{throw Error('model_format');}
+  }
+  function alive(id,signal){if(id!==revision||signal.aborted)throw Error('cancelled');}
+  async function fetchOne(s,signal,report){
+   let r;try{r=await env.fetch(s.url,{credentials:'same-origin',redirect:'error',cache:'no-store',signal,referrerPolicy:'no-referrer'});}catch{throw Error('network');}
+   if(!r.ok)throw Error('http');
+   if(r.url&&new URL(r.url).origin!==env.location.origin)throw Error('origin');
+   if(!MIME.has(String(r.headers.get('content-type')||'').split(';')[0].trim().toLowerCase()))throw Error('mime');
+   const out=new Uint8Array(s.bytes);let n=0;
+   if(r.body?.getReader){
+    const reader=r.body.getReader();try{while(true){const {done,value}=await reader.read();if(signal.aborted)throw Error('cancelled');if(done)break;if(n+value.length>s.bytes)throw Error('integrity');out.set(value,n);n+=value.length;report(n);}}finally{try{await reader.cancel();}catch{}}
+   }else{
+    // No streaming API: only accept a bounded advertised length.
+    if(r.headers.get('content-length')!==String(s.bytes))throw Error('stream');
+    const data=new Uint8Array(await r.arrayBuffer());if(data.length!==s.bytes)throw Error('integrity');out.set(data);n=data.length;report(n);
+   }
+   if(n!==s.bytes)throw Error('integrity');return out;
+  }
+  async function load({consent=false,restore=false,activate,onProgress=()=>{}}={}){
+   if(running)throw Error('busy');
+   if(!restore&&consent!==true)throw Error('consent');
+   if(typeof activate!=='function')throw Error('activate');
+   running=true;const id=++revision,ctl=new AbortController();controller=ctl;
+   let timedOut=false;const deadline=setTimeout(()=>{timedOut=true;ctl.abort();},45000);
+   let cache=null,downloaded=0,staged=[],persisted=false;const started=performance.now();
+   try{
+    try{if(env.caches)cache=await env.caches.open(CACHE);}catch{}
+    if(restore&&!cache)return {state:'missing'};
+    for(const s of manifest){
+     alive(id,ctl.signal);let bytes;
+     if(restore){const r=await cache.match(s.url);if(!r)return {state:'missing'};bytes=new Uint8Array(await r.arrayBuffer());}
+     else bytes=await fetchOne(s,ctl.signal,n=>onProgress({bytes:downloaded+n,total,rate:(downloaded+n)/Math.max(.05,(performance.now()-started)/1000)}));
+     const value=await verify(bytes,s);staged.push({s,bytes,value});downloaded+=bytes.length;
+    }
+    alive(id,ctl.signal);
+    // Activation must acknowledge the worker is usable before writing any cache.
+    const candidate=await activate(staged.map(x=>x.value),ctl.signal);
+    try{alive(id,ctl.signal);}catch(e){candidate?.close?.();throw e;}
+    if(!candidate||typeof candidate.close!=='function')throw Error('activate');
+    active?.close();active=candidate;
+    // A complete verified set is needed for offline restore. If writing fails,
+    // discard this candidate cache, never the old production cache.
+    if(!restore&&cache){try{for(const x of staged)await cache.put(x.s.url,new Response(x.bytes,{headers:{'Content-Type':'application/json'}}));persisted=true;}catch{try{await env.caches.delete(CACHE);}catch{}}}
+    else persisted=restore;
+    return {state:'ready',persisted,bytes:downloaded};
+   }catch(e){
+    if(restore&&cache){try{await env.caches.delete(CACHE);}catch{}}
+    const known=new Set(['integrity','crypto_unavailable','model_format','network','http','origin','mime','stream','cancelled','activate']);
+    throw Error(timedOut?'timeout':ctl.signal.aborted?'cancelled':known.has(e.message)?e.message:'load');
+   }finally{clearTimeout(deadline);running=false;controller=null;}
+  }
+  function cancel(){controller?.abort();}
+  async function remove(){if(running)throw Error('busy');revision++;active?.close();active=null;if(env.caches)await env.caches.delete(CACHE);}
+  return Object.freeze({load,cancel,remove,active:()=>!!active,total});
+ }
+ const api=Object.freeze({create,CACHE});if(typeof module==='object'&&module.exports)module.exports=api;else root.AVENQIR_RESEARCH_LOADER=api;
+})(typeof self!=='undefined'?self:globalThis);
