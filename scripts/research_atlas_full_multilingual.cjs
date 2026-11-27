@@ -65,3 +65,20 @@ assert.deepEqual(codec.deserialize(packed[idx]),payloads[idx]);
 if(process.argv.includes('--write'))fs.writeFileSync(target,packed[idx]);
 if(process.argv.includes('--check'))assert.equal(fs.readFileSync(target,'utf8'),packed[idx]);
 console.log('64_CLASS_PACKED_CAP_REPORT',JSON.stringify({total,metrics,best}));
+
+const crypto=require('node:crypto');
+const bundlePath=path.join(__dirname,'../research/atlas-semantic-bundle-v2.json');
+const domainPacked=JSON.parse(fs.readFileSync(path.join(__dirname,'../research/atlas-model-v2.packed.json'),'utf8'));
+const fullBundle=JSON.stringify({schema:'aq-semantic-bundle-2',domain:domainPacked,unicode:JSON.parse(packed[idx])})+'\n';
+const spec=require('../research/atlas-semantic-manifest.js');
+assert.equal(Buffer.byteLength(fullBundle),spec.bytes);assert.equal(crypto.createHash('sha256').update(fullBundle).digest('hex'),spec.sha256);
+if(process.argv.includes('--check'))assert.equal(fs.readFileSync(bundlePath,'utf8'),fullBundle);
+const unicodeRuntime=require('../research/atlas-unicode-runtime.js');
+const loadedUnicode=unicodeRuntime.create(codec.deserialize(packed[idx]),tasks);
+for(const q of ['ضغط صورة','PDFを圧縮','QR 코드 생성','научные статьи','地图']){
+ assert.deepEqual([...unicodeRuntime.unicodeFeatures(q)], [...unicodeFeatures(q)]);
+ const a=loadedUnicode.classify(q),b=classify(payloads[idx].classes,unicodeFeatures,q);
+ assert.deepEqual(a.map(x=>x.id),b.map(x=>x.id));
+ for(let i=0;i<a.length;i++)assert.ok(Math.abs(a[i].score-b[i].score)<1e-10);
+}
+console.log('FULL_BUNDLE_MANIFEST_AND_RUNTIME_PASS',spec.bytes);
