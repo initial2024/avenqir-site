@@ -1,5 +1,6 @@
 "use strict";
 (function(root){
+const multilingual=typeof module==='object'&&module.exports?require('./atlas-multilingual-intents.js'):root.AVENQIR_RESEARCH_MULTILINGUAL;
 function classify(model,features,text){
  const f=features(text);return model.classes.map(([id,weights])=>{let score=0;for(const [k,w] of weights)score+=(f.get(k)||0)*w/4096;return {id,score};}).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id));
 }
@@ -65,7 +66,8 @@ function compound(q){
 function candidate(query,items,model,features,baseline){
  const q=String(query||'').normalize('NFKC').trim();
  if(q.length<3||q.length>512||constraints.test(q)||incompatible.test(q)||compound(q))return [];
- const matches=rules.filter(([,p])=>p.test(q));
+ const alias=multilingual.resolve(q);if(alias.blocked)return [];
+ const matches=alias.id?rules.filter(([id])=>id===alias.id):rules.filter(([,p])=>p.test(q));
  if(matches.length>1)return []; // unresolved conjunction: do not broaden to an OR.
  if(!matches.length)return [...baseline.rank(q,items).keys()];
  const [id,,guard]=matches[0];
