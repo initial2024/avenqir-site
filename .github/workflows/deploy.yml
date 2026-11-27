@@ -60,6 +60,8 @@ jobs:
           if test -f scripts/research_atlas_retrieval_v2.cjs; then node scripts/research_atlas_retrieval_v2.cjs; fi
           if test -f scripts/research_atlas_unicode.cjs; then node scripts/research_atlas_unicode.cjs --check; fi
           if test -f scripts/research_atlas_full_multilingual.cjs; then node scripts/research_atlas_full_multilingual.cjs --check; fi
+          if test -f scripts/research_atlas_paraphrases.cjs; then node scripts/research_atlas_paraphrases.cjs; fi
+          if test -f scripts/build_semantic_candidate.cjs; then node scripts/build_semantic_candidate.cjs --check; fi
           if test -f scripts/research_atlas_pack.cjs; then node scripts/research_atlas_pack.cjs --check; fi
           if test -f tests/research_atlas_worker_client.cjs; then node tests/research_atlas_worker_client.cjs; node --check research/atlas-search-worker.js; fi
           node tests/test_atlas_semantic.cjs
