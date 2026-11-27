@@ -512,3 +512,11 @@ function assess(engine,fine,dev,challenge){
 }
 
 const robustness=assess(engine,fine,dev,challenge);assert.equal(robustness.correctLocale.n,120);assert.equal(robustness.negative.n,136);console.log('LOCALE_ROBUSTNESS_REPORT',JSON.stringify(robustness));
+
+const augmentation=require('../research/atlas-paraphrase-augmentation.cjs');
+const evalPhrases=new Set(dev.concat(challenge).flatMap(r=>r.slice(1).filter((_,i)=>i%2===0)).map(fine.normalize));
+let addedCount=0;
+for(const [locale,...qs] of augmentation.rows)for(const q of qs)if(q){assert.ok(!exact.has(fine.normalize(q)));assert.ok(!evalPhrases.has(fine.normalize(q)));addedCount++;}
+const expanded={...fine,tasks:fine.tasks.concat(augmentation.tasks),rows:fine.rows.map((r,i)=>{assert.equal(r[0],augmentation.rows[i][0]);return r.concat(augmentation.rows[i].slice(1));})};
+const augmented=assess(create(expanded,topics,uni,u),fine,dev,challenge);
+console.log('AUGMENTED_REFERENCE_REPORT',JSON.stringify({addedCount,...augmented}));
