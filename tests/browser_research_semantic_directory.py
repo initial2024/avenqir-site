@@ -37,6 +37,7 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  yes(panel().hidden,'fresh page should not interrupt');
  if('serviceWorker' in w.navigator){
   await wait(()=>!!w.navigator.serviceWorker.controller);
+  yes(w.navigator.serviceWorker.controller.scriptURL.includes('/sw.js'),'unexpected worker controller');
   const caches=await w.caches.keys();
   for(const key of caches){const c=await w.caches.open(key);yes(!await c.match(modelURL()),'model in cache before consent');}
   yes(w.performance.getEntriesByName(modelURL()).length===0,'worker preloaded optional weights');
