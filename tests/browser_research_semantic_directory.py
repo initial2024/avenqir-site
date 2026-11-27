@@ -11,7 +11,7 @@ MODEL_PATH='/research/atlas-semantic-bundle-v2.json'
 CANDIDATE_SCRIPTS=['atlas-semantic-manifest.js','atlas-semantic-locales.js','atlas-candidate-loader.js','atlas-worker-client.js','atlas-worker-activation.js','atlas-semantic-directory-adapter.js']
 DIRECTORY=(SITE/'directory.html').read_text(encoding='utf-8').replace('<script src="atlas-semantic-download.js?v=150" defer></script>',''.join('<script src="/research/'+x+'" defer></script>' for x in CANDIDATE_SCRIPTS))
 assert 'atlas-semantic-directory-adapter.js' in DIRECTORY
-DIRECTORY_JS=(SITE/'directory.js').read_text(encoding='utf-8').replace('}},T);','}},T,()=>records);',1)
+DIRECTORY_JS=(SITE/'directory.js').read_text(encoding='utf-8')
 assert 'T,()=>records);' in DIRECTORY_JS
 requests=[]
 mode='bad'
@@ -54,6 +54,7 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  yes($('atlasSemanticDetail').textContent.includes('100%'),'100% not shown');
  yes(w.localStorage.getItem('avenqir.semantic.preference.v2')==='enabled','consent not saved');
  query('QR 코드 생성');
+ yes(!$('atlasNoMatchDialog').open,'premature no-match dialog while worker is pending');
  await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent)));
  yes(w.document.querySelector('#atlasResults .atlas-semantic-match'),'semantic result not labelled');
  w.AVENQIR_I18N.set('ar');yes($('atlasSemanticTitle').textContent==='البحث الدلالي المحلي','Arabic localization');
