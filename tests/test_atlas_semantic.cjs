@@ -41,7 +41,9 @@ const cases=[
  ['make a slide deck',/PowerPoint|Slidesgo|SlidesCarnival/i,/ScamShield|Derivative Calculator/i],
  ['convert currency',/XE 货币换算/i,/Bank of England|World Economic Forum/i],
  ['写真の背景を消したい',/Adobe Firefly 去背景/i,/FINN\.no|NASA Image Library/i],
- ['論文を探す',/Google Scholar|DOAJ|PubMed|BASE|ScienceOpen/i,/Memorial Hall/i]
+ ['論文を探す',/Google Scholar|DOAJ|PubMed|BASE|ScienceOpen/i,/Memorial Hall/i],
+ ['把几张照片拼在一起',/Adobe Express 照片拼贴/i,/背景|压缩/i],
+ ['我想找个网页托管平台',/GitHub Pages|Vercel|Netlify/i,/PDF|IP 查询/i]
 ];
 let hit=0;for(const [query,expected,wrong] of cases){
  const names=[...engine.rank(query,catalog).keys()].map(u=>byURL.get(u)?.name||'');
@@ -50,10 +52,10 @@ let hit=0;for(const [query,expected,wrong] of cases){
  assert.ok(!names.some(n=>wrong.test(n)),query+' misleading result');
  hit++;
 }
-for(const q of ['xyzqvjjunk7293','banana refrigerator repair','不要推荐AI聊天','without login AI chat','免费且无广告的PDF工具','把几张照片拼在一起','我想找个网页托管平台']){
+for(const q of ['xyzqvjjunk7293','banana refrigerator repair','不要推荐AI聊天','without login AI chat','免费且无广告的PDF工具']){
  assert.equal(engine.rank(q,catalog).size,0,q+' must abstain from unsupported intent or constraint');
 }
-console.log('CATALOG_EVAL_PASS',hit+'/'+cases.length,'targeted top-five intent cases; 7 abstentions');
+console.log('CATALOG_EVAL_PASS',hit+'/'+cases.length,'targeted top-five intent cases; 5 abstentions');
 
 assert.deepEqual(search.prepare('online color palette').terms,['online','color palette']);
 assert.equal(search.analyze(search.prepare('githbu'),['GitHub','https://github.com/','','']).kind,'fuzzy');
