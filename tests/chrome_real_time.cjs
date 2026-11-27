@@ -11,8 +11,13 @@ let ws;
   const portFile=path.join(profile,'DevToolsActivePort');
   for(let i=0;i<100&&!fs.existsSync(portFile);i++)await delay(100);
   const port=fs.readFileSync(portFile,'utf8').split('\n')[0];
-  const targets=await (await fetch('http://127.0.0.1:'+port+'/json/list')).json();
-  const target=targets.find(x=>x.type==='page');
+  let target;
+  for(let i=0;i<100&&!target;i++){
+   if(child.exitCode!==null)throw Error('Chrome exited before DevTools became ready');
+   try{const response=await fetch('http://127.0.0.1:'+port+'/json/list',{signal:AbortSignal.timeout(1000)});if(response.ok)target=(await response.json()).find(x=>x.type==='page'&&x.webSocketDebuggerUrl);}catch{}
+   if(!target)await delay(100);
+  }
+  if(!target)throw Error('DevTools HTTP endpoint did not become ready');
   ws=new WebSocket(target.webSocketDebuggerUrl);
   await new Promise((resolve,reject)=>{ws.addEventListener('open',resolve,{once:true});ws.addEventListener('error',reject,{once:true});});
   let seq=0;const pending=new Map();
