@@ -124,7 +124,7 @@
  const meaningful=x=>{let fields=fieldCache.get(x);if(!fields){fields=[x.name,x.url,x.category,x.description].map(normalize);fieldCache.set(x,fields)}return fields};
  const searchModel=window.AVENQIR_ATLAS_SEARCH;
  let termsQuery=null,prepared=null,lexicalCache=new WeakMap(),matchKinds=new WeakMap();
- const semantic=window.AVENQIR_SEMANTIC_DOWNLOAD?.mount(()=>{draw();if(query&&filtered().length){const d=$('atlasNoMatchDialog');if(d?.open)d.close();if(committedQuery===query)updateSearchNext(query,false);}},T);
+ const semantic=window.AVENQIR_SEMANTIC_DOWNLOAD?.mount(()=>{draw();if(loaded&&pendingNoMatchQuery){completeSearch();return;}if(query&&filtered().length){const d=$('atlasNoMatchDialog');if(d?.open)d.close();if(committedQuery===query)updateSearchNext(query,false);}},T,()=>records);
  function score(x){if(!query)return 1;if(termsQuery!==query){termsQuery=query;prepared=searchModel?.prepare(query);lexicalCache=new WeakMap();matchKinds=new WeakMap();}let rank=lexicalCache.get(x);
    if(rank===undefined){const fields=meaningful(x);const match=prepared?searchModel.analyze(prepared,fields,t=>initialsMatch(x,t)):{rank:normalize(fields.join(' ')).includes(normalize(query))?20:-1,kind:'exact'};rank=match.rank;matchKinds.set(x,match.kind);lexicalCache.set(x,rank);}
    if(rank>=0)return rank;
@@ -390,7 +390,7 @@
    }
  }
  let languageStatsRecords=null,languageStatsLocale='';
- function draw(){syncDirectoryURL();const list=filtered(), shown=list.slice(0,limit);renderTags();quickCategories();results.replaceChildren();$('atlasEmpty').hidden=list.length!==0;const hint=$('atlasFilteredHint');if(hint)hint.hidden=!(query&&list.length===0&&records.some(x=>score(x)>=0));
+ function draw(){syncDirectoryURL();const list=filtered(), shown=list.slice(0,limit);renderTags();quickCategories();results.replaceChildren();$('atlasEmpty').hidden=list.length!==0||!!semantic?.pending?.(query,records);const hint=$('atlasFilteredHint');if(hint)hint.hidden=!(query&&list.length===0&&records.some(x=>score(x)>=0));
    const languageHint=$('atlasSiteLanguageHint'),target=locale()?.locale||'en';
    if(languageHint&&(languageStatsRecords!==records||languageStatsLocale!==target)){
      languageStatsRecords=records;languageStatsLocale=target;
@@ -537,10 +537,12 @@
  $('atlasReopenNoMatch')?.addEventListener('click',()=>{if(lastNoMatch)openNoMatch(lastNoMatch);});
  function completeSearch(){
    const q=pendingNoMatchQuery.trim();if(!q||q!==query.trim())return;
+   const matches=filtered();
+   if(!matches.length&&semantic?.pending?.(query,records)){updateSearchNext(q,false);return;}
    pendingNoMatchQuery='';
    committedQuery=q;lastNoMatch='';
    scrollToResults();
-   if(filtered().length){updateSearchNext(q,false);return;}
+   if(matches.length){updateSearchNext(q,false);return;}
    if(records.some(x=>score(x)>=0)){
      $('atlasFilteredHint').hidden=false;updateSearchNext(q,false);return;
    }
