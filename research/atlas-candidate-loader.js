@@ -36,7 +36,7 @@
   }
   async function load({consent=false,restore=false,activate,onProgress=()=>{}}={}){
    if(running)throw Error('busy');
-   if(!restore&&consent!==true)throw Error('consent');
+   if(consent!==true)throw Error('consent');
    if(typeof activate!=='function')throw Error('activate');
    running=true;const id=++revision,ctl=new AbortController();controller=ctl;
    let timedOut=false;const deadline=setTimeout(()=>{timedOut=true;ctl.abort();},45000);
@@ -55,6 +55,8 @@
     const candidate=await activate(staged.map(x=>x.value),ctl.signal);
     try{alive(id,ctl.signal);}catch(e){candidate?.close?.();throw e;}
     if(!candidate||typeof candidate.close!=='function')throw Error('activate');
+    // Finalization is atomic with respect to cancellation; no cancellation after commit starts.
+    clearTimeout(deadline);controller=null;
     active?.close();active=candidate;
     // A complete verified set is needed for offline restore. If writing fails,
     // discard this candidate cache, never the old production cache.
