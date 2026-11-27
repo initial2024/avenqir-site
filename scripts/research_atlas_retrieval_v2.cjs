@@ -546,3 +546,16 @@ for(let i=0;i<augmentation.rows.length;i++){
 }
 assert.equal(variantHits,120);assert.equal(variantRefusals,840);assert.equal(variantWrapped,120);assert.equal(variantCompounds,120);
 console.log('REVIEWED_VARIANT_REPORT',JSON.stringify({variantHits,variantRefusals,variantWrapped,variantCompounds}));
+
+let requestMatches=0,requestRefusals=0;
+for(let i=0;i<topics.requestFrames.length;i++){
+ const [locale,prefix,suffix]=topics.requestFrames[i];
+ assert.equal(locale,multilingual.locales[i]);
+ for(const q of [...topics.rows[i].slice(1),...multilingual.rows[i].slice(1),...multilingual.variantRows[i].slice(1)]){
+  const wrapped=prefix+q+suffix;
+  assert.deepEqual(fused.rank(wrapped),fused.rank(q),locale+' '+wrapped);requestMatches++;
+  for(const c of multilingual.localeConstraints[i].slice(1)){assert.equal(fused.rank(prefix+q+' '+c+suffix).length,0,locale+' constrained '+wrapped);requestRefusals++;}
+ }
+}
+assert.equal(requestMatches,2680);assert.equal(requestRefusals,13400);
+console.log('REQUEST_FRAME_REPORT',JSON.stringify({requestMatches,requestRefusals}));
