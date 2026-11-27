@@ -49,3 +49,19 @@ for(const [locale,...phrases] of topics.rows)for(let i=0;i<topics.tasks.length;i
 const report=compare(rows,tasks,unicodeFeatures,old.features,train,classify,model.parents);
 assert.equal(report.total,2560);
 console.log('64_CLASS_HELD_OUT_REPORT',JSON.stringify(report));
+
+const caps=[96,128,160,192],codec=require('../research/atlas-model-codec.js'),fs=require('node:fs'),path=require('node:path');
+const metrics=caps.map(cap=>({cap,top1:0,top5:0,parent:0}));let total=0;
+for(let fold=0;fold<5;fold++){const tr=rows.filter((_,i)=>i%5!==fold),te=rows.filter((_,i)=>i%5===fold),weights=caps.map(cap=>train(tr,tasks,unicodeFeatures,cap));
+ for(const row of te)for(let i=0;i<tasks.length;i++){total++;for(let j=0;j<caps.length;j++){const rank=classify(weights[j],unicodeFeatures,row[i+1]);const m=metrics[j];if(rank[0].score<=0)continue;const group=id=>model.parents[id]||id;m.top1+=Number(rank[0].id===tasks[i]);m.top5+=Number(rank.slice(0,5).some(x=>x.id===tasks[i]&&x.score>0));m.parent+=Number(group(rank[0].id)===group(tasks[i]));}}
+}
+const payloads=caps.map(cap=>({schema:'aq-multilingual-research-1',bins:8192,classes:train(rows,tasks,unicodeFeatures,cap)})),packed=payloads.map(codec.serialize);
+const domainBytes=fs.statSync(path.join(__dirname,'../research/atlas-model-v2.packed.json')).size;
+for(let i=0;i<caps.length;i++){metrics[i].packedBytes=Buffer.byteLength(packed[i]);metrics[i].combinedBytes=metrics[i].packedBytes+domainBytes;}
+const best=metrics.filter(m=>m.combinedBytes<=100*1024).sort((a,b)=>b.top1-a.top1||b.top5-a.top5||a.packedBytes-b.packedBytes)[0];
+assert.ok(best);assert.equal(total,2560);
+const idx=caps.indexOf(best.cap),target=path.join(__dirname,'../research/atlas-full-unicode-weights.packed.json');
+assert.deepEqual(codec.deserialize(packed[idx]),payloads[idx]);
+if(process.argv.includes('--write'))fs.writeFileSync(target,packed[idx]);
+if(process.argv.includes('--check'))assert.equal(fs.readFileSync(target,'utf8'),packed[idx]);
+console.log('64_CLASS_PACKED_CAP_REPORT',JSON.stringify({total,metrics,best}));
