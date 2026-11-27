@@ -99,6 +99,28 @@ async function verified(p){
  await loader.remove();
  yes(!loader.active()&&closes===2,'remove failed');
  yes(!(await caches.has(AVENQIR_RESEARCH_LOADER.CACHE)),'candidate cache retained');
+
+ // Use real browser cryptography, Response and Worker APIs, injecting host failure modes.
+ const bytes=new TextEncoder().encode(packed);
+ const envFor=(fetch,caches)=>({location,crypto,fetch,caches});
+ const single=specs[0];
+ async function expectCode(fetch,code){
+  const l=AVENQIR_RESEARCH_LOADER.create(specs,envFor(fetch,undefined));
+  let actual='';try{await l.load({consent:true,activate});}catch(e){actual=e.message;}
+  yes(actual===code&&!l.active(),'expected '+code+', got '+actual);
+ }
+ await expectCode(async()=>new Response('<html>verification required</html>',{headers:{'Content-Type':'text/html'}}),'mime');
+ await expectCode(async()=>new Response('',{status:404}),'http');
+ await expectCode(async()=>new Response(bytes.slice(0,-1),{headers:{'Content-Type':'application/octet-stream'}}),'integrity');
+ await expectCode(async()=>{throw TypeError('network');},'network');
+ await expectCode(async()=>({ok:true,headers:new Headers({'Content-Type':'application/octet-stream'}),body:null,arrayBuffer:async()=>bytes.buffer}),'stream');
+ const limited=AVENQIR_RESEARCH_LOADER.create(specs,envFor(async()=>({ok:true,headers:new Headers({'Content-Type':'application/octet-stream','Content-Length':String(bytes.length)}),body:null,arrayBuffer:async()=>bytes.buffer}),{open:async()=>{throw Error('storage denied');}}));
+ const sessionOnly=await limited.load({consent:true,activate});
+ yes(sessionOnly.state==='ready'&&!sessionOnly.persisted,'session-only fallback');
+ current.query('QR 코드 생성');await wait(()=>current.hits.length);
+ yes(current.hits[0].urls.some(u=>/QRCode Monkey/i.test(byURL.get(u))),'session fallback worker failed');
+ await limited.remove().catch(()=>{});
+ yes(!limited.active(),'session fallback removal');
  document.documentElement.dataset.result='pass';
 })().catch(e=>{document.documentElement.dataset.result='fail';document.documentElement.dataset.error=e.message;});
 </script>"""
@@ -119,5 +141,5 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
         subprocess.run(['node',str(ROOT/'tests'/'chrome_real_time.cjs'),CHROME,profile,f'http://127.0.0.1:{server.server_port}/qa.html'],timeout=75,check=True)
     assert requests.count(MODEL)==4,requests
     assert '/site/atlas-semantic-model-v1.json' not in requests,requests
-    print('PASS real Chromium packed model digest, worker, stale query rejection, Korean and Arabic retrieval, constraint and ungrounded abstention, corrupt payload rejection, fresh single-model install, real worker activation, cancellation and retry, verified cache restore and deletion')
+    print('PASS real Chromium packed model digest, worker, stale query rejection, Korean and Arabic retrieval, constraint and ungrounded abstention, corrupt payload rejection, fresh single-model install, real worker activation, cancellation and retry, verified cache restore and deletion, MIME/404/truncated/network rejection, bounded non-stream fallback and session-only storage denial')
     server.shutdown()
