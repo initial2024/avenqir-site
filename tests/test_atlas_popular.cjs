@@ -17,7 +17,7 @@ const model=require(path.join(site,'atlas-popular.js'));
 const full=model.pool(catalog);
 const byId=new Map(full.map(pick=>[pick.entry.id,pick]));
 const urls=new Set(catalog.map(entry=>new URL(entry.url).href));
-assert.equal(catalog.length,1240+newLinks.length);
+assert.equal(catalog.length,1244+newLinks.length);
 assert.equal(catalog.length,urls.size);
 assert.ok(newLinks.length>=80&&newLinks.length<=150);
 assert.ok(newLinks.every(entry=>gate.officialSourceReviewed(entry.url)&&safety.inspect(entry.url).type==='reviewed'));
