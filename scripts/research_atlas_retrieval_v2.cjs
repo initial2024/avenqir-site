@@ -489,3 +489,26 @@ for(let i=0;i<topics.frames.length;i++){
 }
 assert.equal(wrappedCount,2560);assert.equal(wrappedConstraints,2560);
 console.log('POLITE_FRAME_REPORT',JSON.stringify({wrappedCount,wrappedConstraints}));
+
+const codec=require('../research/atlas-model-codec.js'),unicodeRuntime=require('../research/atlas-unicode-runtime.js');
+const fullBundle=require('../research/atlas-semantic-bundle-v2.json');
+assert.deepEqual(codec.deserialize(JSON.stringify(fullBundle.domain)),model);
+const unicode=unicodeRuntime.create(codec.deserialize(JSON.stringify(fullBundle.unicode)),model.classes.map(x=>x[0]));
+const fused=createSession(catalog,model,runtime.features,runtime.create(base),unicode);
+let fusedGrounded=0,fusedTop1=0,fusedTop5=0,fusedRefused=0,broadPreserved=0;
+for(let i=0;i<multilingual.rows.length;i++){
+ const [locale,...phrases]=multilingual.rows[i];
+ for(let j=0;j<phrases.length;j++){
+  const q=phrases[j],hits=fused.rank(q),names=hits.map(u=>byURL.get(u));
+  if(expected[j]){fusedGrounded++;fusedTop1+=Number(expected[j].test(names[0]||''));fusedTop5+=Number(names.slice(0,5).some(x=>expected[j].test(x)));}else assert.equal(hits.length,0,q);
+  for(const c of multilingual.localeConstraints[i].slice(1)){assert.equal(fused.rank(q+' '+c).length,0,q+' '+c);fusedRefused++;}
+ }
+ for(const q of topics.rows[i].slice(1)){
+  assert.deepEqual(fused.rank(q).slice(0,5),broadSession.rank(q).slice(0,5),locale+' '+q);broadPreserved++;
+  for(const c of multilingual.localeConstraints[i].slice(1)){assert.equal(fused.rank(q+' '+c).length,0,q+' '+c);fusedRefused++;}
+ }
+}
+for(const [q,re] of positive.concat(multilingualStress,padded))assert.ok(fused.rank(q).slice(0,5).some(u=>re.test(byURL.get(u))),q);
+for(const q of [...new Set(negative.concat(difficultNegatives,generated))])assert.equal(fused.rank(q).length,0,q);
+assert.equal(fusedGrounded,1240);assert.ok(fusedTop1>=1200);assert.equal(fusedTop5,1240);assert.equal(broadPreserved,1120);assert.equal(fusedRefused,12800);
+console.log('FUSED_RETRIEVAL_REPORT',JSON.stringify({fusedGrounded,fusedTop1,fusedTop5,broadPreserved,fusedRefused}));
