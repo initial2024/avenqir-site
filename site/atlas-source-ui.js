@@ -103,9 +103,9 @@
     link.textContent=t('评价','Rate');
     link.hidden=true;
     bundledByURL??=bundledCatalog().then(byURL);
-    bundledByURL.then(async urls=>{
-      const exact=new URL(url).href;
-      let item=urls.get(exact);
+    const exact=new URL(url).href;
+    async function connect(){
+      let item=urlIndex.get(exact)||(await bundledByURL).get(exact);
       if(!item){
         addedByURL??=addedCatalog().then(byURL);
         item=(await addedByURL).get(exact);
@@ -122,7 +122,8 @@
       });
       link.setAttribute('aria-label',t('评价 '+new URL(url).hostname,'Rate '+new URL(url).hostname));
       link.hidden=false;
-    });
+    }
+    connect().catch(()=>{});
     return link;
   }
   window.AVENQIR_ATLAS_SOURCE_UI=Object.freeze({badge,external,label,ratingLink,catalog,refreshRatings,itemForURL,noteVisit,metric,average,recommendation,popularity,ratingsAvailable:()=>metrics!==null});

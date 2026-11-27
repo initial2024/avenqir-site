@@ -32,3 +32,8 @@ assert.equal(m.returnPrompt({id:'r1',at:1000,departed:true},8999),false);
 assert.equal(m.returnPrompt({id:'r1',at:1000,departed:true},1801001),false);
 assert.equal(m.returnPrompt({id:'https://private.example',at:1000,departed:true},9000),false);
 console.log('PASS return-rating session age and departure gates');
+
+assert.equal(m.PAUSE,300000);
+assert.ok(dir.includes("'popular'")&&dir.includes('atlasRatingWindow'));
+assert.ok(rec.includes("href.startsWith('leave.html')")&&rec.includes('sessionClicks'));
+console.log('PASS closed-loop click and ranking wiring');

@@ -88,8 +88,8 @@
   function token(){
     const existing=read(TOKEN);
     if(/^[a-f0-9]{64}$/.test(existing||''))return existing;
-    const next=[...crypto.getRandomValues(new Uint8Array(32))].map(byte=>byte.toString(16).padStart(2,'0')).join('');
-    return write(TOKEN,next)?next:null;
+    try{const next=[...crypto.getRandomValues(new Uint8Array(32))].map(byte=>byte.toString(16).padStart(2,'0')).join('');
+      return write(TOKEN,next)?next:null;}catch{return null;}
   }
   function element(tag,label){
     const node=document.createElement(tag);
@@ -474,7 +474,7 @@
     }
   }
   function recordKnown(item){
-    if(!item||!destination(item))return;
+    if((read(LOCAL)!=='1'&&read(SHARE)!=='1')||!item||!destination(item))return;
     const id=item.id,now=Date.now();
     if(now-(sessionClicks.get(id)??-Infinity)<model.PAUSE)return;
     sessionClicks.set(id,now);
@@ -484,6 +484,7 @@
       const next=model.merge(state,{clicks:[{toolId:id,ts:now}],ratings:{}});
       write(model.KEY,JSON.stringify(next));
     }
+    if(read(LOCAL)==='1')window.dispatchEvent(new CustomEvent('aq:personal-rating-updated'));
     if(read(SHARE)==='1')post('click',id).catch(()=>{});
   }
   function recordOpen(id,url){
@@ -505,6 +506,15 @@
   document.addEventListener('click',record);
   document.addEventListener('auxclick',record);
   window.addEventListener('aq:website-open',event=>recordOpen(null,event.detail));
+  const inlineShare=[...document.querySelectorAll('[data-rec-inline-share]')];
+  const inlineLocal=[...document.querySelectorAll('[data-rec-inline-local]')];
+  function syncInline(){for(const node of inlineShare)node.checked=read(SHARE)==='1';for(const node of inlineLocal)node.checked=read(LOCAL)==='1';}
+  for(const node of inlineShare)node.addEventListener('change',()=>{
+    if(!node.checked)write(SHARE,'0');else if(token())write(SHARE,'1');
+    syncInline();if(node.checked)loadCatalog();
+  });
+  for(const node of inlineLocal)node.addEventListener('change',()=>{write(LOCAL,node.checked?'1':'0');syncInline();if(node.checked)loadCatalog();});
+  window.addEventListener('storage',syncInline);syncInline();
   if(!panel){
     if(read(SHARE)==='1'||read(LOCAL)==='1')loadCatalog();
     return;

@@ -25,8 +25,9 @@ try {
         }
         $window=filter_input(INPUT_GET,'days',FILTER_VALIDATE_INT)??7;
         if (!in_array($window,[7,30,90],true)) {rec_reply(['ok'=>false],400);return;}
+        $items=rec_stats(fb_db(),$catalog,time(),$window);
         header('Cache-Control: public, max-age=30');
-        rec_reply(['ok'=>true,'days'=>$window,'items'=>(object)rec_stats(fb_db(),$catalog,time(),$window)]);
+        rec_reply(['ok'=>true,'days'=>$window,'items'=>(object)$items]);
         return;
     }
     if ($method!=='POST') {
