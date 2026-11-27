@@ -30,7 +30,7 @@ if('serviceWorker' in navigator && location.protocol==='https:') {
 (() => {
   if (document.querySelector('script[data-aq-search]')) return;
   const script=document.createElement('script');
-  script.src='./quick-search.js?v=25';
+  script.src='./quick-search.js?v=131';
   script.dataset.aqSearch='1';
   document.head.append(script);
 })();

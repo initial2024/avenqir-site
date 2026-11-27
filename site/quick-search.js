@@ -168,9 +168,12 @@
       if(e.key==='Enter'){const first=results.querySelector('a');if(first){e.preventDefault();first.click();}}
     });
     dialog.addEventListener('click',e=>{if(e.target===dialog)hide();});
-    dialog.addEventListener('close',()=>{button.setAttribute('aria-expanded','false');});
+    dialog.addEventListener('close',()=>{
+      button.setAttribute('aria-expanded','false');
+      if(document.body.dataset.startDensity)document.getElementById('startSettingsToggle')?.focus();
+    });
     document.addEventListener('keydown',e=>{
-      if(e.defaultPrevented)return;
+      if(e.defaultPrevented||(document.body.dataset.startDensity&&!dialog.open))return;
       const focused=document.activeElement?.tagName||'';
       if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();open();}
       else if(e.key==='/'&&!e.ctrlKey&&!e.altKey&&!e.metaKey&&!/INPUT|TEXTAREA|SELECT/.test(focused)&&!document.activeElement?.isContentEditable&&!document.body.classList.contains('search-body')){
