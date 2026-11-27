@@ -1,0 +1,86 @@
+#!/usr/bin/env python3
+"""Real Chromium research worker test; localhost only, no production deployment."""
+import hashlib
+import http.server
+import json
+import pathlib
+import shutil
+import subprocess
+import tempfile
+import threading
+from urllib.parse import urlsplit
+
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+CHROME = shutil.which('google-chrome') or shutil.which('chromium')
+assert CHROME
+SCRIPTS = ['atlas-paths','atlas-expansion','atlas-specialist','atlas-depth-a','atlas-depth-b','atlas-depth-c','atlas-depth-d','atlas-ai','atlas-regional','atlas-everyday','atlas-regional-ext','atlas-everyday-ext','atlas-popular-links','atlas-catalog-core']
+MODEL = '/research/atlas-model-v2.packed.json'
+BASE = '/site/atlas-semantic-model-v1.json'
+digests = {p: hashlib.sha256((ROOT / p.lstrip('/')).read_bytes()).hexdigest() for p in [MODEL,BASE]}
+requests = []
+HTML = '<!doctype html><title>Research worker QA</title>' + ''.join('<script src="/site/'+s+'.js"></script>' for s in SCRIPTS) + '<script src="/research/atlas-worker-client.js"></script><script>const hashes=' + json.dumps(digests) + ';' + """
+const yes=(v,m)=>{if(!v)throw Error(m);};
+const wait=async f=>{for(let i=0;i<350;i++){if(f())return;await new Promise(r=>setTimeout(r,30));}throw Error('timeout');};
+async function verified(p){
+ const r=await fetch(p,{cache:'no-store'});yes(r.ok,'fetch '+p);
+ const bytes=await r.arrayBuffer();
+ const digest=[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(x=>x.toString(16).padStart(2,'0')).join('');
+ yes(digest===hashes[p],'sha mismatch');
+ return new TextDecoder('utf-8',{fatal:true}).decode(bytes);
+}
+(async()=>{
+ const [packed,baseText]=await Promise.all(Object.keys(hashes).map(verified));
+ const baseline=JSON.parse(baseText);
+ const items=AVENQIR_ATLAS_CATALOG.catalog();
+ yes(items.length>=1338,'missing catalog');
+ const byURL=new Map(items.map(x=>[x.url,x.name]));
+ const w=new Worker('/research/atlas-search-worker.js');
+ const results=[],errors=[];
+ const client=AVENQIR_RESEARCH_WORKER_CLIENT.create(w,(urls,q,ms)=>results.push({urls,q,ms}),code=>errors.push(code));
+ client.init(packed,baseline,items);
+ client.query('generate a qr code');
+ client.query('QR 코드 생성');
+ await wait(()=>results.length||errors.length);
+ yes(!errors.length,'worker '+errors.join(','));
+ yes(results.length===1&&results[0].q==='QR 코드 생성','stale results');
+ yes(results[0].urls.some(u=>/QRCode Monkey/i.test(byURL.get(u))),'Korean QR miss');
+ client.query('ضغط صورة');
+ await wait(()=>results.length===2||errors.length);
+ yes(!errors.length&&results[1].urls.some(u=>/Squoosh/i.test(byURL.get(u))),'Arabic image miss');
+ client.query('ضغط صورة بدون تسجيل الدخول');
+ await wait(()=>results.length===3||errors.length);
+ yes(!errors.length&&results[2].urls.length===0,'constraint leak');
+ client.query('合并PDF文件');
+ await wait(()=>results.length===4||errors.length);
+ yes(!errors.length&&results[3].urls.length===0,'ungrounded intent');
+ client.close();
+ // Corrupted bytes must not initialize a worker, even when bypassing page verification.
+ const broken=new Worker('/research/atlas-search-worker.js');
+ const rejected=[];
+ const c2=AVENQIR_RESEARCH_WORKER_CLIENT.create(broken,()=>rejected.push('unexpected_result'),code=>rejected.push(code));
+ c2.init(packed.slice(0,-8),baseline,items);
+ c2.query('生成二维码');
+ await wait(()=>rejected.length);
+ yes(rejected[0]!=='unexpected_result','corrupt payload accepted');
+ c2.close();
+ document.documentElement.dataset.result='pass';
+})().catch(e=>{document.documentElement.dataset.result='fail';document.documentElement.dataset.error=e.message;});
+</script>"""
+class Handler(http.server.SimpleHTTPRequestHandler):
+    def __init__(self,*args,**kw):super().__init__(*args,directory=str(ROOT),**kw)
+    def log_message(self,*args):pass
+    def do_GET(self):
+        p=urlsplit(self.path).path
+        requests.append(p)
+        if p=='/qa.html':
+            data=HTML.encode();self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.send_header('Content-Length',str(len(data)));self.end_headers();self.wfile.write(data);return
+        if not ((p.startswith('/site/') or p.startswith('/research/')) and p.endswith(('.js','.json')) and '..' not in p):
+            self.send_error(404);return
+        super().do_GET()
+with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
+    threading.Thread(target=server.serve_forever,daemon=True).start()
+    with tempfile.TemporaryDirectory() as profile:
+        subprocess.run(['node',str(ROOT/'tests'/'chrome_real_time.cjs'),CHROME,profile,f'http://127.0.0.1:{server.server_port}/qa.html'],timeout=75,check=True)
+    assert requests.count(MODEL)==1,requests
+    print('PASS real Chromium packed model digest, worker, stale query rejection, Korean and Arabic retrieval, constraint and ungrounded abstention, corrupt payload rejection')
+    server.shutdown()
