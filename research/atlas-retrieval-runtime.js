@@ -68,9 +68,12 @@ function compound(q){
 }
 
 function intent(q,model){
- if(q.length<3||q.length>512||constraints.test(q)||incompatible.test(q)||compound(q))return null;
- const alias=multilingual.resolve(q);if(alias.blocked)return null;
- const broad=!alias.id&&topics.resolve(q);
+ if(!q||q.length>512||constraints.test(q)||incompatible.test(q)||compound(q))return null;
+ const wrapped=topics.unwrap(q);
+ const body=wrapped&&(multilingual.resolve(wrapped).id||topics.resolve(wrapped))?wrapped:q;
+ const alias=multilingual.resolve(body);if(alias.blocked||multilingual.hasConstraint(multilingual.normalize(q)))return null;
+ if(body.length<3&&!alias.id&&!topics.resolve(body))return null;
+ const broad=!alias.id&&topics.resolve(body);
  if(broad){const row=model.classes.find(x=>x[0]===broad);return row&&evidence[broad]?{id:broad,guard:evidence[broad],weights:row[1]}:null;}
  const matches=alias.id?rules.filter(([id])=>id===alias.id):rules.filter(([,p])=>p.test(q));
  if(matches.length>1)return null;
