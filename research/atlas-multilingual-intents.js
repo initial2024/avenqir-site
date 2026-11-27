@@ -1,7 +1,7 @@
 "use strict";
 (function(root){
 // Exact, local multilingual task phrases. Not a general translation system.
-const tasks=["qr-create","regex-test","flowchart","timer","image-compress","dns-lookup","tls-check","whois","ip-lookup","network-speed","json-edit","html-validate","css-validate","citation","doi-lookup","text-translate","word-dictionary","pdf-view","dns-propagation","url-risk","webrtc","meeting-zone","typing","palette","font-pair","public-books","web-performance","currency"];
+const tasks=["qr-create","regex-test","flowchart","timer","image-compress","dns-lookup","tls-check","whois","ip-lookup","network-speed","json-edit","html-validate","css-validate","citation","doi-lookup","text-translate","word-dictionary","pdf-view","dns-propagation","url-risk","webrtc","meeting-zone","typing","palette","font-pair","public-books","web-performance","currency","pdf-merge","pdf-compress","pdf-split","image-resize","image-background","image-collage","fingerprint","static-host"];
 const rows=[
   [
     "en",
@@ -32,7 +32,15 @@ const rows=[
     "pair heading and body fonts",
     "read public domain ebooks",
     "measure page loading performance",
-    "convert currencies"
+    "convert currencies",
+    "merge PDF files",
+    "compress a PDF",
+    "split a PDF",
+    "resize an image",
+    "remove image background",
+    "create a photo collage",
+    "check browser fingerprint",
+    "host a static website"
   ],
   [
     "zh-Hans",
@@ -63,7 +71,15 @@ const rows=[
     "搭配标题正文字体",
     "阅读公版电子书",
     "检测网页加载性能",
-    "货币换算"
+    "货币换算",
+    "合并PDF文件",
+    "压缩PDF文件",
+    "拆分PDF文件",
+    "调整图片尺寸",
+    "去除图片背景",
+    "制作照片拼图",
+    "检测浏览器指纹",
+    "托管静态网站"
   ],
   [
     "zh-Hant",
@@ -94,7 +110,15 @@ const rows=[
     "搭配標題正文字型",
     "閱讀公版電子書",
     "檢測網頁載入效能",
-    "貨幣換算"
+    "貨幣換算",
+    "合併PDF檔案",
+    "壓縮PDF檔案",
+    "分割PDF檔案",
+    "調整圖片尺寸",
+    "移除圖片背景",
+    "製作照片拼貼",
+    "檢測瀏覽器指紋",
+    "託管靜態網站"
   ],
   [
     "ja",
@@ -125,7 +149,15 @@ const rows=[
     "見出しと本文のフォントを組み合わせる",
     "著作権切れの電子書籍を読む",
     "ページ読み込み性能を測定",
-    "通貨を換算"
+    "通貨を換算",
+    "PDFファイルを結合",
+    "PDFを圧縮",
+    "PDFを分割",
+    "画像のサイズを変更",
+    "画像の背景を削除",
+    "写真のコラージュを作成",
+    "ブラウザの指紋を確認",
+    "静的サイトをホスティング"
   ],
   [
     "ko",
@@ -156,7 +188,15 @@ const rows=[
     "제목과 본문 글꼴 조합",
     "퍼블릭 도메인 전자책 읽기",
     "페이지 로딩 성능 측정",
-    "통화 환산"
+    "통화 환산",
+    "PDF 파일 병합",
+    "PDF 압축",
+    "PDF 분할",
+    "이미지 크기 조정",
+    "이미지 배경 제거",
+    "사진 콜라주 만들기",
+    "브라우저 지문 검사",
+    "정적 웹사이트 호스팅"
   ],
   [
     "fr",
@@ -187,7 +227,15 @@ const rows=[
     "associer les polices de titre et de texte",
     "lire des livres numériques du domaine public",
     "mesurer les performances de chargement de page",
-    "convertir des devises"
+    "convertir des devises",
+    "fusionner des PDF",
+    "compresser un PDF",
+    "diviser un PDF",
+    "redimensionner une image",
+    "supprimer le fond d'une image",
+    "créer un collage photo",
+    "vérifier l'empreinte du navigateur",
+    "héberger un site statique"
   ],
   [
     "de",
@@ -218,7 +266,15 @@ const rows=[
     "Überschriften- und Textschriften kombinieren",
     "gemeinfreie E-Books lesen",
     "Seitenladeleistung messen",
-    "Währungen umrechnen"
+    "Währungen umrechnen",
+    "PDF-Dateien zusammenführen",
+    "PDF komprimieren",
+    "PDF aufteilen",
+    "Bildgröße ändern",
+    "Bildhintergrund entfernen",
+    "Fotocollage erstellen",
+    "Browser-Fingerabdruck prüfen",
+    "statische Website hosten"
   ],
   [
     "es",
@@ -249,7 +305,15 @@ const rows=[
     "combinar fuentes de título y texto",
     "leer libros electrónicos de dominio público",
     "medir el rendimiento de carga de página",
-    "convertir monedas"
+    "convertir monedas",
+    "combinar archivos PDF",
+    "comprimir un PDF",
+    "dividir un PDF",
+    "cambiar el tamaño de una imagen",
+    "eliminar el fondo de una imagen",
+    "crear un collage de fotos",
+    "comprobar la huella del navegador",
+    "alojar un sitio web estático"
   ],
   [
     "pt",
@@ -280,7 +344,15 @@ const rows=[
     "combinar fontes de título e texto",
     "ler livros digitais de domínio público",
     "medir desempenho de carregamento da página",
-    "converter moedas"
+    "converter moedas",
+    "juntar arquivos PDF",
+    "comprimir um PDF",
+    "dividir um PDF",
+    "redimensionar uma imagem",
+    "remover o fundo de uma imagem",
+    "criar uma colagem de fotos",
+    "verificar a impressão digital do navegador",
+    "hospedar um site estático"
   ],
   [
     "it",
@@ -311,7 +383,15 @@ const rows=[
     "abbinare caratteri di titolo e testo",
     "leggere ebook di pubblico dominio",
     "misurare le prestazioni di caricamento della pagina",
-    "convertire valute"
+    "convertire valute",
+    "unire file PDF",
+    "comprimere un PDF",
+    "dividere un PDF",
+    "ridimensionare un'immagine",
+    "rimuovere lo sfondo di un'immagine",
+    "creare un collage di foto",
+    "verificare l'impronta del browser",
+    "ospitare un sito statico"
   ],
   [
     "nl",
@@ -342,7 +422,15 @@ const rows=[
     "lettertypen voor kop en tekst combineren",
     "publiekdomeinboeken lezen",
     "laadprestaties van een pagina meten",
-    "valuta omrekenen"
+    "valuta omrekenen",
+    "PDF-bestanden samenvoegen",
+    "een PDF comprimeren",
+    "een PDF splitsen",
+    "een afbeelding verkleinen",
+    "achtergrond van een afbeelding verwijderen",
+    "een fotocollage maken",
+    "browserfingerafdruk controleren",
+    "een statische website hosten"
   ],
   [
     "sv",
@@ -373,7 +461,15 @@ const rows=[
     "kombinera typsnitt för rubrik och brödtext",
     "läsa upphovsrättsfria e-böcker",
     "mäta sidans laddningsprestanda",
-    "omvandla valutor"
+    "omvandla valutor",
+    "slå samman PDF-filer",
+    "komprimera en PDF",
+    "dela upp en PDF",
+    "ändra storlek på en bild",
+    "ta bort bildbakgrund",
+    "skapa ett fotokollage",
+    "kontrollera webbläsarens fingeravtryck",
+    "hosta en statisk webbplats"
   ],
   [
     "no",
@@ -404,7 +500,15 @@ const rows=[
     "kombinere skrifttyper for overskrift og brødtekst",
     "lese e-bøker i det fri",
     "måle sidens lasteytelse",
-    "konvertere valuta"
+    "konvertere valuta",
+    "slå sammen PDF-filer",
+    "komprimere en PDF",
+    "dele opp en PDF",
+    "endre størrelsen på et bilde",
+    "fjerne bildebakgrunn",
+    "lage en fotokollasj",
+    "sjekke nettleserens fingeravtrykk",
+    "drifte et statisk nettsted"
   ],
   [
     "da",
@@ -435,7 +539,15 @@ const rows=[
     "kombinere skrifttyper til overskrift og brødtekst",
     "læse e-bøger uden ophavsret",
     "måle sidens indlæsningsydelse",
-    "omregne valuta"
+    "omregne valuta",
+    "flette PDF-filer",
+    "komprimere en PDF",
+    "opdele en PDF",
+    "ændre størrelsen på et billede",
+    "fjerne billedbaggrund",
+    "lave en fotocollage",
+    "kontrollere browserens fingeraftryk",
+    "hoste et statisk websted"
   ],
   [
     "fi",
@@ -466,7 +578,15 @@ const rows=[
     "yhdistää otsikon ja leipätekstin fontit",
     "lukea tekijänoikeudesta vapaita e-kirjoja",
     "mitata sivun lataussuorituskyky",
-    "muuntaa valuuttoja"
+    "muuntaa valuuttoja",
+    "yhdistää PDF-tiedostoja",
+    "pakata PDF",
+    "jakaa PDF",
+    "muuttaa kuvan kokoa",
+    "poistaa kuvan tausta",
+    "tehdä valokuvakollaasi",
+    "tarkistaa selaimen sormenjälki",
+    "isännöidä staattista verkkosivustoa"
   ],
   [
     "pl",
@@ -497,7 +617,15 @@ const rows=[
     "dopasować fonty nagłówka i tekstu",
     "czytać ebooki z domeny publicznej",
     "zmierzyć wydajność ładowania strony",
-    "przeliczyć waluty"
+    "przeliczyć waluty",
+    "połączyć pliki PDF",
+    "skompresować PDF",
+    "podzielić PDF",
+    "zmienić rozmiar obrazu",
+    "usunąć tło obrazu",
+    "stworzyć kolaż zdjęć",
+    "sprawdzić odcisk palca przeglądarki",
+    "hostować statyczną stronę internetową"
   ],
   [
     "cs",
@@ -528,7 +656,15 @@ const rows=[
     "zkombinovat písma nadpisu a textu",
     "číst elektronické knihy ve veřejné doméně",
     "změřit výkon načítání stránky",
-    "převést měny"
+    "převést měny",
+    "sloučit soubory PDF",
+    "komprimovat PDF",
+    "rozdělit PDF",
+    "změnit velikost obrázku",
+    "odstranit pozadí obrázku",
+    "vytvořit fotokoláž",
+    "zkontrolovat otisk prohlížeče",
+    "hostovat statický web"
   ],
   [
     "sk",
@@ -559,7 +695,15 @@ const rows=[
     "skombinovať písma nadpisu a textu",
     "čítať elektronické knihy vo verejnej doméne",
     "zmerať výkon načítania stránky",
-    "previesť meny"
+    "previesť meny",
+    "zlúčiť súbory PDF",
+    "komprimovať PDF",
+    "rozdeliť PDF",
+    "zmeniť veľkosť obrázka",
+    "odstrániť pozadie obrázka",
+    "vytvoriť fotokoláž",
+    "skontrolovať odtlačok prehliadača",
+    "hostovať statický web"
   ],
   [
     "hu",
@@ -590,7 +734,15 @@ const rows=[
     "címsor és törzsszöveg betűtípusainak párosítása",
     "közkincs e-könyvek olvasása",
     "oldalbetöltési teljesítmény mérése",
-    "valuták átváltása"
+    "valuták átváltása",
+    "PDF-fájlok egyesítése",
+    "PDF tömörítése",
+    "PDF felosztása",
+    "kép átméretezése",
+    "kép hátterének eltávolítása",
+    "fotókollázs készítése",
+    "böngészőujjlenyomat ellenőrzése",
+    "statikus webhely hosztolása"
   ],
   [
     "ro",
@@ -621,7 +773,15 @@ const rows=[
     "combină fonturile pentru titlu și text",
     "citește cărți electronice din domeniul public",
     "măsoară performanța încărcării paginii",
-    "convertește valute"
+    "convertește valute",
+    "combină fișiere PDF",
+    "comprimă un PDF",
+    "împarte un PDF",
+    "redimensionează o imagine",
+    "elimină fundalul imaginii",
+    "creează un colaj foto",
+    "verifică amprenta browserului",
+    "găzduiește un site static"
   ],
   [
     "bg",
@@ -652,7 +812,15 @@ const rows=[
     "съчетаване на шрифтове за заглавие и текст",
     "четене на електронни книги в обществено достояние",
     "измерване на скоростта на зареждане на страница",
-    "преобразуване на валути"
+    "преобразуване на валути",
+    "обединяване на PDF файлове",
+    "компресиране на PDF",
+    "разделяне на PDF",
+    "преоразмеряване на изображение",
+    "премахване на фона на изображение",
+    "създаване на фотоколаж",
+    "проверка на отпечатъка на браузъра",
+    "хостване на статичен сайт"
   ],
   [
     "hr",
@@ -683,7 +851,15 @@ const rows=[
     "kombinirati fontove naslova i teksta",
     "čitati e-knjige u javnom vlasništvu",
     "izmjeriti performanse učitavanja stranice",
-    "pretvoriti valute"
+    "pretvoriti valute",
+    "spojiti PDF datoteke",
+    "komprimirati PDF",
+    "podijeliti PDF",
+    "promijeniti veličinu slike",
+    "ukloniti pozadinu slike",
+    "izraditi fotokolaž",
+    "provjeriti otisak preglednika",
+    "hostati statičnu web-stranicu"
   ],
   [
     "sr",
@@ -714,7 +890,15 @@ const rows=[
     "upariti fontove naslova i teksta",
     "čitati e-knjige u javnom domenu",
     "izmeriti performanse učitavanja stranice",
-    "pretvoriti valute"
+    "pretvoriti valute",
+    "spojiti PDF datoteke",
+    "komprimovati PDF",
+    "podeliti PDF",
+    "promeniti veličinu slike",
+    "ukloniti pozadinu slike",
+    "napraviti fotokolaž",
+    "proveriti otisak pregledača",
+    "hostovati statički veb-sajt"
   ],
   [
     "sl",
@@ -745,7 +929,15 @@ const rows=[
     "združiti pisave naslova in besedila",
     "brati e-knjige v javni domeni",
     "izmeriti zmogljivost nalaganja strani",
-    "pretvoriti valute"
+    "pretvoriti valute",
+    "združiti datoteke PDF",
+    "stisniti PDF",
+    "razdeliti PDF",
+    "spremeniti velikost slike",
+    "odstraniti ozadje slike",
+    "ustvariti fotokolaž",
+    "preveriti prstni odtis brskalnika",
+    "gostiti statično spletno mesto"
   ],
   [
     "el",
@@ -776,7 +968,15 @@ const rows=[
     "συνδυασμός γραμματοσειρών τίτλου και κειμένου",
     "ανάγνωση ηλεκτρονικών βιβλίων δημόσιου τομέα",
     "μέτρηση απόδοσης φόρτωσης σελίδας",
-    "μετατροπή νομισμάτων"
+    "μετατροπή νομισμάτων",
+    "συγχώνευση αρχείων PDF",
+    "συμπίεση PDF",
+    "διαίρεση PDF",
+    "αλλαγή μεγέθους εικόνας",
+    "αφαίρεση φόντου εικόνας",
+    "δημιουργία κολάζ φωτογραφιών",
+    "έλεγχος αποτυπώματος προγράμματος περιήγησης",
+    "φιλοξενία στατικού ιστότοπου"
   ],
   [
     "ru",
@@ -807,7 +1007,15 @@ const rows=[
     "подобрать шрифты заголовка и текста",
     "читать электронные книги общественного достояния",
     "измерить производительность загрузки страницы",
-    "конвертировать валюты"
+    "конвертировать валюты",
+    "объединить файлы PDF",
+    "сжать PDF",
+    "разделить PDF",
+    "изменить размер изображения",
+    "удалить фон изображения",
+    "создать фотоколлаж",
+    "проверить отпечаток браузера",
+    "разместить статический сайт"
   ],
   [
     "uk",
@@ -838,7 +1046,15 @@ const rows=[
     "підібрати шрифти заголовка й тексту",
     "читати електронні книги суспільного надбання",
     "виміряти продуктивність завантаження сторінки",
-    "конвертувати валюти"
+    "конвертувати валюти",
+    "об'єднати файли PDF",
+    "стиснути PDF",
+    "розділити PDF",
+    "змінити розмір зображення",
+    "видалити фон зображення",
+    "створити фотоколаж",
+    "перевірити відбиток браузера",
+    "розмістити статичний сайт"
   ],
   [
     "tr",
@@ -869,7 +1085,15 @@ const rows=[
     "başlık ve metin yazı tiplerini eşleştir",
     "kamu malı e-kitapları oku",
     "sayfa yükleme performansını ölç",
-    "para birimlerini dönüştür"
+    "para birimlerini dönüştür",
+    "PDF dosyalarını birleştir",
+    "PDF sıkıştır",
+    "PDF böl",
+    "resmi yeniden boyutlandır",
+    "resim arka planını kaldır",
+    "fotoğraf kolajı oluştur",
+    "tarayıcı parmak izini kontrol et",
+    "statik web sitesi barındır"
   ],
   [
     "ar",
@@ -900,7 +1124,15 @@ const rows=[
     "تنسيق خطوط العنوان والنص",
     "قراءة كتب إلكترونية في الملكية العامة",
     "قياس أداء تحميل الصفحة",
-    "تحويل العملات"
+    "تحويل العملات",
+    "دمج ملفات PDF",
+    "ضغط ملف PDF",
+    "تقسيم ملف PDF",
+    "تغيير حجم الصورة",
+    "إزالة خلفية الصورة",
+    "إنشاء صورة مجمعة",
+    "فحص بصمة المتصفح",
+    "استضافة موقع ثابت"
   ],
   [
     "he",
@@ -931,7 +1163,15 @@ const rows=[
     "התאמת גופנים לכותרת ולטקסט",
     "קריאת ספרים אלקטרוניים בנחלת הכלל",
     "מדידת ביצועי טעינת הדף",
-    "המרת מטבעות"
+    "המרת מטבעות",
+    "מיזוג קובצי PDF",
+    "דחיסת PDF",
+    "פיצול PDF",
+    "שינוי גודל תמונה",
+    "הסרת רקע תמונה",
+    "יצירת קולאז' תמונות",
+    "בדיקת טביעת אצבע של הדפדפן",
+    "אירוח אתר סטטי"
   ],
   [
     "fa",
@@ -962,7 +1202,15 @@ const rows=[
     "ترکیب فونت عنوان و متن",
     "خواندن کتاب های الکترونیکی مالکیت عمومی",
     "سنجش عملکرد بارگذاری صفحه",
-    "تبدیل ارز"
+    "تبدیل ارز",
+    "ادغام فایل های PDF",
+    "فشرده سازی PDF",
+    "تقسیم PDF",
+    "تغییر اندازه تصویر",
+    "حذف پس زمینه تصویر",
+    "ساخت کلاژ عکس",
+    "بررسی اثر انگشت مرورگر",
+    "میزبانی وب سایت ایستا"
   ],
   [
     "hi",
@@ -993,7 +1241,15 @@ const rows=[
     "शीर्षक और मुख्य पाठ के फ़ॉन्ट मिलाएं",
     "सार्वजनिक डोमेन की ईबुक पढ़ें",
     "पेज लोड प्रदर्शन मापें",
-    "मुद्रा परिवर्तित करें"
+    "मुद्रा परिवर्तित करें",
+    "PDF फाइलें मर्ज करें",
+    "PDF संपीड़ित करें",
+    "PDF विभाजित करें",
+    "छवि का आकार बदलें",
+    "छवि की पृष्ठभूमि हटाएं",
+    "फोटो कोलाज बनाएं",
+    "ब्राउज़र फिंगरप्रिंट जांचें",
+    "स्थिर वेबसाइट होस्ट करें"
   ],
   [
     "bn",
@@ -1024,7 +1280,15 @@ const rows=[
     "শিরোনাম ও মূল লেখার ফন্ট মেলান",
     "পাবলিক ডোমেইনের ইবুক পড়ুন",
     "পৃষ্ঠা লোডের কর্মক্ষমতা মাপুন",
-    "মুদ্রা রূপান্তর করুন"
+    "মুদ্রা রূপান্তর করুন",
+    "PDF ফাইল একত্র করুন",
+    "PDF সংকুচিত করুন",
+    "PDF ভাগ করুন",
+    "ছবির আকার পরিবর্তন করুন",
+    "ছবির পটভূমি সরান",
+    "ফটো কোলাজ তৈরি করুন",
+    "ব্রাউজার ফিঙ্গারপ্রিন্ট পরীক্ষা করুন",
+    "স্ট্যাটিক ওয়েবসাইট হোস্ট করুন"
   ],
   [
     "ur",
@@ -1055,7 +1319,15 @@ const rows=[
     "عنوان اور متن کے فونٹ ملائیں",
     "عوامی ملکیت کی ای بکس پڑھیں",
     "صفحہ لوڈ کی کارکردگی ناپیں",
-    "کرنسی تبدیل کریں"
+    "کرنسی تبدیل کریں",
+    "PDF فائلیں ضم کریں",
+    "PDF کمپریس کریں",
+    "PDF تقسیم کریں",
+    "تصویر کا سائز بدلیں",
+    "تصویر کا پس منظر ہٹائیں",
+    "فوٹو کولیج بنائیں",
+    "براؤزر فنگر پرنٹ چیک کریں",
+    "جامد ویب سائٹ ہوسٹ کریں"
   ],
   [
     "th",
@@ -1086,7 +1358,15 @@ const rows=[
     "จับคู่ฟอนต์หัวเรื่องและเนื้อหา",
     "อ่านอีบุ๊กสาธารณสมบัติ",
     "วัดประสิทธิภาพการโหลดหน้าเว็บ",
-    "แปลงสกุลเงิน"
+    "แปลงสกุลเงิน",
+    "รวมไฟล์ PDF",
+    "บีบอัด PDF",
+    "แยก PDF",
+    "ปรับขนาดรูปภาพ",
+    "ลบพื้นหลังรูปภาพ",
+    "สร้างภาพตัดปะ",
+    "ตรวจสอบลายนิ้วมือเบราว์เซอร์",
+    "โฮสต์เว็บไซต์แบบสแตติก"
   ],
   [
     "vi",
@@ -1117,7 +1397,15 @@ const rows=[
     "phối phông chữ tiêu đề và nội dung",
     "đọc sách điện tử thuộc phạm vi công cộng",
     "đo hiệu suất tải trang",
-    "chuyển đổi tiền tệ"
+    "chuyển đổi tiền tệ",
+    "gộp tệp PDF",
+    "nén PDF",
+    "tách PDF",
+    "đổi kích thước hình ảnh",
+    "xóa nền hình ảnh",
+    "tạo ảnh ghép",
+    "kiểm tra dấu vân tay trình duyệt",
+    "lưu trữ trang web tĩnh"
   ],
   [
     "id",
@@ -1148,7 +1436,15 @@ const rows=[
     "padukan font judul dan teks",
     "baca buku elektronik domain publik",
     "ukur kinerja pemuatan halaman",
-    "konversi mata uang"
+    "konversi mata uang",
+    "gabungkan file PDF",
+    "kompres PDF",
+    "pisahkan PDF",
+    "ubah ukuran gambar",
+    "hapus latar belakang gambar",
+    "buat kolase foto",
+    "periksa sidik jari browser",
+    "hosting situs web statis"
   ],
   [
     "ms",
@@ -1179,7 +1475,15 @@ const rows=[
     "padankan fon tajuk dan teks",
     "baca e-buku domain awam",
     "ukur prestasi pemuatan halaman",
-    "tukar mata wang"
+    "tukar mata wang",
+    "gabungkan fail PDF",
+    "mampatkan PDF",
+    "pisahkan PDF",
+    "ubah saiz imej",
+    "buang latar belakang imej",
+    "buat kolaj foto",
+    "semak cap jari pelayar",
+    "hos laman web statik"
   ],
   [
     "fil",
@@ -1210,7 +1514,15 @@ const rows=[
     "ipares ang font ng pamagat at teksto",
     "magbasa ng public domain ebooks",
     "sukatin ang page loading performance",
-    "mag-convert ng mga pera"
+    "mag-convert ng mga pera",
+    "pagsamahin ang mga PDF file",
+    "i-compress ang PDF",
+    "hatiin ang PDF",
+    "baguhin ang laki ng larawan",
+    "alisin ang background ng larawan",
+    "gumawa ng photo collage",
+    "suriin ang browser fingerprint",
+    "mag-host ng static website"
   ],
   [
     "af",
@@ -1241,7 +1553,15 @@ const rows=[
     "kombineer opskrif- en tekslettertipes",
     "lees e-boeke in die openbare domein",
     "meet bladsylaaiprestasie",
-    "skakel geldeenhede om"
+    "skakel geldeenhede om",
+    "voeg PDF-lêers saam",
+    "druk 'n PDF saam",
+    "verdeel 'n PDF",
+    "verander die grootte van 'n beeld",
+    "verwyder die beeldagtergrond",
+    "maak 'n fotocollage",
+    "kontroleer die blaaiervingerafdruk",
+    "huisves 'n statiese webwerf"
   ]
 ];
 const localeConstraints=[
