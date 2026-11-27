@@ -12,7 +12,7 @@ from verify_site import validate
 class FakeFTP:
     def __init__(self):
         self.files={};self.dirs={'/','/avenqir.bg5.net','/avenqir.bg5.net/htdocs'};self.here='/';self.fail_one_overwrite=False
-        self.deleted=[]
+        self.deleted=[];self.list_calls=0;self.read_calls=0
     def _path(self,name):return (Path(self.here)/name).as_posix()
     def cwd(self,path):
         dest=Path(path) if path.startswith('/') else Path(self.here)/path
@@ -21,9 +21,11 @@ class FakeFTP:
         self.here=dest
     def pwd(self):return self.here
     def nlst(self):
+        self.list_calls+=1
         return [Path(p).name for p in self.files if str(Path(p).parent)==self.here]
     def mkd(self,name):self.dirs.add(self._path(name))
     def retrbinary(self,cmd,callback,blocksize=65536):
+        self.read_calls+=1
         _,name=cmd.split(' ',1)
         path=self._path(name)
         if path not in self.files:raise d.ftplib.error_perm('550 not found')
@@ -79,6 +81,38 @@ class DeployTests(unittest.TestCase):
         d.upload(self.ftp,asset,self.commit,self.target,self.base)
         self.assertEqual(self.ftp.files[self.target+'/new-image.webp'],b'NEW_IMAGE')
 
+    def test_batch_unchanged_files_reuse_listing_but_read_every_file(self):
+        cache={}
+        for i in range(20):
+            asset=self.base/('asset'+str(i)+'.js')
+            asset.write_bytes(b'unchanged')
+            self.ftp.files[self.target+'/'+asset.name]=b'unchanged'
+        for asset in sorted(self.base.glob('*.js')):
+            d.upload(self.ftp,asset,self.commit,self.target,self.base,cache)
+        self.assertEqual(self.ftp.list_calls,1)
+        self.assertEqual(self.ftp.read_calls,20)
+        self.assertEqual(self.ftp.deleted,[])
+    def test_batch_changed_file_rechecks_listing_and_invalidates_hint(self):
+        asset=self.base/'index.html'
+        self.ftp.files[self.target+'/index.html']=b'OLD'
+        cache={'':{'index.html'}}
+        d.upload(self.ftp,asset,self.commit,self.target,self.base,cache)
+        self.assertEqual(self.ftp.files[self.target+'/index.html'],b'NEW')
+        self.assertNotIn('',cache)
+        self.assertEqual(self.ftp.read_calls,3)
+        self.assertEqual(self.ftp.list_calls,2)
+    def test_batch_stale_positive_fails_closed(self):
+        with self.assertRaises(d.ftplib.error_perm):
+            d.upload(self.ftp,self.base/'index.html',self.commit,self.target,self.base,{'':{'index.html'}})
+        self.assertEqual(self.ftp.files,{})
+    def test_batch_scratch_collision_never_overwrites(self):
+        name='index.html.avenqir-upload-'+self.commit[:12]+'.tmp'
+        self.ftp.files[self.target+'/index.html']=b'OLD'
+        self.ftp.files[self.target+'/'+name]=b'OTHER'
+        with self.assertRaisesRegex(RuntimeError,'Unexpected pre-existing'):
+            d.upload(self.ftp,self.base/'index.html',self.commit,self.target,self.base,{'':{'index.html'}})
+        self.assertEqual(self.ftp.files[self.target+'/'+name],b'OTHER')
+        self.assertEqual(self.ftp.files[self.target+'/index.html'],b'OLD')
     def test_no_private_data_in_release(self):
         self.assertTrue(len(validate())>35)
         self.assertFalse(any('_private' in str(x) or '_store' in str(x) for x in validate()))
