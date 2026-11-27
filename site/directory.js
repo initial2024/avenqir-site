@@ -112,9 +112,15 @@
      return (ai<0?Number.MAX_SAFE_INTEGER:ai)-(bi<0?Number.MAX_SAFE_INTEGER:bi)||(b.rank-a.rank);
    });
    else if($('atlasSort').value==='name')r.sort((a,b)=>a.x.name.localeCompare(b.x.name,'zh-CN'));
-   else if(query)r.sort((a,b)=>b.rank-a.rank||(languageMode()==='prefer'?languageRank(a.x)-languageRank(b.x):0)||a.x.name.localeCompare(b.x.name,'zh-CN'));
+   else if(!selectedUrls&&['rating','recommended'].includes($('atlasSort').value)){
+     const rating=$('atlasSort').value==='rating';
+     const value=x=>dangerous(x.url)?-1:(rating?sourceUI?.average(x.url)||0:sourceUI?.recommendation(x.url)??-1);
+     r.sort((a,b)=>value(b.x)-value(a.x)||b.rank-a.rank||(languageMode()==='prefer'?languageRank(a.x)-languageRank(b.x):0));
+   }
+   else if(query)r.sort((a,b)=>b.rank-a.rank||(languageMode()==='prefer'?languageRank(a.x)-languageRank(b.x):0)||(sourceUI?.recommendation(b.x.url)??-1)-(sourceUI?.recommendation(a.x.url)??-1)||a.x.name.localeCompare(b.x.name,'zh-CN'));
    else if(selectedUrls)r.sort((a,b)=>flow.urls.indexOf(a.x.url)-flow.urls.indexOf(b.x.url));
-   else if(languageMode()==='prefer')r.sort((a,b)=>languageRank(a.x)-languageRank(b.x));
+   else if(languageMode()==='prefer')r.sort((a,b)=>languageRank(a.x)-languageRank(b.x)||(sourceUI?.recommendation(b.x.url)??-1)-(sourceUI?.recommendation(a.x.url)??-1));
+   else r.sort((a,b)=>(sourceUI?.recommendation(b.x.url)??-1)-(sourceUI?.recommendation(a.x.url)??-1));
    return r.map(y=>y.x);
  }
  function storeFavorites(){try{localStorage.setItem(key,JSON.stringify(favorites))}catch{}}
@@ -520,7 +526,16 @@
    for(const t of tabs){const active=t.dataset.tab==='all';t.classList.toggle('active',active);t.setAttribute('aria-pressed',String(active));}
    choiceBar();drawPaths();draw();scrollToResults();
  });
- $('atlasSort').addEventListener('change',draw);
+ $('atlasSort').addEventListener('change',async()=>{
+   if(['rating','recommended'].includes($('atlasSort').value))await sourceUI?.refreshRatings();
+   draw();
+ });
+ const ratingHint=$('atlasRatingHint');
+ function ratingStatus(){if(ratingHint)ratingHint.textContent=sourceUI?.ratingsAvailable()?T('公开评分至少5份才参与排行。评价后可重新选择排序刷新。','At least 5 public ratings to rank. Re-select sort to refresh after rating.'):T('公开评分暂不可用；保留目录原有排序。','Public ratings unavailable; original ordering retained.');}
+ window.addEventListener('aq:ratings-updated',ratingStatus);
+ window.addEventListener('aq:language-change',ratingStatus);
+ $('atlasRatingRefresh')?.addEventListener('click',async()=>{await sourceUI?.refreshRatings(true);draw();});
+ ratingStatus();
  $('atlasSiteLanguageMode')?.addEventListener('change',()=>{limit=pageSize;draw();});
  let inputTimer=null,composing=false;
  function scheduleInput(){clearTimeout(inputTimer);pendingNoMatchQuery='';clearSearchNext();query=input.value.slice(0,140);limit=pageSize;inputTimer=setTimeout(()=>{if(!composing){draw();suggestions()}},90);}

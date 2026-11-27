@@ -61,7 +61,30 @@
   }
   let bundledByURL;
   let addedByURL;
-  const byURL=rows=>new Map(rows.filter(item=>item.kind==='website').map(item=>[new URL(item.url).href,item.id]));
+  const byURL=rows=>new Map(rows.filter(item=>item.kind==='website'&&gate?.sanitize(item.url)).map(item=>[new URL(item.url).href,item]));
+  let urlIndex=new Map(), metrics=null, statsRequest=null;
+  function refreshRatings(force=false){
+    if(statsRequest)return statsRequest;
+    if(metrics!==null&&!force)return Promise.resolve(metrics);
+    statsRequest=Promise.all([bundledCatalog(),addedCatalog(),fetch('recommendations-api.php?days=7',{cache:'no-store',signal:AbortSignal.timeout?.(7000)}).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([base,remote,data])=>{
+      urlIndex=byURL([...remote,...base]);
+      metrics=data?.ok&&data.items&&typeof data.items==='object'?data.items:null;
+      window.dispatchEvent(new CustomEvent('aq:ratings-updated'));
+      return metrics;
+    }).finally(()=>{statsRequest=null;});
+    return statsRequest;
+  }
+  function metric(url){const item=urlIndex.get(gate?.sanitize(url)?.href);return item&&metrics&&Object.hasOwn(metrics,item.id)?metrics[item.id]:null;}
+  function average(url){return window.AVENQIR_RECOMMENDATIONS?.publicAverage(metric(url))||0;}
+  function recommendation(url){return window.AVENQIR_RECOMMENDATIONS?.displayScore(metric(url),false)??-1;}
+  function updateRatingLink(link,item){
+    const m=metric(item.url),avg=average(item.url);
+    let mine=0;try{mine=window.AVENQIR_RECOMMENDATIONS?.clean(JSON.parse(localStorage.getItem(window.AVENQIR_RECOMMENDATIONS.KEY)))?.ratings[item.id]?.stars||0;}catch{}
+    link.textContent=avg?t('评价 · '+avg.toFixed(1)+'★ ('+m.count+')','Rate · '+avg.toFixed(1)+'★ ('+m.count+')'):mine?t('已评 '+mine+'★','Rated '+mine+'★'):t('评价','Rate');
+  }
+  function updateRatingLinks(){for(const link of document.querySelectorAll('a.aq-source-rate[data-rating-url]')){const item=urlIndex.get(link.dataset.ratingUrl);if(item)updateRatingLink(link,item);}}
+  window.addEventListener('aq:ratings-updated',updateRatingLinks);
+  window.addEventListener('aq:personal-rating-updated',updateRatingLinks);
   function ratingLink(url){
     if(!gate||!safety||gate.urlRisk(url).blocked||safety.threatStatus(url)==='listed')return null;
     const link=document.createElement('a');
@@ -71,19 +94,27 @@
     bundledByURL??=bundledCatalog().then(byURL);
     bundledByURL.then(async urls=>{
       const exact=new URL(url).href;
-      let id=urls.get(exact);
-      if(!id){
+      let item=urls.get(exact);
+      if(!item){
         addedByURL??=addedCatalog().then(byURL);
-        id=(await addedByURL).get(exact);
+        item=(await addedByURL).get(exact);
       }
-      if(!id)return;
-      link.href='recommendations.html?pick='+encodeURIComponent(id)+'#recListHeading';
+      if(!item)return;
+      urlIndex.set(exact,item);
+      link.dataset.ratingUrl=exact;
+      link.href='recommendations.html?pick='+encodeURIComponent(item.id)+'#recListHeading';
+      updateRatingLink(link,item);
+      link.addEventListener('click',event=>{
+        if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;
+        const request=new CustomEvent('aq:quick-rating',{cancelable:true,detail:{item,trigger:link}});
+        if(!window.dispatchEvent(request))event.preventDefault();
+      });
       link.setAttribute('aria-label',t('评价 '+new URL(url).hostname,'Rate '+new URL(url).hostname));
       link.hidden=false;
     });
     return link;
   }
-  window.AVENQIR_ATLAS_SOURCE_UI=Object.freeze({badge,external,label,ratingLink,catalog});
+  window.AVENQIR_ATLAS_SOURCE_UI=Object.freeze({badge,external,label,ratingLink,catalog,refreshRatings,metric,average,recommendation,ratingsAvailable:()=>metrics!==null});
   notice();
   window.addEventListener('aq:language-change',notice);
 })();

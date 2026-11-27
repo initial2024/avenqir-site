@@ -17,3 +17,11 @@ assert.ok(source.includes("badge('blocked')"));
 const cat=require('../site/recommendations-catalog.json');
 assert.equal(new Set(cat.map(r=>r.id)).size,cat.length);
 console.log('v138 recommendation display and catalog contracts PASS');
+
+const dir=fs.readFileSync(require('node:path').join(__dirname,'../site/directory.js'),'utf8');
+const rec=fs.readFileSync(require('node:path').join(__dirname,'../site/recommendations.js'),'utf8');
+assert.ok(source.includes("'aq:quick-rating'")&&source.includes('cancelable:true'));
+assert.ok(rec.includes("dialog.showModal()")&&rec.includes("publicVote.checked")&&rec.includes("sourceUI.refreshRatings(true)"));
+assert.ok(dir.includes("sourceUI?.average(x.url)")&&dir.includes("sourceUI?.recommendation(x.url)"));
+assert.ok(!rec.includes("write(SHARE,'1');\n        await post"));
+console.log('v139 inline rating and directory ranking contracts PASS');

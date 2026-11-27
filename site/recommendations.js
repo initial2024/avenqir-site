@@ -182,6 +182,7 @@
     if(removing)delete data.ratings[id];
     else data.ratings[id]={stars,updatedAt:Date.now()};
     if(!write(model.KEY,JSON.stringify(data)))return;
+    window.dispatchEvent(new CustomEvent('aq:personal-rating-updated'));
     if(read(SHARE)!=='1'){
       messages.set(id,removing?t('已清除我的评分。','Personal rating removed.'):t('评分已保存在本机。','Rating saved on this device.'));
       render();
@@ -194,6 +195,7 @@
       await post(removing?'remove':'rate',id,removing?null:stars);
       messages.set(id,removing?t('已撤回公开评分。','Public rating removed.'):t('已参与公开评分。','Public rating submitted.'));
       await refresh();
+      sourceUI.refreshRatings(true);
     }catch(error){
       messages.set(id,error.message==='limit'?t('公开操作达到频率限制。本机设置已保存。','Public rate limit reached. Your local change was saved.'):
         t('公开服务暂不可用。本机设置已保存。','Public service unavailable. Your local change was saved.'));
@@ -202,6 +204,87 @@
       render();
     }
   }
+  // One compact dialog shared by directory, home picks and the standalone rating center.
+  let quickBusy=false;
+  function openQuickRating(item,trigger){
+    if(quickBusy||!item||!destination(item))return false;
+    if(typeof HTMLDialogElement==='undefined'||!HTMLDialogElement.prototype.showModal)return false;
+    if(document.querySelector('dialog[open]'))return false;
+    const dialog=element('dialog');
+    dialog.className='aq-quick-rating';
+    const heading=element('h2',name(item));
+    heading.id='aqQuickRatingTitle';
+    dialog.setAttribute('aria-labelledby',heading.id);
+    const aggregate=element('p');
+    aggregate.className='aq-quick-rating-meta';
+    const updateAggregate=()=>{
+      const value=sourceUI.metric(item.url),average=model.publicAverage(value);
+      aggregate.textContent=average?t('公开评分 '+average.toFixed(1)+'/5 · '+value.count+' 份','Public rating '+average.toFixed(1)+'/5 · '+value.count+' ratings'):sourceUI.ratingsAvailable()?t(value?.count?'公开评分样本不足5份':'暂无公开评分',value?.count?'Fewer than 5 public ratings':'No public ratings'):t('公开评分暂不可用','Public ratings unavailable');
+    };
+    updateAggregate();
+    const meta=element('p',t('评价使用体验，不代表安全认证。','Rate usability, not safety.'));
+    const group=element('div');group.className='aq-quick-stars';group.setAttribute('role','group');group.setAttribute('aria-label',t('选择星级','Choose stars'));
+    let selected=getLocal().ratings[item.id]?.stars||0;
+    const description=element('p');description.className='aq-quick-choice';description.setAttribute('aria-live','polite');
+    const submit=element('button',t('保存评价','Save rating'));submit.type='button';submit.className='aq-quick-primary';
+    const clear=element('button',t('清除评分','Clear rating'));clear.type='button';
+    const cancel=element('button',t('关闭','Close'));cancel.type='button';
+    const shareLabel=element('label');shareLabel.className='aq-quick-share';
+    const publicVote=element('input');publicVote.type='checkbox';publicVote.checked=read(SHARE)==='1';
+    shareLabel.append(publicVote,element('span',t('同时提交匿名公开评分（可选）','Also submit an anonymous public rating (optional)')));
+    const privacy=element('small',t('仅发送公开条目 ID、星级和浏览器随机代号。不启用额外点击追踪。','Sends only public entry ID, stars and random browser identifier. Does not enable extra click tracking.'));
+    const feedback=element('p');feedback.className='aq-quick-feedback';feedback.setAttribute('role','status');
+    const sync=()=>{
+      [...group.children].forEach((b,i)=>{b.textContent=i<selected?'★':'☆';b.setAttribute('aria-pressed',String(selected===i+1));});
+      description.textContent=selected?t(['','很差','不太好用','一般','好用','非常推荐'][selected],['','Poor','Not useful','Average','Useful','Highly recommended'][selected]):t('请选择1–5星','Choose 1–5 stars');
+      submit.disabled=!selected||quickBusy;
+      clear.disabled=quickBusy||!getLocal().ratings[item.id]&&!read(TOKEN);
+    };
+    for(let i=1;i<=5;i++){
+      const b=element('button');b.type='button';b.setAttribute('aria-label',t(i+' 星',i+' stars'));b.addEventListener('click',()=>{selected=i;sync();});group.append(b);
+    }
+    const actions=element('div');actions.className='aq-quick-actions';actions.append(cancel,clear,submit);
+    dialog.append(heading,aggregate,meta,group,description,shareLabel,privacy,feedback,actions);
+    const more=element('a',t('文字反馈 / 报告问题','Written feedback / Report a problem'));
+    more.href='feedback.php?type=feedback&url='+encodeURIComponent(item.url)+'#write';
+    dialog.append(more);
+    function disable(busy){quickBusy=busy;for(const button of group.children)button.disabled=busy;publicVote.disabled=busy;cancel.disabled=busy;sync();}
+    async function save(removing){
+      if(quickBusy||(!removing&&!selected)||!destination(item))return;
+      const data=getLocal();
+      if(removing)delete data.ratings[item.id];else data.ratings[item.id]={stars:selected,updatedAt:Date.now()};
+      if(!model.valid(data)||!write(model.KEY,JSON.stringify(data))){feedback.textContent=t('无法保存本机评分。','Could not save on this device.');return;}
+      if(removing)selected=0;
+      window.dispatchEvent(new CustomEvent('aq:personal-rating-updated'));
+      if(!publicVote.checked){feedback.textContent=t(removing?'已清除本机评分；此前公开评分未撤回。':'已保存本机评分；未提交公开榜单。',removing?'Local rating cleared; previous public rating unchanged.':'Saved locally; not submitted publicly.');sync();return;}
+      disable(true);
+      feedback.textContent=t('正在提交公开评分…','Submitting public rating…');
+      try{
+        const voter=removing?read(TOKEN):token();
+        if(!voter)throw Error('token');
+        await post(removing?'remove':'rate',item.id,removing?null:selected,voter);
+        feedback.textContent=t(removing?'已撤回公开评分。':'已提交公开评分。',removing?'Public rating withdrawn.':'Public rating submitted.');
+        await sourceUI.refreshRatings(true);
+        if(full)await refresh();
+      }catch(error){feedback.textContent=t('公开提交失败，本机评分已保存；可重试。','Public submission failed; local rating saved. Try again.');}
+      finally{disable(false);}
+    }
+    submit.addEventListener('click',()=>save(false));
+    clear.addEventListener('click',()=>save(true));
+    cancel.addEventListener('click',()=>dialog.close());
+    dialog.addEventListener('cancel',event=>{if(quickBusy)event.preventDefault();});
+    dialog.addEventListener('close',()=>{window.removeEventListener('aq:ratings-updated',updateAggregate);dialog.remove();trigger?.focus({preventScroll:true});});
+    document.body.append(dialog);
+    window.addEventListener('aq:ratings-updated',updateAggregate);
+    sync();dialog.showModal();group.firstElementChild?.focus({preventScroll:true});
+    sourceUI.refreshRatings().then(updateAggregate);
+    return true;
+  }
+  window.addEventListener('aq:quick-rating',event=>{
+    if(openQuickRating(event.detail?.item,event.detail?.trigger))event.preventDefault();
+  });
+  // Anonymous read-only aggregates; no visitor token, search or history included.
+  if(!full)sourceUI.refreshRatings();
   function makeCard(item,localView,localData){
     const article=element('article');
     article.dataset.recTool=item.id;
