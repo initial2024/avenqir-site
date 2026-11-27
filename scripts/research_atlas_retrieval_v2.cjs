@@ -423,7 +423,7 @@ console.log('STRESS_REPORT',JSON.stringify(evaluateStress(catalog,model,runtime.
 const multilingual=require('../research/atlas-multilingual-intents.js');
 const expected=[/QRCode Monkey/i,/regex101|RegExr/i,/Excalidraw|Mermaid Live|diagrams\.net/i,/Online Stopwatch/i,/Squoosh|Adobe Express.*压缩/i,/Nslookup\.io|Google Public DNS/i,/SSL Labs/i,/ICANN Lookup/i,/IPinfo|IP\.SB|IP\.FS\.KG/i,/Speedtest|FAST\.com|Cloudflare Speed Test/i,/JSON Editor Online/i,/W3C HTML Validator/i,/W3C CSS Validator/i,/ZoteroBib/i,/Crossref Metadata Search|Crossref Simple Text Query/i,/DeepL|Reverso/i,/Cambridge Dictionary|Collins Dictionary|Dictionary\.com/i];
 expected.push(/PDF\.js/i,/DNSChecker/i,/VirusTotal|Google Safe Browsing/i,/BrowserLeaks/i,/World Time Buddy/i,/TypingClub|Monkeytype/i,/Adobe Color|Color Hunt/i,/Fontjoy/i,/Project Gutenberg|Standard Ebooks|Global Grey/i,/PageSpeed Insights|WebPageTest/i,/XE 货币换算/i);
-expected.push(null,null,null,/Adobe Express 调整图片大小/i,null,null,null,null);
+expected.push(null,/Smallpdf/i,null,/Adobe Express 调整图片大小/i,/Adobe Firefly 去背景/i,null,null,null);
 const byURL=new Map(catalog.map(x=>[x.url,x.name]));
 let n=0,top1=0,top5=0,constraintReject=0,grounded=0,unsupported=0;
 for(const [locale,...phrases] of multilingual.rows)for(const [i,q] of phrases.entries()){
@@ -435,5 +435,5 @@ for(const [locale,...phrases] of multilingual.rows)for(const [i,q] of phrases.en
   assert.equal(blocked.length,0,locale+' '+q+' '+suffix);constraintReject+=Number(!blocked.length);
  }
 }
-assert.equal(multilingual.locales.length,40);assert.equal(n,1440);assert.equal(constraintReject,7200);
+assert.equal(multilingual.locales.length,40);assert.equal(n,1440);assert.equal(grounded,1240);assert.equal(unsupported,200);assert.equal(top5,grounded);assert.equal(constraintReject,7200);
 console.log('MULTILINGUAL_REPORT',JSON.stringify({locales:multilingual.locales.length,n,grounded,unsupported,top1,top5,constraintReject}));
