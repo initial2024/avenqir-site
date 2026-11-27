@@ -437,3 +437,24 @@ for(const [locale,...phrases] of multilingual.rows)for(const [i,q] of phrases.en
 }
 assert.equal(multilingual.locales.length,40);assert.equal(n,1440);assert.equal(grounded,1240);assert.equal(unsupported,200);assert.equal(top5,grounded);assert.equal(constraintReject,7200);
 console.log('MULTILINGUAL_REPORT',JSON.stringify({locales:multilingual.locales.length,n,grounded,unsupported,top1,top5,constraintReject}));
+
+const {createSession}=require('../research/atlas-retrieval-runtime.js');
+const session=createSession(catalog,model,runtime.features,runtime.create(base));
+const t0=performance.now();
+let comparisons=0;
+for(const row of multilingual.rows)for(const q of row.slice(1)){
+ assert.deepEqual(session.rank(q),candidate(q,catalog,model,runtime.features,baseline),q);
+ comparisons++;
+}
+const initial=session.stats();
+assert.equal(initial.cachedIntents,36);
+assert.equal(initial.computed,36);
+assert.equal(initial.hits,1404);
+for(const q of negative)assert.deepEqual(session.rank(q),candidate(q,catalog,model,runtime.features,baseline),q);
+const warm=performance.now();
+for(const row of multilingual.rows)for(const q of row.slice(1))session.rank(q);
+const elapsed=performance.now()-warm;
+const end=session.stats();
+assert.equal(end.featureCalls,initial.featureCalls);
+assert.equal(end.computed,36);
+console.log('SESSION_CACHE_REPORT',JSON.stringify({comparisons,initial,end,comparisonMs:warm-t0,warmMs:elapsed}));
