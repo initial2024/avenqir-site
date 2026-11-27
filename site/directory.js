@@ -623,7 +623,7 @@
   if(data.remote)records=data.items;
   const invalidCategory=category&&!records.some(x=>x.category===category);if(invalidCategory)category='';
   source.textContent=data.remote?T('在线目录 + 本地精选','Online directory + curated links'):T('内置精选目录（后台不可用）','Built-in directory (backend unavailable)');
-  loaded=true;if(data.remote||invalidCategory){choiceBar();draw();}
+  loaded=true;if(data.remote){choiceBar();draw();}else if(invalidCategory){choiceBar();draw();}
   if(pendingNoMatchQuery)completeSearch();else revealHashPanel();
   localRecommendations?.render();regionRecommendations?.render();drawGuide();
  }).catch(()=>{loaded=true;if(pendingNoMatchQuery)completeSearch();});
