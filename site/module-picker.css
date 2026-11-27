@@ -1,0 +1,52 @@
+/* Shared tool navigation, including pages that do not load common.css. */
+.module-picker[data-picker] {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%, 10rem),1fr));
+  column-gap:.55rem;
+  row-gap:.55rem;
+  grid-column:1/-1;
+  max-width:100%;
+  overflow:visible;
+  margin:.45rem 0 1rem;
+  padding:0;
+}
+.module-picker[data-picker] .module-picker-tab {
+  appearance:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.35rem;
+  width:100%;
+  min-width:0;
+  min-height:44px;
+  margin:0;
+  padding:.55rem .65rem;
+  border:1px solid var(--ui-line,#45617d)!important;
+  border-radius:.62rem;
+  background:var(--ui-card,#10253b)!important;
+  box-shadow:none!important;
+  color:var(--ui-ink,#edf6ff)!important;
+  font:inherit;
+  font-size:.9rem;
+  line-height:1.35;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  cursor:pointer;
+}
+.module-picker[data-picker] .module-picker-tab[aria-selected="true"] {
+  background:var(--ui-hover,#234461)!important;
+  border-color:var(--ui-link,#9bd4ff)!important;
+  color:var(--ui-link,#9bd4ff)!important;
+  font-weight:700;
+}
+.module-picker[data-picker] .module-picker-tab[aria-selected="true"]::before {content:'✓' / ''}
+.module-picker[data-picker] .module-picker-tab:focus-visible {
+  outline:2px solid var(--ui-link,#9bd4ff);
+  outline-offset:2px;
+}
+@media(max-width:640px) {
+  .module-picker[data-picker] {grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(hover:hover) {
+  .module-picker[data-picker] .module-picker-tab:hover {border-color:var(--ui-link,#9bd4ff)!important}
+}
