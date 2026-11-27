@@ -501,3 +501,14 @@ const evaluate=rows=>{let total=0,top1=0,top5=0,bins=[.35,.45,.55,.65].map(t=>({
 const exact=new Set(fine.rows.concat(topics.rows).flatMap(r=>r.slice(1)).map(fine.normalize));
 assert.equal(challenge.length,40);assert.deepEqual(challenge.map(x=>x[0]),fine.locales);for(const [locale,q,id] of challenge){assert.ok(!exact.has(fine.normalize(q)));assert.ok(domain.classes.some(x=>x[0]===id));}
 console.log("LOCALE_FUSION_EXPERIMENT",JSON.stringify({dev:evaluate(dev),challenge:evaluate(challenge)}));
+
+
+function assess(engine,fine,dev,challenge){
+ const groups={correctLocale:[],wrongLocale:[],unknownLocale:[],mixed:[],negative:[]};
+ for(const row of dev.concat(challenge)){const [loc,...cases]=row;for(let i=0;i<cases.length;i+=2){const q=cases[i],id=cases[i+1];groups.correctLocale.push([q,loc,id]);groups.wrongLocale.push([q,loc==='en'?'ja':'en',id]);groups.unknownLocale.push([q,null,id]);}}
+ for(let i=0;i<fine.rows.length;i++){const [loc,...p]=fine.rows[i],j=(i*7)%fine.tasks.length;groups.mixed.push([p[j]+' '+fine.rows[0][j+1],loc,fine.tasks[j]]);const [_,prefix,suffix,join]=fine.negativeFrames[i];groups.negative.push([prefix+p[j]+suffix,loc,null],[p[j]+' '+fine.localeConstraints[i][1],loc,null],[p[j]+join+p[(j+1)%fine.tasks.length],loc,null]);}
+ groups.negative.push(...['PDF printer driver installation','why does my browser crash','how do I fix my broken keyboard','does my doctor need a referral','buy a replacement bicycle chain','PDF password removal tutorial','my account has been stolen','QR code scanner not generator','DNS record format documentation','photo collage without upload','where can I buy a new phone','weather next week','my computer is infected','random gibberish zqxyq','PDF 合并不要推荐','translate this sentence without sending data'].map(q=>[q,'en',null]));
+ const report={};for(const [key,rows] of Object.entries(groups)){let top1=0,top5=0,accepted=0,correct=0;for(const [q,loc,id] of rows){const r=engine.rank(q,loc);if(id){top1+=+(r[0]?.id===id);top5+=+r.slice(0,5).some(x=>x.id===id);}if(r[0]?.score>=.35&&r[0].score-(r[1]?.score||0)>=.08){accepted++;correct+=+(r[0].id===id);}}report[key]={n:rows.length,top1,top5,accepted,correct};}return report;
+}
+
+const robustness=assess(engine,fine,dev,challenge);assert.equal(robustness.correctLocale.n,120);assert.equal(robustness.negative.n,136);console.log('LOCALE_ROBUSTNESS_REPORT',JSON.stringify(robustness));
