@@ -40,6 +40,7 @@
   {"id":"r28","title":["itch.io","itch.io"],"url":"https://itch.io/games/free","category":"休闲","kind":"website"},
   {"id":"r29","title":["Chess.com","Chess.com"],"url":"https://www.chess.com/","category":"休闲","kind":"website"},
   {"id":"r30","title":["GeoGuessr","GeoGuessr"],"url":"https://www.geoguessr.com/","category":"休闲","kind":"website"},
+  {"id":"user-ip-fs-kg","title":["IP.FS.KG · IP 查询","IP.FS.KG · IP 查询"],"url":"https://ip.fs.kg/","category":"网络","kind":"website"},
   {"id":"e31","title":["PhET 交互模拟","PhET 交互模拟"],"url":"https://phet.colorado.edu/","category":"教育","kind":"website"},
   {"id":"e32","title":["GeoGebra","GeoGebra"],"url":"https://www.geogebra.org/","category":"教育","kind":"website"},
   {"id":"e33","title":["Desmos 图形计算器","Desmos 图形计算器"],"url":"https://www.desmos.com/calculator","category":"数学","kind":"website"},
