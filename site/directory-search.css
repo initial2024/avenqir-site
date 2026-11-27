@@ -162,3 +162,39 @@
     overflow-wrap: anywhere;
   }
 }
+
+/* v143: compact sticky search, quick categories and progressive disclosure. */
+.search-body .search-hero{padding:20px 0 8px}
+.search-body .search-hero::before,.search-body .search-hero .atlas-icon{display:none}
+.search-body .search-hero .atlas-kicker{margin:0 0 4px}
+.search-body .search-hero h1{font-size:clamp(22px,3vw,34px);margin:0 0 4px}
+.search-body .atlas-sub{font-size:13px;margin:0 0 4px}
+.search-body #atlasLiveCount{font-size:12px;margin:0 0 4px}
+.atlas-sticky-search{position:sticky;top:var(--atlas-head-height,64px);z-index:12;max-width:1150px;margin:0 auto 10px;padding:6px 0;background:var(--bg,#f5f8fd);border-bottom:1px solid #8ca1b544}
+.atlas-sticky-search .atlas-search-wrap{height:48px;border-radius:12px}
+.atlas-sticky-search .atlas-submit{height:36px;padding:0 15px;border-radius:8px}
+.atlas-sticky-search .atlas-suggestions{top:52px;max-height:40vh}
+.atlas-quick-categories{display:flex;gap:6px;overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-width:thin;padding:4px 0;max-width:100%}
+.atlas-quick-category{flex:0 0 auto;min-height:36px;padding:4px 10px;border:1px solid #8ca1b577;border-radius:999px;background:transparent;color:inherit;font-size:12px!important;white-space:nowrap}
+.atlas-quick-category[aria-pressed=true]{border-color:currentColor;color:var(--ui-link,#2563eb);font-weight:750}
+.atlas-quick-links{display:flex;gap:12px;align-items:center;font-size:12px}
+.atlas-quick-links a,.atlas-quick-links button{color:var(--ui-link,#2563eb);min-height:36px;display:inline-flex;align-items:center;background:transparent;border:0;padding:0 3px}
+.atlas-advanced,.atlas-source-disclosure{border:1px solid #8ca1b544;border-radius:9px;margin:6px 0;padding:0 9px}
+.atlas-advanced>summary,.atlas-source-disclosure>summary,.atlas-card-more>summary{cursor:pointer;min-height:44px;display:flex;align-items:center;gap:4px;font-size:12px}
+.atlas-advanced>summary::before,.atlas-source-disclosure>summary::before,.atlas-card-more>summary::before{content:'▸'}
+.atlas-advanced[open]>summary::before,.atlas-source-disclosure[open]>summary::before,.atlas-card-more[open]>summary::before{content:'▾'}
+.atlas-card-more{min-width:0}
+.atlas-secondary-actions{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.atlas-card-actions{align-items:center;gap:7px}
+.atlas-card-more[open]{flex-basis:100%}
+.atlas-match{background:#ffe39c;color:#292012;border-radius:2px;padding:0}
+.search-body :is(#atlasResults,#resultsTitle,#popular,#atlasAdvancedFilters,.atlas-compact-panel h2){scroll-margin-top:calc(var(--atlas-head-height,64px) + var(--atlas-search-height,130px) + 12px)}
+.search-body[data-atlas-density=compact] .atlas-result{grid-template-columns:32px minmax(0,1fr) 44px;gap:8px;padding:10px 0}
+.search-body[data-atlas-density=compact] .atlas-result-icon{width:32px;height:32px;border-radius:9px}
+.search-body[data-atlas-density=compact] .atlas-result-title{font-size:15px;display:block;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+.search-body[data-atlas-density=compact] .atlas-result-desc{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:12px}
+.search-body .atlas-star{min-height:44px;min-width:44px}
+.search-body[data-atlas-density=compact] .atlas-hostline{flex-wrap:wrap;gap:3px 5px}
+.search-body[data-atlas-density=compact] .aq-source-badges{gap:4px;margin-block:3px}
+.search-body .atlas-result:focus-within{outline:2px solid var(--ui-link,#2563eb);outline-offset:2px;border-radius:8px}
+@media(max-width:600px){.atlas-sticky-search{padding:4px 0}.atlas-quick-links{gap:8px}.search-body .directory-main{padding-inline:10px}.search-body .atlas-content{padding:10px}.search-body .atlas-tabs{gap:4px}.search-body .atlas-tabs .atlas-tab{min-height:44px;padding:4px 6px;font-size:12px}.search-body .atlas-tabs #atlasSort{max-width:110px}.search-body .atlas-tabs .atlas-spacer{display:none}.atlas-quick-category{min-height:44px}.atlas-quick-links a,.atlas-quick-links button{min-height:36px}.search-body .atlas-result-title{max-width:100%}}
