@@ -1,46 +1,24 @@
-/* Shared surfaces for the start page and local backup. */
+/* Start page, backup and recommendations use the existing directory palette. */
 :root body:is(.start-page,.transfer-page,.recommendations-page) {
-  --start-bg:#f4f5f7;
-  --start-card:#fff;
-  --start-text:#181a20;
-  --start-muted:#535863;
-  --start-line:#ccd0d8;
-  --start-quiet:#ebedf1;
+  --start-bg:var(--ui-page,#f2f6fa);
+  --start-card:var(--ui-card,#fff);
+  --start-text:var(--ui-ink,#1a314a);
+  --start-muted:var(--aq-muted,var(--ui-sub,#526c82));
+  --start-line:var(--ui-line,#cad9e8);
+  --start-quiet:var(--ui-alt,#edf4fa);
   --start-accent:var(--ui-link,#236aa6);
   --start-tint:var(--ui-hover,#e5f2fc);
   background:var(--start-bg);
   color:var(--start-text);
   overflow:visible;
 }
-:root[data-aq-theme="dark"] body:is(.start-page,.transfer-page,.recommendations-page) {
-  --start-bg:#16171a;
-  --start-card:#202226;
-  --start-text:#f2f2f5;
-  --start-muted:#babdc7;
-  --start-line:#50525b;
-  --start-quiet:#303239;
-}
-:root[data-aq-theme="eye"] body:is(.start-page,.transfer-page,.recommendations-page) {
-  --start-bg:#f1ede4;
-  --start-card:#faf7ef;
-  --start-text:#282420;
-  --start-muted:#575049;
-  --start-line:#cfc5b6;
-  --start-quiet:#e9e2d6;
-}
 :is(.start-page,.transfer-page,.recommendations-page) .headbar {
   position:relative;
   z-index:40;
-  background:var(--start-bg);
+  background:var(--start-card);
   border-bottom:1px solid var(--start-line);
 }
-.start-page .aq-search-dialog {
-  --ui-card:var(--start-card);
-  --ui-alt:var(--start-quiet);
-  --ui-ink:var(--start-text);
-  --ui-sub:var(--start-muted);
-  --ui-line:var(--start-line);
-}
+:root[data-aq-theme="dark"] :is(.start-page,.transfer-page,.recommendations-page) .headbar {background:#0b1a29}
 .start-page .aq-search-dialog :is(a,button,input):focus-visible {outline:2px solid var(--start-accent)!important;outline-offset:2px}
 .start-page .head-inner {position:relative;gap:.5rem;min-height:3.75rem}
 .start-page .logo {color:var(--start-text);margin-inline-end:auto;white-space:nowrap}
