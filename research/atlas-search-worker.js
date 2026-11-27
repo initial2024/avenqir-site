@@ -1,6 +1,6 @@
 "use strict";
 // Research only. The caller must verify the bytes and obtain consent before init.
-importScripts('../site/atlas-domain-embedding.js','atlas-model-codec.js','atlas-multilingual-intents.js','atlas-retrieval-runtime.js');
+importScripts('../site/atlas-domain-embedding.js','atlas-model-codec.js','atlas-multilingual-intents.js','atlas-multilingual-topics.js','atlas-retrieval-runtime.js');
 const embed=globalThis.AVENQIR_DOMAIN_EMBEDDING, retrieval=globalThis.AVENQIR_RESEARCH_RETRIEVAL;
 let state=null,epoch=0;
 function validModel(model){
