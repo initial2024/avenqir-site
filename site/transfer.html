@@ -4,35 +4,58 @@
 <meta name="theme-color" content="#070c16">
 <meta name="description" content="AVENQIR 本地书签、公开网址收藏、笔记与游戏记录统一备份迁移，数据不上传服务器。">
 <title>本地数据迁移 · AVENQIR</title><link rel="stylesheet" href="common.css?v=9"><link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="start-page.css?v=132">
 <style>
-.transfer-card{max-width:870px;margin:18px auto 32px;padding:clamp(16px,4vw,28px)}
-.transfer-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.transfer-choice-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
-.transfer-choice{display:flex;gap:10px;align-items:flex-start;padding:15px;border:1px solid #749cbd66;background:#112b41;border-radius:14px;cursor:pointer}
-.transfer-choice input{width:19px;min-width:19px;height:19px;margin:4px 0 0;accent-color:#79d6ff}
-.transfer-choice strong,.transfer-choice small{display:block}.transfer-choice strong{color:#f1f7ff}.transfer-choice small{font-size:12px;line-height:1.5;color:#a8c4d9;margin-top:3px}
-.transfer-preview-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #ffffff22;margin:0}
-.transfer-preview-row span{color:#a8d8ed}
-.transfer-status{padding:12px 14px;border:1px solid #60b4c566;background:#102b3c;border-radius:11px;overflow-wrap:anywhere}
-.transfer-status.transfer-error{color:#ffcfcf;border-color:#ed9494aa;background:#3c202b}
-.transfer-file{width:100%;max-width:100%;margin:8px 0 12px}
-.transfer-warning{border-left:3px solid #e3be77;padding:10px 14px;background:#422f1b66;color:#ffe9c5;border-radius:4px}
-.transfer-desc{color:#bacfe3}
-@media(max-width:690px){.transfer-choice-list{grid-template-columns:1fr}.transfer-choice{padding:12px}.transfer-actions .btn{flex:1 1 140px;text-align:center}}
-.transfer-mode{width:100%;max-width:520px;background:#112b41;color:#fff;border:1px solid #749cbd77;border-radius:9px;padding:11px;font:inherit;min-height:42px}
+.transfer-main{max-width:870px;padding-top:1.1rem}
+.transfer-main h1{font-size:clamp(1.35rem,4vw,2rem);margin:.4rem 0}
+.transfer-card,.transfer-summary{padding:clamp(14px,3vw,24px);margin:.8rem 0;background:var(--start-card);border:1px solid var(--start-line);border-radius:.7rem}
+.transfer-main h2{font-size:1.1rem;margin:0 0 .45rem}
+.transfer-main p{margin:.3rem 0 .8rem}
+.transfer-main a{color:var(--start-accent)}
+.transfer-actions{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.transfer-choice-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;margin:1rem 0}
+.transfer-choice{display:flex;gap:.55rem;align-items:flex-start;min-height:44px;padding:.7rem;border:1px solid var(--start-line);background:var(--start-quiet);border-radius:.55rem;cursor:pointer}
+.transfer-choice input{width:18px;min-width:18px;height:18px;margin:4px 0 0;accent-color:var(--start-accent)}
+.transfer-choice strong,.transfer-choice small{display:block}
+.transfer-choice small,.transfer-main .transfer-desc,.transfer-main .hint{color:var(--start-muted)}
+.transfer-preview-row,.transfer-stats{display:flex;flex-wrap:wrap;gap:.5rem 1.25rem}
+.transfer-preview-row{justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--start-line)}
+.transfer-stats{margin:0 0 .6rem}
+.transfer-stats dt{color:var(--start-muted);font-size:.85rem}
+.transfer-stats dd{margin:0;font-weight:650}
+.transfer-status{font-size:.92rem;overflow-wrap:anywhere}
+.transfer-warning{border-inline-start:3px solid var(--start-line);padding:.4rem .65rem;color:var(--start-muted)}
+.transfer-file,.transfer-mode{display:block;width:100%;max-width:100%;min-height:44px;margin:.35rem 0 .8rem}
+.transfer-mode{background:var(--start-quiet);color:var(--start-text);border:1px solid var(--start-line);border-radius:.55rem;padding:.45rem;font:inherit}
+.transfer-confirm{width:min(28rem,calc(100% - 2rem));max-height:82dvh;padding:1rem;border:1px solid var(--start-line);border-radius:.7rem;background:var(--start-card);color:var(--start-text)}
+.transfer-confirm h2{margin:0;font-size:1.1rem}
+.transfer-confirm::backdrop{background:#0007}
+.transfer-page{--transfer-alert:#8a323a}
+:root[data-aq-theme="dark"] .transfer-page{--transfer-alert:#f0afb3}
+.transfer-error,.transfer-confirm[data-mode="replace"] button[value="restore"]{color:var(--transfer-alert);border-color:currentColor}
+.transfer-page :is(button,a,select,input):focus-visible{outline:2px solid var(--start-accent);outline-offset:2px}
+@media(max-width:539px){.transfer-choice-list{grid-template-columns:1fr}}
 </style><link rel="stylesheet" href="theme.css?v=25"></head>
-<body>
+<body class="transfer-page">
 <header class="headbar"><div class="wrap head-inner"><a class="logo" href="index.html"><span class="logoicon">⬡</span> AVENQIR</a><a class="aq-theme-link" data-aq-theme-link="1" aria-label="切换显示模式" href="appearance.html">◐ <span class="aq-theme-link-label">模式</span></a><button type="button" class="menu-toggle" aria-controls="global-nav" aria-expanded="false" aria-label="打开导航菜单">☰ <span>菜单</span></button><nav id="global-nav" class="main-nav" aria-label="网站导航"><a href="index.html">首页</a><a href="directory.html">公开网址</a><a href="bookmarks.html">私人书签</a><a href="notes.html">笔记</a><a href="daily.html">日常助手</a><a href="tools.html">工具箱</a><a href="health.html">站点状态</a><a href="transfer.html" class="active" aria-current="page">数据迁移</a></nav><span class="microbadge">v9.0</span></div></header>
-<main class="wrap">
-<section class="hero scenic-hero compact-hero"><div class="eyebrow">LOCAL FIRST / PORTABLE DATA</div><h1>一个文件，<span class="grad">带走你的本地记录。</span></h1><p class="subline">一次整理私人书签、公开网址收藏、笔记、专注计时与小游戏存档。整个过程在当前浏览器完成；没有服务器上传，也不要求注册。</p></section>
-<section class="panel transfer-card">
+<main class="wrap transfer-main">
+<a href="index.html">← 返回起始页</a>
+<h1>本地数据备份</h1><p class="transfer-desc">导出书签、首页收藏、笔记和游戏记录，或从备份文件恢复。</p>
+<section class="transfer-summary" aria-labelledby="transferSummaryTitle">
+<h2 id="transferSummaryTitle">当前浏览器</h2>
+<dl class="transfer-stats"><div><dt>可备份数据大小（估算）</dt><dd id="transferUsage">—</dd></div><div><dt>上次生成 JSON 备份</dt><dd id="transferLastExport">—</dd></div></dl>
+<p id="transferReminder" class="transfer-desc" hidden>当前有本地数据，可以导出一份备份。</p>
+</section>
+<section class="transfer-card">
 <h2>选择需要备份或恢复的数据</h2><p class="transfer-desc">所有选择仅影响本次导入导出。不会自动同步到其他浏览器。</p>
 <div id="transferCategories" class="transfer-choice-list" role="group" aria-label="数据类别"></div>
-<div class="divider"></div>
-<h3>① 导出到手机</h3><p class="hint">点击后生成 JSON 备份文件，保存在浏览器下载目录中。没有记录的类别会跳过。</p>
-<div class="transfer-actions"><button type="button" class="btn primary" id="transferExport">导出可恢复 JSON</button><button type="button" class="btn ghost" id="transferExportMarkdown">导出可读 Markdown</button><a class="btn ghost" href="bookmarks.html#transfer">单独管理书签</a></div><p class="hint">JSON 可以在另一台设备导入恢复；Markdown 仅供查看或存档，不支持反向导入。</p>
-<hr style="border:0;border-top:1px solid #ffffff22;margin:24px 0">
-<h3>② 从备份恢复</h3><p class="hint">先选择可恢复 JSON 并预览，再选恢复模式。只修改已勾选且文件中存在的数据类别。</p>
+</section>
+<section class="transfer-card">
+<h2>导出备份</h2><p class="transfer-warning">备份未加密，其中可能包含私人书签和笔记。请妥善保管。</p>
+<div class="transfer-actions"><button type="button" class="start-control" id="transferExport">导出可恢复 JSON</button><button type="button" class="start-control" id="transferExportMarkdown">导出可读 Markdown</button><a class="start-control" href="bookmarks.html#transfer">单独管理书签</a></div><p class="hint">JSON 可以在另一台设备导入恢复；Markdown 仅供查看或存档，不支持反向导入。</p>
+</section>
+<section class="transfer-card">
+<h2>从备份恢复</h2><p class="hint">先选择可恢复 JSON 并预览，再选恢复模式。只修改已勾选且文件中存在的数据类别。</p>
 <label class="smalllabel" for="transferMode">恢复冲突处理</label>
 <select class="transfer-mode" id="transferMode" aria-label="选择覆盖或合并">
  <option value="merge" selected>合并并优先保留本机记录（推荐）</option>
@@ -42,12 +65,16 @@
 <label class="smalllabel" for="transferInput">选择备份文件（最大 4 MB）</label>
 <input class="transfer-file" id="transferInput" type="file" accept=".json,application/json">
 <div id="transferPreview" aria-live="polite"></div>
-<div class="transfer-actions"><button type="button" class="btn primary" id="transferRestore" disabled>确认恢复选中数据</button><button type="button" class="btn ghost" id="transferClear">清除预览</button></div>
+<div class="transfer-actions"><button type="button" class="start-control" id="transferRestore" disabled>确认恢复选中数据</button><button type="button" class="start-control" id="transferClear">清除预览</button></div>
 <p id="transferStatus" class="transfer-status" role="status" aria-live="polite">正在准备本地校验模块…</p>
 <p class="hint"><strong>换设备操作：</strong>① 在旧设备导出 JSON → ② 通过你信任的离线传输方式把文件复制到新设备 → ③ 在新设备打开此页，选择 JSON → ④ 预览并选择合并或覆盖 → ⑤ 恢复后刷新书签／笔记页面。Markdown 无法作为恢复文件。</p>
-<p class="transfer-warning"><strong>隐私提醒：</strong>导出的 JSON <strong>未加密</strong>，拿到文件的人可以阅读其中的书签和笔记。不要在公共电脑上下载，也不要把文件发到公开仓库、聊天群或网站后台。迁移后建议及时保管或删除临时副本。</p>
 <p class="hint">如果正在其他标签页编辑笔记，请先保存并关闭这些标签页，再执行恢复。导入后刷新相应页面才能看到新内容；当前页面不负责同步远端或保存数据库内容。</p>
 </section>
-</main><footer class="wrap footer"><span>© 2026 AVENQIR · LOCAL FIRST</span><span><a href="privacy.html">隐私说明</a> · <a href="disclaimer.html">免责声明</a> · <a href="index.html">回到首页</a></span></footer>
-<script src="transfer-schema.js?v=22" defer></script><script src="device-transfer.js?v=22" defer></script><script src="site.js?v=25" defer></script>
+</main>
+<dialog class="transfer-confirm" id="transferConfirmDialog" aria-labelledby="transferConfirmTitle" aria-describedby="transferConfirmCopy">
+<h2 id="transferConfirmTitle">确认恢复本地数据</h2><p id="transferConfirmCopy"></p>
+<form method="dialog" class="transfer-actions"><button class="start-control" value="cancel" autofocus>取消</button><button class="start-control" value="restore">确认恢复</button></form>
+</dialog>
+<footer class="wrap footer"><span>© 2026 AVENQIR · LOCAL FIRST</span><span><a href="privacy.html">隐私说明</a> · <a href="disclaimer.html">免责声明</a> · <a href="index.html">回到首页</a></span></footer>
+<script src="transfer-schema.js?v=132" defer></script><script src="device-transfer.js?v=132" defer></script><script src="site.js?v=132" defer></script>
 <script src="theme.js?v=15" defer></script></body></html>

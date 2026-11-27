@@ -5,6 +5,7 @@ const path=require('node:path');
 require(path.resolve(__dirname,'../site/transfer-schema.js'));
 const api=globalThis.AVENQIR_TRANSFER;
 const B='avenqir_v6_bookmarks',N='avenqir_v6_notes',F='avenqir.link-atlas.favorites.v8',T='avenqir_v5_timer';
+const START='avenqir.start.favorites.v1';
 const bookmark=(id,url,n)=>({id,name:n,category:'学习',url,note:'local note',at:1710000000000,fav:false,todo:true,custom:true});
 const note=(id,title,body)=>({id,title,body,at:1710000000000});
 const current={ [B]:[bookmark('b1','https://example.org/one','Local')], [N]:[note('n1','My note','LOCAL PRIORITY')], [F]:['https://example.org/favorite'],[T]:{total:60,remaining:60,label:'local timer',running:false,endAt:0}};
@@ -37,6 +38,15 @@ assert.equal(JSON.parse(storeMap.get(B))[0].name,'Incoming older');
 assert.throws(()=>api.prepareImport(storage,incoming,keys,'unexpected'),/未知恢复模式/);
 assert.throws(()=>api.prepareImport(storage,{[B]:[{id:'broken'}]},[B],'merge'),/校验/);
 assert.throws(()=>api.readArchive({format:'wrong',data:incoming}),/不是/);
+for(const path of ['https://example.org','//example.org','../tools.html','tools.html?q=secret','javascript:evil']){
+ assert.equal(api.validate(START,[path]),false,'reject arbitrary, private query and external shortcuts');
+}
+storage.setItem(START,JSON.stringify(['tools.html#image']));
+const startArchive=api.makeExport(storage,['start']).archive;
+assert.deepEqual(api.readArchive(startArchive)[START],['tools.html#image']);
+assert.equal(api.importInto(storage,{[START]:['tools.html#image','notes.html']},[START],'merge'),1);
+assert.deepEqual(JSON.parse(storage.getItem(START)),['tools.html#image','notes.html']);
+assert.equal(api.validate('avenqir.start.recent.v1',['notes.html']),false,'usage history is outside the backup allowlist');
 const before=storeMap.get(N);let failOnce=true;
 const failureStore={
  getItem:k=>storeMap.get(k)||null,

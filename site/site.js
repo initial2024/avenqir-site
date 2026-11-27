@@ -2,7 +2,7 @@
 /* Retired feature: clear only the obsolete remote-browser address, never other local settings. */
 try { localStorage.removeItem('avenqir.remote-access-url.v1'); } catch (_) {}
 /* Register offline shell after page load. Offline is best-effort only. */
-if('serviceWorker' in navigator && location.protocol==='https:') {
+if('serviceWorker' in navigator && isSecureContext && /^https?:$/.test(location.protocol)) {
   window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=25',{updateViaCache:'none'}).catch(()=>{}));
 }
 
@@ -30,7 +30,7 @@ if('serviceWorker' in navigator && location.protocol==='https:') {
 (() => {
   if (document.querySelector('script[data-aq-search]')) return;
   const script=document.createElement('script');
-  script.src='./quick-search.js?v=131';
+  script.src='./quick-search.js?v=132';
   script.dataset.aqSearch='1';
   document.head.append(script);
 })();

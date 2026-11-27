@@ -3,6 +3,7 @@
 (function (root) {
   const FORMAT = 'avenqir-device-transfer-v1';
   const GROUPS = Object.freeze({
+    start: { label: '首页工具收藏', keys: ['avenqir.start.favorites.v1'] },
     bookmarks: { label: '私人书签 / 公开网址收藏', keys: ['avenqir_v6_bookmarks','avenqir.link-atlas.favorites.v8'] },
     notes: { label: '本地笔记', keys: ['avenqir_v6_notes'] },
     daily: { label: '计时、任务与游戏记录',
@@ -56,6 +57,10 @@
   function validate(key, value) {
     switch (key) {
       case 'avenqir_v6_bookmarks': return validateBookmarks(value);
+      case 'avenqir.start.favorites.v1':
+        // Only site-relative built-in tool paths are eligible. The homepage only renders known cards.
+        return Array.isArray(value) && value.length <= 100 && new Set(value).size === value.length &&
+          value.every(x => typeof x === 'string' && /^[a-z][a-z-]{0,40}\.(?:html|php)(?:#[A-Za-z][\w-]{0,60})?$/.test(x));
       case 'avenqir.link-atlas.favorites.v8':
         return Array.isArray(value) && value.length <= 500 && value.every(x => typeof x === 'string' && safeURL(x)) && new Set(value).size === value.length;
       case 'avenqir_v6_notes': return validateNotes(value);
@@ -130,7 +135,7 @@
   // For non-list state (timer, games, tasks), merge only fills absent local keys.
   // Never silently overwrite an existing note body or resume an imported timer.
   function mergeRecords(key, local, incoming) {
-    if (key === 'avenqir.link-atlas.favorites.v8') {
+    if (key === 'avenqir.link-atlas.favorites.v8' || key === 'avenqir.start.favorites.v1') {
       return [...new Set([...local, ...incoming])];
     }
     if (key === 'avenqir_v6_bookmarks' || key === 'avenqir_v6_notes') {
@@ -176,9 +181,10 @@
     };
     add('私人书签',data.avenqir_v6_bookmarks,x=>'- **'+esc(x.name)+'** ('+esc(x.category)+')\n  - 网址：'+esc(x.url)+'\n  - 备注：'+esc(x.note));
     add('公开目录收藏',data['avenqir.link-atlas.favorites.v8'],x=>'- '+esc(x));
+    add('首页工具收藏',data['avenqir.start.favorites.v1'],x=>'- '+esc(x));
     add('本地笔记',data.avenqir_v6_notes,x=>'### '+esc(x.title)+'\n\n'+esc(x.body));
     if(data.avenqir_v5_tasks)out.push('## 今日任务','',...data.avenqir_v5_tasks.items.map(x=>'- ['+(x.done?'x':' ')+'] '+esc(x.text)),'');
-    const other=Object.keys(data).filter(k=>!['avenqir_v6_bookmarks','avenqir_v6_notes','avenqir.link-atlas.favorites.v8','avenqir_v5_tasks'].includes(k));
+    const other=Object.keys(data).filter(k=>!['avenqir_v6_bookmarks','avenqir_v6_notes','avenqir.start.favorites.v1','avenqir.link-atlas.favorites.v8','avenqir_v5_tasks'].includes(k));
     if(other.length)out.push('## 其他已备份状态','',...other.map(k=>'- '+esc(k)+'：已保存（完整状态仅在 JSON 中）'),'');
     return out.join('\n');
   }

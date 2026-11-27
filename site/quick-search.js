@@ -46,7 +46,7 @@
     text:normalize(title+' '+keywords+' '+url)}));
   function find(query) {
     const terms=normalize(query).split(/\s+/).filter(Boolean).slice(0,7);
-    const items=searchable.filter(x=>terms.every(term=>x.text.includes(term)));
+    const items=searchable.filter(x=>terms.every(term=>x.text.includes(term)||normalize(EN_NAMES[x.url]||'').includes(term)));
     return items.sort((a,b)=>{
       const score=x=>terms.reduce((n,t)=>n+(normalize(x.title).includes(t)?5:1),0);
       return score(b)-score(a);
@@ -106,7 +106,6 @@
     input.setAttribute('aria-label',L('输入要查找的功能','Search features'));input.id='aqSearchQuery';
     row.append(searchIcon,input);
     const results=document.createElement('div');results.className='aq-search-results';results.id='aqSearchResults';
-    results.setAttribute('role','list');
     const hint=document.createElement('div');hint.className='aq-search-hint';
     const hintText=document.createElement('span');hintText.textContent=L('支持本机私人书签和公开网址目录搜索；不读取笔记、不上传私人书签。','Find local bookmarks and public sites. Private data is not uploaded.');
     const explore=document.createElement('a');explore.href='directory.html';explore.textContent=L('探索公开网址 ↗','Explore public sites ↗');
@@ -136,7 +135,7 @@
       results.replaceChildren();
       for(const item of found){
         const a=document.createElement('a');a.className='aq-search-result';
-        a.href=item.url;a.setAttribute('role','listitem');
+        a.href=item.url;
         const title=document.createElement('strong');title.textContent=localizedTitle(item);
         const url=document.createElement('small');url.textContent=item.kind==='private'?L('私人书签 · 当前浏览器','Private bookmark · on this device'):item.kind==='public'?L('公开目录 · 本地搜索','Public directory · local search'):item.url;
         const arrow=document.createElement('span');arrow.className='aq-result-arrow';arrow.textContent='↗';arrow.setAttribute('aria-hidden','true');
@@ -155,9 +154,11 @@
         const p=document.createElement('p');p.className='aq-cmd-empty';p.textContent=L('没有对应的本站功能。可以试试公开网址搜索。','No matching feature. Try the website directory.');results.append(p);
       }
     };
+    let previousFocus;
     function hide(){if(dialog.open&&typeof dialog.close==='function')dialog.close();else dialog.removeAttribute('open');button.setAttribute('aria-expanded','false');}
     function open(){
       if(dialog.open){input.focus();return;}
+      previousFocus=document.activeElement;
       input.value='';update();
       if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');
       button.setAttribute('aria-expanded','true');input.focus();
@@ -165,12 +166,24 @@
     button.addEventListener('click',open);close.addEventListener('click',hide);
     input.addEventListener('input',update);
     input.addEventListener('keydown',e=>{
-      if(e.key==='Enter'){const first=results.querySelector('a');if(first){e.preventDefault();first.click();}}
+      if(e.key==='Enter'&&!e.isComposing){const first=results.querySelector('a');if(first){e.preventDefault();first.click();}}
+    });
+    dialog.addEventListener('keydown',e=>{
+      if(!['ArrowUp','ArrowDown'].includes(e.key)||e.isComposing)return;
+      const links=[...results.querySelectorAll('a')];
+      if(e.target!==input&&!links.includes(e.target))return;
+      const direction=e.key==='ArrowDown'?1:-1;
+      const index=links.indexOf(e.target);
+      if(index<0&&direction<0)return;
+      const next=links[index+direction];
+      if(next){e.preventDefault();next.focus();}
+      else if(index===0&&direction<0){e.preventDefault();input.focus();}
     });
     dialog.addEventListener('click',e=>{if(e.target===dialog)hide();});
     dialog.addEventListener('close',()=>{
       button.setAttribute('aria-expanded','false');
-      if(document.body.dataset.startDensity)document.getElementById('startSettingsToggle')?.focus();
+      if(previousFocus?.getClientRects().length)previousFocus.focus();
+      else if(document.body.dataset.startDensity)document.getElementById('startSettingsToggle')?.focus();
     });
     document.addEventListener('keydown',e=>{
       if(e.defaultPrevented||(document.body.dataset.startDensity&&!dialog.open))return;

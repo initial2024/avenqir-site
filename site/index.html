@@ -1,19 +1,22 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#070c16"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="description" content="AVENQIR：浏览编辑精选的公开网址，找到日常学习、设计、旅行和网络自查工具。"><title>AVENQIR · 好网站与日常工具</title><link rel="stylesheet" href="common.css?v=96"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="theme.css?v=25"><link rel="stylesheet" href="atlas-popular.css?v=126"><link rel="stylesheet" href="start-page.css?v=131"></head><body class="start-page">
+<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#070c16"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="description" content="AVENQIR：浏览编辑精选的公开网址，找到日常学习、设计、旅行和网络自查工具。"><title>AVENQIR · 好网站与日常工具</title><link rel="stylesheet" href="common.css?v=96"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="theme.css?v=25"><link rel="stylesheet" href="atlas-popular.css?v=126"><link rel="stylesheet" href="start-page.css?v=132"></head><body class="start-page">
 <header class="headbar"><div class="wrap head-inner"><a class="logo" href="index.html"><span class="logoicon">⬡</span> AVENQIR</a><a class="aq-theme-link" data-aq-theme-link="1" aria-label="切换显示模式" href="appearance.html">◐ <span class="aq-theme-link-label">模式</span></a><button type="button" class="menu-toggle" aria-controls="global-nav" aria-expanded="false" aria-label="打开导航菜单">☰ <span>菜单</span></button><nav id="global-nav" class="main-nav" aria-label="网站导航"><a href="index.html" class="active">首页</a><a href="bookmarks.html">个人书签</a><a href="notes.html">笔记与文本</a><a href="fun.html">解压乐园</a><a href="daily.html">日常助手</a><a href="check.html">网络检测</a><a href="tools.html">工具箱</a><a href="projects.html">GitHub</a><a href="domains.html">DNS 台账</a><a href="logs.html">日志</a><a href="health.html">站点状态</a><a href="feedback.php">留言反馈</a></nav><button class="start-control" id="startSettingsToggle" type="button" hidden aria-haspopup="dialog"><span aria-hidden="true">⚙︎</span><span class="sr-only" data-start-label="settings">设置</span></button></div></header>
 <main class="wrap start-main">
   <h1 data-start-label="tagline">本地优先的工具起始页</h1>
   <section class="start-sticky" aria-label="起始页搜索与分类">
     <form class="start-search" action="directory.html" method="get" role="search">
-      <label class="sr-only" for="startQuery" data-start-label="searchLabel">搜索工具</label>
+      <label class="sr-only" for="startQuery" data-start-label="searchLabel">搜索工具或分类</label>
       <span class="start-search-icon" aria-hidden="true">⌕</span>
-      <input type="search" id="startQuery" name="q" maxlength="140" autocomplete="off" placeholder="搜工具，或去目录查网址">
+      <input type="search" id="startQuery" name="q" maxlength="140" autocomplete="off" placeholder="搜索工具或分类">
       <button class="start-control start-clear" type="button" id="startClear" hidden><span aria-hidden="true">×</span><span class="sr-only" data-start-label="clear">清空搜索</span></button>
       <kbd aria-hidden="true">/</kbd>
       <button class="start-control start-directory" type="submit" data-start-label="directory">搜公开网址</button>
     </form>
-    <nav class="start-categories" id="startCategories" aria-label="工具分类" hidden></nav>
+    <div class="start-category-rail">
+      <nav class="start-categories" id="startCategories" aria-label="工具分类" hidden></nav>
+    </div>
   </section>
   <section class="start-results" aria-labelledby="start-results-title">
+    <div id="startAnchors" aria-hidden="true"></div>
     <div class="start-section-head">
       <h2 id="start-results-title" data-start-label="tools">工具入口</h2>
       <a id="popularHeroAction" href="#popular">看看大众精选</a>
@@ -136,7 +139,7 @@
       <span class="start-arrow" aria-hidden="true">→</span>
     </a>
     </div>
-    <div id="startEmpty" class="start-empty" hidden><p data-start-label="empty">没有匹配的工具入口。</p><button type="button" class="start-control" id="startEmptyClear" data-start-label="clear">清空搜索</button></div>
+    <div id="startEmpty" class="start-empty" hidden><p id="startEmptyMessage">没有匹配的工具入口。</p><button type="button" class="start-control" id="startEmptyClear" data-start-label="clear">清空搜索</button></div>
     <button type="button" class="start-control start-more" id="startMore" hidden></button>
   </section>
 <section id="popular" class="aq-popular" data-popular-view="home" aria-labelledby="popularTitle">
@@ -149,16 +152,22 @@
 </section>
 
   <div class="start-footer-bar">
-    <span class="start-local" title="书签、笔记和游戏存档保存在此浏览器"><span aria-hidden="true">🔒</span> <span data-start-label="local">本地存储 · 不同步 · 可导出</span></span>
+    <p class="start-notice" id="startOffline" role="status" data-start-label="offline" hidden>当前离线。已缓存的本地工具仍可使用。</p>
+    <p class="start-notice" id="startStorage" role="status" data-start-label="noStorage" hidden>当前浏览器无法保存更改。</p>
+    <details class="start-details" id="startSnapshot">
+      <summary><span data-start-label="snapshot">本地快照</span><span id="startSnapshotLine"></span></summary>
+      <dl class="start-snapshot-fields">
+        <div><dt data-start-label="timeZone">时区</dt><dd id="homeTZ">—</dd></div>
+        <div><dt>UTC</dt><dd id="homeOffset">—</dd></div>
+        <div><dt data-start-label="browserLanguage">浏览器语言</dt><dd id="homeLang">—</dd></div>
+        <div><dt data-start-label="viewport">可视区域</dt><dd id="homeView">—</dd></div>
+        <div><dt data-start-label="browser">浏览器</dt><dd id="homeBrowser">—</dd></div>
+      </dl>
+      <p data-start-label="snapshotPrivacy">这些信息由当前浏览器在本地读取，无需查询公网 IP。</p>
+    </details>
+    <a class="start-local" href="privacy.html" id="startLocal" title="书签、笔记和游戏存档保存在此浏览器"><span aria-hidden="true">🔒</span> <span data-start-label="local">本地存储 · 不同步 · 可导出</span></a>
     <a href="directory.html" data-aq-catalog-summary="1">公开网址目录</a>
   </div>
-<details class="start-details"><summary>当前浏览器 · 即时概览</summary><section class="panel wide"><div class="sectionhead"><div><span class="label">QUICK SNAPSHOT</span><h2>当前浏览器 · 即时概览</h2><p>页面打开即在本地读取，不需要外部 API。</p></div><span class="pill good" id="quickStatus">本地检测</span></div><div class="split"><div class="stat"><span class="k">JavaScript 时区</span><b class="v" id="homeTZ">检测中…</b></div><div class="stat"><span class="k">UTC 偏移</span><b class="v" id="homeOffset">—</b></div><div class="stat"><span class="k">浏览器语言</span><b class="v" id="homeLang">—</b></div><div class="stat"><span class="k">可视区域</span><b class="v" id="homeView">—</b></div></div><p class="hint">上面显示的是当前浏览器暴露的信息，不是 IP 地理位置，也不能据此推断服务器所在地区。</p></section></details>
-
-  <details class="start-details">
-    <summary data-start-label="privacy">隐私和本地备份</summary>
-    <p data-start-label="privacyText">书签、笔记和游戏存档保存在当前浏览器。查询公网 IP 会使用外部服务，请在网络检测页按需操作。</p>
-    <a href="transfer.html" data-start-label="backup">导入与导出</a> · <a href="privacy.html" data-start-label="policy">隐私说明</a>
-  </details>
 </main>
 <dialog class="start-settings" id="startSettings" aria-labelledby="start-settings-title">
   <div class="start-settings-head">
@@ -166,16 +175,39 @@
     <form method="dialog"><button class="start-control" type="submit" data-start-label="close">关闭</button></form>
   </div>
   <fieldset>
-    <legend data-start-label="density">显示密度</legend>
+    <legend data-start-label="appearance">外观</legend>
+    <div class="start-theme-options" role="group" aria-label="显示模式">
+      <button class="start-control" type="button" data-aq-theme-option="system" data-start-label="system">系统</button>
+      <button class="start-control" type="button" data-aq-theme-option="light" data-start-label="light">浅色</button>
+      <button class="start-control" type="button" data-aq-theme-option="dark" data-start-label="dark">深色</button>
+      <button class="start-control" type="button" data-aq-theme-option="eye" data-start-label="eye">护眼</button>
+    </div>
     <label><input type="radio" name="startDensity" value="comfortable" checked> <span data-start-label="comfortable">舒适</span></label>
     <label><input type="radio" name="startDensity" value="compact"> <span data-start-label="compact">紧凑</span></label>
+    <div id="startLanguage"></div>
+    <a href="appearance.html" data-start-label="theme">更多主题设置</a>
   </fieldset>
-  <a href="appearance.html" data-start-label="theme">主题与护眼模式</a>
-  <button class="start-control" type="button" id="startCommandSearch" data-start-label="commandSearch">站内快捷搜索</button>
-  <a href="transfer.html" data-start-label="backup">导入与导出</a>
-  <a href="bookmarks.html#transfer" data-start-label="manage">管理本地书签数据</a>
+  <fieldset>
+    <legend data-start-label="searchSettings">搜索与最近使用</legend>
+    <button class="start-control" type="button" id="startCommandSearch" data-start-label="commandSearch">快捷搜索工具和书签</button>
+    <p id="startKeyHelp" tabindex="-1" data-start-label="keys">/ 聚焦搜索 · Ctrl 或 ⌘ + K 快捷搜索 · ↑↓ 移动 · Esc 清空或关闭</p>
+    <label><input type="checkbox" id="startRemember"> <span data-start-label="remember">在此浏览器记录最近使用的 5 个首页工具</span></label>
+    <button class="start-control" type="button" id="startClearRecent" data-start-label="clearRecent" disabled>清除最近使用</button>
+  </fieldset>
+  <fieldset>
+    <legend data-start-label="data">数据</legend>
+    <a href="transfer.html" data-start-label="backup">导入与导出</a>
+    <a href="bookmarks.html#editor" data-start-label="addBookmarks">添加自定义网址</a>
+    <a href="bookmarks.html#transfer" data-start-label="manage">管理本地书签数据</a>
+  </fieldset>
+  <fieldset>
+    <legend data-start-label="about">关于</legend>
+    <p data-start-label="localHelp">书签、笔记和游戏存档保存在当前浏览器。换设备时可以导出备份。</p>
+    <a href="privacy.html" data-start-label="policy">隐私说明</a>
+    <a href="deploy-status.html" data-start-label="version">部署版本</a>
+  </fieldset>
 </dialog>
 <footer class="wrap footer"><span>© 2026 AVENQIR · PERSONAL HUB v9.1</span><span><a href="disclaimer.html">免责声明</a> · <a href="privacy.html">隐私说明</a> · <a href="https://publicfreesuffix.org/" target="_blank" rel="noopener noreferrer">PFS / SEUS Hosting</a></span></footer>
-<script src="site.js?v=131" defer></script><script src="theme.js?v=15" defer></script>
+<script src="site.js?v=132" defer></script><script src="theme.js?v=15" defer></script>
 <script src="atlas-paths.js?v=119" defer></script><script src="atlas-expansion.js?v=126" defer></script>
-<script src="atlas-specialist.js?v=124" defer></script><script src="atlas-depth-a.js?v=119" defer></script><script src="atlas-depth-b.js?v=126" defer></script><script src="atlas-depth-c.js?v=128" defer></script><script src="atlas-depth-d.js?v=120" defer></script><script src="atlas-ai.js?v=128" defer></script><script src="atlas-regional.js?v=127" defer></script><script src="atlas-everyday.js?v=124" defer></script><script src="atlas-regional-ext.js?v=125" defer></script><script src="atlas-everyday-ext.js?v=129" defer></script><script src="atlas-enrich.js?v=24" defer></script><script src="atlas-popular-links.js?v=126" defer></script><script src="atlas-catalog-core.js?v=126" defer></script><script src="atlas-summary.js?v=19" defer></script><script src="link-gate.js?v=129" defer></script><script src="atlas-threat-snapshot.js?v=112" defer></script><script src="atlas-safety.js?v=115" defer></script><script src="atlas-popular-picks.js?v=126" defer></script><script src="atlas-popular.js?v=126" defer></script><script src="atlas-popular-ui.js?v=131" defer></script><script src="start-page.js?v=131" defer></script></body></html>
+<script src="atlas-specialist.js?v=124" defer></script><script src="atlas-depth-a.js?v=119" defer></script><script src="atlas-depth-b.js?v=126" defer></script><script src="atlas-depth-c.js?v=128" defer></script><script src="atlas-depth-d.js?v=120" defer></script><script src="atlas-ai.js?v=128" defer></script><script src="atlas-regional.js?v=127" defer></script><script src="atlas-everyday.js?v=124" defer></script><script src="atlas-regional-ext.js?v=125" defer></script><script src="atlas-everyday-ext.js?v=129" defer></script><script src="atlas-enrich.js?v=24" defer></script><script src="atlas-popular-links.js?v=126" defer></script><script src="atlas-catalog-core.js?v=126" defer></script><script src="atlas-summary.js?v=19" defer></script><script src="link-gate.js?v=129" defer></script><script src="atlas-threat-snapshot.js?v=112" defer></script><script src="atlas-safety.js?v=115" defer></script><script src="atlas-popular-picks.js?v=126" defer></script><script src="atlas-popular.js?v=126" defer></script><script src="atlas-popular-ui.js?v=131" defer></script><script src="start-page.js?v=132" defer></script></body></html>

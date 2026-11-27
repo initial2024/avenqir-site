@@ -5,6 +5,7 @@
   const API = window.AVENQIR_TRANSFER;
   if (!API) { $('transferStatus').textContent = '本地校验模块未加载，请刷新页面。'; return; }
   const categories = [
+    ['start','首页工具收藏','在首页点星标收藏的工具'],
     ['bookmarks','书签与公开收藏','私人书签、公开目录的星标收藏'],
     ['notes','笔记','当前浏览器保存的全部随手笔记'],
     ['daily','日常 / 游戏','计时、三件小事、2048、翻牌与泡泡记录']
@@ -25,7 +26,28 @@
     const s = $('transferStatus');s.textContent=message;s.classList.toggle('transfer-error',isError);
   };
   const preview = $('transferPreview'), restore = $('transferRestore'), input = $('transferInput');
+  const confirmation=$('transferConfirmDialog');
+  const lastExportKey='avenqir.transfer.lastExport.v1';
+  const byteFormat=new Intl.NumberFormat(undefined,{maximumFractionDigits:1});
   let loaded = null;
+  let pending = null;
+  let fileSelection = 0;
+  function updateStorageSummary(){
+    try{
+      const bytes=new TextEncoder();
+      let total=0;
+      for(const key of API.KEYS){
+        const value=localStorage.getItem(key);
+        if(value!==null)total+=bytes.encode(key).length+bytes.encode(value).length;
+      }
+      $('transferUsage').textContent=byteFormat.format(total/1024)+' KB';
+      const stamp=Date.parse(localStorage.getItem(lastExportKey)||'');
+      $('transferLastExport').textContent=Number.isFinite(stamp)?new Date(stamp).toLocaleString():'尚未导出';
+      $('transferReminder').hidden=!total||(Number.isFinite(stamp)&&Date.now()-stamp<=30*86400000);
+    }catch{
+      $('transferUsage').textContent='当前浏览器无法读取';
+    }
+  }
   function clearPreview() {
     loaded = null;restore.disabled=true;preview.replaceChildren();
   }
@@ -37,6 +59,7 @@
       const atlas=Array.isArray(data['avenqir.link-atlas.favorites.v8'])?data['avenqir.link-atlas.favorites.v8'].length:0;
       return ks.length?personal+' 条私人书签 / '+atlas+' 条公开收藏':'无记录';
     }
+    if(group==='start')return ks.length?data[ks[0]].length+' 个工具':'无记录';
     if(main) return ks.length ? data[main].length+' 条' : '无记录';
     return ks.length+' 组记录';
   }
@@ -67,15 +90,19 @@
     try {
       const pack=API.makeExport(localStorage,groups);
       download(JSON.stringify(pack.archive,null,2),'application/json;charset=utf-8','.json');
+      try{localStorage.setItem(lastExportKey,pack.archive.exportedAt);}catch{}
+      updateStorageSummary();
       const msg='已生成本地备份，共 '+Object.keys(pack.archive.data).length+' 组数据。';
       status(msg+(pack.skipped.length?' 另外跳过 '+pack.skipped.length+' 组格式无效的数据。':''),!!pack.skipped.length);
     } catch(e){status('导出失败：'+String(e.message||e).slice(0,130),true);}
   });
   input.addEventListener('change',async()=>{
+    const selection=++fileSelection;
     clearPreview();const file=input.files?.[0];if(!file)return;
     try{
       if(file.size>4*1024*1024) throw Error('文件超过 4 MB');
       const obj=JSON.parse(await file.text());
+      if(selection!==fileSelection)return;
       loaded=API.readArchive(obj);
       for(const [group,title] of categories){
         const count=countFor(loaded,group);
@@ -89,8 +116,8 @@
       preview.append(small);
       restore.disabled=false;
       status('已完成文件格式检查。检查预览后，选择类别并点击恢复。');
-    }catch(e){clearPreview();status('无法使用此备份：'+String(e.message||e).slice(0,130),true);}
-    finally{input.value='';}
+    }catch(e){if(selection===fileSelection){clearPreview();status('无法使用此备份：'+String(e.message||e).slice(0,130),true);}}
+    finally{if(selection===fileSelection)input.value='';}
   });
   restore.addEventListener('click',()=>{
     if(!loaded){status('请先选择并检查备份文件。',true);return;}
@@ -101,16 +128,30 @@
     let preview;
     try{preview=API.prepareImport(localStorage,loaded,keys,action);}
     catch(e){status('恢复预检查失败：'+String(e.message||e).slice(0,150),true);return;}
-    const label=action==='merge'?'合并（本机冲突数据优先保留）':'覆盖（文件中对应类别的本机数据将被替换）';
-    if(!confirm('准备 '+label+'：'+summary+'。预计写入 '+preview.counts.written+' 组，原样保留 '+preview.counts.unchanged+' 组。请确保其他标签页的数据已保存。确定吗？'))return;
+    const label=action==='merge'?'合并并优先保留本机冲突记录':'用备份替换所选项目';
+    pending={data:loaded,keys,action};
+    confirmation.returnValue='';
+    $('transferConfirmCopy').textContent=label+'。范围：'+summary+'。预计写入 '+preview.counts.written+' 组，保留 '+preview.counts.unchanged+' 组。此操作仅影响当前浏览器。';
+    confirmation.dataset.mode=action;
+    confirmation.showModal();
+  });
+  confirmation.addEventListener('close',()=>{
+    const request=pending;
+    pending=null;
+    if(confirmation.returnValue!=='restore'||!request)return;
+    const {data,keys,action}=request;
     try{
-      const n=API.importInto(localStorage,loaded,keys,action);
-      status('已按“'+(action==='merge'?'合并':'覆盖')+'”模式恢复 '+n+' 组数据；未修改 '+preview.counts.unchanged+' 组本机数据。请关闭其他 AVENQIR 标签页，然后刷新对应页面。');
+      const n=API.importInto(localStorage,data,keys,action);
+      status('已按“'+(action==='merge'?'合并':'覆盖')+'”模式恢复 '+n+' 组数据。刷新对应页面即可查看。');
       clearPreview();
+      updateStorageSummary();
     }catch(e){status('恢复失败：'+String(e.message||e).slice(0,150),true);}
   });
   $('transferClear').addEventListener('click',()=>{
+    fileSelection++;
     clearPreview();input.value='';status('已清除文件预览，没有修改浏览器存储。');
   });
+  updateStorageSummary();
+  window.addEventListener('storage',updateStorageSummary);
   status('可以先导出，再到另一台设备导入。无需账号或网络上传。');
 })();
