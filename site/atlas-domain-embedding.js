@@ -18,12 +18,13 @@ const tasks=[
  ['photo-background',/(?:抠图|去背景|去除.{0,8}背景|背景.{0,8}(?:消|去|删)|remove.{0,24}background|background removal)/i,/(?:抠图|去背景|去除.{0,8}(?:图片)?背景|remove.{0,12}background|background remover)/i],
  ['photo-size',/(?:resize.{0,20}(?:photo|image|picture)|(?:photo|image|picture).{0,20}resiz|调整.{0,8}(?:图片|照片).{0,8}大小|(?:图片|照片).{0,10}(?:尺寸|缩放|大小)|画像.{0,10}リサイズ)/i,/(?:调整图片大小|调整.{0,10}(?:尺寸|大小)|(?:照片|图片|图像).{0,10}尺寸|resize.{0,15}(?:image|photo)|image resizer)/i],
  ['photo-collage',/(?:照片|图片|图像).{0,16}(?:拼在|拼接|拼合|拼成|合在)|(?:photo|image|picture).{0,12}collage|写真.{0,8}結合/i,/(?:照片|图片|图像).{0,12}(?:拼接|拼合|拼贴)|photo collage|image collage/i],
- ['ip-lookup',/(?:公网.{0,8}(?:出口|地址|ip)|出口.{0,8}(?:地址|ip)|(?:public|internet|network).{0,12}(?:ip|address)|(?:ip|asn).{0,10}(?:查询|归属|lookup|address|geolocation)|(?:查询|查看).{0,8}ip)/i,/(?:公网.{0,10}(?:ip|出口)|ip\s*(?:信息|查询|地址|归属|lookup|address|geolocation)|(?:查询|查看)\s*ip|网络属性|ipinfo|ip\.sb|ip\.fs\.kg)/i],
+ ['ip-lookup',/(?:公网.{0,8}(?:出口|地址|ip)|出口.{0,8}(?:地址|ip)|(?:public|internet|network).{0,12}(?:ip|address)|(?:ip|asn).{0,10}(?:查询|归属|lookup|address|geolocation)|(?:查询|查看).{0,8}ip)/i,/(?:公网.{0,10}(?:ip|出口)|ip\s*(?:信息查询|查询|归属|lookup|geolocation)|(?:查询|查看|检测).{0,8}(?:ip|公网)|ipinfo|ip\.sb|ip\.fs\.kg)/i],
  ['speed-test',/(?:网速|测速|网络.{0,8}(?:延时|延迟|速度)|speed\s*test|(?:internet|network).{0,12}speed|bandwidth|latency test)/i,/(?:测速|测网速|测试.{0,10}(?:延迟|吞吐|网络连接)|speedtest|speed test|bandwidth test|fast\.com)/i],
  ['papers',/(?:学术.{0,8}(?:研究|资料|搜索)|(?:找|查|检索).{0,8}(?:论文|文献)|論文.{0,8}探|scholarly.{0,12}(?:publications|articles)|research papers|literature search)/i,/(?:学术搜索|论文检索|文献检索|学术机构开放资源检索|academic search|scholarly search|research papers|google scholar|pubmed|doaj)/i],
  ['slides',/(?:课堂.{0,8}汇报|演示文稿|幻灯片|slide deck|make.{0,15}presentation|powerpoint|ppt|プレゼン)/i,/(?:幻灯片模板|演示模板|演示文稿.{0,10}(?:制作|模板)|幻灯片.{0,8}制作|powerpoint|slidesgo|slidescarnival|presentation templates|slide deck)/i],
  ['translate-text',/(?:译成|翻译.{0,12}(?:文章|文字|文本|英文|中文)|(?:英文|中文).{0,12}翻译|translate.{0,12}(?:text|article|paragraph)|文章.{0,8}翻訳)/i,/(?:在线翻译服务|翻译.{0,8}(?:服务|语境例句|文本|文章)|deepl|reverso|text translation)/i],
- ['web-host',/(?:网页.{0,8}托管|网站.{0,8}(?:托管|部署|上线)|web(?:site)? hosting|host.{0,12}website|deploy.{0,12}website)/i,/(?:网站.{0,10}(?:托管|部署)|静态.{0,10}托管|web(?:site)? hosting|deploy.{0,12}website)/i],
+ ['web-host-docs',/^(?=.*(?:文档|指南|教程|docs|documentation|guide))(?=.*(?:网站|网页|website|hosting|deploy)).*$/i,/(?:网站.{0,12}(?:托管|部署)|静态.{0,10}托管|web(?:site)? hosting|deploy.{0,12}website)/i],
+ ['web-host',/^(?!.*(?:文档|指南|教程|docs|documentation|guide)).*(?:网页.{0,8}托管|网站.{0,8}(?:托管|部署|上线)|web(?:site)? hosting|host.{0,12}website|deploy.{0,12}website)/i,/^(?!.*(?:文档|指南|教程|\bdocs\b|\bdocumentation\b)).*(?:网站.{0,10}(?:托管|部署)|静态.{0,10}托管|web(?:site)? hosting|deploy.{0,12}website)/i],
  ['currency-convert',/(?:汇率.{0,8}(?:换算|转换)|货币.{0,8}(?:换算|转换)|convert currency|currency converter|exchange rate conversion|為替.{0,8}換算)/i,/(?:货币换算|币种估算|汇率换算|currency converter|currency conversion)/i]
 ];
 // Broad domains still require a meaningful matching descriptor in the actual catalog.

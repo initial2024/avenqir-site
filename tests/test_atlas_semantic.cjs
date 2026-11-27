@@ -29,12 +29,12 @@ assert.ok(catalog.length>=1338);
 const byURL=new Map(catalog.map(x=>[x.url,x]));
 const cases=[
  ['把多个PDF合成一个',/iLovePDF|PDF24|Acrobat/i,/查看器|Gaia Archive/i],
- ['查公网出口地址',/IP\.FS\.KG|IPinfo|IP\.SB|Net\.Coffee/i,/ASEAN IP Portal/i],
+ ['查公网出口地址',/IP\.FS\.KG|IPinfo|IP\.SB|Net\.Coffee/i,/ASEAN IP Portal|^IANA$/i],
  ['网络延时怎么测',/Cloudflare Speed Test|Speedtest|FAST\.com/i,/IETF|ARIN/i],
  ['找学术研究的原始资料',/Google Scholar|DOAJ|PubMed|BASE|ScienceOpen/i,/Memorial Hall/i],
  ['做一份课堂汇报',/PowerPoint|Slidesgo|SlidesCarnival/i,/ScamShield|Derivative Calculator/i],
  ['把英文文章译成中文',/DeepL|Reverso/i,/Dictionary|HeyGen/i],
- ['我想找个网页托管平台',/Vercel Docs/i,/Hugging Face|Codeberg/i],
+ ['查网站部署文档',/Vercel Docs/i,/Hugging Face|Codeberg/i],
  ['resize photographs',/Adobe Express 调整图片大小/i,/FINN\.no|NASA Image Library/i],
  ['remove background from a photo',/Adobe Firefly 去背景/i,/FINN\.no|NASA Image Library/i],
  ['find scholarly publications',/Google Scholar|DOAJ|PubMed|BASE|ScienceOpen/i,/Memorial Hall/i],
@@ -50,7 +50,7 @@ let hit=0;for(const [query,expected,wrong] of cases){
  assert.ok(!names.some(n=>wrong.test(n)),query+' misleading result');
  hit++;
 }
-for(const q of ['xyzqvjjunk7293','banana refrigerator repair','不要推荐AI聊天','without login AI chat','免费且无广告的PDF工具','把几张照片拼在一起']){
+for(const q of ['xyzqvjjunk7293','banana refrigerator repair','不要推荐AI聊天','without login AI chat','免费且无广告的PDF工具','把几张照片拼在一起','我想找个网页托管平台']){
  assert.equal(engine.rank(q,catalog).size,0,q+' must abstain from unsupported intent or constraint');
 }
-console.log('CATALOG_EVAL_PASS',hit+'/'+cases.length,'targeted top-five intent cases; 6 abstentions');
+console.log('CATALOG_EVAL_PASS',hit+'/'+cases.length,'targeted top-five intent cases; 7 abstentions');
