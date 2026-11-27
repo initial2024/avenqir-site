@@ -23,12 +23,13 @@
    for(const [id,key,hidden] of [['atlasSemanticDownload','download',busy||!!session],['atlasSemanticLater','later',busy||!!session],['atlasSemanticCancel','cancel',!busy],['atlasSemanticRemove','remove',busy||!session],['atlasSemanticClose','close',false]]){const e=$(id);e.textContent=l[key];e.hidden=hidden;}
   }
   function resetRank(){clearTimeout(rankTimer);rankTimer=null;lastQuery='';result=null;}
-  function workerFailure(id,code='worker'){if(id!==serial)return;session?.close();session=null;resetRank();phase='error';error=code;draw();notify();}
+  function workerFailure(id,code='worker'){if(id!==serial)return;serial++;session?.close();session=null;resetRank();phase='error';error=code;draw();notify();}
   function notify(){onChange?.();}
   function show(){panel.hidden=false;draw();}
   function offer(){if(!offered&&!session&&!busy&&pref()!=='declined'){offered=true;show();}}
   function scores(q,items){
-   if(!session||!q.trim()||!items?.length)return null;
+   if(!q.trim()){resetRank();return null;}
+   if(!session||!items?.length)return null;
    if(lastItems!==items){lastItems=items;resetRank();session.replaceCatalog(items);}
    if(lastQuery!==q){resetRank();lastQuery=q;const id=serial;rankTimer=setTimeout(()=>workerFailure(id,'worker_timeout'),8000);session.query(q);}
    return result;
