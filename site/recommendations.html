@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>工具推荐与评价 · AVENQIR</title>
+<link rel="stylesheet" href="common.css?v=96">
+<link rel="stylesheet" href="theme.css?v=25">
+<link rel="stylesheet" href="start-page.css?v=135">
+<link rel="stylesheet" href="recommendations.css?v=135">
+<link rel="manifest" href="manifest.webmanifest">
+</head>
+<body class="recommendations-page">
+<header class="headbar">
+  <div class="wrap head-inner">
+    <a class="logo" href="index.html"><span class="logoicon">⬡</span> AVENQIR</a>
+    <nav class="rec-nav" aria-label="网站导航">
+      <a href="index.html" data-rec-label="home">起始页</a>
+      <a href="directory.html" data-rec-label="directory">公开网址</a>
+      <a class="aq-theme-link" href="appearance.html" data-aq-theme-link="1" data-rec-label="theme">主题</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap rec-main" data-rec-view="full">
+  <h1 data-rec-label="page">工具推荐与评价</h1>
+  <section class="rec-panel" aria-labelledby="recHeading">
+    <div class="rec-head">
+      <h2 id="recHeading" data-rec-title>近期热门 · 本机</h2>
+      <label><span data-rec-label="period">时间</span>
+        <select id="recWindow">
+          <option value="7" data-rec-label="week">近 7 天</option>
+          <option value="30" data-rec-label="month">近 30 天</option>
+          <option value="90" data-rec-label="allTime">近 90 天</option>
+        </select>
+      </label>
+    </div>
+    <p data-rec-mode>显示当前浏览器的记录。</p>
+    <ol class="rec-trend" data-rec-trend></ol>
+  </section>
+  <details class="rec-panel rec-preferences">
+    <summary data-rec-label="privacySettings">参与设置</summary>
+    <label><input type="checkbox" id="recLocal"><span data-rec-label="local">记录本机热度</span></label>
+    <label><input type="checkbox" id="recShare"><span data-rec-label="share">参与公开榜单与评分</span></label>
+    <p data-rec-label="sharingCopy">开启后，打开本页收录的入口或评价时，会向 AVENQIR 发送公开条目 ID、星级（如有）和本浏览器的随机代号。公开区只展示汇总。你的书签、搜索词和笔记留在本机。</p>
+    <div class="rec-head">
+      <button type="button" class="start-control" data-rec-clear="local" data-rec-label="clearLocal">清除本机点击和评分</button>
+      <button type="button" class="start-control" id="recRevoke" data-rec-clear="public" data-rec-label="withdraw">撤回公开评分并关闭参与</button>
+      <a href="privacy.html#recommendations" data-rec-label="privacy">隐私说明</a>
+    </div>
+  </details>
+  <p data-rec-status class="rec-status" role="status" aria-live="polite"></p>
+  <div class="rec-head rec-sort">
+    <h2 data-rec-label="list">全部工具与网站</h2>
+    <label><span data-rec-label="sort">排序</span>
+      <select id="recSort">
+        <option value="recommended" data-rec-label="recommended">推荐指数</option>
+        <option value="rating" data-rec-label="rating">评分最高</option>
+        <option value="popular" data-rec-label="popular">近期热门</option>
+        <option value="name" data-rec-label="name">名称 A–Z</option>
+      </select>
+    </label>
+  </div>
+  <div id="recCards" class="rec-grid"></div>
+</main>
+<dialog class="rec-confirm" id="recClearDialog" aria-labelledby="recClearTitle" aria-describedby="recClearChoice">
+  <h2 id="recClearTitle" data-rec-label="confirm">确认操作</h2>
+  <p id="recClearChoice"></p>
+  <form method="dialog" class="rec-head">
+    <button class="start-control" value="cancel" autofocus data-rec-label="cancel">取消</button>
+    <button class="start-control" value="clear" data-rec-label="apply">确认</button>
+  </form>
+</dialog>
+<script src="site.js?v=132" defer></script>
+<script src="theme.js?v=15" defer></script>
+<script src="link-gate.js?v=129" defer></script>
+<script src="atlas-threat-snapshot.js?v=112" defer></script>
+<script src="atlas-safety.js?v=115" defer></script>
+<script src="recommendations-model.js?v=135" defer></script>
+<script src="recommendations.js?v=135" defer></script>
+</body>
+</html>

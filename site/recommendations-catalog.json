@@ -1,0 +1,245 @@
+[
+  {
+    "id": "toolbox",
+    "title": [
+      "常用工具箱",
+      "Toolbox"
+    ],
+    "url": "tools.html",
+    "kind": "tool"
+  },
+  {
+    "id": "bookmarks",
+    "title": [
+      "私人书签",
+      "Private bookmarks"
+    ],
+    "url": "bookmarks.html",
+    "kind": "tool"
+  },
+  {
+    "id": "notes",
+    "title": [
+      "笔记与文本",
+      "Notes and text"
+    ],
+    "url": "notes.html",
+    "kind": "tool"
+  },
+  {
+    "id": "playground",
+    "title": [
+      "解压乐园",
+      "Playground"
+    ],
+    "url": "fun.html",
+    "kind": "tool"
+  },
+  {
+    "id": "daily",
+    "title": [
+      "日常助手",
+      "Daily tools"
+    ],
+    "url": "daily.html",
+    "kind": "tool"
+  },
+  {
+    "id": "image",
+    "title": [
+      "图片压缩与缩放",
+      "Image compression"
+    ],
+    "url": "tools.html#image",
+    "kind": "tool"
+  },
+  {
+    "id": "json",
+    "title": [
+      "JSON 格式化",
+      "JSON formatter"
+    ],
+    "url": "tools.html#json",
+    "kind": "tool"
+  },
+  {
+    "id": "url",
+    "title": [
+      "URL 结构检查",
+      "URL structure check"
+    ],
+    "url": "tools.html#url",
+    "kind": "tool"
+  },
+  {
+    "id": "hash",
+    "title": [
+      "SHA-256 文件校验",
+      "SHA-256 file check"
+    ],
+    "url": "tools.html#hash",
+    "kind": "tool"
+  },
+  {
+    "id": "browser",
+    "title": [
+      "浏览器环境",
+      "Browser profile"
+    ],
+    "url": "check.html#browser",
+    "kind": "tool"
+  },
+  {
+    "id": "transfer",
+    "title": [
+      "本地数据备份",
+      "Local data backup"
+    ],
+    "url": "transfer.html",
+    "kind": "tool"
+  },
+  {
+    "id": "dA054",
+    "title": [
+      "ChatGPT",
+      "ChatGPT"
+    ],
+    "url": "https://chatgpt.com/",
+    "kind": "website"
+  },
+  {
+    "id": "dA057",
+    "title": [
+      "Perplexity",
+      "Perplexity"
+    ],
+    "url": "https://www.perplexity.ai/",
+    "kind": "website"
+  },
+  {
+    "id": "r11",
+    "title": [
+      "Khan Academy",
+      "Khan Academy"
+    ],
+    "url": "https://www.khanacademy.org/",
+    "kind": "website"
+  },
+  {
+    "id": "r13",
+    "title": [
+      "Google Scholar",
+      "Google Scholar"
+    ],
+    "url": "https://scholar.google.com/",
+    "kind": "website"
+  },
+  {
+    "id": "r9",
+    "title": [
+      "Photopea",
+      "Photopea"
+    ],
+    "url": "https://www.photopea.com/",
+    "kind": "website"
+  },
+  {
+    "id": "r10",
+    "title": [
+      "Excalidraw",
+      "Excalidraw"
+    ],
+    "url": "https://excalidraw.com/",
+    "kind": "website"
+  },
+  {
+    "id": "a98",
+    "title": [
+      "Squoosh",
+      "Squoosh"
+    ],
+    "url": "https://squoosh.app/",
+    "kind": "website"
+  },
+  {
+    "id": "dA037",
+    "title": [
+      "Google Arts & Culture",
+      "Google Arts & Culture"
+    ],
+    "url": "https://artsandculture.google.com/",
+    "kind": "website"
+  },
+  {
+    "id": "dA069",
+    "title": [
+      "Windy",
+      "Windy"
+    ],
+    "url": "https://www.windy.com/",
+    "kind": "website"
+  },
+  {
+    "id": "e42",
+    "title": [
+      "Stellarium Web",
+      "Stellarium Web"
+    ],
+    "url": "https://stellarium.com/sky/",
+    "kind": "website"
+  },
+  {
+    "id": "dB018",
+    "title": [
+      "PDF24 Tools",
+      "PDF24 Tools"
+    ],
+    "url": "https://tools.pdf24.org/en/",
+    "kind": "website"
+  },
+  {
+    "id": "dB008",
+    "title": [
+      "Quick Draw",
+      "Quick Draw"
+    ],
+    "url": "https://quickdraw.withgoogle.com/",
+    "kind": "website"
+  },
+  {
+    "id": "n072",
+    "title": [
+      "Neal.fun",
+      "Neal.fun"
+    ],
+    "url": "https://neal.fun/",
+    "kind": "website"
+  },
+  {
+    "id": "n078",
+    "title": [
+      "Canva",
+      "Canva"
+    ],
+    "url": "https://www.canva.com/",
+    "kind": "website"
+  },
+  {
+    "id": "popular26-128",
+    "title": [
+      "FAST.com",
+      "FAST.com"
+    ],
+    "url": "https://fast.com/",
+    "kind": "website"
+  },
+  {
+    "id": "popular26-107",
+    "title": [
+      "Music Lab",
+      "Music Lab"
+    ],
+    "url": "https://musiclab.chromeexperiments.com/",
+    "kind": "website"
+  }
+]

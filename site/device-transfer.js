@@ -8,14 +8,15 @@
     ['start','首页工具收藏','在首页点星标收藏的工具'],
     ['bookmarks','书签与公开收藏','私人书签、公开目录的星标收藏'],
     ['notes','笔记','当前浏览器保存的全部随手笔记'],
-    ['daily','日常 / 游戏','计时、三件小事、2048、翻牌与泡泡记录']
+    ['daily','日常 / 游戏','计时、三件小事、2048、翻牌与泡泡记录'],
+    ['recommendations','本机打开记录与评分','单独勾选。文件可能包含近 90 天的打开记录和本机星级。'],
   ];
   const boxes = document.getElementById('transferCategories');
   for (const [id, title, description] of categories) {
     const label = document.createElement('label');
     label.className = 'transfer-choice';
     const box = document.createElement('input');
-    box.type='checkbox';box.checked=true;box.value=id;box.dataset.group=id;
+    box.type='checkbox';box.checked=id!=='recommendations';box.value=id;box.dataset.group=id;
     const detail=document.createElement('span');
     const h=document.createElement('strong');h.textContent=title;
     const p=document.createElement('small');p.textContent=description;
@@ -60,6 +61,8 @@
       return ks.length?personal+' 条私人书签 / '+atlas+' 条公开收藏':'无记录';
     }
     if(group==='start')return ks.length?data[ks[0]].length+' 个工具':'无记录';
+    if(group==='recommendations')return ks.length?
+      data[ks[0]].clicks.length+' 条打开记录 / '+Object.keys(data[ks[0]].ratings).length+' 条评分':'无记录';
     if(main) return ks.length ? data[main].length+' 条' : '无记录';
     return ks.length+' 组记录';
   }

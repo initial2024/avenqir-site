@@ -47,6 +47,23 @@ assert.deepEqual(api.readArchive(startArchive)[START],['tools.html#image']);
 assert.equal(api.importInto(storage,{[START]:['tools.html#image','notes.html']},[START],'merge'),1);
 assert.deepEqual(JSON.parse(storage.getItem(START)),['tools.html#image','notes.html']);
 assert.equal(api.validate('avenqir.start.recent.v1',['notes.html']),false,'usage history is outside the backup allowlist');
+const rec=require('../site/recommendations-model.js');
+const now=Date.now();
+const localRec={version:1,clicks:[{toolId:'image',ts:now-600000},{toolId:'json',ts:now-91*rec.DAY}],
+ ratings:{image:{stars:3,updatedAt:now-1000}}};
+const incomingRec={version:1,clicks:[{toolId:'image',ts:now-599000},{toolId:'image',ts:now-1000}],
+ ratings:{image:{stars:5,updatedAt:now-100}}};
+storage.setItem(rec.KEY,JSON.stringify(localRec));
+assert.equal(api.validate(rec.KEY,incomingRec),true);
+assert.equal(api.validate(rec.KEY,{...incomingRec,ratings:{image:{stars:7,updatedAt:now}}}),false);
+const archive=api.makeExport(storage,['recommendations']).archive;
+assert.equal(archive.data[rec.KEY].clicks.length,1);
+assert.equal(api.importInto(storage,{[rec.KEY]:incomingRec},[rec.KEY],'merge'),1);
+const recResult=JSON.parse(storage.getItem(rec.KEY));
+assert.equal(recResult.clicks.length,2);
+assert.equal(recResult.ratings.image.stars,5);
+assert.equal(rec.score(recResult,7,now).image.score,100);
+assert.equal(api.validate('avenqir.recommendations.token.v1','0'.repeat(64)),false);
 const before=storeMap.get(N);let failOnce=true;
 const failureStore={
  getItem:k=>storeMap.get(k)||null,

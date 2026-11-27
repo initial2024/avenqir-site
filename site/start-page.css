@@ -1,5 +1,5 @@
 /* Shared surfaces for the start page and local backup. */
-:root body:is(.start-page,.transfer-page) {
+:root body:is(.start-page,.transfer-page,.recommendations-page) {
   --start-bg:#f4f5f7;
   --start-card:#fff;
   --start-text:#181a20;
@@ -12,7 +12,7 @@
   color:var(--start-text);
   overflow:visible;
 }
-:root[data-aq-theme="dark"] body:is(.start-page,.transfer-page) {
+:root[data-aq-theme="dark"] body:is(.start-page,.transfer-page,.recommendations-page) {
   --start-bg:#16171a;
   --start-card:#202226;
   --start-text:#f2f2f5;
@@ -20,7 +20,7 @@
   --start-line:#50525b;
   --start-quiet:#303239;
 }
-:root[data-aq-theme="eye"] body:is(.start-page,.transfer-page) {
+:root[data-aq-theme="eye"] body:is(.start-page,.transfer-page,.recommendations-page) {
   --start-bg:#f1ede4;
   --start-card:#faf7ef;
   --start-text:#282420;
@@ -28,7 +28,7 @@
   --start-line:#cfc5b6;
   --start-quiet:#e9e2d6;
 }
-:is(.start-page,.transfer-page) .headbar {
+:is(.start-page,.transfer-page,.recommendations-page) .headbar {
   position:relative;
   z-index:40;
   background:var(--start-bg);

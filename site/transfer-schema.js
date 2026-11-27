@@ -2,13 +2,16 @@
 /* AVENQIR browser-only backup schema: strict allowlist, no network or server calls. */
 (function (root) {
   const FORMAT = 'avenqir-device-transfer-v1';
+  const RECOMMENDATIONS=root.AVENQIR_RECOMMENDATIONS||
+    (typeof module==='object'&&module.exports?require('./recommendations-model.js'):null);
   const GROUPS = Object.freeze({
     start: { label: '首页工具收藏', keys: ['avenqir.start.favorites.v1'] },
     bookmarks: { label: '私人书签 / 公开网址收藏', keys: ['avenqir_v6_bookmarks','avenqir.link-atlas.favorites.v8'] },
     notes: { label: '本地笔记', keys: ['avenqir_v6_notes'] },
     daily: { label: '计时、任务与游戏记录',
       keys: ['avenqir_v5_timer','avenqir_v5_tasks','avenqir_v5_2048',
-             'avenqir_v5_2048best','avenqir_v5_memorybest','avenqir_v5_pop'] }
+             'avenqir_v5_2048best','avenqir_v5_memorybest','avenqir_v5_pop'] },
+    recommendations: { label: '本机打开记录与评分', keys: ['avenqir.recommendations.local.v1'] },
   });
   const KEYS = Object.values(GROUPS).flatMap(x => x.keys);
   const isObj = x => x !== null && typeof x === 'object' && !Array.isArray(x);
@@ -61,6 +64,7 @@
         // Only site-relative built-in tool paths are eligible. The homepage only renders known cards.
         return Array.isArray(value) && value.length <= 100 && new Set(value).size === value.length &&
           value.every(x => typeof x === 'string' && /^[a-z][a-z-]{0,40}\.(?:html|php)(?:#[A-Za-z][\w-]{0,60})?$/.test(x));
+      case 'avenqir.recommendations.local.v1': return !!RECOMMENDATIONS?.valid(value);
       case 'avenqir.link-atlas.favorites.v8':
         return Array.isArray(value) && value.length <= 500 && value.every(x => typeof x === 'string' && safeURL(x)) && new Set(value).size === value.length;
       case 'avenqir_v6_notes': return validateNotes(value);
@@ -86,6 +90,7 @@
     }
   }
   function transferCopy(key, val) {
+    if (key === 'avenqir.recommendations.local.v1') return RECOMMENDATIONS.clean(val);
     // Do not resume an old wall-clock timer immediately after migrating devices.
     if (key === 'avenqir_v5_timer') {
       const x = Object.assign({}, val);
@@ -135,6 +140,7 @@
   // For non-list state (timer, games, tasks), merge only fills absent local keys.
   // Never silently overwrite an existing note body or resume an imported timer.
   function mergeRecords(key, local, incoming) {
+    if (key === 'avenqir.recommendations.local.v1') return RECOMMENDATIONS.merge(local,incoming);
     if (key === 'avenqir.link-atlas.favorites.v8' || key === 'avenqir.start.favorites.v1') {
       return [...new Set([...local, ...incoming])];
     }

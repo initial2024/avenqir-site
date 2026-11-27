@@ -52,6 +52,7 @@ const require=(condition,reason)=>{if(!condition)throw Error(reason);};
  const startQuery=h.getElementById('startQuery');
  require(h.querySelectorAll('.start-card:not([hidden])').length===8,'home should cap the initial card grid');
  require(!h.getElementById('startSnapshot').open&&h.getElementById('startSnapshotLine').textContent.includes('390×844'),'collapsed snapshot should show current dimensions');
+ require(!h.getElementById('community').open,'the public recommendations panel should be collapsed on mobile');
  h.dispatchEvent(new home.KeyboardEvent('keydown',{key:'/',bubbles:true,cancelable:true}));
  require(h.activeElement===startQuery,'slash must focus the start page search');
  startQuery.value='JSON';
