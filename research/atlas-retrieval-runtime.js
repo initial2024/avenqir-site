@@ -74,7 +74,7 @@ function intent(q,model){
  const alias=multilingual.resolve(body);if(alias.blocked||multilingual.hasConstraint(multilingual.normalize(q)))return null;
  if(body.length<3&&!alias.id&&!topics.resolve(body))return null;
  const broad=!alias.id&&topics.resolve(body);
- if(broad){const row=model.classes.find(x=>x[0]===broad);return row&&evidence[broad]?{id:broad,guard:evidence[broad],weights:row[1]}:null;}
+ if(broad){const row=model.classes.find(x=>x[0]===broad);return row&&evidence[broad]?{id:broad,guard:evidence[broad],weights:row[1],broad:true}:null;}
  const matches=alias.id?rules.filter(([id])=>id===alias.id):rules.filter(([,p])=>p.test(q));
  if(matches.length>1)return null;
  if(!matches.length)return {fallback:true};
@@ -83,14 +83,18 @@ function intent(q,model){
  return row?{id,guard,weights:row[1]}:null;
 }
 function rankedCandidates(items,features,task,docFeatures,unicode=null,unicodeDoc=null){
- const weights=new Map(task.weights),ranked=new Map();
+ const weights=new Map(task.weights),ranked=new Map(),original=new Map();
  for(const item of items){
   if(!item?.url||!task.guard.test([item.name,item.description].join(' ')))continue;
   let score=0;for(const [k,v] of docFeatures(item))score+=v*(weights.get(k)||0)/4096;
+  original.set(item.url,Math.max(score,original.get(item.url)||0));
   if(unicode&&unicodeDoc)score=.9*score+.1*unicode.score(task.id,unicodeDoc(item));
   ranked.set(item.url,Math.max(score,ranked.get(item.url)||0));
  }
- return [...ranked].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).slice(0,12).map(x=>x[0]);
+ const ordered=m=>[...m].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).map(x=>x[0]);
+ const fused=ordered(ranked);
+ if(unicode&&task.broad){const head=ordered(original).slice(0,5),seen=new Set(head);return head.concat(fused.filter(u=>!seen.has(u))).slice(0,12);}
+ return fused.slice(0,12);
 }
 function candidate(query,items,model,features,baseline){
  const q=String(query||'').normalize('NFKC').trim(),task=intent(q,model);
