@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-/* AVENQIR private message centre, v8.1. No PHP mail, no public accounts. */
+/* AVENQIR feedback centre. No PHP mail or public accounts. */
 function fb_conf(): array {
     static $c = null;
     if (is_array($c)) return $c;
@@ -120,9 +120,76 @@ function fb_submission_enabled(PDO $db):bool{
   }catch(PDOException $e){return false;}
   return false;
 }
+
+const FB_WALL_PREFIX = 'public_message:';
+const FB_WALL_PAGE_SIZE = 12;
+
+function fb_kind_names(): array {
+    return ['feedback'=>'网站反馈','link'=>'推荐网址','broken'=>'失效链接','contact'=>'联系管理员'];
+}
+
+function fb_wall_join(bool $includePrivate = false): string {
+    // Use a reserved key per message in the existing settings table. Messages
+    // without a key are private, including every entry from older versions.
+    return ($includePrivate ? ' LEFT JOIN ' : ' INNER JOIN ').
+        "fb_settings wall ON wall.setting_key=CONCAT('".FB_WALL_PREFIX."',m.id)";
+}
+
+function fb_save_message(PDO $db, array $input, string $digest, bool $requestPublic): string {
+    $db->beginTransaction();
+    try {
+        $s=$db->prepare('INSERT INTO fb_messages (kind,sender_name,sender_email,subject,body,ref_url,ip_digest) VALUES (?,?,?,?,?,?,?)');
+        $s->execute([$input['kind'],$input['name'],$input['email'],$input['subject'],$input['body'],$input['ref_url'],$digest]);
+        $id=$db->lastInsertId();
+        if($requestPublic){
+            $s=$db->prepare("INSERT INTO fb_settings (setting_key,setting_value) VALUES (?,'pending')");
+            $s->execute([FB_WALL_PREFIX.$id]);
+        }
+        $db->commit();
+        return $id;
+    }catch(Throwable $e){
+        if($db->inTransaction())$db->rollBack();
+        throw $e;
+    }
+}
+
+function fb_wall_messages(PDO $db, string $kind, int $before): array {
+    // Keep the public projection narrow. Contact fields and admin metadata
+    // never leave the inbox, even on a published message.
+    $sql='SELECT m.id,m.kind,m.sender_name,m.subject,m.body,DATE(m.created_at) AS submitted_date'.
+        ' FROM fb_messages m'.fb_wall_join()." WHERE wall.setting_value='published'";
+    $args=[];
+    if($kind!==''){$sql.=' AND m.kind=?';$args[]=$kind;}
+    if($before>0){$sql.=' AND m.id<?';$args[]=$before;}
+    $s=$db->prepare($sql.' ORDER BY m.id DESC LIMIT '.(FB_WALL_PAGE_SIZE+1));
+    $s->execute($args);
+    return $s->fetchAll();
+}
+
+function fb_wall_moderate(PDO $db, int $id, bool $publish): bool {
+    $states=$publish ? "'pending','hidden'" : "'pending','published'";
+    $s=$db->prepare('UPDATE fb_settings SET setting_value=? WHERE setting_key=? AND setting_value IN ('.$states.')');
+    $s->execute([$publish?'published':'hidden',FB_WALL_PREFIX.$id]);
+    return $s->rowCount()===1;
+}
+
+function fb_delete_message(PDO $db, int $id): void {
+    $db->beginTransaction();
+    try {
+        $s=$db->prepare('DELETE FROM fb_messages WHERE id=?');
+        $s->execute([$id]);
+        $s=$db->prepare('DELETE FROM fb_settings WHERE setting_key=?');
+        $s->execute([FB_WALL_PREFIX.$id]);
+        $db->commit();
+    }catch(Throwable $e){
+        if($db->inTransaction())$db->rollBack();
+        throw $e;
+    }
+}
+
 function fb_config_message(Throwable $e): string {
     return match($e->getMessage()) {
-        'NOT_CONFIGURED'=>'数据库连接尚未配置，请站长先完成安装。',
+        'NOT_CONFIGURED'=>'留言数据库尚未启用。',
         'MYSQL_DRIVER_UNAVAILABLE'=>'当前 PHP 环境未启用 PDO MySQL 驱动。',
         default=>'留言服务暂不可用，稍后再试；其他网站功能不受影响。',
     };

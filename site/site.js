@@ -20,7 +20,7 @@ if('serviceWorker' in navigator && location.protocol==='https:') {
  script.dataset.aqI18n='1';
  script.addEventListener('load',()=>{
    if(document.querySelector('script[data-aq-copy]'))return;
-   const copy=document.createElement('script');copy.src='./aq-copy.js?v=25';
+   const copy=document.createElement('script');copy.src='./aq-copy.js?v=130';
    copy.dataset.aqCopy='1';document.head.append(copy);
  });
  document.head.append(script);

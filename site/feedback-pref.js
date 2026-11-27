@@ -6,7 +6,7 @@
  const email=form.querySelector('input[name="email"]');
  if(!name||!email)return;
  // Transfer one intentional recommendation locally; no query in the URL.
- try{const q=sessionStorage.getItem('avenqir.feedback.query.once.v1');sessionStorage.removeItem('avenqir.feedback.query.once.v1');if(q&&form.querySelector('select[name="kind"]').value==='link'){const subject=form.querySelector('[name="subject"]'),body=form.querySelector('[name="body"]');if(!subject.value)subject.value='申请补充收录：'+q.slice(0,80);if(!body.value)body.value='在公开网址目录中未找到「'+q.slice(0,80)+'」相关资源。希望站长审核并补充优质网站。';}}catch{}
+ try{const q=sessionStorage.getItem('avenqir.feedback.query.once.v1');sessionStorage.removeItem('avenqir.feedback.query.once.v1');if(q&&form.querySelector('select[name="kind"]').value==='link'){const subject=form.querySelector('[name="subject"]'),body=form.querySelector('[name="body"]');if(!subject.value)subject.value='申请补充收录：'+q.slice(0,80);if(!body.value)body.value='在公开网址目录中未找到「'+q.slice(0,80)+'」相关资源。希望管理员审核并补充优质网站。';}}catch{}
  const KEY='avenqir.feedback.contact.v1';
  const wrap=document.createElement('div');wrap.className='fb-local-preferences';
  const label=document.createElement('label');const check=document.createElement('input');check.type='checkbox';

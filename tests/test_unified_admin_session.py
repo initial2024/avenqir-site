@@ -35,7 +35,10 @@ class UnifiedAdM(unittest.TestCase):
         self.assertNotIn("change_password",FEEDBACK)
         self.assertNotIn("setup_code",FEEDBACK)
         self.assertNotIn("DROP TABLE",FEEDBACK+CORE)
-        self.assertNotIn("DELETE FROM fb_settings",FEEDBACK+CORE)
+        self.assertNotIn("DELETE FROM fb_settings",FEEDBACK)
+        self.assertEqual(CORE.count("DELETE FROM fb_settings"),1)
+        self.assertIn("DELETE FROM fb_settings WHERE setting_key=?",CORE)
+        self.assertIn("$s->execute([FB_WALL_PREFIX.$id])",CORE)
         self.assertNotIn("setup_sha256'] as $k",CORE)
     def test_privacy_controls(self):
         self.assertIn("http_response_code(403)",FEEDBACK)
