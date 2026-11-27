@@ -1,15 +1,25 @@
 #!/usr/bin/env python3
 """Actual directory UI with full v2 candidate injected only into localhost QA."""
-import http.server, pathlib, shutil, subprocess, tempfile, threading, time
+import http.server, pathlib, shutil, subprocess, tempfile, threading, time, sys, atexit
 from urllib.parse import urlsplit
 SITE=pathlib.Path(__file__).resolve().parents[1]/'site'
 CHROME=shutil.which('google-chrome') or shutil.which('chromium')
 assert CHROME
 ROOT=SITE.parent
-MODEL=(ROOT/'research'/'atlas-semantic-bundle-v2.json').read_bytes()
-MODEL_PATH='/research/atlas-semantic-bundle-v2.json'
-CANDIDATE_SCRIPTS=['atlas-semantic-manifest.js','atlas-semantic-locales.js','atlas-candidate-loader.js','atlas-worker-client.js','atlas-worker-activation.js','atlas-semantic-directory-adapter.js']
-DIRECTORY=(SITE/'directory.html').read_text(encoding='utf-8').replace('<script src="atlas-semantic-download.js?v=150" defer></script>',''.join('<script src="/research/'+x+'" defer></script>' for x in CANDIDATE_SCRIPTS))
+PACKAGED='--packaged' in sys.argv
+if PACKAGED:
+    staging=tempfile.TemporaryDirectory(prefix='avenqir-v154-site-')
+    atexit.register(staging.cleanup)
+    SITE=pathlib.Path(staging.name)/'site'
+    subprocess.run(['node',str(ROOT/'scripts'/'build_semantic_candidate.cjs'),str(SITE)],check=True)
+    MODEL=(SITE/'semantic-v2'/'atlas-semantic-bundle-v2.json').read_bytes()
+    MODEL_PATH='/semantic-v2/atlas-semantic-bundle-v2.json'
+    DIRECTORY=(SITE/'directory.html').read_text(encoding='utf-8')
+else:
+    MODEL=(ROOT/'research'/'atlas-semantic-bundle-v2.json').read_bytes()
+    MODEL_PATH='/research/atlas-semantic-bundle-v2.json'
+    CANDIDATE_SCRIPTS=['atlas-semantic-manifest.js','atlas-semantic-locales.js','atlas-candidate-loader.js','atlas-worker-client.js','atlas-worker-activation.js','atlas-semantic-directory-adapter.js']
+    DIRECTORY=(SITE/'directory.html').read_text(encoding='utf-8').replace('<script src="atlas-semantic-download.js?v=150" defer></script>',''.join('<script src="/research/'+x+'" defer></script>' for x in CANDIDATE_SCRIPTS))
 assert 'atlas-semantic-directory-adapter.js' in DIRECTORY
 DIRECTORY_JS=(SITE/'directory.js').read_text(encoding='utf-8')
 assert 'T,()=>records);' in DIRECTORY_JS
@@ -23,7 +33,7 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  await wait(()=>w.document.getElementById('atlasSemanticPanel')?.dataset.state==='idle'&&w.document.querySelector('#atlasResults article'));
  const $=id=>w.document.getElementById(id),panel=()=> $('atlasSemanticPanel');
  const query=q=>{$('atlasQuery').value=q;$('atlasForm').requestSubmit();};
- const modelURL=()=>new URL('/research/'+w.AVENQIR_RESEARCH_MANIFEST.file,w.location.href).href;
+ const modelURL=()=>new URL('MODEL_PATH_PLACEHOLDER',w.location.href).href;
  yes(panel().hidden,'fresh page should not interrupt');
  query('githbu');
  yes(!panel().hidden,'first search must offer download');
@@ -75,7 +85,7 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  yes(!await w.caches.has('avenqir-semantic-model-v2-candidate'),'model not deleted');
  document.documentElement.dataset.result='pass';
 })().catch(e=>{document.documentElement.dataset.result='fail';document.documentElement.dataset.error=e.message});
-</script>"""
+</script>""".replace("MODEL_PATH_PLACEHOLDER",MODEL_PATH)
 class Handler(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kw):super().__init__(*args,directory=str(SITE),**kw)
     def log_message(self,*args):pass
@@ -91,7 +101,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             data=MODEL if mode=='valid' else b'X'+MODEL[1:];kind='application/octet-stream' if mode=='valid' else 'application/json'
         elif p=='/directory.html':data=DIRECTORY.encode();kind='text/html; charset=utf-8'
         elif p=='/directory.js':data=DIRECTORY_JS.encode();kind='application/javascript; charset=utf-8'
-        elif p.startswith('/research/') or p.startswith('/site/'):
+        elif not PACKAGED and (p.startswith('/research/') or p.startswith('/site/')):
             target=(ROOT/p.lstrip('/')).resolve()
             if not target.is_relative_to(ROOT) or not target.is_file():self.send_error(404);return
             data=target.read_bytes();kind='application/javascript; charset=utf-8' if target.suffix=='.js' else 'application/json'
@@ -108,8 +118,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
     threading.Thread(target=server.serve_forever,daemon=True).start()
     with tempfile.TemporaryDirectory() as profile:
-        subprocess.run(['node',str(SITE.parent/'tests'/'chrome_real_time.cjs'),CHROME,profile,f'http://127.0.0.1:{server.server_port}/qa.html'],timeout=75,check=True)
+        subprocess.run(['node',str(ROOT/'tests'/'chrome_real_time.cjs'),CHROME,profile,f'http://127.0.0.1:{server.server_port}/qa.html'],timeout=75,check=True)
     assert len([x for x in requests if x[0]=='valid'])==1,requests
     assert not any(x[0]=='block' or '?' in x[1] for x in requests),requests
-    print('PASS real 390x844 candidate directory, full bundle consent, cancel/retry, integrity, progress, Korean result, locale switch, reload and deletion')
+    print('PACKAGED' if PACKAGED else 'RESEARCH', 'PASS real 390x844 candidate directory, full bundle consent, cancel/retry, integrity, progress, Korean result, locale switch, reload and deletion')
     server.shutdown()
