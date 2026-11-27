@@ -458,3 +458,17 @@ const end=session.stats();
 assert.equal(end.featureCalls,initial.featureCalls);
 assert.equal(end.computed,36);
 console.log('SESSION_CACHE_REPORT',JSON.stringify({comparisons,initial,end,comparisonMs:warm-t0,warmMs:elapsed}));
+
+const topics=require('../research/atlas-multilingual-topics.js');
+const broadSession=createSession(catalog,model,runtime.features,runtime.create(base));
+let broadCount=0,broadAnswered=0,broadRefused=0;
+for(const [locale,...phrases] of topics.rows)for(const q of phrases){
+ const hits=broadSession.rank(q);
+ assert.deepEqual(hits,candidate(q,catalog,model,runtime.features,baseline),locale+' '+q);
+ broadCount++;if(hits.length)broadAnswered++;
+ for(const c of multilingual.localeConstraints.find(x=>x[0]===locale).slice(1)){
+  assert.equal(broadSession.rank(q+' '+c).length,0,locale+' '+q+' '+c);broadRefused++;
+ }
+}
+assert.equal(broadCount,1120);assert.equal(broadRefused,5600);
+console.log('BROAD_TOPIC_REPORT',JSON.stringify({broadCount,broadAnswered,broadRefused}));
