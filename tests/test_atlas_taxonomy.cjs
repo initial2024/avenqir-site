@@ -89,7 +89,7 @@ assert.ok(js.includes("atlasTaxonomySummary"),'category count is runtime generat
 assert.ok(summary.includes("new Set(info.items.map(x=>x.category))"),'home category counts are dynamic');
 assert.ok(!home.includes("1239 个精选网址"),'do not hardcode promotional URL totals');
 assert.ok(!dir.includes("1239 个独立网址"),'directory total must be runtime generated');
-assert.equal(catalog.catalog([{name:'追加',url:'https://new-public-resource.example/',category:'新的后台分类',description:'测试动态后台条目'} ]).length,1240+popularLinks.links.length,'backend entries must remain dynamic after expansion');
+assert.equal(catalog.catalog([{name:'追加',url:'https://new-public-resource.example/',category:'新的后台分类',description:'测试动态后台条目'} ]).length,1241+popularLinks.links.length,'backend entries must remain dynamic after expansion');
 const newCount=new Map(counts);newCount.set('新的后台分类',1);
 assert.equal(newCount.size,51,'backend may introduce a new dynamic category');
 assert.ok(all.some(x=>x.url==='https://read.claua.de/'),'public English reader remains in catalog');
