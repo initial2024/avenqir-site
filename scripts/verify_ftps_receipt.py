@@ -24,6 +24,8 @@ CORE=(
     'local-organize.js',
     'bookmarks.html',
     'bookmarks.js',
+    'transfer-schema.js',
+    'transfer.html',
     'directory.html',
     'directory.js',
     'directory-search.css',

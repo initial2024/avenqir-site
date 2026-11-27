@@ -13,3 +13,8 @@ assert.ok(md.includes('\\[x\\] \\<script\\>')&&md.includes('hi there')&&!md.incl
 const data={'avenqir.x':'x','unrelated':'ignored'};
 assert.deepEqual(m.usage({length:2,key:i=>Object.keys(data)[i],getItem:k=>data[k]}),{bytes:20,keys:1});
 console.log('PASS local organization, Markdown escaping and scoped storage estimates');
+
+assert.deepEqual(m.tags(' AI, 学习，AI、免费 '),['AI','学习','免费']);
+assert.equal(m.tags(Array.from({length:12},(_,i)=>String(i))).length,8);
+assert.deepEqual(m.tags(['a\u0000b','x'.repeat(25),'ok']),['ok']);
+assert.ok(m.markdown([{...rows[0],tags:['学习']}]).includes('Tags: 学习'));
