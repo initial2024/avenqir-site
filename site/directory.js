@@ -72,6 +72,16 @@
  limit=pageSize;
  const key='avenqir.link-atlas.favorites.v8';let favorites=[],compareUrls=[];let pendingNoMatchQuery=query.trim();
  const multiCategories=new Set();
+ const organize=window.AVENQIR_LOCAL_ORGANIZE;
+ const historyKey='avenqir.atlas.search-history.v1',historyOpt='avenqir.atlas.search-history.enabled.v1';
+ const historyToggle=$('atlasHistoryEnabled'),historyList=$('atlasHistoryList');
+ const historyEnabled=()=>{try{return storage?.getItem(historyOpt)==='1';}catch{return false;}};
+ function historyValues(){try{return organize?.history(JSON.parse(storage?.getItem(historyKey)||'[]'))||[];}catch{return [];}}
+ function drawHistory(){if(!historyList)return;historyToggle.checked=historyEnabled();historyList.replaceChildren();for(const q of historyEnabled()?historyValues():[]){const b=el('button','atlas-quick-category',q);b.type='button';b.addEventListener('click',()=>submitSearch(q));historyList.append(b);}}
+ function rememberSearch(q){if(!historyEnabled()||!q.trim())return;try{storage?.setItem(historyKey,JSON.stringify(organize.history([q,...historyValues()])));}catch{}drawHistory();}
+ historyToggle?.addEventListener('change',()=>{try{if(historyToggle.checked)storage?.setItem(historyOpt,'1');else{storage?.removeItem(historyOpt);storage?.removeItem(historyKey);}}catch{}drawHistory();});
+ $('atlasHistoryClear')?.addEventListener('click',()=>{try{storage?.removeItem(historyKey);}catch{}drawHistory();});drawHistory();
+ function syncDirectoryURL(){const u=new URL(location.href);query?u.searchParams.set('q',query):u.searchParams.delete('q');if(category&&!multiOn()&&!selectedFlow)u.searchParams.set('category',category);else u.searchParams.delete('category');if(u.href!==location.href)history.replaceState(null,'',u.pathname+u.search+u.hash);}
  const densityKey='avenqir.atlas.density.v1';
  function applyDensity(value){const compact=value==='compact';document.body.dataset.atlasDensity=compact?'compact':'comfortable';const b=$('atlasDensity');if(b){b.setAttribute('aria-pressed',String(compact));b.textContent=compact?T('舒适','Comfortable'):T('紧凑','Compact');b.title=compact?T('切换舒适布局','Switch to comfortable layout'):T('切换紧凑布局','Switch to compact layout');}}
  let density='';try{density=storage?.getItem(densityKey)||'';}catch{}
@@ -371,7 +381,7 @@
    }
  }
  let languageStatsRecords=null,languageStatsLocale='';
- function draw(){const list=filtered(), shown=list.slice(0,limit);quickCategories();results.replaceChildren();$('atlasEmpty').hidden=list.length!==0;const hint=$('atlasFilteredHint');if(hint)hint.hidden=!(query&&list.length===0&&records.some(x=>score(x)>=0));
+ function draw(){syncDirectoryURL();const list=filtered(), shown=list.slice(0,limit);quickCategories();results.replaceChildren();$('atlasEmpty').hidden=list.length!==0;const hint=$('atlasFilteredHint');if(hint)hint.hidden=!(query&&list.length===0&&records.some(x=>score(x)>=0));
    const languageHint=$('atlasSiteLanguageHint'),target=locale()?.locale||'en';
    if(languageHint&&(languageStatsRecords!==records||languageStatsLocale!==target)){
      languageStatsRecords=records;languageStatsLocale=target;
@@ -419,7 +429,7 @@
        else {const status=$('atlasCompareStatus');if(status)status.textContent=T('最多同时比较三个网址，先移除一个。','You can compare up to three sites. Remove one first.');return;}
        draw();
      });
-     const cardActions=el('div','atlas-card-actions');const moreActions=el('details','atlas-card-more');const moreLabel=el('summary','',T('更多','More'));moreActions.append(moreLabel);const secondary=el('div','atlas-secondary-actions');secondary.append(report,cmp);moreActions.append(secondary);
+     const cardActions=el('div','atlas-card-actions');const moreActions=el('details','atlas-card-more');const moreLabel=el('summary','',T('更多','More'));moreActions.append(moreLabel);const secondary=el('div','atlas-secondary-actions');secondary.append(report,cmp);const copy=el('button','atlas-security-lookup',T('复制网址','Copy URL'));copy.type='button';copy.addEventListener('click',async()=>{try{if(!navigator.clipboard?.writeText)throw Error('clipboard');await navigator.clipboard.writeText(url);copy.textContent=T('已复制','Copied');}catch{const field=el('input');field.type='text';field.readOnly=true;field.value=url;field.setAttribute('aria-label',T('手动复制网址','Copy URL manually'));secondary.append(field);field.focus();field.select();copy.disabled=true;}});secondary.append(copy);moreActions.append(secondary);
      const rate=sourceUI?.ratingLink(url);
      if(rate)cardActions.append(rate);
      const reg=safety?.registryEvidence(url);
@@ -529,7 +539,7 @@
    clearTimeout(inputTimer);
    clearSearchNext();
    replaceQuery(value.trim());suggestClose();input.blur();
-   pendingNoMatchQuery=query.trim();
+   pendingNoMatchQuery=query.trim();rememberSearch(pendingNoMatchQuery);
    if(loaded)completeSearch();
    else {committedQuery=pendingNoMatchQuery;updateSearchNext(committedQuery,false);scrollToResults();}
  }
@@ -562,7 +572,7 @@
  const ratingHint=$('atlasRatingHint');
  function ratingStatus(){if(ratingHint)ratingHint.textContent=sourceUI?.ratingsAvailable()?T('公开汇总 · 评分至少5份才进入推荐排序。','Public totals · at least 5 ratings to enter recommendation ranking.'):T('公开数据暂不可用 · 本机记录或原始目录排序。','Public data unavailable · device records or catalog order.');}
  let firstRatingRender=true;
- window.addEventListener('aq:ratings-updated',()=>{ratingStatus();if(firstRatingRender){firstRatingRender=false;if(!query&&!document.querySelector('dialog[open]')&&window.scrollY<200)draw();}});
+ window.addEventListener('aq:ratings-updated',()=>{ratingStatus();if(firstRatingRender){firstRatingRender=false;if(!document.querySelector('dialog[open]')&&window.scrollY<200)draw();}});
  window.addEventListener('aq:language-change',ratingStatus);
  $('atlasRatingRefresh')?.addEventListener('click',async()=>{await sourceUI?.refreshRatings(true,Number($('atlasRatingWindow')?.value||7));draw();});
  $('atlasRatingWindow')?.addEventListener('change',async()=>{await sourceUI?.refreshRatings(true,Number($('atlasRatingWindow').value));draw();});
@@ -608,7 +618,7 @@
  requestAnimationFrame(()=>setTimeout(()=>{try{updateApprovals();drawPaths();choiceBar();mountOptionalRecommendations()}catch{}},0));
  if($('atlasStartupNotice'))$('atlasStartupNotice').hidden=true;
  catalog.load().then(data=>{
-  if(data.remote)records=data.items;
+  if(data.remote){records=data.items;if(initialCategory&&!category&&records.some(x=>x.category===initialCategory)&&!groupId&&!selectedFlow)category=initialCategory;}
   source.textContent=data.remote?T('在线目录 + 本地精选','Online directory + curated links'):T('内置精选目录（后台不可用）','Built-in directory (backend unavailable)');
   loaded=true;if(data.remote){choiceBar();draw();}
   if(pendingNoMatchQuery)completeSearch();else revealHashPanel();

@@ -290,3 +290,5 @@
 @media(prefers-reduced-motion:reduce) {
   .start-page .start-card {transition:none;transform:none!important}
 }
+
+@media(max-width:600px){.start-main h1{font-size:clamp(1.15rem,5vw,1.6rem);margin-block:.3rem}.start-main{padding-block:.4rem 1rem}.start-page #popular .aq-popular-head{gap:.4rem}.start-page #popular .start-details{margin:.25rem 0}.start-page #popular .start-details summary{min-height:36px;font-size:.8rem}}

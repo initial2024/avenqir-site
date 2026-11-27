@@ -19,6 +19,11 @@ from ftps_deploy import HOST, REMOTE, SITE, credential, retrieve
 # dynamically refreshed risk/registry snapshots and owner-customized media.
 CORE=(
     'index.html',
+    'start-page.js',
+    'start-page.css',
+    'local-organize.js',
+    'bookmarks.html',
+    'bookmarks.js',
     'directory.html',
     'directory.js',
     'directory-search.css',

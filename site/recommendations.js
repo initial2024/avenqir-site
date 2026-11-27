@@ -35,7 +35,7 @@
   let positioned=false;
   if(full&&pick)panel.classList.add('rec-focused');
   let rows=[];
-  let indexes=null;
+  let indexes=null,indexedAt=0;
   let resolvedItems=new Map();
   const sessionClicks=new Map();
   let stats=null;
@@ -119,7 +119,9 @@
     return anchor;
   }
   function loadCatalog(){
+    if(indexes&&indexedAt&&Date.now()-indexedAt>=30000)indexes=null;
     if(!indexes){
+      indexedAt=0;
       indexes=sourceUI.catalog().then(payload=>{
         const seen=new Set();
         rows=payload.filter(item=>{
@@ -128,7 +130,7 @@
           return true;
         });
         resolvedItems=new Map(rows.map(item=>[item.id,item]));
-        return resolvedItems;
+        indexedAt=Date.now();return resolvedItems;
       }).catch(()=>{
         indexes=null;
         return new Map();
@@ -241,6 +243,7 @@
       [...group.children].forEach((b,i)=>{b.textContent=i<selected?'★':'☆';b.setAttribute('aria-pressed',String(selected===i+1));});
       description.textContent=selected?t(['','很差','不太好用','一般','好用','非常推荐'][selected],['','Poor','Not useful','Average','Useful','Highly recommended'][selected]):t('请选择1–5星','Choose 1–5 stars');
       submit.disabled=!selected||quickBusy;
+      submit.textContent=publicVote.checked?t('保存并公开','Save & publish'):t('仅保存本机','Save on device');
       clear.disabled=quickBusy||!getLocal().ratings[item.id]&&!read(TOKEN);
     };
     for(let i=1;i<=5;i++){
@@ -269,9 +272,10 @@
         feedback.textContent=t(removing?'已撤回公开评分。':'已提交公开评分。',removing?'Public rating withdrawn.':'Public rating submitted.');
         await sourceUI.refreshRatings(true);
         if(full)await refresh();
-      }catch(error){feedback.textContent=t('公开提交失败，本机评分已保存；可重试。','Public submission failed; local rating saved. Try again.');}
+      }catch(error){feedback.textContent=error.message==='limit'?t('已达公开评价频率限制；本机修改已保存。','Public rating limit reached; local change saved.'):t('公开提交失败，本机修改已保存；可重试。','Public submission failed; local change saved. Try again.');}
       finally{disable(false);}
     }
+    publicVote.addEventListener('change',sync);
     submit.addEventListener('click',()=>save(false));
     clear.addEventListener('click',()=>save(true));
     cancel.addEventListener('click',()=>dialog.close());
@@ -520,7 +524,7 @@
     return;
   }
   window.addEventListener('aq:language-change',()=>{localize();if(rows.length)render();});
-  window.addEventListener('online',()=>{if(full||panel.open)refresh();});
+  window.addEventListener('online',()=>{indexes=null;if(full||panel.open)refresh();});
   window.addEventListener('offline',()=>{stats=null;if(rows.length)render();});
   localize();
   if(!full){
@@ -592,7 +596,7 @@
         write(SHARE,'0');
         remove(TOKEN);
         say(t('已撤回公开评分并关闭参与。','Public ratings removed and sharing turned off.'));
-        await refresh();
+        await refresh();sourceUI.refreshRatings(true);
       }catch{say(t('暂时无法撤回，原匿名代号仍保留，可稍后重试。','Could not withdraw ratings. The browser identifier has been kept so you can retry.'));}
     }
     render();

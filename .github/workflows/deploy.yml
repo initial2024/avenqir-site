@@ -53,6 +53,7 @@ jobs:
           node tests/test_atlas_i18n.cjs
           node tests/test_atlas_popular.cjs
           node tests/test_recommendations_v138.cjs
+          node tests/test_local_organize.cjs
           node tests/test_transfer_v90.cjs
           node tests/test_orbit_bridge.cjs
           node tests/test_i18n_v91.cjs
@@ -96,8 +97,19 @@ jobs:
         run: |
           php -m | grep -i pdo_mysql
           php tests/test_recommendations_mysql.php
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Verify actual Chrome directory and mobile interactions
+        run: |
+          python3 tests/browser_directory_first_paint.py
+          python3 tests/browser_popular_mobile.py
   deploy:
-    needs: [verify, recommendations-db]
+    needs: [verify, recommendations-db, browser]
     if: >-
       vars.AVENQIR_DEPLOY_PAUSED != 'true' &&
       github.repository == 'initial2024/avenqir-site' &&

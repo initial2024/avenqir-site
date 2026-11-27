@@ -1,0 +1,15 @@
+"use strict";
+const assert=require('node:assert/strict');
+const m=require('../site/local-organize.js');
+assert.deepEqual(m.history([' a ','a','b',null, 'x'.repeat(141)]),['a','b']);
+assert.equal(m.history(Array.from({length:15},(_,i)=>String(i))).length,10);
+const rows=[{id:'1',name:'[x] <script>',url:'https://example.com/',category:'A',note:'hi\nthere'},{id:'2',name:'B',url:'https://example.org/',category:'B'}];
+assert.deepEqual(m.move(rows,'1','2').map(x=>x.id),['2','1']);
+assert.deepEqual(rows.map(x=>x.id),['1','2']);
+assert.deepEqual(m.rename(rows,'A',' B ').map(x=>x.category),['B','B']);
+assert.equal(rows[0].category,'A');
+const md=m.markdown([...rows,{name:'no',url:'javascript:alert(1)',category:'A'}]);
+assert.ok(md.includes('\\[x\\] \\<script\\>')&&md.includes('hi there')&&!md.includes('javascript:'));
+const data={'avenqir.x':'x','unrelated':'ignored'};
+assert.deepEqual(m.usage({length:2,key:i=>Object.keys(data)[i],getItem:k=>data[k]}),{bytes:20,keys:1});
+console.log('PASS local organization, Markdown escaping and scoped storage estimates');
