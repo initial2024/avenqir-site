@@ -48,3 +48,12 @@
 :is(.rec-panel,.rec-main,.rec-confirm) :is(a,summary,input,button,select):focus-visible {outline:2px solid var(--start-accent);outline-offset:2px}
 @media(max-width:900px) {.rec-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px) {.rec-grid{grid-template-columns:1fr}}
+
+.rec-rate-details{margin-top:auto;border-top:1px solid var(--start-line);padding-top:.2rem}
+.rec-rate-details summary{cursor:pointer;min-height:44px;padding:.65rem 0;font-weight:650;color:var(--start-accent)}
+.rec-feedback-link{display:inline-flex;min-height:44px;align-items:center;font-size:.85rem}
+.rec-focused #recTrending,.rec-focused .rec-filters,.rec-focused #recBasis,.rec-focused #recCount{display:none}
+.rec-focused .rec-grid{grid-template-columns:minmax(0,1fr);max-width:36rem}
+.rec-filters label:not(.rec-find){flex:1 1 8rem}
+.rec-filters select{width:100%}
+@media(max-width:600px){.rec-grid article{padding:.6rem}.rec-grid h2{font-size:1rem}.rec-participation{margin:.3rem 0}}

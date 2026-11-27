@@ -13,6 +13,8 @@
       pending:t('第三方 · 来源待核对','Third party · Source pending'),
       blocked:t('已拦截','Blocked'),
       prompt:t('访问前确认','Confirmation required'),
+      caution:t('额外风险提示','Extra caution'),
+      direct:t('外链 · 非安全认证','External · Not safety-certified'),
       remembered:t('本机已记住访问选择','Access choice saved on this device'),
     }[type];
   }
@@ -27,9 +29,13 @@
     node.className='aq-source-badges';
     const reviewed=!!gate?.officialSourceReviewed(url);
     node.append(badge(reviewed?'reviewed':'pending'));
-    if(!gate||gate.urlRisk(url).blocked||safety?.threatStatus(url)==='listed')node.append(badge('blocked'));
+    const risk=gate?.urlRisk(url);
+    if(!risk||risk.blocked||safety?.threatStatus(url)==='listed')node.append(badge('blocked'));
+    else if(risk.forcePrompt)node.append(badge('caution'));
     else if(!permitted)node.append(badge('prompt'));
     else if(!reviewed)node.append(badge('remembered'));
+    else node.append(badge('direct'));
+    node.title=t('第三方独立运营；来源核对不是安全认证。请自行核对内容及隐私政策。','Independently operated; a source check is not safety certification. Check content and privacy practices.');
     return node;
   }
   function notice(){
@@ -60,7 +66,7 @@
     if(!gate||!safety||gate.urlRisk(url).blocked||safety.threatStatus(url)==='listed')return null;
     const link=document.createElement('a');
     link.className='aq-source-rate';
-    link.textContent=t('评分','Rate');
+    link.textContent=t('评价','Rate');
     link.hidden=true;
     bundledByURL??=bundledCatalog().then(byURL);
     bundledByURL.then(async urls=>{
@@ -72,6 +78,7 @@
       }
       if(!id)return;
       link.href='recommendations.html?pick='+encodeURIComponent(id)+'#recListHeading';
+      link.setAttribute('aria-label',t('评价 '+new URL(url).hostname,'Rate '+new URL(url).hostname));
       link.hidden=false;
     });
     return link;

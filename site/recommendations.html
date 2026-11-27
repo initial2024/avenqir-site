@@ -8,9 +8,9 @@
 <link rel="stylesheet" href="common.css?v=96">
 <link rel="stylesheet" href="theme.css?v=25">
 <link rel="stylesheet" href="start-page.css?v=136">
-<link rel="stylesheet" href="recommendations.css?v=137">
+<link rel="stylesheet" href="recommendations.css?v=138">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="atlas-source-ui.css?v=137"></head>
+<link rel="stylesheet" href="atlas-source-ui.css?v=138"></head>
 <body class="recommendations-page">
 <header class="headbar">
   <div class="wrap head-inner">
@@ -60,6 +60,7 @@
   </div>
   <p class="aq-source-notice" data-atlas-source-notice>外链由第三方运营。来源核对针对精确网址，不能保证第三方内容、隐私处理或访问安全。</p>
   <div class="rec-filters">
+    <label><span data-rec-label="scope">数据范围</span><select id="recScope"><option value="public" data-rec-label="publicScope">公开汇总</option><option value="local" data-rec-label="localScope">我的本机</option></select></label>
     <label class="rec-find"><span data-rec-label="find">按名称、域名或分类搜索</span>
       <input id="recQuery" type="search" maxlength="140" autocomplete="off">
     </label>
@@ -70,15 +71,19 @@
         <option value="website" data-rec-label="website">第三方网址</option>
       </select>
     </label>
+    <label><span data-rec-label="source">来源</span><select id="recSource"><option value="all" data-rec-label="allSources">全部来源</option><option value="reviewed" data-rec-label="reviewed">来源已核对</option><option value="pending" data-rec-label="pending">来源待核对</option></select></label>
     <label><span data-rec-label="sort">排序</span>
       <select id="recSort">
         <option value="recommended" data-rec-label="recommended">推荐指数</option>
         <option value="rating" data-rec-label="rating">评分最高</option>
         <option value="popular" data-rec-label="popular">近期热门</option>
+        <option value="editor" data-rec-label="editor">编辑精选</option>
+        <option value="mine" data-rec-label="mine">我评过的</option>
         <option value="name" data-rec-label="name">名称 A–Z</option>
       </select>
     </label>
   </div>
+  <p id="recBasis" class="rec-count" role="status"></p>
   <p id="recCount" class="rec-count" role="status" aria-live="polite"></p>
   <div id="recCards" class="rec-grid"></div>
   <nav class="rec-pagination" aria-label="分页" hidden>
@@ -99,8 +104,9 @@
 <script src="link-gate.js?v=129" defer></script>
 <script src="atlas-threat-snapshot.js?v=112" defer></script>
 <script src="atlas-safety.js?v=115" defer></script>
-<script src="atlas-source-ui.js?v=137" defer></script>
-<script src="recommendations-model.js?v=137" defer></script>
-<script src="recommendations.js?v=137" defer></script>
+<script src="atlas-source-ui.js?v=138" defer></script>
+<script src="atlas-popular-picks.js?v=126" defer></script>
+<script src="recommendations-model.js?v=138" defer></script>
+<script src="recommendations.js?v=138" defer></script>
 </body>
 </html>
