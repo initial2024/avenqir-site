@@ -25,7 +25,9 @@ try {
         }
         $window=filter_input(INPUT_GET,'days',FILTER_VALIDATE_INT)??7;
         if (!in_array($window,[7,30,90],true)) {rec_reply(['ok'=>false],400);return;}
-        rec_reply(['ok'=>true,'days'=>$window,'items'=>(object)rec_stats(fb_db(),$catalog,time(),$window)]);
+        $items=rec_stats(fb_db(),$catalog,time(),$window);
+        header('Cache-Control: public, max-age=30');
+        rec_reply(['ok'=>true,'days'=>$window,'items'=>(object)$items]);
         return;
     }
     if ($method!=='POST') {
@@ -46,7 +48,7 @@ try {
     $action=$data['action']??null;
     $tool=$data['tool_id']??null;
     $stars=$data['stars']??null;
-    if (!is_array($data) || !in_array($action,['click','rate','remove','clear'],true) ||
+    if (!is_array($data) || array_diff(array_keys($data),['action','tool_id','voter_token','stars']) || !in_array($action,['click','rate','remove','clear'],true) ||
         !rec_token($data['voter_token']??null) ||
         ($action!=='clear' && (!is_string($tool) || !isset($catalog[$tool]))) ||
         ($action==='rate' && (!is_int($stars) || $stars<1 || $stars>5))) {
@@ -62,7 +64,7 @@ try {
         rec_schema($db);
         $outcome=rec_write($db,$key,$data,$_SERVER['REMOTE_ADDR']??'',time());
     }
-    if ($action==='click') rec_reply(['ok'=>true]);
+    if ($action==='click') rec_reply(['ok'=>true]); // Suppress duplicate/limited click details; never fabricate successful ratings.
     elseif ($outcome==='limited') rec_reply(['ok'=>false,'error'=>'rate_limited'],429);
     else rec_reply(['ok'=>true]);
 } catch (Throwable $error) {

@@ -157,13 +157,13 @@
   renderResults();
  }
  function render(){
-  $('popularTitle').textContent=home?t('🔥 最近值得试试','🔥 Popular picks'):t('🔥 大众热门','🔥 Popular');
+  $('popularTitle').textContent=home?t('🔥 最近值得试试','🔥 Editor picks'):t('🔥 编辑精选','🔥 Editor picks');
   $('popularDescription').textContent=t('编辑精选 · 用途与上手体验排序','Editor picks, ordered by usefulness and ease of use');
   $('popularRandom').textContent=t('🎲 随便逛一个','🎲 Pick a site');
   $('popularNetworkNote').textContent=t('检测结果属于第三方信息，不代表绝对安全。','Third-party checks provide information and cannot guarantee safety.');
   if(home){
    $('popularMore').textContent=t('去目录看完整精选','See all editor picks');
-   $('popularHeroAction').textContent=t('看看大众精选','Browse popular picks');
+   $('popularHeroAction').textContent=t('看看编辑精选','Browse editor picks');
    $('popularTopics').setAttribute('aria-label',t('精选主题','Editor picks by topic'));
   }else $('popularIntentTitle').textContent=t('我现在想……','I want to…');
   renderTopics();
