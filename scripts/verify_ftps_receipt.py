@@ -56,9 +56,9 @@ def summary(result, detail):
     output=os.environ.get('GITHUB_STEP_SUMMARY')
     if output:
         with open(output,'a',encoding='utf-8') as f:
-            f.write('### Independent FTPS receipt: '+result+'\\n')
-            f.write(detail+'\\n')
-            f.write('This is a **file delivery check**, not a public browser or PHP runtime test.\\n')
+            f.write('### Independent FTPS receipt: '+result+'\n')
+            f.write(detail+'\n')
+            f.write('This is a **file delivery check**, not a public browser or PHP runtime test.\n')
 
 def main():
     sha=credential('GITHUB_SHA')
