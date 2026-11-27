@@ -524,3 +524,25 @@ for(let i=0;i<multilingual.negativeFrames.length;i++){
 }
 assert.equal(nativeNegations,2560);assert.equal(nativeCompound,1440);
 console.log('NATIVE_NEGATION_COMPOUND_REPORT',JSON.stringify({nativeNegations,nativeCompound}));
+
+const augmentation=require('../research/atlas-paraphrase-augmentation.cjs');
+assert.deepEqual(multilingual.variantRows,augmentation.rows);
+assert.deepEqual(multilingual.variantTasks,augmentation.tasks);
+let variantHits=0,variantRefusals=0,variantWrapped=0,variantCompounds=0;
+for(let i=0;i<augmentation.rows.length;i++){
+ const [locale,...phrases]=augmentation.rows[i], [,prefix,suffix,join]=multilingual.negativeFrames[i], [,please,after]=topics.frames[i];
+ for(let j=0;j<phrases.length;j++){
+  const q=phrases[j],id=augmentation.tasks[j];if(!q)continue;
+  assert.equal(multilingual.resolve(q).id,id);
+  const canonical=multilingual.rows[i][multilingual.tasks.indexOf(id)+1],hits=fused.rank(q);
+  assert.ok(hits.length,locale+' '+q);
+  assert.deepEqual(hits,fused.rank(canonical),locale+' '+q);variantHits++;
+  assert.deepEqual(fused.rank(please+q+after),hits);variantWrapped++;
+  for(const c of multilingual.localeConstraints[i].slice(1)){assert.equal(fused.rank(q+' '+c).length,0,locale+' '+q+' '+c);variantRefusals++;}
+  assert.equal(fused.rank(prefix+q+suffix).length,0);variantRefusals++;
+  assert.equal(fused.rank(q+join+phrases[(j+1)%phrases.length]).length,0);variantCompounds++;
+  assert.equal(fused.rank(q+' zq-unverified-extra').length,0);variantRefusals++;
+ }
+}
+assert.equal(variantHits,120);assert.equal(variantRefusals,840);assert.equal(variantWrapped,120);assert.equal(variantCompounds,120);
+console.log('REVIEWED_VARIANT_REPORT',JSON.stringify({variantHits,variantRefusals,variantWrapped,variantCompounds}));
