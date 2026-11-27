@@ -18,7 +18,7 @@
      if(signal.aborted){abort();return;}
      if(!Number.isSafeInteger(count)||count<1||count>items.length){fail();return;}
      settled=true;signal.removeEventListener('abort',abort);
-     resolve(Object.freeze({query(q){if(!closed)client.query(q);},close,count}));
+     resolve(Object.freeze({query(q){if(!closed)client.query(q);},replaceCatalog(next){if(!closed&&Array.isArray(next)&&next.length)client.init(values[0],next);},close,count}));
     });
     signal.addEventListener('abort',abort,{once:true});
     if(signal.aborted){abort();return;}
