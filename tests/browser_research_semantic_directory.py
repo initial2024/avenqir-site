@@ -35,6 +35,12 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  const query=q=>{$('atlasQuery').value=q;$('atlasForm').requestSubmit();};
  const modelURL=()=>new URL('MODEL_PATH_PLACEHOLDER',w.location.href).href;
  yes(panel().hidden,'fresh page should not interrupt');
+ if('serviceWorker' in w.navigator){
+  await wait(()=>!!w.navigator.serviceWorker.controller);
+  const caches=await w.caches.keys();
+  for(const key of caches){const c=await w.caches.open(key);yes(!await c.match(modelURL()),'model in cache before consent');}
+  yes(w.performance.getEntriesByName(modelURL()).length===0,'worker preloaded optional weights');
+ }
  query('githbu');
  yes(!panel().hidden,'first search must offer download');
  yes([...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>a.textContent.includes('GitHub')),'typo result must work without model');
@@ -73,6 +79,9 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  yes([...w.document.querySelectorAll('#atlasResults .atlas-result-title')].every(a=>w.AVENQIR_ATLAS_CATALOG.catalog().some(x=>a.textContent.includes(x.name))),'invented catalog entry');
  const cache=await w.caches.open('avenqir-semantic-model-v2-candidate');
  yes((await cache.match(modelURL()))?.ok,'verified model cache missing');
+ for(const key of await w.caches.keys())if(key!=='avenqir-semantic-model-v2-candidate'){
+  yes(!await (await w.caches.open(key)).match(modelURL()),'weight duplicated in shell cache');
+ }
  // Reload without network model access: cached bytes must be sufficient.
  await fetch('/fixture-block');
  const prior=w.document;w.location.reload();
