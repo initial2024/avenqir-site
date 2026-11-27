@@ -22,7 +22,7 @@ const current=catalog.catalog();
 const staticTotal=catalog.base.length+catalog.extras.length+paths.links.length+expanded.links.length+specialist.links.length+depthA.links.length+depthB.links.length+depthC.links.length+depthD.links.length+ai.links.length+regional.links.length+everyday.links.length+regionalExt.links.length+everydayExt.links.length+popularLinks.links.length;
 assert.ok(expanded.links.length>=80,'expanded resources must be significant');
 assert.equal(current.length,staticTotal,'catalog data must be actually merged and deduplicated');
-assert.equal(current.length,1240+popularLinks.links.length,'expanded directory must include all curated depths');
+assert.equal(current.length,1244+popularLinks.links.length,'expanded directory must include all curated depths');
 assert.equal(new Set(current.map(x=>x.url)).size,current.length,'all static URLs unique');
 for(const x of current){
  assert.ok(x.name&&x.category&&x.description);
