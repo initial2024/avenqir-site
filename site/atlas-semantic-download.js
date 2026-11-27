@@ -23,7 +23,7 @@
    open.textContent=model?t('语义搜索已开启','Semantic on'):t('语义搜索','Semantic search');
    $('atlasSemanticTitle').textContent=t('可选：本地语义搜索','Optional: local semantic search');
    size.textContent=t('模型文件：','Model file: ')+format(spec.bytes)+' ('+spec.bytes.toLocaleString()+' B)';
-   $('atlasSemanticNote').textContent=t('仅在本机运行的领域向量模型，支持有限的中英文及日文工具意图，不是通用聊天 AI。模型不会上传搜索词；不开启也能正常搜索。','A domain-specific embedding runs on device. Limited Chinese, English and Japanese tool intents, not general chat AI. No queries are sent to a model service. Normal search still works.');
+   $('atlasSemanticNote').textContent=t('仅在本机运行的领域向量模型，支持有限的中英文及日文工具意图，不是通用聊天 AI；不保证满足价格、免登录、否定条件等限制。模型不会上传搜索词；不开启也能正常搜索。','A domain-specific embedding runs on device. Limited Chinese, English and Japanese tool intents, not general chat AI; price, login and negative constraints cannot be guaranteed. No queries are sent to a model service. Normal search still works.');
    start.textContent=phase==='error'?t('重试下载','Retry download'):t('下载并启用','Download & enable');
    later.textContent=t('暂不下载','Not now');dismiss.textContent=t('收起','Close');cancel.textContent=t('取消下载','Cancel download');remove.textContent=t('关闭并删除模型','Disable & delete model');
    start.hidden=!!model||busy;later.hidden=!!model||busy;cancel.hidden=!busy||!controller;remove.hidden=!model||busy;

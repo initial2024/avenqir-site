@@ -426,7 +426,7 @@
        if(e.button!==0||e.ctrlKey||e.metaKey||e.altKey||e.shiftKey)return;
        if(!isAllowed(url)){e.preventDefault();showExternal(url,x.name);}
        else trackOpen(url);
-     });a.addEventListener('auxclick',e=>{if(!recheck()){e.preventDefault();return;}if(e.button===1&&isAllowed(url))trackOpen(url);});data.append(a);if(query&&lexicalCache.get(x)<0&&semantic?.active())data.append(el('small','atlas-semantic-match',T('语义近似匹配','Semantic match')));
+     });a.addEventListener('auxclick',e=>{if(!recheck()){e.preventDefault();return;}if(e.button===1&&isAllowed(url))trackOpen(url);});data.append(a);if(query&&lexicalCache.get(x)<0&&semantic?.active())data.append(el('small','atlas-semantic-match',T('意图近似匹配 · 请核对具体功能','Intent match · verify features')));
      if(sourceUI)data.append(sourceUI.external(url,permitted));
      if(english()&&/[\u3400-\u9fff]/.test(x.description||'')){
        const detail=el('details','atlas-original-desc'),caption=el('summary','',T('查看原始简介','Original description (Chinese) · expand'));
