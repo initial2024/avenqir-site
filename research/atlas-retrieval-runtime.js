@@ -82,11 +82,12 @@ function intent(q,model){
  const row=model.classes.find(x=>x[0]===id);
  return row?{id,guard,weights:row[1]}:null;
 }
-function rankedCandidates(items,features,task,docFeatures){
+function rankedCandidates(items,features,task,docFeatures,unicode=null,unicodeDoc=null){
  const weights=new Map(task.weights),ranked=new Map();
  for(const item of items){
   if(!item?.url||!task.guard.test([item.name,item.description].join(' ')))continue;
   let score=0;for(const [k,v] of docFeatures(item))score+=v*(weights.get(k)||0)/4096;
+  if(unicode&&unicodeDoc)score=.9*score+.1*unicode.score(task.id,unicodeDoc(item));
   ranked.set(item.url,Math.max(score,ranked.get(item.url)||0));
  }
  return [...ranked].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).slice(0,12).map(x=>x[0]);
@@ -99,19 +100,20 @@ function candidate(query,items,model,features,baseline){
 }
 // A worker owns an immutable snapshot. Exact task rankings depend only on the
 // verified model and catalog, not on query spelling. Cache only those rankings.
-function createSession(items,model,features,baseline){
- const snapshot=items.map(x=>Object.freeze({...x})),cache=new Map(),docCache=new WeakMap();
+function createSession(items,model,features,baseline,unicode=null){
+ const snapshot=items.map(x=>Object.freeze({...x})),cache=new Map(),docCache=new WeakMap(),unicodeCache=new WeakMap();
  let computed=0,hits=0,featureCalls=0;
  function docFeatures(item){
   if(!docCache.has(item)){docCache.set(item,features([item.name,item.description].join(' ')));featureCalls++;}
   return docCache.get(item);
  }
+ function unicodeDoc(item){if(!unicodeCache.has(item))unicodeCache.set(item,unicode.features([item.name,item.description].join(' ')));return unicodeCache.get(item);}
  return Object.freeze({rank(query){
   const q=String(query||'').normalize('NFKC').trim(),task=intent(q,model);
   if(!task)return [];
   if(task.fallback)return [...baseline.rank(q,snapshot).keys()];
   if(cache.has(task.id)){hits++;return cache.get(task.id).slice();}
-  const urls=rankedCandidates(snapshot,features,task,docFeatures);
+  const urls=rankedCandidates(snapshot,features,task,docFeatures,unicode,unicodeDoc);
   cache.set(task.id,Object.freeze(urls));computed++;return urls.slice();
  },stats(){return {computed,hits,featureCalls,cachedIntents:cache.size};}});
 }
