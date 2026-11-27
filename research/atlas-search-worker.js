@@ -21,13 +21,13 @@ self.onmessage=e=>{
    const model=typeof m.model==='string'?globalThis.AVENQIR_RESEARCH_CODEC.deserialize(m.model):m.model;
    validModel(model);
    const baseline=embed.create({schema:'aq-domain-embedding-1',bins:model.bins,classes:model.classes.slice(0,28)}),items=loadCatalog(m.items);
-   state={model,baseline,items};
+   state={session:retrieval.createSession(items,model,embed.features,baseline)};
    self.postMessage({type:'ready',id:m.id,epoch,count:items.length});return;
   }
   if(m.type==='clear'){state=null;epoch++;self.postMessage({type:'cleared',id:m.id,epoch});return;}
   if(m.type!=='rank'||!state||m.epoch!==epoch||typeof m.query!=='string')throw Error('STALE_OR_NOT_READY');
   const started=performance.now();
-  const urls=retrieval.candidate(m.query,state.items,state.model,embed.features,state.baseline);
+  const urls=state.session.rank(m.query);
   self.postMessage({type:'result',id:m.id,epoch,urls,elapsedMs:performance.now()-started});
  }catch(e){self.postMessage({type:'error',id:m.id,epoch,code:String(e.message||'WORKER_ERROR').slice(0,80)});}
 };
