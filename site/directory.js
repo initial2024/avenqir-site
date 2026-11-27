@@ -615,7 +615,9 @@
  function mountOptionalRecommendations(){
    localRecommendations=window.AVENQIR_LOCAL_RECOMMEND_UI?.mount({
      items:()=>records,favorites:()=>favorites,open:showExternal,
-     reviewed:url=>!!linkGate?.officialSourceReviewed(url)
+     reviewed:url=>!!linkGate?.officialSourceReviewed(url),
+     allowed:item=>!dangerous(item.url),recent:()=>sessionOpens,
+     priority:item=>(languageRank(item)===0?.25:0)+(linkGate?.officialSourceReviewed(item.url)?.1:0)
    })||null;
    regionRecommendations=window.AVENQIR_ATLAS_REGION_UI?.mount({
      items:()=>records,favorites:()=>favorites,open:showExternal,
