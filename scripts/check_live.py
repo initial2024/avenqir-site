@@ -40,5 +40,11 @@ for attempt in range(3):
         time.sleep(4)
 
 print("HTTP_PROBE_INCONCLUSIVE:", reason)
-print("Verify public browsing separately; FTPS authenticated SHA-256 read-back is checked during deployment.")
+print("Verify public browsing separately; the independent authenticated FTPS receipt is the file-delivery check.")
+summary = os.environ.get("GITHUB_STEP_SUMMARY")
+if summary:
+    with open(summary,"a",encoding="utf-8") as out:
+        out.write("### HTTPS browser-level verification: INCONCLUSIVE\\n")
+        out.write("Reason: "+reason+"\\n")
+        out.write("Public browser execution is **not** certified by this probe. The independent FTPS checksum step separately verifies deployed bytes.\\n")
 sys.exit(2)
