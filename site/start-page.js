@@ -158,10 +158,11 @@
     const terms=Array.from(new Set(query.value.toLowerCase().trim().split(/\s+/).filter(Boolean)));
     const escaped=terms.sort((a,b)=>b.length-a.length).map(term=>term.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
     const pattern=escaped.length?new RegExp(escaped.join('|'),'giu'):null;
-    const totals=new Map();
+    const totals=new Map(),search=window.AVENQIR_ATLAS_SEARCH,prepared=search?.prepare(query.value);
     const matched=cards.filter(card=>{
-      const index=[card.keywords,...categoryNames[card.category],...card.fields.flatMap(field=>[field.zh,field.en])].join(' ').toLowerCase();
-      if(!terms.every(term=>index.includes(term)))return false;
+      const fields=[card.fields[0]?.zh,card.path,categoryNames[card.category].join(' '),[card.keywords,...card.fields.flatMap(field=>[field.zh,field.en])].join(' ')];
+      const index=fields.join(' ').toLowerCase();
+      if(prepared?search.rank(prepared,fields)<0:!terms.every(term=>index.includes(term)))return false;
       totals.set(card.category,(totals.get(card.category)||0)+1);
       return true;
     });
