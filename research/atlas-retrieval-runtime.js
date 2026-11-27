@@ -63,27 +63,50 @@ function compound(q){
  return topicFamilies.filter(p=>p.test(q)).length>1;
 }
 
-function candidate(query,items,model,features,baseline){
- const q=String(query||'').normalize('NFKC').trim();
- if(q.length<3||q.length>512||constraints.test(q)||incompatible.test(q)||compound(q))return [];
- const alias=multilingual.resolve(q);if(alias.blocked)return [];
+function intent(q,model){
+ if(q.length<3||q.length>512||constraints.test(q)||incompatible.test(q)||compound(q))return null;
+ const alias=multilingual.resolve(q);if(alias.blocked)return null;
  const matches=alias.id?rules.filter(([id])=>id===alias.id):rules.filter(([,p])=>p.test(q));
- if(matches.length>1)return []; // unresolved conjunction: do not broaden to an OR.
- if(!matches.length)return [...baseline.rank(q,items).keys()];
+ if(matches.length>1)return null;
+ if(!matches.length)return {fallback:true};
  const [id,,guard]=matches[0];
- const scores=classify(model,features,q);
- const fine=scores.find(x=>x.id===id);
- if(!fine)return []; // explicit task rule + document evidence may recover low model-score queries; model ranks grounded candidates.
- const weights=new Map(model.classes.find(x=>x[0]===id)[1]);
- const ranked=new Map();
+ const row=model.classes.find(x=>x[0]===id);
+ return row?{id,guard,weights:row[1]}:null;
+}
+function rankedCandidates(items,features,task,docFeatures){
+ const weights=new Map(task.weights),ranked=new Map();
  for(const item of items){
-  if(!item?.url||!guard.test([item.name,item.description].join(' ')))continue;
-  let score=0;for(const [k,v] of features([item.name,item.description].join(' ')))score+=v*(weights.get(k)||0)/4096;
+  if(!item?.url||!task.guard.test([item.name,item.description].join(' ')))continue;
+  let score=0;for(const [k,v] of docFeatures(item))score+=v*(weights.get(k)||0)/4096;
   ranked.set(item.url,Math.max(score,ranked.get(item.url)||0));
  }
  return [...ranked].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).slice(0,12).map(x=>x[0]);
 }
+function candidate(query,items,model,features,baseline){
+ const q=String(query||'').normalize('NFKC').trim(),task=intent(q,model);
+ if(!task)return [];
+ if(task.fallback)return [...baseline.rank(q,items).keys()];
+ return rankedCandidates(items,features,task,item=>features([item.name,item.description].join(' ')));
+}
+// A worker owns an immutable snapshot. Exact task rankings depend only on the
+// verified model and catalog, not on query spelling. Cache only those rankings.
+function createSession(items,model,features,baseline){
+ const snapshot=items.map(x=>Object.freeze({...x})),cache=new Map(),docCache=new WeakMap();
+ let computed=0,hits=0,featureCalls=0;
+ function docFeatures(item){
+  if(!docCache.has(item)){docCache.set(item,features([item.name,item.description].join(' ')));featureCalls++;}
+  return docCache.get(item);
+ }
+ return Object.freeze({rank(query){
+  const q=String(query||'').normalize('NFKC').trim(),task=intent(q,model);
+  if(!task)return [];
+  if(task.fallback)return [...baseline.rank(q,snapshot).keys()];
+  if(cache.has(task.id)){hits++;return cache.get(task.id).slice();}
+  const urls=rankedCandidates(snapshot,features,task,docFeatures);
+  cache.set(task.id,Object.freeze(urls));computed++;return urls.slice();
+ },stats(){return {computed,hits,featureCalls,cachedIntents:cache.size};}});
+}
 
-const api=Object.freeze({candidate,classify,compound});
+const api=Object.freeze({candidate,classify,compound,createSession});
 if(typeof module==="object"&&module.exports)module.exports=api;else root.AVENQIR_RESEARCH_RETRIEVAL=api;
 })(typeof self!=="undefined"?self:globalThis);
