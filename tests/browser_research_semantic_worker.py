@@ -51,7 +51,7 @@ async function verified(p){
  yes(!errors.length&&results[2].urls.length===0,'constraint leak');
  client.query('合并PDF文件');
  await wait(()=>results.length===4||errors.length);
- yes(!errors.length&&results[3].urls.length===0,'ungrounded intent');
+ yes(!errors.length&&results[3].urls.some(u=>/Adobe Acrobat PDF 合并/i.test(byURL.get(u))),'grounded PDF merge missing');
  client.close();
  // Corrupted bytes must not initialize a worker, even when bypassing page verification.
  const broken=new Worker('/research/atlas-search-worker.js');
