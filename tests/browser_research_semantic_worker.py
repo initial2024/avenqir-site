@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Real Chromium research worker test; localhost only, no production deployment."""
 import hashlib
+import gzip
 import http.server
 import json
 import pathlib
@@ -15,10 +16,13 @@ CHROME = shutil.which('google-chrome') or shutil.which('chromium')
 assert CHROME
 SCRIPTS = ['atlas-paths','atlas-expansion','atlas-specialist','atlas-depth-a','atlas-depth-b','atlas-depth-c','atlas-depth-d','atlas-ai','atlas-regional','atlas-everyday','atlas-regional-ext','atlas-everyday-ext','atlas-popular-links','atlas-catalog-core']
 MODEL = '/research/atlas-model-v2.packed.json'
-digests = {p: hashlib.sha256((ROOT / p.lstrip('/')).read_bytes()).hexdigest() for p in [MODEL]}
+FULL = '/research/atlas-semantic-bundle-v2.json'
+FULL_RAW=(ROOT/FULL.lstrip('/')).read_bytes()
+FULL_GZIP=gzip.compress(FULL_RAW,mtime=0)
+digests = {p: hashlib.sha256((ROOT / p.lstrip('/')).read_bytes()).hexdigest() for p in [MODEL,FULL]}
 requests = []
-lengths = {p: (ROOT / p.lstrip('/')).stat().st_size for p in [MODEL]}
-HTML = '<!doctype html><title>Research worker QA</title>' + ''.join('<script src="/site/'+s+'.js"></script>' for s in SCRIPTS) + '<script src="/research/atlas-worker-client.js"></script><script src="/research/atlas-candidate-loader.js"></script><script src="/research/atlas-worker-activation.js"></script><script>const hashes=' + json.dumps(digests) + ';const sizes=' + json.dumps(lengths) + ';' + """
+lengths = {p: (ROOT / p.lstrip('/')).stat().st_size for p in [MODEL,FULL]}
+HTML = '<!doctype html><title>Research worker QA</title>' + ''.join('<script src="/site/'+s+'.js"></script>' for s in SCRIPTS) + '<script src="/research/atlas-multilingual-intents.js"></script><script src="/research/atlas-worker-client.js"></script><script src="/research/atlas-candidate-loader.js"></script><script src="/research/atlas-worker-activation.js"></script><script>const hashes=' + json.dumps(digests) + ';const sizes=' + json.dumps(lengths) + ';' + """
 const yes=(v,m)=>{if(!v)throw Error(m);};
 const wait=async f=>{for(let i=0;i<350;i++){if(f())return;await new Promise(r=>setTimeout(r,30));}throw Error('timeout');};
 async function verified(p){
@@ -29,7 +33,7 @@ async function verified(p){
  return new TextDecoder('utf-8',{fatal:true}).decode(bytes);
 }
 (async()=>{
- const [packed]=await Promise.all(Object.keys(hashes).map(verified));
+ const packed=await verified(Object.keys(hashes)[0]);
  const items=AVENQIR_ATLAS_CATALOG.catalog();
  yes(items.length>=1338,'missing catalog');
  const byURL=new Map(items.map(x=>[x.url,x.name]));
@@ -63,7 +67,7 @@ async function verified(p){
  yes(rejected[0]!=='unexpected_result','corrupt payload accepted');
  c2.close();
 
- const specs=Object.keys(hashes).map(file=>({file,bytes:sizes[file],sha256:hashes[file]}));
+ const specs=[Object.keys(hashes)[0]].map(file=>({file,bytes:sizes[file],sha256:hashes[file]}));
  const loader=AVENQIR_RESEARCH_LOADER.create(specs);
  let activations=0,closes=0,progress=[],current=null;
  const activate=async(values,signal)=>{
@@ -128,6 +132,37 @@ async function verified(p){
  yes(current.hits[3].urls.length===0,'Arabic request constraint leak');
  await limited.remove().catch(()=>{});
  yes(!limited.active(),'session fallback removal');
+
+ // Exercise the full production bundle over real gzip HTTP transfer.
+ const fullPath=Object.keys(hashes)[1];
+ const fullLoader=AVENQIR_RESEARCH_LOADER.create([{file:fullPath,bytes:sizes[fullPath],sha256:hashes[fullPath]}]);
+ let workerSession=null,resolveRank=null;
+ const progressFull=[],start=performance.now();
+ const fullState=await fullLoader.load({consent:true,onProgress:p=>progressFull.push(p.bytes),activate:async(values,signal)=>{
+   workerSession=await AVENQIR_RESEARCH_ACTIVATION.activate({values,items,signal,workerURL:'/research/atlas-search-worker.js',onResult:(urls,q,ms)=>resolveRank?.({urls,q,ms}),onError:code=>{errors.push(code);resolveRank?.(null);}});
+   return workerSession;
+ }});
+ const initMs=performance.now()-start;
+ yes(fullState.state==='ready'&&fullState.bytes===sizes[fullPath]&&progressFull.at(-1)===sizes[fullPath],'gzip decoded progress mismatch');
+ const entry=performance.getEntriesByName(new URL(fullPath,location.href).href).at(-1);
+ yes(entry&&entry.encodedBodySize>0&&entry.encodedBodySize<entry.decodedBodySize&&entry.decodedBodySize===sizes[fullPath],'real gzip transfer not observed');
+ const queries=AVENQIR_RESEARCH_MULTILINGUAL.rows[0].slice(1);
+ async function rank(q){
+  const started=performance.now();
+  const r=await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('benchmark rank timeout')),4000);resolveRank=x=>{clearTimeout(timer);resolveRank=null;resolve(x);};workerSession.query(q);});
+  yes(r&&r.q===q&&r.urls.length>0,'benchmark missing '+q);
+  return {urls:r.urls,worker:r.ms,wall:performance.now()-started};
+ }
+ const cold=[],warm=[];
+ for(const q of queries)cold.push(await rank(q));
+ for(let i=0;i<queries.length;i++){const r=await rank(queries[i]);yes(JSON.stringify(r.urls)===JSON.stringify(cold[i].urls),'cache parity');warm.push(r);}
+ const sorted=(arr,k)=>arr.map(x=>x[k]).sort((a,b)=>a-b);
+ const quantile=(arr,p)=>arr[Math.ceil(arr.length*p)-1];
+ const metrics={catalog:items.length,queries:queries.length,initMs,encodedBytes:entry.encodedBodySize,decodedBytes:entry.decodedBodySize,coldWorkerP95:quantile(sorted(cold,'worker'),.95),warmWorkerP95:quantile(sorted(warm,'worker'),.95),coldWallP95:quantile(sorted(cold,'wall'),.95),warmWallP95:quantile(sorted(warm,'wall'),.95)};
+ yes(metrics.queries===36&&metrics.coldWallP95<2000&&metrics.warmWallP95<2000,'query latency budget exceeded');
+ await fullLoader.remove();
+ yes(!await caches.has(AVENQIR_RESEARCH_LOADER.CACHE),'full model cache retained');
+ document.documentElement.dataset.metrics=JSON.stringify(metrics);
  document.documentElement.dataset.result='pass';
 })().catch(e=>{document.documentElement.dataset.result='fail';document.documentElement.dataset.error=e.message;});
 </script>"""
@@ -137,6 +172,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         p=urlsplit(self.path).path
         requests.append(p)
+        if p==FULL:
+            self.send_response(200);self.send_header('Content-Type','application/json');self.send_header('Content-Encoding','gzip');self.send_header('Content-Length',str(len(FULL_GZIP)));self.end_headers();self.wfile.write(FULL_GZIP);return
         if p=='/qa.html':
             data=HTML.encode();self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.send_header('Content-Length',str(len(data)));self.end_headers();self.wfile.write(data);return
         if not ((p.startswith('/site/') or p.startswith('/research/')) and p.endswith(('.js','.json')) and '..' not in p):
@@ -147,6 +184,7 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
     with tempfile.TemporaryDirectory() as profile:
         subprocess.run(['node',str(ROOT/'tests'/'chrome_real_time.cjs'),CHROME,profile,f'http://127.0.0.1:{server.server_port}/qa.html'],timeout=75,check=True)
     assert requests.count(MODEL)==4,requests
+    assert requests.count(FULL)==1,requests
     assert '/site/atlas-semantic-model-v1.json' not in requests,requests
-    print('PASS real Chromium packed model digest, worker, stale query rejection, Korean and Arabic retrieval, constraint and ungrounded abstention, corrupt payload rejection, fresh single-model install, real worker activation, cancellation and retry, verified cache restore and deletion, MIME/404/truncated/network rejection, bounded non-stream fallback and session-only storage denial, localized broad topics and polite request constraints')
+    print('PASS real Chromium packed model digest, worker, stale query rejection, Korean and Arabic retrieval, constraint and ungrounded abstention, corrupt payload rejection, fresh single-model install, real worker activation, cancellation and retry, verified cache restore and deletion, MIME/404/truncated/network rejection, bounded non-stream fallback and session-only storage denial, localized broad topics and polite request constraints, full gzip model transfer and 36 cold/warm worker queries')
     server.shutdown()
