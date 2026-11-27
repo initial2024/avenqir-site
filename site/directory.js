@@ -86,6 +86,7 @@
    if(item)localRecommendations?.recordOpen(item.category);
    sessionOpens=[url,...sessionOpens.filter(x=>x!==url)].slice(0,100);
    try{sessionStorage.setItem(recentKey,JSON.stringify(sessionOpens));}catch{}
+   sourceUI?.noteVisit(url);
    window.dispatchEvent(new CustomEvent('aq:website-open',{detail:url}));
  }
  try{const v=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(v))favorites=v.filter(x=>typeof x==='string').slice(0,500)}catch{}

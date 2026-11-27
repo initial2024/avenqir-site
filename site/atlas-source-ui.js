@@ -74,6 +74,8 @@
     }).finally(()=>{statsRequest=null;});
     return statsRequest;
   }
+  function itemForURL(url){return urlIndex.get(gate?.sanitize(url)?.href)||null;}
+  function noteVisit(url){const item=itemForURL(url);if(item&&!gate.urlRisk(url).blocked&&safety?.threatStatus(url)!=='listed')window.dispatchEvent(new CustomEvent('aq:rating-visit',{detail:item.id}));}
   function metric(url){const item=urlIndex.get(gate?.sanitize(url)?.href);return item&&metrics&&Object.hasOwn(metrics,item.id)?metrics[item.id]:null;}
   function average(url){return window.AVENQIR_RECOMMENDATIONS?.publicAverage(metric(url))||0;}
   function recommendation(url){return window.AVENQIR_RECOMMENDATIONS?.displayScore(metric(url),false)??-1;}
@@ -114,7 +116,7 @@
     });
     return link;
   }
-  window.AVENQIR_ATLAS_SOURCE_UI=Object.freeze({badge,external,label,ratingLink,catalog,refreshRatings,metric,average,recommendation,ratingsAvailable:()=>metrics!==null});
+  window.AVENQIR_ATLAS_SOURCE_UI=Object.freeze({badge,external,label,ratingLink,catalog,refreshRatings,itemForURL,noteVisit,metric,average,recommendation,ratingsAvailable:()=>metrics!==null});
   notice();
   window.addEventListener('aq:language-change',notice);
 })();

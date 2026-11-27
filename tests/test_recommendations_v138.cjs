@@ -25,3 +25,10 @@ assert.ok(rec.includes("dialog.showModal()")&&rec.includes("publicVote.checked")
 assert.ok(dir.includes("sourceUI?.average(x.url)")&&dir.includes("sourceUI?.recommendation(x.url)"));
 assert.ok(!rec.includes("write(SHARE,'1');\n        await post"));
 console.log('v139 inline rating and directory ranking contracts PASS');
+
+assert.equal(m.returnPrompt({id:'r1',at:1000,departed:true},9000),true);
+assert.equal(m.returnPrompt({id:'r1',at:1000,departed:false},9000),false);
+assert.equal(m.returnPrompt({id:'r1',at:1000,departed:true},8999),false);
+assert.equal(m.returnPrompt({id:'r1',at:1000,departed:true},1801001),false);
+assert.equal(m.returnPrompt({id:'https://private.example',at:1000,departed:true},9000),false);
+console.log('PASS return-rating session age and departure gates');

@@ -121,6 +121,14 @@ const require=(condition,reason)=>{if(!condition)throw Error(reason);};
  d.getElementById('atlasSort').value='rating';
  d.getElementById('atlasSort').dispatchEvent(new directory.Event('change'));
  await waitFor(()=>d.querySelector('#atlasResults .atlas-result-title')?.textContent.includes('GitHub'));
+ directory.sessionStorage.setItem('avenqir.rating.return.v1',JSON.stringify({id:'r1',at:Date.now()-9000,departed:true}));
+ directory.dispatchEvent(new directory.Event('focus'));
+ await waitFor(()=>d.querySelector('.aq-return-rating'));
+ require(d.querySelector('.aq-return-rating').textContent.includes('GitHub'),'return reminder must target the exact public item');
+ d.querySelector('.aq-return-rating button').click();
+ require(d.querySelector('.aq-quick-rating[open]')&&directory.location.href===beforeRatingURL,'return reminder should open inline rating');
+ d.querySelector('.aq-quick-rating').close();
+ require(!directory.sessionStorage.getItem('avenqir.rating.return.v1'),'reminder must be consumed');
  d.getElementById('atlasSort').value='relevance';
  d.getElementById('atlasSort').dispatchEvent(new directory.Event('change'));
 

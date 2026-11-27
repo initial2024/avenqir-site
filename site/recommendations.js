@@ -113,6 +113,7 @@
     anchor.href=href;
     anchor.rel='noopener noreferrer';
     anchor.referrerPolicy='no-referrer';
+    if(item.kind==='website'&&!href.startsWith('leave.html'))anchor.addEventListener('click',event=>{if(event.button===0&&!event.ctrlKey&&!event.metaKey&&!event.shiftKey&&!event.altKey&&destination(item))sourceUI.noteVisit(item.url);});
     return anchor;
   }
   function loadCatalog(){
@@ -283,8 +284,56 @@
   window.addEventListener('aq:quick-rating',event=>{
     if(openQuickRating(event.detail?.item,event.detail?.trigger))event.preventDefault();
   });
+  // One pending public catalog ID in this tab only, never sent to a server.
+  const RETURN_KEY='avenqir.rating.return.v1', RETURN_OFF='avenqir.rating.return.disabled.v1';
+  let reminder=null,returnCheckRunning=false;
+  function getReturn(){try{return JSON.parse(sessionStorage.getItem(RETURN_KEY)||'null');}catch{return null;}}
+  function setReturn(value){try{if(value)sessionStorage.setItem(RETURN_KEY,JSON.stringify(value));else sessionStorage.removeItem(RETURN_KEY);}catch{}}
+  function dismissReturn(){setReturn(null);reminder?.remove();reminder=null;}
+  window.addEventListener('aq:rating-visit',event=>{
+    const id=event.detail;
+    if(read(RETURN_OFF)==='1'||!/^[a-zA-Z0-9-]{1,40}$/.test(id)||getLocal().ratings[id])return;
+    dismissReturn();
+    setReturn({id,at:Date.now(),departed:false});
+  });
+  function markDeparture(){const record=getReturn();if(record&&!record.departed)setReturn({...record,departed:true});}
+  async function checkReturn(){
+    if(returnCheckRunning||document.visibilityState!=='visible'||reminder||read(RETURN_OFF)==='1')return;
+    const record=getReturn();
+    if(!record)return;
+    if(Date.now()-record.at>1800000||getLocal().ratings[record.id]){dismissReturn();return;}
+    if(!model.returnPrompt(record)||document.querySelector('dialog[open]'))return;
+    returnCheckRunning=true;
+    try{
+      const item=(await loadCatalog()).get(record.id);
+      if(!item||item.kind!=='website'||!destination(item)){dismissReturn();return;}
+      if(document.visibilityState!=='visible'||document.querySelector('dialog[open]')||getReturn()?.id!==record.id)return;
+      // Consume before presenting; dismissal or navigating away never repeats it.
+      setReturn(null);
+      const box=element('aside');box.className='aq-return-rating';box.setAttribute('aria-label',t('访问后评价','Rate after opening'));
+      box.append(element('strong',t('刚才打开了 '+name(item)+'，好用吗？','How was '+name(item)+'?')));
+      const controls=element('div');controls.className='aq-return-actions';
+      const rateButton=element('button',t('快速评价','Quick rating'));rateButton.type='button';
+      const later=element('button',t('暂不','Not now'));later.type='button';
+      const off=element('button',t('不再提醒','Don’t remind me'));off.type='button';
+      rateButton.addEventListener('click',()=>{if(openQuickRating(item,rateButton)){box.remove();reminder=null;}});
+      later.addEventListener('click',dismissReturn);
+      off.addEventListener('click',()=>{write(RETURN_OFF,'1');dismissReturn();});
+      controls.append(rateButton,later,off);box.append(controls);document.body.append(box);reminder=box;
+    }finally{returnCheckRunning=false;}
+  }
+  window.addEventListener('pagehide',markDeparture);
+  window.addEventListener('pageshow',checkReturn);
+  window.addEventListener('focus',checkReturn);
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')markDeparture();else checkReturn();});
+  document.getElementById('aqRatingReminder')?.addEventListener('change',event=>{
+    if(event.target.checked)remove(RETURN_OFF);else{write(RETURN_OFF,'1');dismissReturn();}
+  });
+  const reminderSetting=document.getElementById('aqRatingReminder');
+  if(reminderSetting)reminderSetting.checked=read(RETURN_OFF)!=='1';
+  checkReturn();
   // Anonymous read-only aggregates; no visitor token, search or history included.
-  if(!full)sourceUI.refreshRatings();
+  if(!full&&!document.getElementById('aqRatingReminder'))sourceUI.refreshRatings();
   function makeCard(item,localView,localData){
     const article=element('article');
     article.dataset.recTool=item.id;
