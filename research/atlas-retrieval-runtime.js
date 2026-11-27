@@ -1,6 +1,10 @@
 "use strict";
 (function(root){
 const multilingual=typeof module==='object'&&module.exports?require('./atlas-multilingual-intents.js'):root.AVENQIR_RESEARCH_MULTILINGUAL;
+const topics=typeof module==='object'&&module.exports?require('./atlas-multilingual-topics.js'):root.AVENQIR_RESEARCH_TOPICS;
+const evidence={
+ pdf:/\bpdf\b/i,image:/图片|图像|照片|photo|image editor|写真/i,slides:/幻灯片模板|演示模板|演示文稿|powerpoint|slidesgo|slidescarnival/i,papers:/论文|文献|学术搜索|scholarly|academic search|pubmed/i,courses:/课程|公开课|教育|教学|course|lessons|tutorial/i,ai:/人工智能|大模型|AI交流|智能助手|chatbot|language model|AI官网/i,translate:/翻译|词典|字典|translate|dictionary|翻訳/i,code:/编程|代码|开发|developer|programming|documentation/i,deploy:/网站.{0,10}(?:部署|托管)|运维|容器|hosting|deployment|kubernetes/i,ip:/公网.{0,10}(?:ip|出口)|ip\s*(?:信息|查询|地址|归属|lookup|address)|(?:查询|查看)\s*ip|网络属性|ipinfo|ip\.sb|ip\.fs\.kg/i,speed:/测速|测网速|延迟|吞吐|speedtest|speed test|fast\.com/i,dns:/域名解析|dns|whois|域名登记/i,security:/风险检测|钓鱼|恶意|证书|phishing|malware|ssl/i,privacy:/隐私|指纹|webrtc|泄漏|privacy|fingerprint/i,maps:/地图|地理|卫星|街景|map|satellite/i,travel:/旅行|交通|航班|火车|旅游|travel|transit|flight/i,assets:/素材|插画|字体|图标|stock image|illustration|font|icon/i,music:/音乐|音频|播客|music|audio|podcast/i,video:/视频|电影|影片|video|film/i,play:/游戏|休闲|解压|game|puzzle/i,data:/数据集|统计|数据库|数据可视化|dataset|statistics|database/i,science:/科学|科研|材料|化学|物理|工程|science|engineering/i,time:/时间|时钟|时区|日期|日历|计时|timezone|clock|calendar|timer/i,finance:/金融|经济|汇率|货币|财经|finance|economics|currency/i,books:/图书|电子书|书籍|阅读|library|ebook|books/i,news:/新闻|时事|报道|news|journalism/i,files:/文件格式|文件转换|压缩包|解压|file converter|archive|json/i,health:/健康|医学|公共卫生|医疗|health|medical/i
+};
 function classify(model,features,text){
  const f=features(text);return model.classes.map(([id,weights])=>{let score=0;for(const [k,w] of weights)score+=(f.get(k)||0)*w/4096;return {id,score};}).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id));
 }
@@ -66,6 +70,8 @@ function compound(q){
 function intent(q,model){
  if(q.length<3||q.length>512||constraints.test(q)||incompatible.test(q)||compound(q))return null;
  const alias=multilingual.resolve(q);if(alias.blocked)return null;
+ const broad=!alias.id&&topics.resolve(q);
+ if(broad){const row=model.classes.find(x=>x[0]===broad);return row&&evidence[broad]?{id:broad,guard:evidence[broad],weights:row[1]}:null;}
  const matches=alias.id?rules.filter(([id])=>id===alias.id):rules.filter(([,p])=>p.test(q));
  if(matches.length>1)return null;
  if(!matches.length)return {fallback:true};
