@@ -58,8 +58,7 @@
     // Finalization is atomic with respect to cancellation; no cancellation after commit starts.
     clearTimeout(deadline);controller=null;
     active?.close();active=candidate;
-    // A complete verified set is needed for offline restore. If writing fails,
-    // discard this candidate cache, never the old production cache.
+    // Only the candidate cache participates in restore; no legacy model is needed.
     if(!restore&&cache){try{for(const x of staged)await cache.put(x.s.url,new Response(x.bytes,{headers:{'Content-Type':'application/json'}}));persisted=true;}catch{try{await env.caches.delete(CACHE);}catch{}}}
     else persisted=restore;
     return {state:'ready',persisted,bytes:downloaded};
