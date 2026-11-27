@@ -60,6 +60,17 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  yes(!w.localStorage.getItem('avenqir.semantic.preference.v2')||w.localStorage.getItem('avenqir.semantic.preference.v2')==='declined','corrupt model enabled');
  const failedCache=await w.caches.open('avenqir-semantic-model-v2-candidate');
  yes(!await failedCache.match(modelURL()),'corrupt model saved');
+
+ // Real HTTP responses, not synthetic fetch replacement: hosting challenge and temporary outage.
+ for(const [endpoint,code] of [['/fixture-html','mime'],['/fixture-unavailable','http']]){
+  await fetch(endpoint);
+  $('atlasSemanticDownload').click();
+  await wait(()=>panel().dataset.state==='error');
+  yes($('atlasSemanticStatus').textContent.includes('['+code+']'),'missing real HTTP failure diagnostic '+code);
+  yes(!await failedCache.match(modelURL()),'unverified host response cached');
+  query('GitHub');
+  yes([...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>a.textContent.includes('GitHub')),'ordinary search failed during outage');
+ }
  await fetch('/fixture-valid');
  let intermediate=false;
  const obs=new w.MutationObserver(()=>{const v=$('atlasSemanticProgress').value;const txt=$('atlasSemanticDetail').textContent;if(v>0&&v<w.AVENQIR_RESEARCH_MANIFEST.bytes&&txt.includes('/s'))intermediate=true;});
@@ -104,11 +115,14 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         p=urlsplit(self.path).path
         if p=='/qa.html':data=FIXTURE.encode();kind='text/html; charset=utf-8'
         elif p=='/fixture-valid':mode='valid';data=b'ok';kind='text/plain'
+        elif p=='/fixture-html':mode='html';data=b'ok';kind='text/plain'
+        elif p=='/fixture-unavailable':mode='unavailable';data=b'ok';kind='text/plain'
         elif p=='/fixture-block':mode='block';data=b'ok';kind='text/plain'
         elif p==MODEL_PATH:
             requests.append((mode,self.path))
-            if mode=='block':self.send_error(503);return
-            data=MODEL if mode=='valid' else b'X'+MODEL[1:];kind='application/octet-stream' if mode=='valid' else 'application/json'
+            if mode in ('block','unavailable'):self.send_error(503);return
+            if mode=='html':data=b'<!doctype html><html><body>Host verification required</body></html>';kind='text/html'
+            else:data=MODEL if mode=='valid' else b'X'+MODEL[1:];kind='application/octet-stream' if mode=='valid' else 'application/json'
         elif p=='/directory.html':data=DIRECTORY.encode();kind='text/html; charset=utf-8'
         elif p=='/directory.js':data=DIRECTORY_JS.encode();kind='application/javascript; charset=utf-8'
         elif not PACKAGED and (p.startswith('/research/') or p.startswith('/site/')):
@@ -131,5 +145,6 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
         subprocess.run(['node',str(ROOT/'tests'/'chrome_real_time.cjs'),CHROME,profile,f'http://127.0.0.1:{server.server_port}/qa.html'],timeout=75,check=True)
     assert len([x for x in requests if x[0]=='valid'])==1,requests
     assert not any(x[0]=='block' or '?' in x[1] for x in requests),requests
-    print('PACKAGED' if PACKAGED else 'RESEARCH', 'PASS real 390x844 candidate directory, full bundle consent, cancel/retry, integrity, progress, Korean result, locale switch, reload and deletion')
+    assert sum(x[0]=='html' for x in requests)==1 and sum(x[0]=='unavailable' for x in requests)==1,requests
+    print('PACKAGED' if PACKAGED else 'RESEARCH', 'PASS real 390x844 candidate directory, full bundle consent, cancel/retry, integrity, progress, Korean result, locale switch, real HTTP HTML/503 failure and retry, reload and deletion')
     server.shutdown()
