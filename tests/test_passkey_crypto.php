@@ -27,7 +27,10 @@ denied(fn()=>aq_pk_assertion(array_replace($in,['authenticatorData'=>aq_pk_encod
 // fmt:none CBOR attestation with a valid P-256 COSE key, UV and UP set.
 function bs(string $s):string{$n=strlen($s);return ($n<24?chr(0x40+$n):($n<256?"\x58".chr($n):"\x59".pack('n',$n))).$s;}
 function ts(string $s):string{return chr(0x60+strlen($s)).$s;}
-$cose="\xa5\x01\x02\x03\x26\x20\x01\x21".bs($details['ec']['x'])."\x22".bs($details['ec']['y']);
+// OpenSSL may omit a leading zero octet; COSE P-256 requires exactly 32 bytes.
+$x=str_pad($details['ec']['x'],32,"\0",STR_PAD_LEFT);$y=str_pad($details['ec']['y'],32,"\0",STR_PAD_LEFT);
+yes(strlen($x)===32&&strlen($y)===32);
+$cose="\xa5\x01\x02\x03\x26\x20\x01\x21".bs($x)."\x22".bs($y);
 $ad=hash('sha256',AQ_PK_RP,true).chr(0x45).pack('N',0).str_repeat("\0",16).pack('n',strlen($id)).$id.$cose;
 $att="\xa3".ts('fmt').ts('none').ts('attStmt')."\xa0".ts('authData').bs($ad);
 $create=['id'=>aq_pk_encode($id),'clientDataJSON'=>aq_pk_encode($client('webauthn.create')),'attestationObject'=>aq_pk_encode($att)];

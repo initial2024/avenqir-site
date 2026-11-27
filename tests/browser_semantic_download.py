@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Actual mobile-size Chromium: isolated model download, corrupt payload, consent and local cache."""
-import http.server, pathlib, re, shutil, subprocess, tempfile, threading
+import http.server, pathlib, shutil, subprocess, tempfile, threading, time
 from urllib.parse import urlsplit
 SITE=pathlib.Path(__file__).resolve().parents[1]/'site'
 CHROME=shutil.which('google-chrome') or shutil.which('chromium')
@@ -20,7 +20,7 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  yes(panel().hidden,'fresh page should not interrupt');
  query('githbu');
  yes(!panel().hidden,'first search must offer download');
- yes(w.document.querySelector('#atlasResults .atlas-result-title')?.textContent.includes('GitHub'),'typo result must work without model');
+ yes([...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>a.textContent.includes('GitHub')),'typo result must work without model');
  yes($('atlasSemanticSize').textContent.includes('34.1 KiB'),'actual pinned size not shown');
  yes(w.performance.getEntriesByName(modelURL()).length===0,'download before consent');
  $('atlasSemanticLater').click();
@@ -36,8 +36,12 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  const failedCache=await w.caches.open('avenqir-semantic-model-v1');
  yes(!await failedCache.match(modelURL()),'corrupt model saved');
  await fetch('/fixture-valid');
+ let intermediate=false;
+ const obs=new w.MutationObserver(()=>{const v=$('atlasSemanticProgress').value;const txt=$('atlasSemanticDetail').textContent;if(v>0&&v<w.AVENQIR_DOMAIN_EMBEDDING.SPEC.bytes&&txt.includes('/s'))intermediate=true;});
+ obs.observe($('atlasSemanticDetail'),{childList:true,subtree:true,characterData:true});
  $('atlasSemanticDownload').click();
- await wait(()=>panel().dataset.state==='ready');
+ await wait(()=>panel().dataset.state==='ready');obs.disconnect();
+ yes(intermediate,'actual partial-byte progress and speed were not observed');
  yes($('atlasSemanticProgress').value===w.AVENQIR_DOMAIN_EMBEDDING.SPEC.bytes,'complete byte progress missing');
  yes($('atlasSemanticDetail').textContent.includes('100%'),'100% not shown');
  yes(w.localStorage.getItem('avenqir.semantic.preference.v1')==='enabled','consent not saved');
@@ -48,8 +52,8 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  yes((await cache.match(modelURL()))?.ok,'verified model cache missing');
  // Reload without network model access: cached bytes must be sufficient.
  await fetch('/fixture-block');
- w.location.reload();
- await wait(()=>w.document.getElementById('atlasSemanticPanel')?.dataset.state==='ready');
+ const prior=w.document;w.location.reload();
+ await wait(()=>w.document!==prior&&w.document.getElementById('atlasSemanticPanel')?.dataset.state==='ready');
  yes(w.document.querySelector('#atlasResults .atlas-semantic-match'),'cache restore did not restore ranking');
  w.confirm=()=>true;
  $('atlasSemanticOpen').click();$('atlasSemanticRemove').click();
@@ -77,14 +81,15 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         elif p.endswith('.php'):self.send_error(404);return
         else:super().do_GET();return
         try:
-            self.send_response(200);self.send_header('Content-Type',kind);self.send_header('Content-Length',str(len(data)));self.end_headers();self.wfile.write(data)
+            self.send_response(200);self.send_header('Content-Type',kind);self.send_header('Content-Length',str(len(data)));self.end_headers()
+            if p=='/atlas-semantic-model-v1.json' and mode=='valid':
+                self.wfile.write(data[:1024]);self.wfile.flush();time.sleep(.25);self.wfile.write(data[1024:])
+            else:self.wfile.write(data)
         except (BrokenPipeError,ConnectionResetError):pass
 with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
     threading.Thread(target=server.serve_forever,daemon=True).start()
     with tempfile.TemporaryDirectory() as profile:
-        result=subprocess.run([CHROME,'--headless','--no-sandbox','--disable-dev-shm-usage','--disable-background-networking','--disable-gpu','--no-first-run','--user-data-dir='+profile,'--virtual-time-budget=30000','--dump-dom',f'http://127.0.0.1:{server.server_port}/qa.html'],capture_output=True,text=True,timeout=75,check=True)
-    state=re.search(r'<html[^>]+>',result.stdout)
-    assert 'data-result="pass"' in result.stdout,state[0] if state else 'No test page'
+        subprocess.run(['node',str(SITE.parent/'tests'/'chrome_real_time.cjs'),CHROME,profile,f'http://127.0.0.1:{server.server_port}/qa.html'],timeout=75,check=True)
     assert len([x for x in requests if x[0]=='valid'])==1,requests
     assert not any(x[0]=='block' or '?' in x[1] for x in requests),requests
     print('PASS real 390x844 Chrome model consent, cancel, corrupt rejection, exact byte progress, semantic results, reload cache and deletion')
