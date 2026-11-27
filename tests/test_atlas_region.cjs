@@ -26,7 +26,7 @@ assert.equal(everyday.links.length,60);
 assert.equal(regionalExt.links.length,140);
 assert.equal(everydayExt.links.length,112);
 assert.equal(ai.links.length,62);
-assert.equal(merged.length,1240+popularLinks.links.length,'combined catalog must include all new resource sources');
+assert.equal(merged.length,1244+popularLinks.links.length,'combined catalog must include all new resource sources');
 const actual=new Map();
 for(const item of merged){
   if(!item.region)continue;
