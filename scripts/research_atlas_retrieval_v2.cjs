@@ -61,7 +61,7 @@ console.log(JSON.stringify(report,null,2));
 for(const q of negative.filter(q=>/(?:不要|排除|免费|無廣告|免費|无广告|离线|不上传|免注册|without|offline|no ads|no registration|広告なし|sin registro|sans connexion|ohne Anmeldung|local-only)/i.test(q)))assert.equal(candidate(q,catalog,model,runtime.features,baseline).length,0,q);
 assert.equal(candidate("create qr code",[],model,runtime.features,baseline).length,0);
 
-const multilingual=[
+const multilingualStress=[
   [
     "PDF をオンラインで閲覧する",
     "PDF\\.js",
@@ -409,7 +409,7 @@ const padded=positive.flatMap(([q,re])=>[[`请问${q}`,re],[`我想${q}，有什
 const generated=positive.flatMap(([q])=>constraintSuffixes.map(s=>q+s));
 function evaluateStress(catalog,model,features,baseline){
  const by=new Map(catalog.map(x=>[x.url,x.name]));
- const positives=positive.concat(multilingual,padded);
+ const positives=positive.concat(multilingualStress,padded);
  const negatives=[...new Set(negative.concat(difficultNegatives,generated))];
  const report={positive:positives.length,negative:negatives.length,generatedConstraint:generated.length,top1:0,top5:0,negativeHits:0,misses:[],negativeLeaks:[]};
  for(const [q,re] of positives){const n=candidate(q,catalog,model,features,baseline).map(u=>by.get(u));report.top1+=Number(re.test(n[0]||''));report.top5+=Number(n.slice(0,5).some(x=>re.test(x)));if(!n.slice(0,5).some(x=>re.test(x)))report.misses.push(q);}
