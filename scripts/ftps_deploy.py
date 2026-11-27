@@ -54,13 +54,18 @@ def retrieve(ftp, name):
 def sha(data):
     return hashlib.sha256(data).hexdigest()
 
-def upload(ftp, file, commit, target_root, root=SITE):
+def upload(ftp, file, commit, target_root, root=SITE, listing_cache=None):
     rel=file.relative_to(root).as_posix()
     parent=rel.rsplit('/',1)[0] if '/' in rel else ''
     safe_mkdir(ftp,parent,target_root)
     name=file.name
     new=file.read_bytes()
-    current=remote_names(ftp)
+    # Cached positive names are only a read-only hint, never authorization to write.
+    # Every existing file is still retrieved and compared by SHA-256.
+    current=listing_cache.get(parent) if listing_cache is not None else None
+    if current is None or name not in current:
+        current=remote_names(ftp)
+        if listing_cache is not None: listing_cache[parent]=current
     old=retrieve(ftp,name) if name in current else None
     if old is not None and sha(old)==sha(new):
         print('UNCHANGED',rel)
@@ -70,6 +75,12 @@ def upload(ftp, file, commit, target_root, root=SITE):
         # replacement procedure is used separately from routine code deploys.
         print('PRESERVED_REMOTE_MEDIA',rel,'remote_bytes='+str(len(old)))
         return
+    if listing_cache is not None:
+        # Fresh listing before any mutation; abort if presence changed during this pass.
+        listing_cache.pop(parent,None)
+        current=remote_names(ftp)
+        if (name in current)!=(old is not None):
+            raise RuntimeError('Remote file presence changed during deployment: '+rel)
     temp=name+'.avenqir-upload-'+commit[:12]+'.tmp'
     if temp in current: raise RuntimeError('Unexpected pre-existing temporary file: '+rel)
     try:
@@ -95,7 +106,9 @@ def upload(ftp, file, commit, target_root, root=SITE):
                 except Exception:
                     raise RuntimeError('ROLLBACK_FAILED at '+rel+'; restore site backup immediately') from e
                 raise RuntimeError('Overwrite rejected; old file restored: '+rel) from e
-        if sha(retrieve(ftp,name))!=sha(new):
+        # Existing-file final readback is already inside the rollback-protected block.
+        # Renamed new files still require their own final readback.
+        if old is None and sha(retrieve(ftp,name))!=sha(new):
             raise RuntimeError('Final remote file mismatch: '+rel)
         print('DEPLOYED',rel,len(new))
     finally:
@@ -135,18 +148,21 @@ def main():
         ftp.cwd(REMOTE)
         target_root=ftp.pwd()
         print('FTPS connected with certificate verification; target:',REMOTE)
+        started=time.monotonic()
+        listing_cache={}
         for file in sorted(files,key=deploy_order):
             if (file.name=='atlas-threat-snapshot.js' and b'window.AVENQIR_THREAT_SNAPSHOT = null;' in file.read_bytes()) or (file.name=='atlas-registry-snapshot.js' and b'window.AVENQIR_REGISTRY_SNAPSHOT = null;' in file.read_bytes()):
                 ftp.cwd(target_root)
                 if file.name in remote_names(ftp):
                     print('PRESERVED_LAST_THREAT_SNAPSHOT',file.name)
                     continue
-            upload(ftp,file,commit,target_root)
+            upload(ftp,file,commit,target_root,listing_cache=listing_cache)
         metadata={'schema':'avenqir-deploy-state-1','commit':commit,'deployed_at':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())}
         state=SITE/'deploy-state.json'
         try:
             state.write_text(json.dumps(metadata,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-            upload(ftp,state,commit,target_root)
+            upload(ftp,state,commit,target_root,listing_cache=listing_cache)
+            print('FTPS_UPLOAD_COMPLETE',len(files),'validated payload files; elapsed_seconds='+str(round(time.monotonic()-started,1)),flush=True)
         finally:
             state.unlink(missing_ok=True)
     finally:

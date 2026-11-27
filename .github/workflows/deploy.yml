@@ -136,7 +136,7 @@ jobs:
         env:
           FTPS_USERNAME: ${{ secrets.AVENQIR_FTPS_USERNAME }}
           FTPS_PASSWORD: ${{ secrets.AVENQIR_FTPS_PASSWORD }}
-        run: python3 scripts/ftps_deploy.py
+        run: python3 -u scripts/ftps_deploy.py
       - name: Independently verify deployed files through read-only authenticated FTPS
         env:
           FTPS_USERNAME: ${{ secrets.AVENQIR_FTPS_USERNAME }}
