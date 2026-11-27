@@ -512,3 +512,15 @@ for(const [q,re] of positive.concat(multilingualStress,padded))assert.ok(fused.r
 for(const q of [...new Set(negative.concat(difficultNegatives,generated))])assert.equal(fused.rank(q).length,0,q);
 assert.equal(fusedGrounded,1440);assert.ok(fusedTop1>=1400);assert.equal(fusedTop5,1440);assert.equal(broadPreserved,1120);assert.equal(fusedRefused,12800);
 console.log('FUSED_RETRIEVAL_REPORT',JSON.stringify({fusedGrounded,fusedTop1,fusedTop5,broadPreserved,fusedRefused}));
+
+let nativeNegations=0,nativeCompound=0;
+for(let i=0;i<multilingual.negativeFrames.length;i++){
+ const [locale,prefix,suffix,join]=multilingual.negativeFrames[i],phrases=topics.rows[i].slice(1).concat(multilingual.rows[i].slice(1));
+ for(const q of phrases){assert.equal(fused.rank(prefix+q+suffix).length,0,locale+' negative '+q);nativeNegations++;}
+ for(let j=0;j<multilingual.tasks.length;j++){
+  const q=multilingual.rows[i][j+1]+join+multilingual.rows[i][(j+1)%multilingual.tasks.length+1];
+  assert.equal(fused.rank(q).length,0,locale+' compound '+q);nativeCompound++;
+ }
+}
+assert.equal(nativeNegations,2560);assert.equal(nativeCompound,1440);
+console.log('NATIVE_NEGATION_COMPOUND_REPORT',JSON.stringify({nativeNegations,nativeCompound}));
