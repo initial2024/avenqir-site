@@ -121,6 +121,7 @@ jobs:
           python3 tests/browser_popular_mobile.py
           python3 tests/browser_semantic_download.py
           if test -f tests/browser_research_semantic_worker.py; then python3 tests/browser_research_semantic_worker.py; fi
+          if test -f tests/browser_research_semantic_directory.py; then python3 tests/browser_research_semantic_directory.py; fi
   deploy:
     needs: [verify, recommendations-db, browser]
     if: >-
