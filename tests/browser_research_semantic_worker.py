@@ -119,6 +119,13 @@ async function verified(p){
  yes(sessionOnly.state==='ready'&&!sessionOnly.persisted,'session-only fallback');
  current.query('QR 코드 생성');await wait(()=>current.hits.length);
  yes(current.hits[0].urls.some(u=>/QRCode Monkey/i.test(byURL.get(u))),'session fallback worker failed');
+
+ current.query('пожалуйста, научные статьи');await wait(()=>current.hits.length===2);
+ yes(current.hits[1].urls.length>0,'Russian broad topic miss');
+ current.query('地图');await wait(()=>current.hits.length===3);
+ yes(current.hits[2].urls.length>0,'short Chinese broad topic miss');
+ current.query('من فضلك، ضغط صورة بدون تسجيل الدخول');await wait(()=>current.hits.length===4);
+ yes(current.hits[3].urls.length===0,'Arabic request constraint leak');
  await limited.remove().catch(()=>{});
  yes(!limited.active(),'session fallback removal');
  document.documentElement.dataset.result='pass';
@@ -141,5 +148,5 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
         subprocess.run(['node',str(ROOT/'tests'/'chrome_real_time.cjs'),CHROME,profile,f'http://127.0.0.1:{server.server_port}/qa.html'],timeout=75,check=True)
     assert requests.count(MODEL)==4,requests
     assert '/site/atlas-semantic-model-v1.json' not in requests,requests
-    print('PASS real Chromium packed model digest, worker, stale query rejection, Korean and Arabic retrieval, constraint and ungrounded abstention, corrupt payload rejection, fresh single-model install, real worker activation, cancellation and retry, verified cache restore and deletion, MIME/404/truncated/network rejection, bounded non-stream fallback and session-only storage denial')
+    print('PASS real Chromium packed model digest, worker, stale query rejection, Korean and Arabic retrieval, constraint and ungrounded abstention, corrupt payload rejection, fresh single-model install, real worker activation, cancellation and retry, verified cache restore and deletion, MIME/404/truncated/network rejection, bounded non-stream fallback and session-only storage denial, localized broad topics and polite request constraints')
     server.shutdown()
