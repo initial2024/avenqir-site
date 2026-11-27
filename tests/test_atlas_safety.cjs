@@ -17,7 +17,7 @@ require(path.join(site,'atlas-everyday-ext.js'));
 const popularLinks=require(path.join(site,'atlas-popular-links.js'));
 const catalog=require(path.join(site,'atlas-catalog-core.js'));
 const items=catalog.catalog();
-assert.equal(items.length,1239+popularLinks.links.length);
+assert.equal(items.length,1240+popularLinks.links.length);
 const result=safety.summary(items);
 const reviewed=gate.OFFICIAL_URLS.length;
 const itemUrls=new Set(items.map(item=>item.url));

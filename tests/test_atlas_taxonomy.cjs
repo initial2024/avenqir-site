@@ -19,10 +19,10 @@ const catalog=require(path.join(site,'atlas-catalog-core.js'));
 const gate=require(path.join(site,'link-gate.js'));
 const all=catalog.catalog();
 const expected=catalog.base.length+catalog.extras.length+atlas.links.length+expanded.links.length+specialist.links.length+depth.reduce((n,x)=>n+x.links.length,0)+ai.links.length+regional.links.length+everyday.links.length+regionalExt.links.length+everydayExt.links.length+popularLinks.links.length;
-assert.equal(expected,1239+popularLinks.links.length,'expected complete dynamic merged catalog');
-assert.equal(all.length,1239+popularLinks.links.length,'live merged catalog must include all curated resources');
+assert.equal(expected,1240+popularLinks.links.length,'expected complete dynamic merged catalog');
+assert.equal(all.length,1240+popularLinks.links.length,'live merged catalog must include all curated resources');
 assert.equal(depth.reduce((n,x)=>n+x.links.length,0),310,'310 new resources in four distinct depth files');
-assert.equal(new Set(all.map(x=>new URL(x.url).href)).size,1239+popularLinks.links.length,'no normalized URL duplicates');
+assert.equal(new Set(all.map(x=>new URL(x.url).href)).size,1240+popularLinks.links.length,'no normalized URL duplicates');
 const counts=new Map();
 const ids=new Set();
 for(const x of all){

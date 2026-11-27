@@ -20,7 +20,7 @@ require(path.join(site,'atlas-regional-ext.js'));
 require(path.join(site,'atlas-everyday-ext.js'));
 const popularLinks=require(path.join(site,'atlas-popular-links.js'));
 const catalog=require(path.join(site,'atlas-catalog-core.js'));
-assert.equal(catalog.catalog().length,1239+popularLinks.links.length,'original curated resources preserved');
+assert.equal(catalog.catalog().length,1240+popularLinks.links.length,'original curated resources preserved');
 assert.equal(language.LOCALES.length,40,'forty manually selectable interface locales');
 assert.equal(new Set(language.LOCALES.map(x=>x.code)).size,40);
 assert.equal(language.detect([]),'en','no detectable browser language defaults to English');
