@@ -45,7 +45,6 @@ def verify_receipt(ftp, expected, root=SITE):
     for rel in CORE:
         file=(root/rel)
         expected_bytes=file.read_bytes()
-        ftp.cwd(REMOTE)
         actual=retrieve(ftp,rel)
         if hashlib.sha256(actual).digest()!=hashlib.sha256(expected_bytes).digest():
             raise RuntimeError('REMOTE_SHA256_MISMATCH '+rel)
