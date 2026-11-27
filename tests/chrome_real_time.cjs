@@ -27,8 +27,8 @@ let ws;
   const start=Date.now();
   while(Date.now()-start<50000){
    let state;
-   try{const r=await call('Runtime.evaluate',{expression:"({result:document.documentElement?.dataset.result||'',error:document.documentElement?.dataset.error||'',url:location.href})",returnByValue:true});state=r.result?.value;}catch{}
-   if(state?.result==='pass'){console.log('CHROME_REAL_TIME_PASS');return;}
+   try{const r=await call('Runtime.evaluate',{expression:"({result:document.documentElement?.dataset.result||'',error:document.documentElement?.dataset.error||'',metrics:document.documentElement?.dataset.metrics||'',url:location.href})",returnByValue:true});state=r.result?.value;}catch{}
+   if(state?.result==='pass'){if(state.metrics)console.log('CHROME_FIXTURE_METRICS',state.metrics);console.log('CHROME_REAL_TIME_PASS');return;}
    if(state?.result==='fail')throw Error(state.error||'browser fixture failed');
    await delay(100);
   }
