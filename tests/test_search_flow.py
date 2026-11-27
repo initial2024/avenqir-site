@@ -7,7 +7,7 @@ class SearchFlowTests(unittest.TestCase):
             subprocess.run(['node','--check',str(ROOT/'site'/name)],check=True)
     def test_explicit_search_and_navigation(self):
         s=(ROOT/'site/directory.js').read_text()
-        for token in ['submitSearch(input.value)','submitSearch(r.name)','scrollToResults()','if(filtered().length){updateSearchNext(q,false);return;}','if(pendingNoMatchQuery)completeSearch()','searchEngineDestination','atlasClearFilters']:
+        for token in ['submitSearch(input.value)','submitSearch(r.name)','scrollToResults()','if(matches.length){updateSearchNext(q,false);return;}','if(!matches.length&&semantic?.pending?.(query,records)){updateSearchNext(q,false);return;}','if(pendingNoMatchQuery)completeSearch()','searchEngineDestination','atlasClearFilters']:
             self.assertIn(token,s)
         self.assertNotIn("feedback.php?type=link&q=",s)
     def test_search_actions_runtime(self):
