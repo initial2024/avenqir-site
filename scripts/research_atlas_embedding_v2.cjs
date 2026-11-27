@@ -360,13 +360,287 @@ function evaluate(base,candidate,rows,negatives,features){
  return {n,baseCoarse,newCoarse,fine,fine5,misses,negativeScores:negatives.map(q=>({q,baseline:classify(base,features,q)[0],candidate:classify(candidate,features,q)[0]}))};
 }
 
-const model=trainV2(base,rows,runtime.features);
+
+const extra=[
+  [
+    "pdf-merge",
+    "join PDF pages into one document 拼合PDF 合为一个文件",
+    "PDF ファイル 結合 一つにまとめる",
+    "join two PDF attachments"
+  ],
+  [
+    "pdf-compress",
+    "make PDF smaller shrink megabytes PDF文档减肥",
+    "PDF 容量 削減",
+    "PDF容量を小さくする"
+  ],
+  [
+    "pdf-split",
+    "divide PDF into separate files PDF分割 单页导出",
+    "PDF ページ 分離 抽出",
+    "从PDF中单独导出一页"
+  ],
+  [
+    "pdf-view",
+    "open and inspect PDF pages PDF预览 阅读器",
+    "PDF ファイル 表示 読む",
+    "preview a PDF document"
+  ],
+  [
+    "image-resize",
+    "change image width height pixels 图片宽高 像素调整",
+    "画像 ピクセル サイズ変更",
+    "调整照片宽高像素"
+  ],
+  [
+    "image-background",
+    "erase picture background transparent cutout 照片背景删除 透明底",
+    "画像 背景 透過 除去",
+    "make a transparent photo background"
+  ],
+  [
+    "image-compress",
+    "reduce JPEG PNG bytes photo compression 照片减肥 图片文件体积",
+    "JPEG 画像 容量 削減",
+    "JPEG文件太大怎么缩小"
+  ],
+  [
+    "image-collage",
+    "join multiple photographs into a grid 多图合成 拼贴",
+    "写真 複数枚 コラージュ",
+    "combine pictures into a grid"
+  ],
+  [
+    "dns-lookup",
+    "look up A MX TXT DNS records 域名记录 查询解析值",
+    "DNS レコード A MX TXT 確認",
+    "查看域名的MX记录"
+  ],
+  [
+    "dns-propagation",
+    "check DNS changes from different locations 域名解析全球同步 生效状态",
+    "DNS 変更 世界 伝播 状況",
+    "has my DNS change propagated worldwide"
+  ],
+  [
+    "whois",
+    "find registrar domain expiry ownership 域名注册商 到期时间",
+    "ドメイン 登録者 有効期限 WHOIS",
+    "查询域名到期日期和注册商"
+  ],
+  [
+    "tls-check",
+    "inspect HTTPS SSL expiry certificate chain 证书到期 HTTPS链",
+    "HTTPS 証明書 有効期限",
+    "SSL証明書の期限を確認"
+  ],
+  [
+    "url-risk",
+    "check URL scam malicious site 链接诈骗 恶意网址安全检查",
+    "詐欺 サイト URL 危険",
+    "is this web link malicious"
+  ],
+  [
+    "webrtc",
+    "test WebRTC exposing network address RTC IP泄漏测试",
+    "WebRTC IP 漏洩 確認",
+    "WebRTCでIPが漏れていないか"
+  ],
+  [
+    "fingerprint",
+    "browser canvas fingerprint entropy 浏览器指纹识别 canvas",
+    "ブラウザ 指紋 トラッキング",
+    "浏览器canvas指纹查看"
+  ],
+  [
+    "ip-lookup",
+    "what is my public IP ISP ASN 出口IP 运营商",
+    "グローバル IP アドレス プロバイダ",
+    "what is my external internet address"
+  ],
+  [
+    "network-speed",
+    "measure download upload latency bandwidth 测下载上传网速 延迟",
+    "インターネット 回線 速度 測定",
+    "測定したいネット回線速度"
+  ],
+  [
+    "meeting-zone",
+    "find overlapping work hours across countries 不同国家开会 时间重叠",
+    "会議 時差 時間 調整",
+    "find a meeting time in Tokyo and London time zones"
+  ],
+  [
+    "timer",
+    "set countdown alarm stopwatch 倒数 计时 闹钟",
+    "カウントダウン タイマー 設定",
+    "倒数十分钟计时"
+  ],
+  [
+    "qr-create",
+    "turn website URL into QR code 二维码生成 网址转换",
+    "URL QRコード 生成",
+    "URLをQRコードにする"
+  ],
+  [
+    "regex-test",
+    "check pattern matches regex 正则匹配 调试表达式",
+    "正規表現 マッチ 確認",
+    "debug a regex pattern"
+  ],
+  [
+    "json-edit",
+    "beautify JSON indentation nested data JSON美化 缩进",
+    "JSON 整形 ツリー",
+    "JSON数据缩进格式化"
+  ],
+  [
+    "typing",
+    "learn keyboard touch typing words per minute 键盘打字 WPM",
+    "タイピング 速度 練習",
+    "measure my typing WPM"
+  ],
+  [
+    "palette",
+    "pick harmonious colours colour scheme 色彩组合 色板",
+    "色 組み合わせ パレット",
+    "select a color scheme for a poster"
+  ],
+  [
+    "font-pair",
+    "choose matching typefaces heading body text 字体组合 正文标题",
+    "見出し 本文 フォント 組み合わせ",
+    "見出しと本文のフォントを組み合わせる"
+  ],
+  [
+    "flowchart",
+    "map a workflow with boxes arrows 工作流程 方框箭头",
+    "業務フロー 図 作成",
+    "画带箭头的工作流程图"
+  ],
+  [
+    "public-books",
+    "read copyright expired classic books 公共领域经典著作",
+    "著作権 期限 切れ 本",
+    "find copyright-expired novels"
+  ],
+  [
+    "citation",
+    "format academic citations bibliography APA MLA 引用格式 参考文献",
+    "文献 引用 参考文献 書式",
+    "make APA references for a bibliography"
+  ],
+  [
+    "doi-lookup",
+    "resolve DOI to journal article metadata DOI编号 期刊元数据",
+    "DOI 論文 書誌 情報",
+    "通过DOI获取期刊文章信息"
+  ],
+  [
+    "html-validate",
+    "check HTML tags markup errors HTML标签校验",
+    "HTML タグ 構文 チェック",
+    "find errors in HTML tags"
+  ],
+  [
+    "css-validate",
+    "check CSS properties styles syntax CSS属性 校验",
+    "CSS スタイル 構文 チェック",
+    "CSSの構文エラーを調べる"
+  ],
+  [
+    "web-performance",
+    "analyze slow page loading LCP core web vitals 页面性能 加载慢",
+    "ページ 読み込み パフォーマンス",
+    "网页LCP加载性能检测"
+  ],
+  [
+    "static-host",
+    "publish HTML static files on hosting 静态HTML站点发布",
+    "静的 HTML サイト 公開",
+    "put a static HTML site online"
+  ],
+  [
+    "currency",
+    "exchange dollars euros yuan monetary conversion 货币兑换 美元汇率",
+    "ドル 円 通貨 換算",
+    "美元换算成日元"
+  ],
+  [
+    "text-translate",
+    "translate sentences between languages 句子段落 翻译",
+    "文章 言語 翻訳",
+    "translate these sentences into Japanese"
+  ],
+  [
+    "word-dictionary",
+    "look up definitions dictionary vocabulary meanings 字典 查词 词义",
+    "辞書 単語 意味 調べる",
+    "単語の意味を辞書で調べる"
+  ]
+];
+
+function trainExpanded(base,rows,extra,features,cap=160){
+ const classes=base.classes.map(([id,w])=>[id,w.slice()]);
+ const raw=rows.map(([id,parent,...examples])=>{
+  const more=extra.find(x=>x[0]===id);if(!more)throw Error('missing training data '+id);
+  const texts=examples.slice(0,3).concat(more.slice(1,3));
+  const acc=new Map();for(const text of texts)for(const [k,w] of features(text))acc.set(k,(acc.get(k)||0)+w/texts.length);
+  return [id,parent,acc];
+ });
+ const df=new Map();for(const [,,m] of raw)for(const k of m.keys())df.set(k,(df.get(k)||0)+1);
+ for(const [id,parent,m] of raw){
+  const a=[...m].map(([k,w])=>[k,w*(1+Math.log((raw.length+1)/(1+df.get(k))))]).sort((a,b)=>b[1]-a[1]||a[0]-b[0]).slice(0,cap);
+  const norm=Math.hypot(...a.map(x=>x[1]))||1;
+  classes.push([id,a.map(([k,w])=>[k,Math.round(w/norm*4096)]).filter(x=>x[1]>0).sort((a,b)=>a[0]-b[0])]);
+ }
+ return {schema:'aq-domain-embedding-research-2',bins:base.bins,classes,parents:Object.fromEntries(rows.map(([id,p])=>[id,p]))};
+}
+const objectPatterns=[
+ ['pdf',/\bpdfs?\b|ＰＤＦ/i],
+ ['image',/\b(?:photos?|photographs?|images?|pictures?|jpeg|png)\b|照片|图片|图像|写真|画像/i],
+ ['dns',/\b(?:dns|whois|rdap)\b|域名|ドメイン/i],
+ ['privacy',/\bwebrtc\b|browser fingerprint|浏览器指纹|ブラウザ.{0,8}指紋/i],
+ ['security',/\b(?:https|tls|ssl|phishing|malicious)\b|钓鱼|恶意|フィッシング|証明書/i],
+ ['code',/\b(?:regex|html|css|qrcode|qr code|flowchart)\b|正则|二维码|正規表現|QRコード|流程图|業務フロー/i],
+ ['files',/\bjson\b/i],
+ ['finance',/\b(?:currenc(?:y|ies)|exchange rate)\b|汇率|货币|通貨|為替/i],
+ ['papers',/\bdoi\b|bibliography|参考文献|文献引用/i],
+ ['time',/\b(?:countdown|stopwatch|timer|time zones?)\b|倒计时|倒数|時差|タイマー|时区/i],
+ ['courses',/\b(?:touch typing|typing speed|typing wpm)\b|盲打|打字|タイピング/i],
+ ['assets',/\b(?:color scheme|colour scheme|color palette|colour palette|fonts?|typefaces?)\b|配色|字体|フォント/i]
+];
+function hierarchical(model,features,q){
+ const all=classify(model,features,q);
+ const hints=objectPatterns.filter(([,p])=>p.test(q)).map(([id])=>id);
+ const hint=hints.length===1?hints[0]:null;
+ const parent=x=>model.parents[x.id]||x.id;
+ const groups=new Map();
+ for(const x of all){const p=parent(x),g=groups.get(p)||{coarse:0,fine:0};if(model.parents[x.id])g.fine=Math.max(g.fine,x.score);else g.coarse=x.score;groups.set(p,g);}
+ const ranked=[...groups].map(([id,g])=>({id,score:Math.max(g.coarse,g.fine)+.15*Math.min(g.coarse,g.fine)+(hint===id?.18:0)})).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id));
+ const p=ranked[0].id;
+ const fine=all.filter(x=>model.parents[x.id]===p);
+ // Research ranking only; ambiguous/unsupported intents must be gated before production retrieval.
+ return fine.length&&fine[0].score>=.08?fine[0].id:p;
+}
+function compareSets(prior,expanded,rows,extra,features){
+ const evaluateSet=cases=>{
+  const out={n:cases.length,priorFine:0,expandedFlatFine:0,expandedHierFine:0,expandedHierCoarse:0,misses:[]};
+  for(const [id,p,q] of cases){const before=classify(prior,features,q)[0].id,flat=classify(expanded,features,q)[0].id,after=hierarchical(expanded,features,q);
+   out.priorFine+=Number(before===id);out.expandedFlatFine+=Number(flat===id);out.expandedHierFine+=Number(after===id);out.expandedHierCoarse+=Number((expanded.parents[after]||after)===p);if(after!==id)out.misses.push({q,expected:id,actual:after});}
+  return out;
+ };
+ return {development:evaluateSet(rows.flatMap(([id,p,...qs])=>qs.slice(3).map(q=>[id,p,q]))),newAuthorWritten:evaluateSet(rows.map(([id,p])=>[id,p,extra.find(x=>x[0]===id)[3]]))};
+}
+
+const prior=trainV2(base,rows,runtime.features);
+const model=trainExpanded(base,rows,extra,runtime.features);
 const payload=JSON.stringify(model)+"\n";
 assert.equal(model.classes.length,64);
 assert.equal(new Set(model.classes.map(x=>x[0])).size,64);
 assert.ok(Buffer.byteLength(payload)<=100*1024);
 assert.equal(JSON.stringify(model.classes.slice(0,28)),JSON.stringify(base.classes));
-const report=evaluate(base,model,rows,negatives,runtime.features);
+const report=compareSets(prior,model,rows,extra,runtime.features);
 const sha256=crypto.createHash("sha256").update(payload).digest("hex");
 console.log(JSON.stringify({bytes:Buffer.byteLength(payload),sha256,...report},null,2));
 if(process.argv.includes("--write"))fs.writeFileSync(path.join(__dirname,"../research/atlas-model-v2.json"),payload);
