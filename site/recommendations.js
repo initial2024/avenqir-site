@@ -36,6 +36,8 @@
   if(full&&pick)panel.classList.add('rec-focused');
   let rows=[];
   let indexes=null;
+  let resolvedItems=new Map();
+  const sessionClicks=new Map();
   let stats=null;
   let fetchVersion=0;
   const pending=new Set();
@@ -125,7 +127,8 @@
           seen.add(item.url);
           return true;
         });
-        return new Map(rows.map(item=>[item.id,item]));
+        resolvedItems=new Map(rows.map(item=>[item.id,item]));
+        return resolvedItems;
       }).catch(()=>{
         indexes=null;
         return new Map();
@@ -154,7 +157,7 @@
     if(revision===fetchVersion&&!stats)render();
     let data=null;
     try{
-      const response=await fetch(endpoint+'?days='+days,{signal:AbortSignal.timeout?.(7000)});
+      const response=await fetch(endpoint+'?days='+days,{cache:'no-store',signal:AbortSignal.timeout?.(7000)});
       if(!response.ok)throw Error('unavailable');
       const {ok,items}=await response.json();
       if(ok&&items&&typeof items==='object')data=items;
@@ -165,12 +168,11 @@
   }
   function summarize(item,localData){
     const value=stats?.[item.id];
-    if(scope?.value==='local'){
+    if(scope?.value==='local'||!stats){
       const personal=localData.ratings[item.id]?.stars;
-      return personal?t('我的评分 '+personal+'/5','My rating '+personal+'/5'):
-        t('暂无我的评分','No personal rating');
+      return personal?t('本机评分 '+personal+'/5','Device rating '+personal+'/5'):
+        t('暂无本机评分','No device rating');
     }
-    if(!stats)return t('公开数据暂不可用','Public data unavailable');
     const n=value?.count||0;
     return n>=5?t(value.average+' / 5 · '+n+' 个评分',value.average+' / 5 · '+n+' ratings'):
       n?t('评分较少 · '+n+' 个评分','Small sample · '+n+' ratings'):
@@ -334,13 +336,14 @@
   checkReturn();
   // Anonymous read-only aggregates; no visitor token, search or history included.
   if(!full&&!document.getElementById('aqRatingReminder'))sourceUI.refreshRatings();
+  if(read(SHARE)==='1'||read(LOCAL)==='1')loadCatalog();
   function makeCard(item,localView,localData){
     const article=element('article');
     article.dataset.recTool=item.id;
     const title=element('h2');
     title.append(link(item));
     const info=element('p',summarize(item,localData));
-    const isLocal=scope?.value==='local';
+    const isLocal=scope?.value==='local'||!stats;
     const metric=(isLocal?localView:stats)?.[item.id];
     const score=model.displayScore(metric,isLocal);
     if(score!==null)info.append(' · '+t(isLocal?'本机指数 ':'公开推荐指数 ',isLocal?'Device index ':'Public recommendation ')+score);
@@ -401,10 +404,10 @@
     panel.querySelector('[data-rec-mode]').textContent=stats?
       t('仅统计自愿参与者打开入口和提交评分的次数。','Counts reflect opted-in opens and ratings.'):
       t('显示当前浏览器的记录。','Showing activity saved in this browser.');
-    const isLocal=full?scope.value==='local':!stats;
+    const isLocal=!stats||(full&&scope.value==='local');
     const values=isLocal?localView:(stats||{});
     panel.querySelector('[data-rec-title]').textContent=isLocal?t('近期热门 · 本机','Trending · This device'):t('近期热门 · 公开','Trending · Public');
-    panel.querySelector('[data-rec-mode]').textContent=isLocal?t('仅本机入口点击记录。','Device entry opens only.'):stats?t('仅统计自愿参与者的入口点击；不是全网热度。','Opted-in entry opens only, not web-wide popularity.'):t('公开数据暂不可用。','Public data unavailable.');
+    panel.querySelector('[data-rec-mode]').textContent=isLocal?t(!stats?'公开数据暂不可用 · 仅显示本机记录。':'仅本机入口点击记录。',!stats?'Public data unavailable · device records only.':'Device entry opens only.'):t('仅统计自愿参与者的入口点击；不是全网热度。','Opted-in entry opens only, not web-wide popularity.');
     const hottest=[...rows].filter(item=>values[item.id]?.clicks>0)
       .sort((a,b)=>values[b.id].clicks-values[a.id].clicks).slice(0,5);
     trend.replaceChildren(...hottest.map(item=>{
@@ -412,12 +415,12 @@
       entry.append(link(item),element('small',t(values[item.id].clicks+' 次打开',values[item.id].clicks+' opens')));
       return entry;
     }));
-    if(!hottest.length)trend.append(element('li',t('暂时没有足够的打开记录。','There is no activity to rank yet.')));
+    if(!hottest.length){panel.querySelector('[data-rec-title]').textContent=t('近期热门 · 暂无数据','Trending · No data yet');trend.append(element('li',t('暂无有效打开记录。可先浏览编辑精选。','No eligible opens yet. Browse editor picks instead.')));}
     if(!full)return;
     share.checked=read(SHARE)==='1';
     panel.querySelector('#recSharingMode').textContent=share.checked?
       t('当前评分会同时参与公开汇总。','New ratings also contribute to the public totals.'):
-      t('评分默认保存在本机。','Ratings are saved on this device.');
+      t('评分默认保存在本机；弹窗可单独选择公开提交。','Ratings are saved on this device; the dialog offers optional public submission.');
     local.checked=read(LOCAL)==='1';
     revoke.disabled=!read(TOKEN);
     const choice=sort.value;
@@ -470,17 +473,24 @@
       list.scrollIntoView({block:'nearest'});
     }
   }
-  async function recordOpen(id,url){
-    if(read(LOCAL)!=='1'&&read(SHARE)!=='1')return;
-    const map=await loadCatalog();
-    id=id||rows.find(item=>item.url===url)?.id;
-    if(!map.has(id))return;
+  function recordKnown(item){
+    if(!item||!destination(item))return;
+    const id=item.id,now=Date.now();
+    if(now-(sessionClicks.get(id)??-Infinity)<model.PAUSE)return;
+    sessionClicks.set(id,now);
+    if(sessionClicks.size>2000)sessionClicks.delete(sessionClicks.keys().next().value);
     if(read(LOCAL)==='1'){
       const state=getLocal();
-      const next=model.merge(state,{clicks:[{toolId:id,ts:Date.now()}],ratings:{}});
+      const next=model.merge(state,{clicks:[{toolId:id,ts:now}],ratings:{}});
       write(model.KEY,JSON.stringify(next));
     }
     if(read(SHARE)==='1')post('click',id).catch(()=>{});
+  }
+  function recordOpen(id,url){
+    if(read(LOCAL)!=='1'&&read(SHARE)!=='1')return;
+    const item=(id&&resolvedItems.get(id))||sourceUI.itemForURL(url);
+    if(item){recordKnown(item);return;}
+    loadCatalog().then(map=>recordKnown(id?map.get(id):sourceUI.itemForURL(url)||rows.find(item=>item.url===url))).catch(()=>{});
   }
   function record(event){
     if(event.defaultPrevented||!(event.target instanceof Element))return;
@@ -488,7 +498,9 @@
     const anchor=event.target.closest('a[data-rec-open],a.start-card,a.aq-pick-link');
     if(!anchor)return;
     const pick=anchor.closest('[data-pick-id]');
-    recordOpen(anchor.dataset.recOpen||pick?.dataset.pickId,anchor.getAttribute('href'));
+    const href=anchor.getAttribute('href');
+    if(!href||href.startsWith('leave.html'))return; // Count only after the existing external gate is confirmed.
+    recordOpen(anchor.dataset.recOpen||pick?.dataset.pickId,href);
   }
   document.addEventListener('click',record);
   document.addEventListener('auxclick',record);

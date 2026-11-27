@@ -62,12 +62,21 @@
   let bundledByURL;
   let addedByURL;
   const byURL=rows=>new Map(rows.filter(item=>item.kind==='website'&&gate?.sanitize(item.url)).map(item=>[new URL(item.url).href,item]));
-  let urlIndex=new Map(), metrics=null, statsRequest=null;
-  function refreshRatings(force=false){
-    if(statsRequest)return statsRequest;
-    if(metrics!==null&&!force)return Promise.resolve(metrics);
-    statsRequest=Promise.all([bundledCatalog(),addedCatalog(),fetch('recommendations-api.php?days=7',{cache:'no-store',signal:AbortSignal.timeout?.(7000)}).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([base,remote,data])=>{
-      urlIndex=byURL([...remote,...base]);
+  let urlIndex=new Map(), metrics=null, statsRequest=null, metricsDays=7, localRatings=null, localMetrics=null;
+  // The built-in catalog already exists synchronously on home/directory. Use it for fast click handlers.
+  try{for(const x of window.AVENQIR_ATLAS_CATALOG?.catalog()||[]){const u=gate?.sanitize(x.url);if(u&&/^[a-zA-Z0-9-]{1,40}$/.test(x.id))urlIndex.set(u.href,{id:x.id,url:u.href,title:[x.name,x.name],kind:'website',category:x.category});}}catch{}
+  function readLocal(){const m=window.AVENQIR_RECOMMENDATIONS;if(!m)return;try{localRatings=m.clean(JSON.parse(localStorage.getItem(m.KEY)));}catch{localRatings=m.empty();}localMetrics=m.score(localRatings,metricsDays);}
+  function localMetric(url){if(!localMetrics)readLocal();const item=itemForURL(url);return item?localMetrics?.[item.id]:null;}
+  function localStars(url){if(!localRatings)readLocal();const item=itemForURL(url);return item?localRatings?.ratings?.[item.id]?.stars||0:0;}
+  window.addEventListener('aq:personal-rating-updated',()=>{readLocal();});
+  window.addEventListener('storage',event=>{if(event.key===window.AVENQIR_RECOMMENDATIONS?.KEY){readLocal();updateRatingLinks();}});
+  function refreshRatings(force=false,days=metricsDays){
+    if(![7,30,90].includes(days))days=7;
+    if(statsRequest)return statsRequest.then(()=>metricsDays===days?metrics:refreshRatings(true,days));
+    if(metrics!==null&&!force&&metricsDays===days)return Promise.resolve(metrics);
+    metricsDays=days;readLocal();
+    statsRequest=Promise.all([bundledCatalog(),addedCatalog(),fetch('recommendations-api.php?days='+days,{cache:'no-store',signal:AbortSignal.timeout?.(7000)}).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([base,remote,data])=>{
+      for(const [url,item] of byURL([...remote,...base]))urlIndex.set(url,item);
       metrics=data?.ok&&data.items&&typeof data.items==='object'?data.items:null;
       window.dispatchEvent(new CustomEvent('aq:ratings-updated'));
       return metrics;
@@ -77,12 +86,12 @@
   function itemForURL(url){return urlIndex.get(gate?.sanitize(url)?.href)||null;}
   function noteVisit(url){const item=itemForURL(url);if(item&&!gate.urlRisk(url).blocked&&safety?.threatStatus(url)!=='listed')window.dispatchEvent(new CustomEvent('aq:rating-visit',{detail:item.id}));}
   function metric(url){const item=urlIndex.get(gate?.sanitize(url)?.href);return item&&metrics&&Object.hasOwn(metrics,item.id)?metrics[item.id]:null;}
-  function average(url){return window.AVENQIR_RECOMMENDATIONS?.publicAverage(metric(url))||0;}
-  function recommendation(url){return window.AVENQIR_RECOMMENDATIONS?.displayScore(metric(url),false)??-1;}
+  function average(url){return metrics===null?localStars(url):window.AVENQIR_RECOMMENDATIONS?.publicAverage(metric(url))||0;}
+  function recommendation(url){return window.AVENQIR_RECOMMENDATIONS?.displayScore(metrics===null?localMetric(url):metric(url),metrics===null)??-1;}
+  function popularity(url){return (metrics===null?localMetric(url):metric(url))?.clicks||0;}
   function updateRatingLink(link,item){
-    const m=metric(item.url),avg=average(item.url);
-    let mine=0;try{mine=window.AVENQIR_RECOMMENDATIONS?.clean(JSON.parse(localStorage.getItem(window.AVENQIR_RECOMMENDATIONS.KEY)))?.ratings[item.id]?.stars||0;}catch{}
-    link.textContent=avg?t('评价 · '+avg.toFixed(1)+'★ ('+m.count+')','Rate · '+avg.toFixed(1)+'★ ('+m.count+')'):mine?t('已评 '+mine+'★','Rated '+mine+'★'):t('评价','Rate');
+    const m=metric(item.url),avg=window.AVENQIR_RECOMMENDATIONS?.publicAverage(m)||0,mine=localStars(item.url);
+    link.textContent=avg?t('评价 · '+avg.toFixed(1)+'★ ('+m.count+')','Rate · '+avg.toFixed(1)+'★ ('+m.count+')'):mine?t('本机已评 '+mine+'★','Device rating '+mine+'★'):m?.count?t('评价 · 样本较少 ('+m.count+')','Rate · Small sample ('+m.count+')'):t('评价 ☆','Rate ☆');
   }
   function updateRatingLinks(){for(const link of document.querySelectorAll('a.aq-source-rate[data-rating-url]')){const item=urlIndex.get(link.dataset.ratingUrl);if(item)updateRatingLink(link,item);}}
   window.addEventListener('aq:ratings-updated',updateRatingLinks);
@@ -116,7 +125,7 @@
     });
     return link;
   }
-  window.AVENQIR_ATLAS_SOURCE_UI=Object.freeze({badge,external,label,ratingLink,catalog,refreshRatings,itemForURL,noteVisit,metric,average,recommendation,ratingsAvailable:()=>metrics!==null});
+  window.AVENQIR_ATLAS_SOURCE_UI=Object.freeze({badge,external,label,ratingLink,catalog,refreshRatings,itemForURL,noteVisit,metric,average,recommendation,popularity,ratingsAvailable:()=>metrics!==null});
   notice();
   window.addEventListener('aq:language-change',notice);
 })();

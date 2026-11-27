@@ -305,7 +305,7 @@
     document.body.dataset.startDensity=density;
     for(const input of densityOptions)input.checked=input.value===density;
   }
-  try{setDensity(localStorage.getItem(densityKey));}catch{setDensity('comfortable');}
+  try{setDensity(localStorage.getItem(densityKey)||(window.matchMedia('(max-width:600px)').matches?'compact':'comfortable'));}catch{setDensity(window.matchMedia('(max-width:600px)').matches?'compact':'comfortable');}
   for(const input of densityOptions){
     input.addEventListener('change',()=>{
       setDensity(input.value);

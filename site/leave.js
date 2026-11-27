@@ -30,6 +30,7 @@
       try{gate.remember(safe.href,window.localStorage)}catch{}
     }
     source?.noteVisit(safe.href);
+    window.dispatchEvent(new CustomEvent('aq:website-open',{detail:safe.href}));
     location.assign(safe.href);
   });
 })();

@@ -113,10 +113,10 @@
      return (ai<0?Number.MAX_SAFE_INTEGER:ai)-(bi<0?Number.MAX_SAFE_INTEGER:bi)||(b.rank-a.rank);
    });
    else if($('atlasSort').value==='name')r.sort((a,b)=>a.x.name.localeCompare(b.x.name,'zh-CN'));
-   else if(!selectedUrls&&['rating','recommended'].includes($('atlasSort').value)){
+   else if(!selectedUrls&&['rating','recommended','popular'].includes($('atlasSort').value)){
      const rating=$('atlasSort').value==='rating';
-     const value=x=>dangerous(x.url)?-1:(rating?sourceUI?.average(x.url)||0:sourceUI?.recommendation(x.url)??-1);
-     r.sort((a,b)=>value(b.x)-value(a.x)||b.rank-a.rank||(languageMode()==='prefer'?languageRank(a.x)-languageRank(b.x):0));
+     const value=x=>dangerous(x.url)?-1:(rating?sourceUI?.average(x.url)||0:$('atlasSort').value==='popular'?sourceUI?.popularity(x.url)||0:sourceUI?.recommendation(x.url)??-1);
+     r.sort((a,b)=>(query?b.rank-a.rank:0)||value(b.x)-value(a.x)||b.rank-a.rank||(languageMode()==='prefer'?languageRank(a.x)-languageRank(b.x):0));
    }
    else if(query)r.sort((a,b)=>b.rank-a.rank||(languageMode()==='prefer'?languageRank(a.x)-languageRank(b.x):0)||(sourceUI?.recommendation(b.x.url)??-1)-(sourceUI?.recommendation(a.x.url)??-1)||a.x.name.localeCompare(b.x.name,'zh-CN'));
    else if(selectedUrls)r.sort((a,b)=>flow.urls.indexOf(a.x.url)-flow.urls.indexOf(b.x.url));
@@ -528,14 +528,16 @@
    choiceBar();drawPaths();draw();scrollToResults();
  });
  $('atlasSort').addEventListener('change',async()=>{
-   if(['rating','recommended'].includes($('atlasSort').value))await sourceUI?.refreshRatings();
+   if(['rating','recommended','popular'].includes($('atlasSort').value))await sourceUI?.refreshRatings(false,Number($('atlasRatingWindow')?.value||7));
    draw();
  });
  const ratingHint=$('atlasRatingHint');
- function ratingStatus(){if(ratingHint)ratingHint.textContent=sourceUI?.ratingsAvailable()?T('公开评分至少5份才参与排行。评价后可重新选择排序刷新。','At least 5 public ratings to rank. Re-select sort to refresh after rating.'):T('公开评分暂不可用；保留目录原有排序。','Public ratings unavailable; original ordering retained.');}
- window.addEventListener('aq:ratings-updated',ratingStatus);
+ function ratingStatus(){if(ratingHint)ratingHint.textContent=sourceUI?.ratingsAvailable()?T('公开汇总 · 评分至少5份才进入推荐排序。','Public totals · at least 5 ratings to enter recommendation ranking.'):T('公开数据暂不可用 · 本机记录或原始目录排序。','Public data unavailable · device records or catalog order.');}
+ let firstRatingRender=true;
+ window.addEventListener('aq:ratings-updated',()=>{ratingStatus();if(firstRatingRender){firstRatingRender=false;if(!query&&!document.querySelector('dialog[open]')&&window.scrollY<200)draw();}});
  window.addEventListener('aq:language-change',ratingStatus);
- $('atlasRatingRefresh')?.addEventListener('click',async()=>{await sourceUI?.refreshRatings(true);draw();});
+ $('atlasRatingRefresh')?.addEventListener('click',async()=>{await sourceUI?.refreshRatings(true,Number($('atlasRatingWindow')?.value||7));draw();});
+ $('atlasRatingWindow')?.addEventListener('change',async()=>{await sourceUI?.refreshRatings(true,Number($('atlasRatingWindow').value));draw();});
  ratingStatus();
  $('atlasSiteLanguageMode')?.addEventListener('change',()=>{limit=pageSize;draw();});
  let inputTimer=null,composing=false;
