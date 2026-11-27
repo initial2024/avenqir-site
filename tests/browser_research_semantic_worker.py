@@ -18,7 +18,8 @@ MODEL = '/research/atlas-model-v2.packed.json'
 BASE = '/site/atlas-semantic-model-v1.json'
 digests = {p: hashlib.sha256((ROOT / p.lstrip('/')).read_bytes()).hexdigest() for p in [MODEL,BASE]}
 requests = []
-HTML = '<!doctype html><title>Research worker QA</title>' + ''.join('<script src="/site/'+s+'.js"></script>' for s in SCRIPTS) + '<script src="/research/atlas-worker-client.js"></script><script>const hashes=' + json.dumps(digests) + ';' + """
+lengths = {p: (ROOT / p.lstrip('/')).stat().st_size for p in [MODEL,BASE]}
+HTML = '<!doctype html><title>Research worker QA</title>' + ''.join('<script src="/site/'+s+'.js"></script>' for s in SCRIPTS) + '<script src="/research/atlas-worker-client.js"></script><script src="/research/atlas-candidate-loader.js"></script><script>const hashes=' + json.dumps(digests) + ';const sizes=' + json.dumps(lengths) + ';' + """
 const yes=(v,m)=>{if(!v)throw Error(m);};
 const wait=async f=>{for(let i=0;i<350;i++){if(f())return;await new Promise(r=>setTimeout(r,30));}throw Error('timeout');};
 async function verified(p){
@@ -63,6 +64,34 @@ async function verified(p){
  await wait(()=>rejected.length);
  yes(rejected[0]!=='unexpected_result','corrupt payload accepted');
  c2.close();
+
+ const specs=Object.keys(hashes).map(file=>({file,bytes:sizes[file],sha256:hashes[file]}));
+ const loader=AVENQIR_RESEARCH_LOADER.create(specs);
+ let activations=0,closes=0,progress=[];
+ const activate=async values=>{
+  yes(values.length===2&&values[0]===packed&&values[1]===baseText,'incorrect staged bytes');
+  activations++;return {close(){closes++;}};
+ };
+ // Old cache must survive candidate restore, cancellation and removal.
+ const old=await caches.open('avenqir-semantic-model-v1');
+ await old.put('/old-marker',new Response('old'));
+ let refused=false;
+ try{await loader.load({activate});}catch(e){refused=e.message==='consent';}
+ yes(refused&&!loader.active(),'download without consent');
+ const missing=await loader.load({consent:true,restore:true,activate});
+ yes(missing.state==='missing'&&activations===0,'unexpected restore');
+ const loaded=await loader.load({consent:true,activate,onProgress:p=>progress.push(p.bytes)});
+ yes(loaded.state==='ready'&&loaded.persisted&&loader.active(),'candidate not saved');
+ yes(progress.at(-1)===loader.total,'incorrect progress');
+ const restored=await loader.load({consent:true,restore:true,activate});
+ yes(restored.state==='ready'&&restored.persisted&&activations===2&&closes===1,'cache restore');
+ const invalid=AVENQIR_RESEARCH_LOADER.create([{...specs[0],sha256:'0'.repeat(64)}]);
+ let integrity=false;try{await invalid.load({consent:true,activate});}catch(e){integrity=e.message==='integrity';}
+ yes(integrity&&activations===2,'wrong digest accepted');
+ await loader.remove();
+ yes(!loader.active()&&closes===2,'remove failed');
+ yes(!(await caches.has(AVENQIR_RESEARCH_LOADER.CACHE)),'candidate cache retained');
+ yes((await old.match('/old-marker'))!==undefined,'old cache lost');
  document.documentElement.dataset.result='pass';
 })().catch(e=>{document.documentElement.dataset.result='fail';document.documentElement.dataset.error=e.message;});
 </script>"""
@@ -81,6 +110,7 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
     threading.Thread(target=server.serve_forever,daemon=True).start()
     with tempfile.TemporaryDirectory() as profile:
         subprocess.run(['node',str(ROOT/'tests'/'chrome_real_time.cjs'),CHROME,profile,f'http://127.0.0.1:{server.server_port}/qa.html'],timeout=75,check=True)
-    assert requests.count(MODEL)==1,requests
-    print('PASS real Chromium packed model digest, worker, stale query rejection, Korean and Arabic retrieval, constraint and ungrounded abstention, corrupt payload rejection')
+    assert requests.count(MODEL)==3,requests
+    assert requests.count(BASE)==2,requests
+    print('PASS real Chromium packed model digest, worker, stale query rejection, Korean and Arabic retrieval, constraint and ungrounded abstention, corrupt payload rejection, verified candidate cache restore, consent and legacy cache preservation')
     server.shutdown()
