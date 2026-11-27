@@ -58,6 +58,7 @@ jobs:
           node scripts/train_atlas_embedding.cjs --check
           if test -f scripts/research_atlas_embedding_v2.cjs; then node scripts/research_atlas_embedding_v2.cjs --check; fi
           if test -f scripts/research_atlas_retrieval_v2.cjs; then node scripts/research_atlas_retrieval_v2.cjs; fi
+          if test -f tests/research_atlas_worker_client.cjs; then node tests/research_atlas_worker_client.cjs; node --check research/atlas-search-worker.js; fi
           node tests/test_atlas_semantic.cjs
           node tests/test_transfer_v90.cjs
           node tests/test_orbit_bridge.cjs
