@@ -1,11 +1,11 @@
 "use strict";
 // Single in-flight request; newest query replaces pending work. Terminate on disable.
 (function(root){
- function create(worker,onResult,onError=()=>{}){
+ function create(worker,onResult,onError=()=>{},onReady=()=>{}){
   let serial=0,epoch=0,ready=false,closed=false,pending=null,inFlight=null,initId=0,latest=0;
   function send(){if(closed||!ready||inFlight||!pending)return;inFlight=pending;pending=null;worker.postMessage({type:'rank',id:inFlight.id,epoch,query:inFlight.query});}
   worker.onmessage=e=>{if(closed)return;const m=e.data;
-   if(m.type==='ready'&&m.id===initId){epoch=m.epoch;ready=true;send();return;}
+   if(m.type==='ready'&&m.id===initId){epoch=m.epoch;ready=true;onReady(m.count);send();return;}
    if(m.type==='error'&&m.id===initId){ready=false;onError(m.code);return;}
    if(!inFlight||m.id!==inFlight.id||m.epoch!==epoch)return;
    const done=inFlight;inFlight=null;
