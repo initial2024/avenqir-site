@@ -472,3 +472,20 @@ for(const [locale,...phrases] of topics.rows)for(const q of phrases){
 }
 assert.equal(broadCount,1120);assert.equal(broadRefused,5600);
 console.log('BROAD_TOPIC_REPORT',JSON.stringify({broadCount,broadAnswered,broadRefused}));
+
+const wrappedSession=createSession(catalog,model,runtime.features,runtime.create(base));
+let wrappedCount=0,wrappedConstraints=0;
+for(let i=0;i<topics.frames.length;i++){
+ const [locale,prefix,suffix]=topics.frames[i];
+ assert.equal(locale,multilingual.rows[i][0]);
+ for(const q of topics.rows[i].slice(1).concat(multilingual.rows[i].slice(1))){
+  const wrapped=prefix+q+suffix;
+  assert.deepEqual(wrappedSession.rank(wrapped),wrappedSession.rank(q),locale+' '+wrapped);
+  wrappedCount++;
+  const c=multilingual.localeConstraints[i][1];
+  assert.equal(wrappedSession.rank(prefix+q+' '+c+suffix).length,0,locale+' constraint '+wrapped);
+  wrappedConstraints++;
+ }
+}
+assert.equal(wrappedCount,2560);assert.equal(wrappedConstraints,2560);
+console.log('POLITE_FRAME_REPORT',JSON.stringify({wrappedCount,wrappedConstraints}));
