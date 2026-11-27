@@ -33,6 +33,8 @@ function build(dest){
  sw=replaceOnce(sw,"'atlas-semantic-download.js'",entries.map(n=>"'semantic-v2/"+n+"'").join(','));
  assert.ok(!sw.includes(spec.file),'Model must never be precached by shell');
  fs.writeFileSync(swPath,sw);
+ // The candidate needs neither legacy downloader nor its weight payload.
+ for(const name of ['atlas-semantic-download.js','atlas-semantic-model-v1.json'])fs.rmSync(path.join(target,name),{force:true});
  assert.ok(!html.includes('atlas-semantic-download.js'),'Old download script must not load');
  assert.ok(!html.includes('/research/'),'No research server path');
  assert.equal(digest(fs.readFileSync(path.join(sub,spec.file))),spec.sha256);
