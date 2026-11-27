@@ -54,3 +54,29 @@ for(const q of ['xyzqvjjunk7293','banana refrigerator repair','不要推荐AI聊
  assert.equal(engine.rank(q,catalog).size,0,q+' must abstain from unsupported intent or constraint');
 }
 console.log('CATALOG_EVAL_PASS',hit+'/'+cases.length,'targeted top-five intent cases; 7 abstentions');
+
+assert.deepEqual(search.prepare('online color palette').terms,['online','color palette']);
+assert.equal(search.analyze(search.prepare('githbu'),['GitHub','https://github.com/','','']).kind,'fuzzy');
+assert.equal(search.analyze(search.prepare('photo'),['图片编辑','','','']).kind,'synonym');
+assert.equal(search.analyze(search.prepare('github'),['GitHub','','','']).kind,'exact');
+const extended=[
+ ['制作一个链接二维码',/QRCode Monkey/i],
+ ['检查域名解析有没有生效',/DNSChecker|Nslookup\.io/i],
+ ['安排跨时区的会议',/World Time Buddy/i],
+ ['test a regular expression',/regex101|RegExr/i],
+ ['练习盲打提高打字速度',/TypingClub|Monkeytype/i],
+ ['给海报找配色方案',/Adobe Color/i],
+ ['搭配标题和正文的字体',/Fontjoy/i],
+ ['检查WebRTC泄漏',/BrowserLeaks|IP Tools/i],
+ ['public domain books',/Project Gutenberg|Standard Ebooks|ManyBooks|Global Grey/i],
+ ['draw a flowchart',/Excalidraw|Mermaid Live|diagrams\.net/i],
+ ['编辑JSON树形数据',/JSON Editor Online/i]
+];
+for(const [q,expected] of extended){
+ const names=[...engine.rank(q,catalog).keys()].map(u=>byURL.get(u)?.name||'');
+ console.log('EXTENDED_EVAL',JSON.stringify({q,names}));
+ assert.ok(names.slice(0,5).some(n=>expected.test(n)),q+' missed grounded resource');
+}
+assert.ok(![...engine.rank('练习盲打提高打字速度',catalog).keys()].some(u=>/Python Typing/.test(byURL.get(u)?.name||'')));
+assert.equal(engine.rank('公版电子书且免费无广告',catalog).size,0);
+console.log('EXTENDED_EVAL_PASS',extended.length+'/'+extended.length);

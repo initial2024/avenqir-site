@@ -123,10 +123,10 @@
  const fieldCache=new WeakMap();
  const meaningful=x=>{let fields=fieldCache.get(x);if(!fields){fields=[x.name,x.url,x.category,x.description].map(normalize);fieldCache.set(x,fields)}return fields};
  const searchModel=window.AVENQIR_ATLAS_SEARCH;
- let termsQuery=null,prepared=null,lexicalCache=new WeakMap();
+ let termsQuery=null,prepared=null,lexicalCache=new WeakMap(),matchKinds=new WeakMap();
  const semantic=window.AVENQIR_SEMANTIC_DOWNLOAD?.mount(()=>{draw();if(query&&filtered().length){const d=$('atlasNoMatchDialog');if(d?.open)d.close();if(committedQuery===query)updateSearchNext(query,false);}},T);
- function score(x){if(!query)return 1;if(termsQuery!==query){termsQuery=query;prepared=searchModel?.prepare(query);lexicalCache=new WeakMap();}let rank=lexicalCache.get(x);
-   if(rank===undefined){const fields=meaningful(x);rank=prepared?searchModel.rank(prepared,fields,t=>initialsMatch(x,t)):normalize(fields.join(' ')).includes(normalize(query))?20:-1;lexicalCache.set(x,rank);}
+ function score(x){if(!query)return 1;if(termsQuery!==query){termsQuery=query;prepared=searchModel?.prepare(query);lexicalCache=new WeakMap();matchKinds=new WeakMap();}let rank=lexicalCache.get(x);
+   if(rank===undefined){const fields=meaningful(x);const match=prepared?searchModel.analyze(prepared,fields,t=>initialsMatch(x,t)):{rank:normalize(fields.join(' ')).includes(normalize(query))?20:-1,kind:'exact'};rank=match.rank;matchKinds.set(x,match.kind);lexicalCache.set(x,rank);}
    if(rank>=0)return rank;
    return dangerous(x.url)?-1:semantic?.scores(query,records)?.get(x.url)??-1;
  }
@@ -426,7 +426,7 @@
        if(e.button!==0||e.ctrlKey||e.metaKey||e.altKey||e.shiftKey)return;
        if(!isAllowed(url)){e.preventDefault();showExternal(url,x.name);}
        else trackOpen(url);
-     });a.addEventListener('auxclick',e=>{if(!recheck()){e.preventDefault();return;}if(e.button===1&&isAllowed(url))trackOpen(url);});data.append(a);if(query&&lexicalCache.get(x)<0&&semantic?.active())data.append(el('small','atlas-semantic-match',T('意图近似匹配 · 请核对具体功能','Intent match · verify features')));
+     });a.addEventListener('auxclick',e=>{if(!recheck()){e.preventDefault();return;}if(e.button===1&&isAllowed(url))trackOpen(url);});data.append(a);if(query){const kind=matchKinds.get(x);if(kind==='synonym')data.append(el('small','atlas-semantic-match',T('同义词匹配','Synonym match')));else if(kind==='fuzzy')data.append(el('small','atlas-semantic-match',T('拼写近似匹配','Spelling match')));else if(lexicalCache.get(x)<0&&semantic?.active())data.append(el('small','atlas-semantic-match',T('意图近似匹配 · 请核对具体功能','Intent match · verify features')));}
      if(sourceUI)data.append(sourceUI.external(url,permitted));
      if(english()&&/[\u3400-\u9fff]/.test(x.description||'')){
        const detail=el('details','atlas-original-desc'),caption=el('summary','',T('查看原始简介','Original description (Chinese) · expand'));

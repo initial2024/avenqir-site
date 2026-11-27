@@ -13,6 +13,17 @@ const SPEC=Object.freeze({"version":"1","file":"atlas-semantic-model-v1.json","b
 // Explicit task evidence constrains the learned vector; no inferred price, account,
 // execution environment, security guarantee or feature from broad topical similarity.
 const tasks=[
+ ['qr-create',/(?:二维码.{0,8}(?:生成|制作)|(?:生成|制作).{0,12}二维码|(?:generate|create|make).{0,16}(?:qr code|qrcode)|qr code generator|QRコード.{0,8}作)/i,/(?:生成.{0,8}二维码|二维码.{0,8}生成|qr code generator|qrcode monkey)/i],
+ ['dns-check',/(?:域名.{0,12}(?:解析|生效)|dns.{0,12}(?:传播|propagation|lookup|查询|check)|(?:check|lookup).{0,16}dns)/i,/(?:dns.{0,12}(?:传播|解析查询|lookup|诊断)|dnschecker|nslookup\.io)/i],
+ ['meeting-zone',/(?:跨时区.{0,12}(?:会议|开会)|(?:会议|开会).{0,12}时区|(?:meeting|schedule).{0,30}time zones|time zones.{0,20}meeting|時差.{0,10}会議)/i,/(?:会议时区|时区重叠|world time buddy)/i],
+ ['regex-test',/(?:正则.{0,8}(?:测试|调试|验证)|(?:测试|调试).{0,8}正则|(?:test|debug).{0,15}(?:regex|regular expression)|regex tester|正規表現.{0,8}テスト)/i,/(?:正则表达式.{0,8}(?:测试|编辑器)|regex101|regExr)/i],
+ ['typing-practice',/(?:打字.{0,10}(?:练习|速度|训练)|(?:练习|训练).{0,8}(?:打字|盲打)|(?:practice|improve|test).{0,18}typing|typing.{0,8}(?:practice|speed)|タイピング.{0,8}練習)/i,/(?:打字速度|练习.{0,8}盲打|typingclub|monkeytype)/i],
+ ['palette',/(?:海报.{0,12}配色|(?:找|生成|搭配|选).{0,8}配色|(?:color|colour).{0,8}palette|配色.{0,8}(?:工具|方案))/i,/(?:色轮|协调配色|color palette|colour palette)/i],
+ ['font-pair',/(?:字体.{0,10}(?:搭配|配对|组合)|(?:搭配|组合).{0,8}字体|font pairing|pair.{0,8}fonts)/i,/(?:试配.{0,12}字体|字体搭配|fontjoy|font pairing)/i],
+ ['webrtc-test',/(?:webrtc.{0,12}(?:检测|泄漏|test|leak)|(?:检查|检测|test|check).{0,12}webrtc)/i,/(?:webrtc.{0,10}(?:检测|诊断|test)|browserleaks|IP Tools 诊断集合)/i],
+ ['public-books',/(?:公版.{0,8}(?:书|电子书)|public domain.{0,8}(?:books|ebooks)|著作権切れ.{0,8}本)/i,/(?:公版.{0,8}(?:电子书|文献)|public domain.{0,8}(?:ebooks|books))/i],
+ ['flowchart',/(?:画.{0,12}流程图|(?:制作|绘制).{0,12}流程图|(?:draw|create|make).{0,18}(?:flowchart|flow chart)|フローチャート.{0,8}作)/i,/(?:流程图|flowchart|flow chart)/i],
+ ['json-editor',/(?:json.{0,12}(?:整理|编辑|格式化|format|edit)|(?:整理|编辑|format|edit).{0,12}json)/i,/(?:json editor|整理.{0,8}可公开的数据|json.{0,10}(?:编辑|树形结构))/i],
  ['pdf-merge',/(?:pdf.{0,16}(?:合并|合成|拼接|combine|merge)|(?:合并|合成|combine|merge).{0,20}pdf)/i,/(?:pdf.{0,14}(?:处理|工具|合并|merge|editor)|(?:合并|merge).{0,15}pdf|ilovepdf|pdf24|acrobat online)/i],
  ['pdf-read',/(?:pdf.{0,12}(?:阅读|查看|打开)|(?:read|view|open).{0,15}pdf)/i,/(?:pdf.{0,12}(?:查看|阅读|打开|viewer)|pdf\.js|(?:read|view).{0,12}pdf)/i],
  ['photo-background',/(?:抠图|去背景|去除.{0,8}背景|背景.{0,8}(?:消|去|删)|remove.{0,24}background|background removal)/i,/(?:抠图|去背景|去除.{0,8}(?:图片)?背景|remove.{0,12}background|background remover)/i],
