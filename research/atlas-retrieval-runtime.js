@@ -72,8 +72,11 @@ function intent(q,model){
  // Do not broaden a conjunction between independently recognizable tasks to OR.
  const normalized=multilingual.normalize(q);
  for(const [, , ,join] of multilingual.negativeFrames){const sep=join.normalize('NFKC').toLowerCase();const at=normalized.indexOf(sep);if(at<=0)continue;const left=normalized.slice(0,at).trim(),right=normalized.slice(at+sep.length).trim();const a=multilingual.resolve(left).id||topics.resolve(left),b=multilingual.resolve(right).id||topics.resolve(right);if(a&&b&&a!==b)return null;}
- const wrapped=topics.unwrap(q);
- const body=wrapped&&(multilingual.resolve(wrapped).id||topics.resolve(wrapped))?wrapped:q;
+ const direct=multilingual.resolve(q).id||topics.resolve(q);
+ const bodies=direct?[]:topics.unwrapCandidates(q).filter(b=>multilingual.resolve(b).id||topics.resolve(b));
+ const ids=new Set(bodies.map(b=>multilingual.resolve(b).id||topics.resolve(b)));
+ if(ids.size>1)return null;
+ const body=bodies[0]||q;
  const alias=multilingual.resolve(body);if(alias.blocked||multilingual.hasConstraint(multilingual.normalize(q)))return null;
  if(body.length<3&&!alias.id&&!topics.resolve(body))return null;
  const broad=!alias.id&&topics.resolve(body);
