@@ -42,7 +42,7 @@ const tasks=[
 const evidence={
  pdf:/\bpdf\b/i,image:/图片|图像|照片|photo|image editor|写真/i,slides:/幻灯片模板|演示模板|演示文稿|powerpoint|slidesgo|slidescarnival/i,papers:/论文|文献|学术搜索|scholarly|academic search|pubmed/i,courses:/课程|公开课|教育|教学|course|lessons|tutorial/i,ai:/人工智能|大模型|AI交流|智能助手|chatbot|language model|AI官网/i,translate:/翻译|词典|字典|translate|dictionary|翻訳/i,code:/编程|代码|开发|developer|programming|documentation/i,deploy:/网站.{0,10}(?:部署|托管)|运维|容器|hosting|deployment|kubernetes/i,ip:/公网.{0,10}(?:ip|出口)|ip\s*(?:信息|查询|地址|归属|lookup|address)|(?:查询|查看)\s*ip|网络属性|ipinfo|ip\.sb|ip\.fs\.kg/i,speed:/测速|测网速|延迟|吞吐|speedtest|speed test|fast\.com/i,dns:/域名解析|dns|whois|域名登记/i,security:/风险检测|钓鱼|恶意|证书|phishing|malware|ssl/i,privacy:/隐私|指纹|webrtc|泄漏|privacy|fingerprint/i,maps:/地图|地理|卫星|街景|map|satellite/i,travel:/旅行|交通|航班|火车|旅游|travel|transit|flight/i,assets:/素材|插画|字体|图标|stock image|illustration|font|icon/i,music:/音乐|音频|播客|music|audio|podcast/i,video:/视频|电影|影片|video|film/i,play:/游戏|休闲|解压|game|puzzle/i,data:/数据集|统计|数据库|数据可视化|dataset|statistics|database/i,science:/科学|科研|材料|化学|物理|工程|science|engineering/i,time:/时间|时钟|时区|日期|日历|计时|timezone|clock|calendar|timer/i,finance:/金融|经济|汇率|货币|财经|finance|economics|currency/i,books:/图书|电子书|书籍|阅读|library|ebook|books/i,news:/新闻|时事|报道|news|journalism/i,files:/文件格式|文件转换|压缩包|解压|file converter|archive|json/i,health:/健康|医学|公共卫生|医疗|health|medical/i
 };
-function unsupported(q){return /(?:不要|不想|不推荐|排除|除了|无需|不用|不需要|免登录|免注册|免费|无广告|本地处理|绝对安全|永久免费|not\s+|without\s+|exclude\s+|avoid\s+|no[- ]login|no[- ]ads|free\s+|offline\s+|ログイン不要|無料|使わない)/i.test(q);}
+function unsupported(q){return /(?:不要|不想|不推荐|排除|除了|无需|不用|不需要|免登录|免注册|免费|无广告|本地处理|离线|不上传|无需联网|绝对安全|永久免费|not\s+|without\s+|exclude\s+|avoid\s+|\bno[- ](?:login|ads|registration|upload|account)\b|\bfree\b|\boffline\b|\blocal[- ]only\b|\bwithout\b|ログイン不要|無料|使わない|広告なし|登録不要|オフライン|アップロード不要|sin (?:registro|publicidad|conexi[oó]n)|gratis|gratuito|sans (?:inscription|publicit[eé]|connexion)|gratuit|ohne (?:anmeldung|werbung|internet)|kostenlos)/i.test(q);}
 
 function create(model){
  if(!model||model.schema!=='aq-domain-embedding-1'||model.bins!==4096||!Array.isArray(model.classes)||model.classes.length!==SPEC.dimensions)throw Error('model schema');
@@ -50,26 +50,28 @@ function create(model){
  model.classes.forEach(([id,weights],i)=>{if(typeof id!=='string'||ids.has(id)||!Array.isArray(weights)||weights.length>4096)throw Error('model classes');ids.add(id);const seen=new Set();for(const [k,w] of weights){if(!Number.isInteger(k)||k<0||k>=4096||seen.has(k)||!Number.isInteger(w)||w<=0||w>4096)throw Error('model weight');seen.add(k);if(!lookup.has(k))lookup.set(k,[]);lookup.get(k).push([i,w/4096]);}});
  const docCache=new WeakMap();
  function embed(text){const f=features(text),v=new Float32Array(model.classes.length);for(const [k,w] of f)for(const [i,c] of lookup.get(k)||[])v[i]+=w*c;let peak=0;for(const x of v)peak=Math.max(peak,x);for(let i=0;i<v.length;i++)v[i]=Math.max(0,v[i]-.045);const norm=Math.hypot(...v);if(norm)for(let i=0;i<v.length;i++)v[i]/=norm;return {v,peak};}
- function doc(item){let e=docCache.get(item);if(!e){e=embed([item.name,item.category,item.description].join(' '));docCache.set(item,e);}return e;}
+ function doc(item){const source=[item.name,item.category,item.description].join(' ');let entry=docCache.get(item);if(!entry||entry.source!==source){entry={source,embedding:embed(source)};docCache.set(item,entry);}return entry.embedding;}
  function rank(query,items){
   const raw=String(query||'').normalize('NFKC').trim();
-  if(raw.length<3||unsupported(raw))return new Map();
+  if(raw.length<3||raw.length>512||unsupported(raw))return new Map();
   const q=embed(raw),selected=tasks.filter(([,pattern])=>pattern.test(raw));
   const peaks=Array.from(q.v,(value,i)=>({value,id:model.classes[i][0]})).sort((a,b)=>b.value-a.value);
   // Unknown intent and diffuse/ambiguous vectors should abstain. Explicit task
   // evidence may retrieve candidates even if the small model misses the phrase.
   if(!selected.length&&(q.peak<.19||!peaks[0]||peaks[0].value<.55||peaks[0].value-(peaks[1]?.value||0)<.12))return new Map();
-  const out=[];
-  for(const item of items.slice(0,2500)){
+  const out=new Map();
+  // Catalog order is not relevance: scan all locally curated entries and deduplicate URLs.
+  for(const item of items){
+   if(!item||typeof item.url!=='string'||!item.url)continue;
    const description=[item.name,item.description].join(' ');
    if(selected.length&&!selected.every(([, ,guard])=>guard.test(description)))continue;
    if(!selected.length&&!evidence[peaks[0].id]?.test(description))continue;
    const d=doc(item);let sim=0;for(let i=0;i<q.v.length;i++)sim+=q.v[i]*d.v[i];
-   if(selected.length){out.push([item.url,1+sim]);}
-   else if(d.peak>=.13&&sim>=.76)out.push([item.url,sim]);
+   const score=selected.length?1+sim:(d.peak>=.13&&sim>=.76?sim:null);
+   if(score!==null&&(!out.has(item.url)||score>out.get(item.url)))out.set(item.url,score);
   }
-  out.sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
-  return new Map(out.slice(0,12).map(([url,sim])=>[url,1+sim]));
+  const ranked=[...out].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
+  return new Map(ranked.slice(0,12).map(([url,sim])=>[url,1+sim]));
  }
  return Object.freeze({embed,rank});
 }
