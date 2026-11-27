@@ -20,7 +20,7 @@
    $('atlasSemanticStatus').textContent=phase==='ready'?(persisted?l.ready:l.session):phase==='error'?l.error+' ['+error+']':busy?l.loading:phase==='cancelled'?l.cancel:'';
    const progress=$('atlasSemanticProgress');progress.max=spec.bytes;progress.value=bytes;progress.hidden=!busy&&phase!=='ready';progress.setAttribute('aria-label',l.loading);
    $('atlasSemanticDetail').textContent=busy||phase==='ready'?format(bytes)+' / '+format(spec.bytes)+' · '+Math.floor(bytes/spec.bytes*100)+'%'+(rate>0?' · '+format(rate)+'/s':''):'';
-   for(const [id,key,hidden] of [['atlasSemanticDownload','download',busy||!!session],['atlasSemanticLater','later',busy||!!session],['atlasSemanticCancel','cancel',!busy],['atlasSemanticRemove','remove',busy||!session],['atlasSemanticClose','close',false]]){const e=$(id);e.textContent=l[key];e.hidden=hidden;}
+   for(const [id,key,hidden] of [['atlasSemanticDownload','download',busy||!!session],['atlasSemanticLater','later',busy||!!session],['atlasSemanticCancel','cancel',!busy],['atlasSemanticRemove','remove',busy||(!session&&pref()!=='enabled'&&!persisted)],['atlasSemanticClose','close',false]]){const e=$(id);e.textContent=l[key];e.hidden=hidden;}
   }
   function resetRank(){clearTimeout(rankTimer);rankTimer=null;lastQuery='';result=null;}
   function workerFailure(id,code='worker'){if(id!==serial)return;serial++;session?.close();session=null;resetRank();phase='error';error=code;draw();notify();}
@@ -47,7 +47,7 @@
      },onError:()=>workerFailure(id)});
      lastItems=items;return next;
     }});
-    if(state.state==='missing'){phase='idle';return;}
+    if(state.state==='missing'){phase='idle';persisted=false;save('');return;}
     session=next;persisted=state.persisted;bytes=spec.bytes;rate=0;phase='ready';save('enabled');resetRank();notify();
    }catch(e){phase=e.message==='cancelled'?'cancelled':'error';error=String(e.message||'load');bytes=0;rate=0;}
    finally{busy=false;draw();if(!session)notify();}
@@ -59,7 +59,7 @@
   $('atlasSemanticCancel').addEventListener('click',()=>loader.cancel());
   $('atlasSemanticRemove').addEventListener('click',async()=>{
    if(busy||!root.confirm(lang().confirm))return;serial++;session=null;resetRank();save('declined');busy=true;phase='idle';bytes=0;notify();draw();
-   try{await loader.remove();}catch{phase='error';error='storage';}finally{busy=false;draw();}
+   try{await loader.remove();persisted=false;}catch{phase='error';error='storage';persisted=true;}finally{busy=false;draw();}
   });
   root.addEventListener('aq:language-change',draw);draw();
   // Defer restoration until the directory finishes initializing its own bindings.
