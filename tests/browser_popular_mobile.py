@@ -15,7 +15,7 @@ assert CHROME, "Chrome/Chromium required"
 
 FIXTURE = """<!doctype html><title>AVENQIR 390×844 checks</title>
 <style>iframe{display:block;border:0;width:390px;height:844px}</style>
-<iframe id="home" src="/index.html"></iframe><iframe id="directory" src="/directory.html"></iframe>
+<iframe id="home" src="/index.html"></iframe><iframe id="directory" src="/directory.html"></iframe><iframe id="bookmarks" src="/bookmarks.html"></iframe>
 <script>
 const waitFor=(predicate)=>new Promise((resolve,reject)=>{
  const start=performance.now();
@@ -161,8 +161,27 @@ const require=(condition,reason)=>{if(!condition)throw Error(reason);};
  require(!d.getElementById('atlasHistoryEnabled').checked,'search history defaults off');
  d.getElementById('atlasHistoryEnabled').click();
  require(directory.localStorage.getItem('avenqir.atlas.search-history.enabled.v1')==='1','history opt-in missing');
+ const search=d.getElementById('atlasQuery');search.value='GitHub';d.getElementById('atlasForm').dispatchEvent(new directory.Event('submit',{bubbles:true,cancelable:true}));
+ require(JSON.parse(directory.localStorage.getItem('avenqir.atlas.search-history.v1'))[0]==='GitHub','committed search history missing');
  d.getElementById('atlasHistoryEnabled').click();
- require(!directory.localStorage.getItem('avenqir.atlas.search-history.enabled.v1'),'history opt-out missing');
+ require(!directory.localStorage.getItem('avenqir.atlas.search-history.enabled.v1')&&!directory.localStorage.getItem('avenqir.atlas.search-history.v1'),'history opt-out must erase records');
+ const bookmarks=document.getElementById('bookmarks').contentWindow;
+ const bk=bookmarks.document;
+ await waitFor(()=>bk.querySelectorAll('#bookmarkGrid .link-card').length>=2);
+ require(bk.documentElement.scrollWidth<=390,'bookmarks mobile overflow');
+ const originalRows=JSON.parse(bookmarks.localStorage.getItem('avenqir_v6_bookmarks'));
+ bk.getElementById('sortLinks').value='manual';bk.getElementById('sortLinks').dispatchEvent(new bookmarks.Event('change'));
+ bk.querySelector('#bookmarkGrid .link-card [data-bookmark-move="down"]').click();
+ const reordered=JSON.parse(bookmarks.localStorage.getItem('avenqir_v6_bookmarks'));
+ require(reordered[0].id===originalRows[1].id&&reordered[1].id===originalRows[0].id,'manual order not persisted');
+ const oldCategory=reordered[0].category;bookmarks.confirm=()=>true;
+ bk.getElementById('bookmarkCategoryFrom').value=oldCategory;bk.getElementById('bookmarkCategoryTo').value='QA fixture';bk.getElementById('bookmarkCategoryMove').click();
+ const moved=JSON.parse(bookmarks.localStorage.getItem('avenqir_v6_bookmarks'));
+ require(moved.length===reordered.length&&moved[0].category==='QA fixture'&&!moved.some(x=>x.category===oldCategory),'category rename must preserve all bookmarks');
+ require(bk.getElementById('exportMarkdown'),'Markdown export missing');
+ bookmarks.localStorage.setItem('avenqir_v6_bookmarks','[]');bookmarks.location.reload();
+ await waitFor(()=>bookmarks.document.querySelector('#bookmarkGrid .empty-state'));
+ require(!bookmarks.document.querySelector('#bookmarkGrid .link-card'),'explicit empty bookmarks must not repopulate defaults');
  directory.AVENQIR_I18N.set('en');
  require(d.getElementById('popularTitle').textContent.includes('Editor picks'),'editor title was not retranslated');
  directory.AVENQIR_I18N.set('zh-Hans');

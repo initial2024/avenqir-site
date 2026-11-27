@@ -33,6 +33,8 @@ CORE=(
     'recommendations-api.php',
     'recommendations-core.php',
     'atlas-popular-ui.js',
+    'leave.html',
+    'leave.js',
     'atlas-source-ui.css',
     'atlas-source-ui.js',
     'admin.php',

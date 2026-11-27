@@ -115,7 +115,12 @@
     anchor.href=href;
     anchor.rel='noopener noreferrer';
     anchor.referrerPolicy='no-referrer';
-    if(item.kind==='website'&&!href.startsWith('leave.html'))anchor.addEventListener('click',event=>{if(event.button===0&&!event.ctrlKey&&!event.metaKey&&!event.shiftKey&&!event.altKey&&destination(item))sourceUI.noteVisit(item.url);});
+    if(item.kind==='website'){
+      const recheck=()=>{const target=destination(item);if(!target){anchor.removeAttribute('href');return false;}anchor.href=target;return true;};
+      for(const event of ['pointerdown','focus','contextmenu'])anchor.addEventListener(event,recheck);
+      const visit=event=>{if(!recheck()){event.preventDefault();return;}if(!destination(item).startsWith('leave.html')&&event.button===0&&!event.ctrlKey&&!event.metaKey&&!event.shiftKey&&!event.altKey)sourceUI.noteVisit(item.url);};
+      anchor.addEventListener('click',visit);anchor.addEventListener('auxclick',visit);
+    }
     return anchor;
   }
   function loadCatalog(){

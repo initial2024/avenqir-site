@@ -97,6 +97,8 @@ jobs:
         run: |
           php -m | grep -i pdo_mysql
           php tests/test_recommendations_mysql.php
+          php tests/test_traffic_mysql.php
+          python3 tests/check_recommendations_http.py
   browser:
     runs-on: ubuntu-latest
     timeout-minutes: 8

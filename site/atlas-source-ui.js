@@ -51,7 +51,7 @@
     }).then(rows=>{if(!Array.isArray(rows))throw Error('catalog');return rows;}).catch(()=>{bundled=null;return [];});
   }
   function addedCatalog(force=false){
-    if(added&&(Date.now()-addedAt<30000||!addedAt))return added;
+    if(added&&(!addedAt||(!force&&Date.now()-addedAt<30000)))return added;
     addedAt=0;
     return added=fetch('recommendations-api.php?catalog=added',{cache:'no-store',signal:AbortSignal.timeout?.(2200)})
       .then(response=>response.ok?response.json():null).then(data=>data?.ok&&Array.isArray(data.items)?data.items:[])
@@ -84,6 +84,7 @@
     return statsRequest;
   }
   function itemForURL(url){return urlIndex.get(gate?.sanitize(url)?.href)||null;}
+  async function prepareVisit(url){const exact=gate?.sanitize(url)?.href;if(!exact)return null;if(itemForURL(exact))return itemForURL(exact);for(const [u,item] of byURL(await bundledCatalog()))urlIndex.set(u,item);if(itemForURL(exact))return itemForURL(exact);for(const [u,item] of byURL(await addedCatalog()))urlIndex.set(u,item);return itemForURL(exact);}
   function noteVisit(url){const item=itemForURL(url);if(item&&!gate.urlRisk(url).blocked&&safety?.threatStatus(url)!=='listed')window.dispatchEvent(new CustomEvent('aq:rating-visit',{detail:item.id}));}
   function metric(url){const item=urlIndex.get(gate?.sanitize(url)?.href);return item&&metrics&&Object.hasOwn(metrics,item.id)?metrics[item.id]:null;}
   function average(url){return metrics===null?localStars(url):window.AVENQIR_RECOMMENDATIONS?.publicAverage(metric(url))||0;}
@@ -117,7 +118,7 @@
     else catalog().then(rows=>{for(const [u,row] of byURL(rows))urlIndex.set(u,row);connectRating(link,urlIndex.get(exact));}).catch(()=>{});
     return link;
   }
-  window.AVENQIR_ATLAS_SOURCE_UI=Object.freeze({badge,external,label,ratingLink,catalog,refreshRatings,itemForURL,noteVisit,metric,average,recommendation,popularity,ratingsAvailable:()=>metrics!==null});
+  window.AVENQIR_ATLAS_SOURCE_UI=Object.freeze({badge,external,label,ratingLink,catalog,refreshRatings,itemForURL,prepareVisit,noteVisit,metric,average,recommendation,popularity,ratingsAvailable:()=>metrics!==null});
   notice();
   window.addEventListener('aq:language-change',()=>{notice();updateRatingLinks();});
   window.addEventListener('online',()=>{if(document.querySelector('[data-rec-view],#atlasResults,[data-popular-view]')){addedAt=1;refreshRatings(true).catch(()=>{});}});

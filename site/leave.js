@@ -22,10 +22,13 @@
   $('leaveStatus').textContent='必须由你主动确认后才会离开本网站。';
   if(row)row.hidden=!risk.rememberable;
   if(remember){remember.checked=false;remember.disabled=!risk.rememberable;}
+  const prepared=source?.prepareVisit(safe.href).catch(()=>null);
   go.disabled=false;
-  go.addEventListener('click',()=>{
+  go.addEventListener('click',async()=>{
+    if(go.disabled)return;go.disabled=true;
+    if(prepared)await Promise.race([prepared,new Promise(resolve=>setTimeout(resolve,250))]);
     const again=gate.urlRisk(safe.href);
-    if(again.blocked||threat?.threatStatus(safe.href)==='listed')return;
+    if(again.blocked||threat?.threatStatus(safe.href)==='listed'){$('leaveStatus').textContent='此链接已被阻止，不能继续访问。';return;}
     if(remember?.checked&&again.rememberable){
       try{gate.remember(safe.href,window.localStorage)}catch{}
     }
@@ -33,4 +36,5 @@
     window.dispatchEvent(new CustomEvent('aq:website-open',{detail:safe.href}));
     location.assign(safe.href);
   });
+  window.addEventListener('pageshow',()=>{if(!gate.urlRisk(safe.href).blocked&&threat?.threatStatus(safe.href)!=='listed')go.disabled=false;});
 })();
