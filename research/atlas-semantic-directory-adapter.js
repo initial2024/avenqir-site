@@ -7,7 +7,7 @@
   const $=id=>document.getElementById(id),panel=$('atlasSemanticPanel'),open=$('atlasSemanticOpen');
   if(!panel||!open||!spec||!locales||typeof getItems!=='function')return null;
   const loader=root.AVENQIR_RESEARCH_LOADER.create([{...spec,file:new URL(spec.file,baseURL).href}]);
-  let busy=false,phase='idle',error='',session=null,persisted=false,offered=false,bytes=0,rate=0,lastItems=null,lastQuery='',result=null,serial=0;
+  let busy=false,phase='idle',error='',session=null,persisted=false,offered=false,bytes=0,rate=0,lastItems=null,lastQuery='',result=null,serial=0,rankTimer=null;
   const pref=()=>{try{return localStorage.getItem(PREF)||'';}catch{return '';}};
   const save=v=>{try{localStorage.setItem(PREF,v);}catch{}};
   const lang=()=>locales.get(root.AVENQIR_I18N?.locale||'en');
@@ -22,14 +22,15 @@
    $('atlasSemanticDetail').textContent=busy||phase==='ready'?format(bytes)+' / '+format(spec.bytes)+' · '+Math.floor(bytes/spec.bytes*100)+'%'+(rate>0?' · '+format(rate)+'/s':''):'';
    for(const [id,key,hidden] of [['atlasSemanticDownload','download',busy||!!session],['atlasSemanticLater','later',busy||!!session],['atlasSemanticCancel','cancel',!busy],['atlasSemanticRemove','remove',busy||!session],['atlasSemanticClose','close',false]]){const e=$(id);e.textContent=l[key];e.hidden=hidden;}
   }
-  function resetRank(){lastQuery='';result=null;}
+  function resetRank(){clearTimeout(rankTimer);rankTimer=null;lastQuery='';result=null;}
+  function workerFailure(id,code='worker'){if(id!==serial)return;session?.close();session=null;resetRank();phase='error';error=code;draw();notify();}
   function notify(){onChange?.();}
   function show(){panel.hidden=false;draw();}
   function offer(){if(!offered&&!session&&!busy&&pref()!=='declined'){offered=true;show();}}
   function scores(q,items){
    if(!session||!q.trim()||!items?.length)return null;
    if(lastItems!==items){lastItems=items;resetRank();session.replaceCatalog(items);}
-   if(lastQuery!==q){lastQuery=q;result=null;session.query(q);}
+   if(lastQuery!==q){resetRank();lastQuery=q;const id=serial;rankTimer=setTimeout(()=>workerFailure(id,'worker_timeout'),8000);session.query(q);}
    return result;
   }
   async function begin(restore=false){
@@ -41,14 +42,14 @@
      const items=getItems();
      next=await root.AVENQIR_RESEARCH_ACTIVATION.activate({values,items,signal,workerURL:new URL('atlas-search-worker.js',baseURL).href,onResult:(urls,q)=>{
       if(id!==serial||!session||q!==lastQuery)return;
-      result=new Map(urls.map((url,i)=>[url,1.99-i*.02]));notify();
-     },onError:()=>{if(id!==serial)return;session=null;resetRank();phase='error';error='worker';draw();notify();}});
+      clearTimeout(rankTimer);rankTimer=null;result=new Map(urls.map((url,i)=>[url,1.99-i*.02]));notify();
+     },onError:()=>workerFailure(id)});
      lastItems=items;return next;
     }});
     if(state.state==='missing'){phase='idle';return;}
     session=next;persisted=state.persisted;bytes=spec.bytes;rate=0;phase='ready';save('enabled');resetRank();notify();
    }catch(e){phase=e.message==='cancelled'?'cancelled':'error';error=String(e.message||'load');bytes=0;rate=0;}
-   finally{busy=false;draw();}
+   finally{busy=false;draw();if(!session)notify();}
   }
   open.addEventListener('click',()=>{panel.hidden?show():panel.hidden=true;});
   $('atlasSemanticClose').addEventListener('click',()=>{panel.hidden=true;});
@@ -62,7 +63,7 @@
   root.addEventListener('aq:language-change',draw);draw();
   // Defer restoration until the directory finishes initializing its own bindings.
   if(pref()==='enabled')Promise.resolve().then(()=>begin(true));
-  return Object.freeze({show,offer,scores,active:()=>!!session});
+  return Object.freeze({show,offer,scores,pending(q,items){return !!q.trim()&&((busy&&phase==='checking')||!!session&&lastItems===items&&lastQuery===q&&result===null);},active:()=>!!session});
  }
  root.AVENQIR_SEMANTIC_DOWNLOAD=Object.freeze({mount});
 })(window);
