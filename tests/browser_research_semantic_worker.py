@@ -18,7 +18,7 @@ MODEL = '/research/atlas-model-v2.packed.json'
 digests = {p: hashlib.sha256((ROOT / p.lstrip('/')).read_bytes()).hexdigest() for p in [MODEL]}
 requests = []
 lengths = {p: (ROOT / p.lstrip('/')).stat().st_size for p in [MODEL]}
-HTML = '<!doctype html><title>Research worker QA</title>' + ''.join('<script src="/site/'+s+'.js"></script>' for s in SCRIPTS) + '<script src="/research/atlas-worker-client.js"></script><script src="/research/atlas-candidate-loader.js"></script><script>const hashes=' + json.dumps(digests) + ';const sizes=' + json.dumps(lengths) + ';' + """
+HTML = '<!doctype html><title>Research worker QA</title>' + ''.join('<script src="/site/'+s+'.js"></script>' for s in SCRIPTS) + '<script src="/research/atlas-worker-client.js"></script><script src="/research/atlas-candidate-loader.js"></script><script src="/research/atlas-worker-activation.js"></script><script>const hashes=' + json.dumps(digests) + ';const sizes=' + json.dumps(lengths) + ';' + """
 const yes=(v,m)=>{if(!v)throw Error(m);};
 const wait=async f=>{for(let i=0;i<350;i++){if(f())return;await new Promise(r=>setTimeout(r,30));}throw Error('timeout');};
 async function verified(p){
@@ -66,22 +66,14 @@ async function verified(p){
  const specs=Object.keys(hashes).map(file=>({file,bytes:sizes[file],sha256:hashes[file]}));
  const loader=AVENQIR_RESEARCH_LOADER.create(specs);
  let activations=0,closes=0,progress=[],current=null;
- const activate=(values,signal)=>new Promise((resolve,reject)=>{
+ const activate=async(values,signal)=>{
   yes(values.length===1&&values[0]===packed,'incorrect staged bytes');
-  const worker=new Worker('/research/atlas-search-worker.js');
-  let settled=false,closed=false;const hits=[];
-  const close=()=>{if(closed)return;closed=true;worker.terminate();closes++;};
-  const fail=code=>{if(settled)return;settled=true;signal.removeEventListener('abort',abort);close();reject(Error(code));};
-  const abort=()=>fail('cancelled');
-  const candidate=AVENQIR_RESEARCH_WORKER_CLIENT.create(worker,(urls,q,ms)=>hits.push({urls,q,ms}),fail,count=>{
-   if(signal.aborted){abort();return;}if(count<1338){fail('catalog');return;}
-   settled=true;signal.removeEventListener('abort',abort);activations++;
-   current={query:q=>candidate.query(q),hits,close};resolve(current);
-  });
-  signal.addEventListener('abort',abort,{once:true});
-  if(signal.aborted){abort();return;}
-  candidate.init(values[0],items);
- });
+  const hits=[];
+  const session=await AVENQIR_RESEARCH_ACTIVATION.activate({values,items,signal,workerURL:'/research/atlas-search-worker.js',onResult:(urls,q,ms)=>hits.push({urls,q,ms}),onError:code=>errors.push(code)});
+  yes(session.count>=1338,'worker catalog count');
+  activations++;
+  let closed=false;current={query:session.query,hits,close(){if(!closed){closed=true;session.close();closes++;}}};return current;
+ };
  let refused=false;
  try{await loader.load({activate});}catch(e){refused=e.message==='consent';}
  yes(refused&&!loader.active(),'download without consent');
