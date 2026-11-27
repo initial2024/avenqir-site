@@ -14,7 +14,7 @@
   };
   worker.onerror=()=>{if(!closed){ready=false;inFlight=null;onError('WORKER_FAILURE');}};
   return Object.freeze({
-   init(model,baseline,items){if(closed)return;ready=false;pending=null;inFlight=null;initId=++serial;latest=initId;worker.postMessage({type:'init',id:initId,model,baseline,items});},
+   init(model,items){if(closed)return;ready=false;pending=null;inFlight=null;initId=++serial;latest=initId;worker.postMessage({type:'init',id:initId,model,items});},
    query(q){if(closed)return;latest=++serial;pending={id:latest,query:String(q||'').slice(0,513)};send();},
    close(){if(closed)return;closed=true;pending=null;inFlight=null;worker.terminate();}
   });
