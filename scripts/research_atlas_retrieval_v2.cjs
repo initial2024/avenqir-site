@@ -417,3 +417,18 @@ function evaluateStress(catalog,model,features,baseline){
  return report;
 }
 console.log('STRESS_REPORT',JSON.stringify(evaluateStress(catalog,model,runtime.features,baseline),null,2));
+
+
+const multilingual=require('../research/atlas-multilingual-intents.js');
+const expected=[/QRCode Monkey/i,/regex101|RegExr/i,/Excalidraw|Mermaid Live|diagrams\.net/i,/Online Stopwatch/i,/Squoosh|Adobe Express.*压缩/i];
+const byURL=new Map(catalog.map(x=>[x.url,x.name]));
+let n=0,top1=0,top5=0,constraintReject=0;
+for(const [locale,...phrases] of multilingual.rows)for(const [i,q] of phrases.entries()){
+ n++;const names=candidate(q,catalog,model,runtime.features,baseline).map(u=>byURL.get(u));
+ top1+=Number(expected[i].test(names[0]||''));top5+=Number(names.slice(0,5).some(x=>expected[i].test(x)));
+ assert.ok(names.slice(0,5).some(x=>expected[i].test(x)),locale+' '+q);
+ const blocked=candidate(q+' without login',catalog,model,runtime.features,baseline);
+ assert.equal(blocked.length,0,locale+' '+q);constraintReject+=Number(!blocked.length);
+}
+assert.equal(multilingual.locales.length,40);assert.equal(n,200);
+console.log('MULTILINGUAL_REPORT',JSON.stringify({locales:multilingual.locales.length,n,top1,top5,constraintReject}));
