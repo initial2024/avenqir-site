@@ -80,3 +80,19 @@ for(const [q,expected] of extended){
 assert.ok(![...engine.rank('练习盲打提高打字速度',catalog).keys()].some(u=>/Python Typing/.test(byURL.get(u)?.name||'')));
 assert.equal(engine.rank('公版电子书且免费无广告',catalog).size,0);
 console.log('EXTENDED_EVAL_PASS',extended.length+'/'+extended.length);
+
+
+// Order-independent retrieval and unsupported-constraint regression.
+const qrFixture={url:'https://qr.example/',name:'QRCode Monkey',description:'qr code generator',category:'tools'};
+const noiseFixtures=Array.from({length:2600},(_,i)=>({url:'https://noise'+i+'.example/',name:'Unrelated',description:'unrelated',category:'other'}));
+const tailRank=engine.rank('create qr code',[...noiseFixtures,qrFixture]);
+assert.ok(tailRank.has(qrFixture.url),'catalog entries beyond old scan limit must be searchable');
+assert.deepEqual([...tailRank],[...engine.rank('create qr code',[qrFixture,...noiseFixtures])]);
+assert.equal(engine.rank('create qr code',Array(16).fill(qrFixture)).size,1);
+for(const q of ['制作二维码且离线','create qr code offline','create qr code no upload','QRコードを作る 広告なし','create qr code sin registro','create qr code sans publicité','create qr code ohne Anmeldung','create qr code '+'x'.repeat(513)])assert.equal(engine.rank(q,[qrFixture]).size,0,q);
+const mutableFixture={...qrFixture};
+engine.rank('create qr code',[mutableFixture]);
+mutableFixture.description='qr code generator public health medical medicine';
+mutableFixture.category='health';
+assert.deepEqual([...engine.rank('create qr code',[mutableFixture])],[...engine.rank('create qr code',[{...mutableFixture}])]);
+console.log('RETRIEVAL_HARDENING_PASS');
