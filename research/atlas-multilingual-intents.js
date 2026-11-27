@@ -1,7 +1,7 @@
 "use strict";
 (function(root){
 // Exact, local multilingual task phrases. Not a general translation system.
-const tasks=["qr-create","regex-test","flowchart","timer","image-compress"];
+const tasks=["qr-create","regex-test","flowchart","timer","image-compress","dns-lookup","tls-check","whois","ip-lookup","network-speed","json-edit","html-validate","css-validate","citation","doi-lookup","text-translate","word-dictionary"];
 const rows=[
   [
     "en",
@@ -9,7 +9,19 @@ const rows=[
     "test a regular expression",
     "draw a flowchart",
     "start a countdown timer",
-    "compress an image"
+    "compress an image",
+    "look up DNS records",
+    "inspect a TLS certificate",
+    "look up a domain registrar",
+    "find my public IP",
+    "test internet speed",
+    "edit JSON",
+    "validate HTML",
+    "validate CSS",
+    "generate a bibliography",
+    "look up a DOI",
+    "translate a paragraph",
+    "look up a word"
   ],
   [
     "zh-Hans",
@@ -17,7 +29,19 @@ const rows=[
     "测试正则表达式",
     "绘制流程图",
     "启动倒计时",
-    "压缩图片"
+    "压缩图片",
+    "查询DNS记录",
+    "检测TLS证书",
+    "查询域名注册商",
+    "查看公网IP",
+    "测试网络速度",
+    "编辑JSON",
+    "验证HTML语法",
+    "验证CSS语法",
+    "生成参考文献",
+    "检索DOI",
+    "翻译段落",
+    "查询词义"
   ],
   [
     "zh-Hant",
@@ -25,7 +49,19 @@ const rows=[
     "測試正規表示式",
     "繪製流程圖",
     "啟動倒數計時",
-    "壓縮圖片"
+    "壓縮圖片",
+    "查詢DNS記錄",
+    "檢查TLS憑證",
+    "查詢網域註冊商",
+    "查詢公網IP",
+    "測試網路速度",
+    "編輯JSON",
+    "驗證HTML語法",
+    "驗證CSS語法",
+    "產生參考文獻",
+    "查詢DOI",
+    "翻譯段落",
+    "查詢詞義"
   ],
   [
     "ja",
@@ -33,7 +69,19 @@ const rows=[
     "正規表現をテスト",
     "フローチャートを作成",
     "カウントダウンを開始",
-    "画像を圧縮"
+    "画像を圧縮",
+    "DNSレコードを検索",
+    "TLS証明書を検査",
+    "ドメイン登録事業者を調べる",
+    "グローバルIPを確認",
+    "回線速度を測定",
+    "JSONを編集",
+    "HTML構文を検証",
+    "CSS構文を検証",
+    "参考文献を作成",
+    "DOIを検索",
+    "段落を翻訳",
+    "単語の意味を調べる"
   ],
   [
     "ko",
@@ -41,7 +89,19 @@ const rows=[
     "정규 표현식 테스트",
     "순서도 그리기",
     "카운트다운 시작",
-    "이미지 압축"
+    "이미지 압축",
+    "DNS 레코드 조회",
+    "TLS 인증서 검사",
+    "도메인 등록기관 조회",
+    "공인 IP 확인",
+    "인터넷 속도 측정",
+    "JSON 편집",
+    "HTML 검증",
+    "CSS 검증",
+    "참고문헌 생성",
+    "DOI 조회",
+    "문단 번역",
+    "단어 뜻 검색"
   ],
   [
     "fr",
@@ -49,7 +109,19 @@ const rows=[
     "tester une expression régulière",
     "dessiner un organigramme",
     "lancer un compte à rebours",
-    "compresser une image"
+    "compresser une image",
+    "rechercher les enregistrements DNS",
+    "vérifier un certificat TLS",
+    "trouver le bureau d'enregistrement du domaine",
+    "trouver mon IP publique",
+    "tester le débit internet",
+    "modifier le JSON",
+    "valider le HTML",
+    "valider le CSS",
+    "générer une bibliographie",
+    "rechercher un DOI",
+    "traduire un paragraphe",
+    "chercher le sens d'un mot"
   ],
   [
     "de",
@@ -57,7 +129,19 @@ const rows=[
     "regulären Ausdruck testen",
     "Flussdiagramm erstellen",
     "Countdown starten",
-    "Bild komprimieren"
+    "Bild komprimieren",
+    "DNS-Einträge abfragen",
+    "TLS-Zertifikat prüfen",
+    "Domainregistrar finden",
+    "öffentliche IP ermitteln",
+    "Internetgeschwindigkeit testen",
+    "JSON bearbeiten",
+    "HTML validieren",
+    "CSS validieren",
+    "Literaturverzeichnis erstellen",
+    "DOI nachschlagen",
+    "Absatz übersetzen",
+    "Wortbedeutung nachschlagen"
   ],
   [
     "es",
@@ -65,7 +149,19 @@ const rows=[
     "probar una expresión regular",
     "crear un diagrama de flujo",
     "iniciar una cuenta regresiva",
-    "comprimir una imagen"
+    "comprimir una imagen",
+    "consultar registros DNS",
+    "comprobar un certificado TLS",
+    "buscar el registrador de dominio",
+    "consultar mi IP pública",
+    "medir la velocidad de internet",
+    "editar JSON",
+    "validar HTML",
+    "validar CSS",
+    "generar una bibliografía",
+    "buscar un DOI",
+    "traducir un párrafo",
+    "buscar el significado de una palabra"
   ],
   [
     "pt",
@@ -73,7 +169,19 @@ const rows=[
     "testar uma expressão regular",
     "criar um fluxograma",
     "iniciar uma contagem regressiva",
-    "comprimir uma imagem"
+    "comprimir uma imagem",
+    "consultar registros DNS",
+    "verificar certificado TLS",
+    "encontrar o registrador do domínio",
+    "consultar meu IP público",
+    "testar a velocidade da internet",
+    "editar JSON",
+    "validar HTML",
+    "validar CSS",
+    "gerar uma bibliografia",
+    "buscar um DOI",
+    "traduzir um parágrafo",
+    "buscar significado de uma palavra"
   ],
   [
     "it",
@@ -81,7 +189,19 @@ const rows=[
     "testare un'espressione regolare",
     "creare un diagramma di flusso",
     "avviare un conto alla rovescia",
-    "comprimere un'immagine"
+    "comprimere un'immagine",
+    "consultare i record DNS",
+    "verificare un certificato TLS",
+    "trovare il registrar del dominio",
+    "trovare il mio IP pubblico",
+    "misurare la velocità di internet",
+    "modificare JSON",
+    "validare HTML",
+    "validare CSS",
+    "generare una bibliografia",
+    "cercare un DOI",
+    "tradurre un paragrafo",
+    "cercare il significato di una parola"
   ],
   [
     "nl",
@@ -89,7 +209,19 @@ const rows=[
     "een reguliere expressie testen",
     "een stroomdiagram maken",
     "een afteltimer starten",
-    "een afbeelding comprimeren"
+    "een afbeelding comprimeren",
+    "DNS-records opzoeken",
+    "TLS-certificaat controleren",
+    "domeinregistrar opzoeken",
+    "mijn openbare IP opzoeken",
+    "internetsnelheid testen",
+    "JSON bewerken",
+    "HTML valideren",
+    "CSS valideren",
+    "bibliografie genereren",
+    "DOI opzoeken",
+    "alinea vertalen",
+    "woordbetekenis opzoeken"
   ],
   [
     "sv",
@@ -97,7 +229,19 @@ const rows=[
     "testa ett reguljärt uttryck",
     "skapa ett flödesschema",
     "starta en nedräkning",
-    "komprimera en bild"
+    "komprimera en bild",
+    "slå upp DNS-poster",
+    "kontrollera TLS-certifikat",
+    "hitta domänregistratorn",
+    "hitta min publika IP",
+    "testa internethastigheten",
+    "redigera JSON",
+    "validera HTML",
+    "validera CSS",
+    "skapa en bibliografi",
+    "slå upp DOI",
+    "översätta ett stycke",
+    "slå upp ett ord"
   ],
   [
     "no",
@@ -105,7 +249,19 @@ const rows=[
     "teste et regulært uttrykk",
     "lage et flytskjema",
     "starte en nedtelling",
-    "komprimere et bilde"
+    "komprimere et bilde",
+    "slå opp DNS-poster",
+    "kontrollere TLS-sertifikat",
+    "finne domeneregistratoren",
+    "finne min offentlige IP",
+    "teste internetthastighet",
+    "redigere JSON",
+    "validere HTML",
+    "validere CSS",
+    "lage en bibliografi",
+    "slå opp DOI",
+    "oversette et avsnitt",
+    "slå opp et ord"
   ],
   [
     "da",
@@ -113,7 +269,19 @@ const rows=[
     "teste et regulært udtryk",
     "oprette et rutediagram",
     "starte en nedtælling",
-    "komprimere et billede"
+    "komprimere et billede",
+    "slå DNS-poster op",
+    "kontrollere TLS-certifikat",
+    "finde domæneregistratoren",
+    "finde min offentlige IP",
+    "teste internethastigheden",
+    "redigere JSON",
+    "validere HTML",
+    "validere CSS",
+    "oprette en bibliografi",
+    "slå DOI op",
+    "oversætte et afsnit",
+    "slå et ord op"
   ],
   [
     "fi",
@@ -121,7 +289,19 @@ const rows=[
     "testata säännöllistä lauseketta",
     "piirtää vuokaavio",
     "käynnistää lähtölaskenta",
-    "pakata kuva"
+    "pakata kuva",
+    "hakea DNS-tietueita",
+    "tarkistaa TLS-varmenne",
+    "etsiä verkkotunnuksen rekisterinpitäjä",
+    "selvittää julkinen IP",
+    "testata internetin nopeus",
+    "muokata JSONia",
+    "validoida HTML",
+    "validoida CSS",
+    "luoda lähdeluettelo",
+    "hakea DOI",
+    "kääntää kappale",
+    "etsiä sanan merkitys"
   ],
   [
     "pl",
@@ -129,7 +309,19 @@ const rows=[
     "przetestować wyrażenie regularne",
     "narysować schemat blokowy",
     "uruchomić odliczanie",
-    "skompresować obraz"
+    "skompresować obraz",
+    "sprawdzić rekordy DNS",
+    "sprawdzić certyfikat TLS",
+    "znaleźć rejestratora domeny",
+    "sprawdzić publiczny adres IP",
+    "zmierzyć prędkość internetu",
+    "edytować JSON",
+    "zweryfikować HTML",
+    "zweryfikować CSS",
+    "wygenerować bibliografię",
+    "wyszukać DOI",
+    "przetłumaczyć akapit",
+    "sprawdzić znaczenie słowa"
   ],
   [
     "cs",
@@ -137,7 +329,19 @@ const rows=[
     "otestovat regulární výraz",
     "nakreslit vývojový diagram",
     "spustit odpočet",
-    "komprimovat obrázek"
+    "komprimovat obrázek",
+    "vyhledat DNS záznamy",
+    "ověřit TLS certifikát",
+    "najít registrátora domény",
+    "zjistit veřejnou IP",
+    "změřit rychlost internetu",
+    "upravit JSON",
+    "ověřit HTML",
+    "ověřit CSS",
+    "vytvořit bibliografii",
+    "vyhledat DOI",
+    "přeložit odstavec",
+    "vyhledat význam slova"
   ],
   [
     "sk",
@@ -145,7 +349,19 @@ const rows=[
     "otestovať regulárny výraz",
     "nakresliť vývojový diagram",
     "spustiť odpočítavanie",
-    "komprimovať obrázok"
+    "komprimovať obrázok",
+    "vyhľadať DNS záznamy",
+    "overiť TLS certifikát",
+    "nájsť registrátora domény",
+    "zistiť verejnú IP",
+    "zmerať rýchlosť internetu",
+    "upraviť JSON",
+    "overiť HTML",
+    "overiť CSS",
+    "vytvoriť bibliografiu",
+    "vyhľadať DOI",
+    "preložiť odsek",
+    "vyhľadať význam slova"
   ],
   [
     "hu",
@@ -153,7 +369,19 @@ const rows=[
     "reguláris kifejezés tesztelése",
     "folyamatábra készítése",
     "visszaszámlálás indítása",
-    "kép tömörítése"
+    "kép tömörítése",
+    "DNS-rekordok keresése",
+    "TLS-tanúsítvány ellenőrzése",
+    "domainregisztrátor keresése",
+    "nyilvános IP megkeresése",
+    "internet sebességének mérése",
+    "JSON szerkesztése",
+    "HTML ellenőrzése",
+    "CSS ellenőrzése",
+    "bibliográfia létrehozása",
+    "DOI keresése",
+    "bekezdés fordítása",
+    "szó jelentésének keresése"
   ],
   [
     "ro",
@@ -161,7 +389,19 @@ const rows=[
     "testează o expresie regulată",
     "creează o diagramă de flux",
     "pornește numărătoarea inversă",
-    "comprimă o imagine"
+    "comprimă o imagine",
+    "caută înregistrări DNS",
+    "verifică certificatul TLS",
+    "găsește registratorul domeniului",
+    "află IP-ul public",
+    "testează viteza internetului",
+    "editează JSON",
+    "validează HTML",
+    "validează CSS",
+    "generează o bibliografie",
+    "caută un DOI",
+    "tradu un paragraf",
+    "caută sensul unui cuvânt"
   ],
   [
     "bg",
@@ -169,7 +409,19 @@ const rows=[
     "тестване на регулярен израз",
     "създаване на блок-схема",
     "стартиране на обратно броене",
-    "компресиране на изображение"
+    "компресиране на изображение",
+    "проверка на DNS записи",
+    "проверка на TLS сертификат",
+    "намиране на регистратор на домейн",
+    "проверка на публичен IP",
+    "измерване на интернет скорост",
+    "редактиране на JSON",
+    "валидиране на HTML",
+    "валидиране на CSS",
+    "създаване на библиография",
+    "търсене на DOI",
+    "превод на абзац",
+    "търсене на значение на дума"
   ],
   [
     "hr",
@@ -177,7 +429,19 @@ const rows=[
     "testirati regularni izraz",
     "izraditi dijagram toka",
     "pokrenuti odbrojavanje",
-    "komprimirati sliku"
+    "komprimirati sliku",
+    "provjeriti DNS zapise",
+    "provjeriti TLS certifikat",
+    "pronaći registrara domene",
+    "pronaći javni IP",
+    "izmjeriti brzinu interneta",
+    "urediti JSON",
+    "validirati HTML",
+    "validirati CSS",
+    "izraditi bibliografiju",
+    "pretražiti DOI",
+    "prevesti odlomak",
+    "potražiti značenje riječi"
   ],
   [
     "sr",
@@ -185,7 +449,19 @@ const rows=[
     "testirati regularni izraz",
     "napraviti dijagram toka",
     "pokrenuti odbrojavanje",
-    "komprimovati sliku"
+    "komprimovati sliku",
+    "proveriti DNS zapise",
+    "proveriti TLS sertifikat",
+    "pronaći registrara domena",
+    "pronaći javni IP",
+    "izmeriti brzinu interneta",
+    "urediti JSON",
+    "validirati HTML",
+    "validirati CSS",
+    "napraviti bibliografiju",
+    "pretražiti DOI",
+    "prevesti pasus",
+    "potražiti značenje reči"
   ],
   [
     "sl",
@@ -193,7 +469,19 @@ const rows=[
     "preizkusiti regularni izraz",
     "narisati diagram poteka",
     "začeti odštevanje",
-    "stisniti sliko"
+    "stisniti sliko",
+    "poiskati zapise DNS",
+    "preveriti potrdilo TLS",
+    "najti registrarja domene",
+    "najti javni IP",
+    "izmeriti hitrost interneta",
+    "urediti JSON",
+    "preveriti HTML",
+    "preveriti CSS",
+    "ustvariti bibliografijo",
+    "poiskati DOI",
+    "prevesti odstavek",
+    "poiskati pomen besede"
   ],
   [
     "el",
@@ -201,7 +489,19 @@ const rows=[
     "δοκιμή κανονικής έκφρασης",
     "δημιουργία διαγράμματος ροής",
     "έναρξη αντίστροφης μέτρησης",
-    "συμπίεση εικόνας"
+    "συμπίεση εικόνας",
+    "αναζήτηση εγγραφών DNS",
+    "έλεγχος πιστοποιητικού TLS",
+    "εύρεση καταχωρητή τομέα",
+    "εύρεση δημόσιας IP",
+    "μέτρηση ταχύτητας διαδικτύου",
+    "επεξεργασία JSON",
+    "επικύρωση HTML",
+    "επικύρωση CSS",
+    "δημιουργία βιβλιογραφίας",
+    "αναζήτηση DOI",
+    "μετάφραση παραγράφου",
+    "αναζήτηση σημασίας λέξης"
   ],
   [
     "ru",
@@ -209,7 +509,19 @@ const rows=[
     "проверить регулярное выражение",
     "нарисовать блок-схему",
     "запустить обратный отсчёт",
-    "сжать изображение"
+    "сжать изображение",
+    "проверить записи DNS",
+    "проверить сертификат TLS",
+    "найти регистратора домена",
+    "узнать публичный IP",
+    "измерить скорость интернета",
+    "редактировать JSON",
+    "проверить HTML",
+    "проверить CSS",
+    "создать библиографию",
+    "найти DOI",
+    "перевести абзац",
+    "узнать значение слова"
   ],
   [
     "uk",
@@ -217,7 +529,19 @@ const rows=[
     "перевірити регулярний вираз",
     "намалювати блок-схему",
     "запустити зворотний відлік",
-    "стиснути зображення"
+    "стиснути зображення",
+    "перевірити записи DNS",
+    "перевірити сертифікат TLS",
+    "знайти реєстратора домену",
+    "дізнатися публічний IP",
+    "виміряти швидкість інтернету",
+    "редагувати JSON",
+    "перевірити HTML",
+    "перевірити CSS",
+    "створити бібліографію",
+    "знайти DOI",
+    "перекласти абзац",
+    "дізнатися значення слова"
   ],
   [
     "tr",
@@ -225,7 +549,19 @@ const rows=[
     "düzenli ifadeyi test et",
     "akış şeması oluştur",
     "geri sayımı başlat",
-    "resmi sıkıştır"
+    "resmi sıkıştır",
+    "DNS kayıtlarını sorgula",
+    "TLS sertifikasını kontrol et",
+    "alan adı kayıt kuruluşunu bul",
+    "genel IP adresimi bul",
+    "internet hızını ölç",
+    "JSON düzenle",
+    "HTML doğrula",
+    "CSS doğrula",
+    "kaynakça oluştur",
+    "DOI ara",
+    "paragraf çevir",
+    "kelime anlamını ara"
   ],
   [
     "ar",
@@ -233,7 +569,19 @@ const rows=[
     "اختبار تعبير نمطي",
     "إنشاء مخطط انسيابي",
     "بدء العد التنازلي",
-    "ضغط صورة"
+    "ضغط صورة",
+    "البحث عن سجلات DNS",
+    "فحص شهادة TLS",
+    "معرفة مسجل النطاق",
+    "معرفة عنوان IP العام",
+    "قياس سرعة الإنترنت",
+    "تحرير JSON",
+    "التحقق من HTML",
+    "التحقق من CSS",
+    "إنشاء قائمة مراجع",
+    "البحث عن DOI",
+    "ترجمة فقرة",
+    "البحث عن معنى كلمة"
   ],
   [
     "he",
@@ -241,7 +589,19 @@ const rows=[
     "בדיקת ביטוי רגולרי",
     "יצירת תרשים זרימה",
     "הפעלת ספירה לאחור",
-    "דחיסת תמונה"
+    "דחיסת תמונה",
+    "חיפוש רשומות DNS",
+    "בדיקת תעודת TLS",
+    "מציאת רשם הדומיין",
+    "מציאת כתובת IP ציבורית",
+    "בדיקת מהירות האינטרנט",
+    "עריכת JSON",
+    "אימות HTML",
+    "אימות CSS",
+    "יצירת ביבליוגרפיה",
+    "חיפוש DOI",
+    "תרגום פסקה",
+    "חיפוש משמעות מילה"
   ],
   [
     "fa",
@@ -249,7 +609,19 @@ const rows=[
     "آزمایش عبارت منظم",
     "رسم نمودار جریان",
     "شروع شمارش معکوس",
-    "فشرده سازی تصویر"
+    "فشرده سازی تصویر",
+    "جستجوی رکوردهای DNS",
+    "بررسی گواهی TLS",
+    "یافتن ثبت کننده دامنه",
+    "یافتن IP عمومی",
+    "سنجش سرعت اینترنت",
+    "ویرایش JSON",
+    "اعتبارسنجی HTML",
+    "اعتبارسنجی CSS",
+    "ساخت فهرست منابع",
+    "جستجوی DOI",
+    "ترجمه یک پاراگراف",
+    "جستجوی معنی کلمه"
   ],
   [
     "hi",
@@ -257,7 +629,19 @@ const rows=[
     "रेगुलर एक्सप्रेशन का परीक्षण करें",
     "फ्लोचार्ट बनाएं",
     "उलटी गिनती शुरू करें",
-    "छवि संपीड़ित करें"
+    "छवि संपीड़ित करें",
+    "DNS रिकॉर्ड खोजें",
+    "TLS प्रमाणपत्र जांचें",
+    "डोमेन रजिस्ट्रार खोजें",
+    "सार्वजनिक IP पता खोजें",
+    "इंटरनेट गति जांचें",
+    "JSON संपादित करें",
+    "HTML सत्यापित करें",
+    "CSS सत्यापित करें",
+    "संदर्भ सूची बनाएं",
+    "DOI खोजें",
+    "अनुच्छेद का अनुवाद करें",
+    "शब्द का अर्थ खोजें"
   ],
   [
     "bn",
@@ -265,7 +649,19 @@ const rows=[
     "রেগুলার এক্সপ্রেশন পরীক্ষা করুন",
     "ফ্লোচার্ট তৈরি করুন",
     "কাউন্টডাউন শুরু করুন",
-    "ছবি সংকুচিত করুন"
+    "ছবি সংকুচিত করুন",
+    "DNS রেকর্ড খুঁজুন",
+    "TLS সার্টিফিকেট যাচাই করুন",
+    "ডোমেইন রেজিস্ট্রার খুঁজুন",
+    "পাবলিক IP খুঁজুন",
+    "ইন্টারনেটের গতি পরীক্ষা করুন",
+    "JSON সম্পাদনা করুন",
+    "HTML যাচাই করুন",
+    "CSS যাচাই করুন",
+    "গ্রন্থপঞ্জি তৈরি করুন",
+    "DOI খুঁজুন",
+    "অনুচ্ছেদ অনুবাদ করুন",
+    "শব্দের অর্থ খুঁজুন"
   ],
   [
     "ur",
@@ -273,7 +669,19 @@ const rows=[
     "ریگولر ایکسپریشن کی جانچ کریں",
     "فلو چارٹ بنائیں",
     "الٹی گنتی شروع کریں",
-    "تصویر کو کمپریس کریں"
+    "تصویر کو کمپریس کریں",
+    "DNS ریکارڈ تلاش کریں",
+    "TLS سرٹیفکیٹ چیک کریں",
+    "ڈومین رجسٹرار تلاش کریں",
+    "عوامی IP تلاش کریں",
+    "انٹرنیٹ کی رفتار جانچیں",
+    "JSON میں ترمیم کریں",
+    "HTML کی تصدیق کریں",
+    "CSS کی تصدیق کریں",
+    "حوالہ جات کی فہرست بنائیں",
+    "DOI تلاش کریں",
+    "پیراگراف کا ترجمہ کریں",
+    "لفظ کا مطلب تلاش کریں"
   ],
   [
     "th",
@@ -281,7 +689,19 @@ const rows=[
     "ทดสอบนิพจน์ปรกติ",
     "สร้างผังงาน",
     "เริ่มนับถอยหลัง",
-    "บีบอัดรูปภาพ"
+    "บีบอัดรูปภาพ",
+    "ค้นหาระเบียน DNS",
+    "ตรวจสอบใบรับรอง TLS",
+    "ค้นหาผู้รับจดทะเบียนโดเมน",
+    "ค้นหา IP สาธารณะ",
+    "ทดสอบความเร็วอินเทอร์เน็ต",
+    "แก้ไข JSON",
+    "ตรวจสอบความถูกต้อง HTML",
+    "ตรวจสอบความถูกต้อง CSS",
+    "สร้างบรรณานุกรม",
+    "ค้นหา DOI",
+    "แปลย่อหน้า",
+    "ค้นหาความหมายของคำ"
   ],
   [
     "vi",
@@ -289,7 +709,19 @@ const rows=[
     "kiểm thử biểu thức chính quy",
     "vẽ lưu đồ",
     "bắt đầu đếm ngược",
-    "nén hình ảnh"
+    "nén hình ảnh",
+    "tra cứu bản ghi DNS",
+    "kiểm tra chứng chỉ TLS",
+    "tìm nhà đăng ký tên miền",
+    "tìm IP công cộng",
+    "đo tốc độ internet",
+    "chỉnh sửa JSON",
+    "xác thực HTML",
+    "xác thực CSS",
+    "tạo danh mục tài liệu tham khảo",
+    "tra cứu DOI",
+    "dịch đoạn văn",
+    "tra nghĩa của từ"
   ],
   [
     "id",
@@ -297,7 +729,19 @@ const rows=[
     "uji ekspresi reguler",
     "buat diagram alir",
     "mulai hitung mundur",
-    "kompres gambar"
+    "kompres gambar",
+    "cari catatan DNS",
+    "periksa sertifikat TLS",
+    "cari registrar domain",
+    "cari IP publik",
+    "uji kecepatan internet",
+    "edit JSON",
+    "validasi HTML",
+    "validasi CSS",
+    "buat daftar pustaka",
+    "cari DOI",
+    "terjemahkan paragraf",
+    "cari arti kata"
   ],
   [
     "ms",
@@ -305,7 +749,19 @@ const rows=[
     "uji ungkapan nalar",
     "buat carta alir",
     "mulakan kira detik",
-    "mampatkan imej"
+    "mampatkan imej",
+    "cari rekod DNS",
+    "semak sijil TLS",
+    "cari pendaftar domain",
+    "cari IP awam",
+    "uji kelajuan internet",
+    "sunting JSON",
+    "sahkan HTML",
+    "sahkan CSS",
+    "jana bibliografi",
+    "cari DOI",
+    "terjemah perenggan",
+    "cari makna perkataan"
   ],
   [
     "fil",
@@ -313,7 +769,19 @@ const rows=[
     "subukan ang regular expression",
     "gumawa ng flowchart",
     "simulan ang countdown",
-    "i-compress ang larawan"
+    "i-compress ang larawan",
+    "hanapin ang DNS records",
+    "suriin ang TLS certificate",
+    "hanapin ang domain registrar",
+    "hanapin ang pampublikong IP",
+    "subukan ang bilis ng internet",
+    "i-edit ang JSON",
+    "i-validate ang HTML",
+    "i-validate ang CSS",
+    "gumawa ng bibliograpiya",
+    "hanapin ang DOI",
+    "isalin ang talata",
+    "hanapin ang kahulugan ng salita"
   ],
   [
     "af",
@@ -321,18 +789,355 @@ const rows=[
     "toets 'n reëlmatige uitdrukking",
     "teken 'n vloeidiagram",
     "begin 'n aftelling",
-    "druk 'n beeld saam"
+    "druk 'n beeld saam",
+    "soek DNS-rekords",
+    "kontroleer TLS-sertifikaat",
+    "vind die domeinregistrateur",
+    "vind my openbare IP",
+    "toets internetspoed",
+    "wysig JSON",
+    "valideer HTML",
+    "valideer CSS",
+    "skep 'n bibliografie",
+    "soek DOI",
+    "vertaal 'n paragraaf",
+    "soek die betekenis van 'n woord"
+  ]
+];
+const localeConstraints=[
+  [
+    "en",
+    "without login",
+    "free",
+    "no ads",
+    "offline",
+    "without upload"
+  ],
+  [
+    "zh-Hans",
+    "免登录",
+    "免费",
+    "无广告",
+    "离线",
+    "不上传"
+  ],
+  [
+    "zh-Hant",
+    "免登入",
+    "免費",
+    "無廣告",
+    "離線",
+    "不上傳"
+  ],
+  [
+    "ja",
+    "ログイン不要",
+    "無料",
+    "広告なし",
+    "オフライン",
+    "アップロード不要"
+  ],
+  [
+    "ko",
+    "로그인 없이",
+    "무료",
+    "광고 없이",
+    "오프라인",
+    "업로드 없이"
+  ],
+  [
+    "fr",
+    "sans connexion",
+    "gratuit",
+    "sans publicité",
+    "hors ligne",
+    "sans téléversement"
+  ],
+  [
+    "de",
+    "ohne Anmeldung",
+    "kostenlos",
+    "ohne Werbung",
+    "offline",
+    "ohne Upload"
+  ],
+  [
+    "es",
+    "sin iniciar sesión",
+    "gratis",
+    "sin publicidad",
+    "sin conexión",
+    "sin subir archivos"
+  ],
+  [
+    "pt",
+    "sem login",
+    "grátis",
+    "sem anúncios",
+    "offline",
+    "sem enviar arquivos"
+  ],
+  [
+    "it",
+    "senza accesso",
+    "gratis",
+    "senza pubblicità",
+    "offline",
+    "senza caricamento"
+  ],
+  [
+    "nl",
+    "zonder inloggen",
+    "gratis",
+    "zonder advertenties",
+    "offline",
+    "zonder upload"
+  ],
+  [
+    "sv",
+    "utan inloggning",
+    "gratis",
+    "utan reklam",
+    "offline",
+    "utan uppladdning"
+  ],
+  [
+    "no",
+    "uten innlogging",
+    "gratis",
+    "uten reklame",
+    "frakoblet",
+    "uten opplasting"
+  ],
+  [
+    "da",
+    "uden login",
+    "gratis",
+    "uden reklamer",
+    "offline",
+    "uden upload"
+  ],
+  [
+    "fi",
+    "ilman kirjautumista",
+    "ilmainen",
+    "ilman mainoksia",
+    "offline",
+    "ilman lataamista"
+  ],
+  [
+    "pl",
+    "bez logowania",
+    "bezpłatnie",
+    "bez reklam",
+    "offline",
+    "bez przesyłania"
+  ],
+  [
+    "cs",
+    "bez přihlášení",
+    "zdarma",
+    "bez reklam",
+    "offline",
+    "bez nahrávání"
+  ],
+  [
+    "sk",
+    "bez prihlásenia",
+    "zadarmo",
+    "bez reklám",
+    "offline",
+    "bez nahrávania"
+  ],
+  [
+    "hu",
+    "bejelentkezés nélkül",
+    "ingyenes",
+    "reklám nélkül",
+    "offline",
+    "feltöltés nélkül"
+  ],
+  [
+    "ro",
+    "fără autentificare",
+    "gratuit",
+    "fără reclame",
+    "offline",
+    "fără încărcare"
+  ],
+  [
+    "bg",
+    "без вход",
+    "безплатно",
+    "без реклами",
+    "офлайн",
+    "без качване"
+  ],
+  [
+    "hr",
+    "bez prijave",
+    "besplatno",
+    "bez oglasa",
+    "izvan mreže",
+    "bez učitavanja"
+  ],
+  [
+    "sr",
+    "bez prijave",
+    "besplatno",
+    "bez oglasa",
+    "van mreže",
+    "bez otpremanja"
+  ],
+  [
+    "sl",
+    "brez prijave",
+    "brezplačno",
+    "brez oglasov",
+    "brez povezave",
+    "brez nalaganja"
+  ],
+  [
+    "el",
+    "χωρίς σύνδεση",
+    "δωρεάν",
+    "χωρίς διαφημίσεις",
+    "εκτός σύνδεσης",
+    "χωρίς μεταφόρτωση"
+  ],
+  [
+    "ru",
+    "без входа",
+    "бесплатно",
+    "без рекламы",
+    "офлайн",
+    "без загрузки файлов"
+  ],
+  [
+    "uk",
+    "без входу",
+    "безкоштовно",
+    "без реклами",
+    "офлайн",
+    "без завантаження файлів"
+  ],
+  [
+    "tr",
+    "giriş yapmadan",
+    "ücretsiz",
+    "reklamsız",
+    "çevrimdışı",
+    "yüklemeden"
+  ],
+  [
+    "ar",
+    "بدون تسجيل الدخول",
+    "مجانا",
+    "بدون إعلانات",
+    "دون اتصال",
+    "بدون رفع الملفات"
+  ],
+  [
+    "he",
+    "ללא התחברות",
+    "בחינם",
+    "ללא פרסומות",
+    "לא מקוון",
+    "ללא העלאה"
+  ],
+  [
+    "fa",
+    "بدون ورود",
+    "رایگان",
+    "بدون تبلیغات",
+    "آفلاین",
+    "بدون بارگذاری"
+  ],
+  [
+    "hi",
+    "बिना लॉगिन",
+    "मुफ्त",
+    "बिना विज्ञापन",
+    "ऑफलाइन",
+    "बिना अपलोड"
+  ],
+  [
+    "bn",
+    "লগইন ছাড়া",
+    "বিনামূল্যে",
+    "বিজ্ঞাপন ছাড়া",
+    "অফলাইন",
+    "আপলোড ছাড়া"
+  ],
+  [
+    "ur",
+    "لاگ ان کے بغیر",
+    "مفت",
+    "اشتہارات کے بغیر",
+    "آف لائن",
+    "اپ لوڈ کے بغیر"
+  ],
+  [
+    "th",
+    "ไม่ต้องเข้าสู่ระบบ",
+    "ฟรี",
+    "ไม่มีโฆษณา",
+    "ออฟไลน์",
+    "ไม่ต้องอัปโหลด"
+  ],
+  [
+    "vi",
+    "không cần đăng nhập",
+    "miễn phí",
+    "không quảng cáo",
+    "ngoại tuyến",
+    "không tải lên"
+  ],
+  [
+    "id",
+    "tanpa login",
+    "gratis",
+    "tanpa iklan",
+    "luring",
+    "tanpa unggah"
+  ],
+  [
+    "ms",
+    "tanpa log masuk",
+    "percuma",
+    "tanpa iklan",
+    "luar talian",
+    "tanpa muat naik"
+  ],
+  [
+    "fil",
+    "walang pag-login",
+    "libre",
+    "walang ad",
+    "offline",
+    "walang pag-upload"
+  ],
+  [
+    "af",
+    "sonder aanmelding",
+    "gratis",
+    "sonder advertensies",
+    "vanlyn",
+    "sonder oplaai"
   ]
 ];
 
 const normalize=q=>String(q||'').normalize('NFKC').toLowerCase().replace(/[’‘]/g,"'").replace(/[\u200c\u200d]/g,' ').replace(/\s+/gu,' ').trim().replace(/[.!?。！？؟]+$/u,'').trim();
 const index=new Map(),strict=new Set();
 for(const [locale,...phrases] of rows)phrases.forEach((phrase,i)=>{const k=normalize(phrase),existing=index.get(k);if(existing&&existing!==tasks[i])throw Error('alias collision');index.set(k,tasks[i]);if(!['en','zh-Hans','ja'].includes(locale))strict.add(k);});
-function resolve(q){const n=normalize(q);const id=index.get(n);if(id)return {id,blocked:false};if(n.length>512)return {id:null,blocked:true};
+const constraintIndex=new Set(localeConstraints.flatMap(r=>r.slice(1)).map(normalize));
+const nonWord=ch=>!ch||!/[\p{L}\p{M}\p{N}]/u.test(ch);
+function hasConstraint(q){for(const phrase of constraintIndex){let at=q.indexOf(phrase);while(at!==-1){const end=at+phrase.length;const unspaced=/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Thai}]/u.test(phrase);if(unspaced||(nonWord(q[at-1])&&nonWord(q[end])))return true;at=q.indexOf(phrase,at+1);}}return false;}
+function resolve(q){const n=normalize(q);if(n.length>512||hasConstraint(n))return {id:null,blocked:true};const id=index.get(n);if(id)return {id,blocked:false};if(n.length>512)return {id:null,blocked:true};
  // Added conditions or additional requests are not supported by exact aliases.
  for(const phrase of strict)if(n.includes(phrase))return {id:null,blocked:true};
  return {id:null,blocked:false};
 }
-const api=Object.freeze({tasks,locales:Object.freeze(rows.map(x=>x[0])),rows:Object.freeze(rows.map(x=>Object.freeze(x))),resolve,normalize});
+const api=Object.freeze({tasks,locales:Object.freeze(rows.map(x=>x[0])),rows:Object.freeze(rows.map(x=>Object.freeze(x))),resolve,normalize,hasConstraint,localeConstraints:Object.freeze(localeConstraints.map(r=>Object.freeze(r)))});
 if(typeof module==='object'&&module.exports)module.exports=api;else root.AVENQIR_RESEARCH_MULTILINGUAL=api;
 })(typeof self!=='undefined'?self:globalThis);
