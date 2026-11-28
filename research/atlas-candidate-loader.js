@@ -36,14 +36,18 @@
   function alive(id,signal){if(id!==revision||signal.aborted)throw Error('cancelled');}
   async function fetchOne(s,signal,report){
    let r;try{r=await env.fetch(s.url,{credentials:'same-origin',redirect:'error',cache:'no-store',signal,referrerPolicy:'no-referrer'});}catch{throw Error('network');}
-   if(!r.ok)throw Error(r.status===429?'rate_limited':'http');
+   if(!r.ok||r.status!==200||r.headers.get('content-range')){
+    // The model is an immutable complete asset. Never activate a range response.
+    try{Promise.resolve(r.body?.cancel()).catch(()=>{});}catch{}
+    throw Error(r.status===429?'rate_limited':'http');
+   }
    if(r.url&&new URL(r.url).origin!==env.location.origin)throw Error('origin');
    if(!MIME.has(String(r.headers.get('content-type')||'').split(';')[0].trim().toLowerCase()))throw Error('mime');
    const wireLength=r.headers.get('content-length'),encoding=(r.headers.get('content-encoding')||'identity').toLowerCase();
    const declaredComplete=encoding==='identity'&&wireLength===String(s.bytes);
    const out=new Uint8Array(s.bytes);let n=0;
    if(r.body?.getReader){
-    const reader=r.body.getReader();try{while(true){let chunk;try{chunk=await reader.read();}catch{throw Error(signal.aborted?'cancelled':'network');}const {done,value}=chunk;if(signal.aborted)throw Error('cancelled');if(done)break;if(n+value.length>s.bytes)throw Error('integrity');out.set(value,n);n+=value.length;report(n);}}finally{try{await reader.cancel();}catch{}}
+    const reader=r.body.getReader();try{while(true){let chunk;try{chunk=await reader.read();}catch{throw Error(signal.aborted?'cancelled':'network');}const {done,value}=chunk;if(signal.aborted)throw Error('cancelled');if(done)break;if(n+value.length>s.bytes)throw Error('integrity');out.set(value,n);n+=value.length;report(n);}}finally{try{Promise.resolve(reader.cancel()).catch(()=>{});}catch{}}
    }else{
     // No streaming API: only accept a bounded advertised length.
     if(r.headers.get('content-length')!==String(s.bytes))throw Error('stream');
