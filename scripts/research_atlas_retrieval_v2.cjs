@@ -831,3 +831,49 @@ for(const [q,id] of [...structureCases,...multilingualStructure.map(([,q,id])=>[
  stats.queries++;stats.top1+=Number(one);stats.top5+=Number(five);
 }
 console.log('STRUCTURED_CATALOG_RELEVANCE_REPORT',JSON.stringify({grounded:structuredGrounded,top1:structuredTop1,top5:structuredTop5,perClass:structuredPerClass}));
+
+
+// Suggestion-only edits must not silently change rank(), or replace a
+// technical object or explicit restriction. Report actual empty-result recovery.
+const suggestionVerbs=new Set(['generate','compress','validate','measure','translate','inspect','practice','convert','preview','remove','resize']);
+const suggestionProbes=new Map();
+for(const [i,phrase] of multilingual.rows[0].slice(1).entries()){
+ const words=multilingual.normalize(phrase).split(' ');
+ for(const [j,word] of words.entries()){
+  if(!suggestionVerbs.has(word))continue;
+  const k=Math.floor(word.length/2);
+  for(const typo of [word.slice(0,k)+word.slice(k+1),word.slice(0,k)+word[k]+word.slice(k),word.slice(0,k)+'z'+word.slice(k+1)]){
+   if(typo===word)continue;
+   const q=words.map((w,n)=>n===j?typo:w).join(' ');
+   if(!suggestionProbes.has(q))suggestionProbes.set(q,new Set());
+   suggestionProbes.get(q).add(multilingual.tasks[i]);
+  }
+ }
+}
+let lexicalSuggestions=0,catalogSuggestions=0,existingResults=0,rejectedSuggestions=0;
+for(const [q,ids] of suggestionProbes){
+ const before=fused.rank(q),repair=multilingual.suggestOperation(q),suggestions=fused.suggest(q);
+ if(before.length)existingResults++;
+ if(repair){assert.ok(ids.has(repair.id),q);lexicalSuggestions++;}
+ if(suggestions.length){
+  assert.equal(suggestions.length,1,q);
+  assert.equal(before.length,0,q+' already ranked');
+  const suggestion=suggestions[0];
+  assert.deepEqual(suggestion,repair,q);
+  assert.ok(ids.has(suggestion.id),q);
+  const selected=fused.rank(suggestion.phrase);
+  assert.ok(selected.length&&selected.every(url=>byURL.has(url)),q+' ungrounded');
+  assert.deepEqual(fused.rank(q),before,q+' automatic promotion');
+  catalogSuggestions++;
+ }
+ for(const extra of [' without upload',' 免费']){
+  assert.deepEqual(fused.suggest(q+extra),[],q+extra);
+  rejectedSuggestions++;
+ }
+}
+assert.ok(lexicalSuggestions>0,'no spelling candidates exercised');
+for(const q of ['generate a rq code','generate a qr cod','genertae a qr code','generate a qr code','generat a qr code without upload']){
+ assert.equal(multilingual.suggestOperation(q),null,q);
+ assert.deepEqual(fused.suggest(q),[],q);
+}
+console.log('OPERATION_SUGGESTION_REPORT',JSON.stringify({probes:suggestionProbes.size,lexicalSuggestions,catalogSuggestions,existingResults,rejectedSuggestions,automaticPromotion:false,scope:'reviewed verb only'}));
