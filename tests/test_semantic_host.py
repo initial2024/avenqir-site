@@ -5,9 +5,13 @@ import pathlib
 import sys
 import threading
 import unittest
+import tempfile
+import subprocess
+import shutil
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts'))
 from check_semantic_host import pinned,probe
+from verify_site import validate
 SPEC,PATH=pinned()
 RAW=(ROOT/'research'/SPEC['file']).read_bytes()
 class Handler(http.server.BaseHTTPRequestHandler):
@@ -45,6 +49,22 @@ class SemanticHost(unittest.TestCase):
                         self.assertEqual(result.get('error'),expected,result)
                 self.assertEqual(server.requests,[PATH]*9)
             finally:server.shutdown();thread.join()
+    def test_staged_host_payload(self):
+        self.assertIsNotNone(shutil.which('node'),'Node required for candidate build')
+        with tempfile.TemporaryDirectory(prefix='aq-host-') as temp:
+            target=pathlib.Path(temp)/'site'
+            subprocess.run(['node',str(ROOT/'scripts'/'build_semantic_candidate.cjs'),str(target)],check=True,capture_output=True)
+            files=validate(target)
+            model=target/PATH.lstrip('/')
+            self.assertIn(model,files)
+            self.assertEqual(model.read_bytes(),RAW)
+            self.assertFalse((target/'atlas-semantic-model-v1.json').exists())
+            manifest=(target/'semantic-v2'/'atlas-semantic-manifest.js').read_text()
+            self.assertIn(model.name,manifest)
+            self.assertNotIn(model.name,(target/'sw.js').read_text())
+            self.assertNotIn(SPEC['file'],(target/'sw.js').read_text())
+            self.assertEqual(list((target/'semantic-v2').glob('*.json')),[model])
+            self.assertLessEqual(sum(p.stat().st_size for p in files),12*1024*1024)
     def test_origin_restrictions(self):
         for origin in ['http://avenqir.bg5.net','https://example.com','https://avenqir.bg5.net/other','https://avenqir.bg5.net?token=x','https://avenqir.bg5.net.evil.example']:
             with self.subTest(origin=origin),self.assertRaises(ValueError):probe(origin)
