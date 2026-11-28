@@ -66,7 +66,7 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  yes(!await failedCache.match(modelURL()),'corrupt model saved');
 
  // Real HTTP responses, not synthetic fetch replacement: hosting challenge and temporary outage.
- for(const [endpoint,code] of [['/fixture-html','mime'],['/fixture-unavailable','http'],['/fixture-rate-limit','rate_limited'],['/fixture-truncated','network']]){
+ for(const [endpoint,code] of [['/fixture-html','mime'],['/fixture-unavailable','http'],['/fixture-rate-limit','rate_limited'],['/fixture-truncated','network'],['/fixture-partial','http'],['/fixture-redirect','network']]){
   await fetch(endpoint);
   $('atlasSemanticDownload').click();
   await wait(()=>panel().dataset.state==='error');
@@ -186,9 +186,20 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         elif p=='/fixture-unavailable':mode='unavailable';data=b'ok';kind='text/plain'
         elif p=='/fixture-rate-limit':mode='rate-limit';data=b'ok';kind='text/plain'
         elif p=='/fixture-truncated':mode='truncated';data=b'ok';kind='text/plain'
+        elif p=='/fixture-partial':mode='partial';data=b'ok';kind='text/plain'
+        elif p=='/fixture-redirect':mode='redirect';data=b'ok';kind='text/plain'
+        elif p=='/redirect-forbidden-target':
+            requests.append(('redirect-followed',self.path));self.send_error(404);return
         elif p=='/fixture-block':mode='block';data=b'ok';kind='text/plain'
         elif p==MODEL_PATH:
             requests.append((mode,self.path))
+            if mode=='redirect':
+                self.send_response(302);self.send_header('Location','/redirect-forbidden-target');self.end_headers();return
+            if mode=='partial':
+                self.send_response(206);self.send_header('Content-Type','application/json');self.send_header('Content-Length',str(len(MODEL)));self.send_header('Content-Range',f'bytes 0-{len(MODEL)-1}/{len(MODEL)}');self.end_headers()
+                try:self.wfile.write(MODEL)
+                except (BrokenPipeError,ConnectionResetError):pass
+                return
             if mode=='rate-limit':self.send_error(429);return
             if mode=='truncated':
                 self.send_response(200);self.send_header('Content-Type','application/octet-stream');self.send_header('Content-Length',str(len(MODEL)));self.end_headers()
@@ -227,5 +238,7 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
     assert not any(x[0]=='block' or '?' in x[1] for x in requests),requests
     assert sum(x[0]=='html' for x in requests)==1 and sum(x[0]=='unavailable' for x in requests)==1,requests
     assert sum(x[0]=='rate-limit' for x in requests)==1 and sum(x[0]=='truncated' for x in requests)==1,requests
-    print('PACKAGED' if PACKAGED else 'RESEARCH', 'FIREFOX' if FIREFOX else 'CHROMIUM', 'PASS real 390x844 candidate directory, full bundle consent, cancel/retry, integrity, progress, Korean result, locale switch, real HTTP HTML/503/429/truncated-body failure and retry, worker activation/cache race, quota session fallback, corrupted cache restore, mixed language and typo retrieval, reload and deletion')
+    assert sum(x[0]=='partial' for x in requests)==1 and sum(x[0]=='redirect' for x in requests)==1,requests
+    assert not any(x[0]=='redirect-followed' for x in requests),requests
+    print('PACKAGED' if PACKAGED else 'RESEARCH', 'FIREFOX' if FIREFOX else 'CHROMIUM', 'PASS real 390x844 candidate directory, full bundle consent, cancel/retry, integrity, progress, Korean result, locale switch, real HTTP HTML/503/429/206/redirect/truncated-body failure and retry, worker activation/cache race, quota session fallback, corrupted cache restore, mixed language and typo retrieval, reload and deletion')
     server.shutdown()
