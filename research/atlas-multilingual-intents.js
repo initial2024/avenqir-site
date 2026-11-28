@@ -1976,6 +1976,19 @@ function recoverSwap(raw){
  const [phrase,id]=options.entries().next().value;
  return {phrase,id};
 }
-const api=Object.freeze({colloquialTasks:Object.freeze(colloquialTasks),colloquialRows:Object.freeze(colloquialRows.map(Object.freeze)),recoverSwap,mixedAliases:Object.freeze(mixedAliases.map(([id,phrases])=>Object.freeze([id,Object.freeze(phrases)]))),variantTasks:Object.freeze(variantTasks),variantRows:Object.freeze(variantRows.map(Object.freeze)),tasks,locales:Object.freeze(rows.map(x=>x[0])),rows:Object.freeze(rows.map(x=>Object.freeze(x))),resolve,normalize,hasConstraint,negated,negativeFrames:Object.freeze(negativeFrames.map(Object.freeze)),localeConstraints:Object.freeze(localeConstraints.map(r=>Object.freeze(r)))});
+
+// Used ONLY after a separate anchored full-query grammar has matched.
+// A same-intent embedded alias is compatible; a different intent, any
+// corrected fragment, negation or explicit constraint remains a hard veto.
+function structuredCompatible(raw,id){
+ const q=normalize(raw);
+ if(!tasks.includes(id)||!q||q.length>160||hasConstraint(q)||negated(q))return false;
+ const exact=index.get(q);
+ if(exact&&exact!==id)return false;
+ for(const phrase of strict)if(q.includes(phrase)&&index.get(phrase)!==id)return false;
+ for(const phrase of swapIndex.keys())if(q.includes(phrase))return false;
+ return true;
+}
+const api=Object.freeze({structuredCompatible,colloquialTasks:Object.freeze(colloquialTasks),colloquialRows:Object.freeze(colloquialRows.map(Object.freeze)),recoverSwap,mixedAliases:Object.freeze(mixedAliases.map(([id,phrases])=>Object.freeze([id,Object.freeze(phrases)]))),variantTasks:Object.freeze(variantTasks),variantRows:Object.freeze(variantRows.map(Object.freeze)),tasks,locales:Object.freeze(rows.map(x=>x[0])),rows:Object.freeze(rows.map(x=>Object.freeze(x))),resolve,normalize,hasConstraint,negated,negativeFrames:Object.freeze(negativeFrames.map(Object.freeze)),localeConstraints:Object.freeze(localeConstraints.map(r=>Object.freeze(r)))});
 if(typeof module==='object'&&module.exports)module.exports=api;else root.AVENQIR_RESEARCH_MULTILINGUAL=api;
 })(typeof self!=='undefined'?self:globalThis);
