@@ -1010,7 +1010,7 @@ const operationLexicon=[
  ['pdf-compress',/\b(?:compress|shrink|reduce|réduire|compresser|verkleinern|komprimieren|reducir|comprimir|reduzir)\b|压缩|壓縮|体积压小|體積縮小|减小|減小|圧縮|軽く|容量を減|압축|크기를 줄|용량을 줄|сжать|уменьш|تقليل|ضغط|आकार कम|छोटा|ลดขนาด/iu],
  ['pdf-split',/\b(?:split|divide|separate|extract|diviser|séparer|teilen|aufteilen|dividir|separar)\b|拆分|拆成|分割|分成|分離|分け|분할|나누|раздел|извлеч|تقسيم|فصل|अलग|विभाज|แยกไฟล์/iu],
  ['qr-create',/\b(?:generate|create|make|générer|créer|erstellen|erzeugen|generar|crear|gerar|criar)\b|生成|產生|制作|製作|创建|作成|作る|作り|생성|만들|созда|сгенер|إنشاء|توليد|बनाना|बनाएं|बनाने|สร้าง/iu]
-];
+].map(([id,re])=>[id,new RegExp(re.source.normalize('NFKC'),re.flags)]);
 const explanatory=/\b(?:why|what is|how does|explain|definition|theory|source code|tutorial|documentation|compare|comparison)\b|为什么|為什麼|是什么|是什麼|原理|教程|比较|比較|仕組み|とは何|なぜ|원리|비교|pourquoi|expliquer|vergleich|warum|por qué|explicar|почему|принцип|كيف يعمل|لماذا|क्या है|क्यों|ทำงานอย่างไร/iu;
 function composedClass(raw){
  const q=fine.normalize(raw);
@@ -1087,7 +1087,7 @@ function guardedComposition(cases){
  for(const r of baseline){
   if(r.expected)positives++;else negatives++;
   let id=null,source=null;
-  if(shadowBlock(r.q)||technicalAbstention(r.q)||explanatory.test(r.q))hardBlocked++;
+  if(shadowBlock(r.q)||technicalAbstention(r.q))hardBlocked++;
   else if(!r.blocked&&r.score>=evidencePolicy.score&&r.margin>=evidencePolicy.margin&&(!evidencePolicy.agreement||r.agreement)){id=r.id;source='model';modelAccepted++;}
   else {id=composedClass(r.q);if(id){source='composition';compositionAccepted++;}}
   if(!id){if(r.expected)misses.push({locale:r.locale,q:r.q,expected:r.expected});continue;}
@@ -1128,3 +1128,35 @@ const compositionPrevious=new Set([...compositionKnown,...compositionChallenge.m
 const uniqueNext=new Set();
 for(const c of compositionNext){const k=fine.normalize(c.q);assert.ok(!compositionPrevious.has(k)&&!uniqueNext.has(k),c.q);uniqueNext.add(k);}
 console.log('GUARDED_COMPOSITION_REPORT',JSON.stringify({previouslyInspected:guardedComposition(shadowTest),inspectedComposition:guardedComposition(compositionChallenge),newAuthored:guardedComposition(compositionNext),releaseEligible:false}));
+
+
+// A broad intent must never be rejected just because it uses a word that is
+// explanatory in another domain (e.g. dictionary definitions). Keep the
+// technical guard scoped and audit both normalization and constraint contrast.
+const guardAuditInputs=[...compositionChallenge,...compositionNext];
+let guardVariants=0,guardMismatch=0;
+for(const c of guardAuditInputs){
+ const wanted=technicalAbstention(c.q);
+ for(const form of ['NFC','NFD','NFKC','NFKD']){
+  guardVariants++;if(technicalAbstention(c.q.normalize(form))!==wanted)guardMismatch++;
+ }
+}
+assert.equal(guardMismatch,0);
+for(const q of ['What is the definition of this unfamiliar word?','Compare time zones for a meeting','شرح قواعد اللغة العربية','ภาษาไทยทำงานอย่างไร'])assert.equal(technicalAbstention(q),false,q);
+// Contrast on an entire reviewed expression: append one native restriction,
+// verify neither model acceptance nor compositional recovery can bypass it.
+let composedRestrictionProbes=0,composedRestrictionLeaks=0;
+for(let i=0;i<fine.rows.length;i++){
+ const row=fine.rows[i],locale=row[0];
+ const constraints=fine.localeConstraints[i].slice(1);
+ for(const id of ['pdf-merge','pdf-compress','pdf-split','qr-create']){
+  const q=row[fine.tasks.indexOf(id)+1];
+  for(const c of constraints){
+   const raw=q+' '+c;composedRestrictionProbes++;
+   if(!shadowBlock(raw)||composedClass(raw))composedRestrictionLeaks++;
+  }
+ }
+}
+assert.equal(composedRestrictionProbes,800);
+assert.equal(composedRestrictionLeaks,0);
+console.log('COMPOSITION_NORMALIZATION_REPORT',JSON.stringify({guardVariants,guardMismatch,composedRestrictionProbes,composedRestrictionLeaks,releaseEligible:false}));
