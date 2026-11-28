@@ -1,0 +1,47 @@
+name: AVENQIR frozen candidate package (no deployment)
+on:
+  push:
+    branches: [package-v154-2d25890c]
+    paths: ['.github/workflows/semantic-candidate-artifact.yml']
+permissions:
+  contents: read
+jobs:
+  package:
+    if: github.repository == 'initial2024/avenqir-site' && github.ref == 'refs/heads/package-v154-2d25890c'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact verified source, not packaging branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 17fdcb363194ae24f21a88ccc8a506b392e70691
+          persist-credentials: false
+      - name: Reproduce reviewed candidate and verify full manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 17fdcb363194ae24f21a88ccc8a506b392e70691
+          stage="$RUNNER_TEMP/avenqir-frozen-rc"
+          mkdir "$stage"
+          node scripts/build_semantic_candidate.cjs "$stage/site"
+          python3 scripts/audit_semantic_candidate.py "$stage/site" > "$stage/candidate-manifest.json"
+          python3 scripts/ftps_deploy.py --semantic-stage "$stage/site" --candidate-commit 17fdcb363194ae24f21a88ccc8a506b392e70691 --manifest-sha256 c12a766c5457498fb822c9744311570b423d4bb1345a4c44abfef55f956da284 --plan-only > "$stage/offline-plan.txt"
+          python3 - "$stage" <<'PY'
+          import json,sys,pathlib,hashlib
+          p=pathlib.Path(sys.argv[1])
+          report=json.loads((p/'candidate-manifest.json').read_text())
+          if report['revision']!='2d25890ca56228c7' or report['fileCount']!=177 or report['totalBytes']!=2969375 or report['manifestSHA256']!='c12a766c5457498fb822c9744311570b423d4bb1345a4c44abfef55f956da284':
+              raise SystemExit('Candidate mismatch')
+          print('FROZEN_PACKAGE_VERIFIED',report['revision'],report['manifestSHA256'])
+          PY
+      - name: Read-only public model baseline (not a deployment gate)
+        continue-on-error: true
+        run: python3 scripts/check_semantic_host.py
+      - name: Save reviewed staged tree and audit, including assetlinks
+        uses: actions/upload-artifact@v4
+        with:
+          name: avenqir-v154-2d25890ca56228c7-verified
+          path: ${{ runner.temp }}/avenqir-frozen-rc/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
