@@ -335,7 +335,7 @@ async function verified(p){
  });
  const latestResult=await last;
  yes(latestResult?.q===latest&&latestResult.urls.length&&!latestResult.suggestions.length,'stale suggestion escaped client');
- console.log('WORKER_SUGGESTION_PASS',JSON.stringify({probes:suggestionCases.size,suggestedCount,alreadyRanked,latestWins:true}));
+ metrics.suggestionProbes=suggestionCases.size;metrics.suggestionCount=suggestedCount;metrics.suggestionAlreadyRanked=alreadyRanked;metrics.suggestionLatestWins=true;
  await fullLoader.remove();
  yes(!await caches.has(AVENQIR_RESEARCH_LOADER.CACHE),'full model cache retained');
  document.documentElement.dataset.metrics=JSON.stringify(metrics);
@@ -366,5 +366,5 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
     assert requests.count(MODEL)==4,requests
     assert requests.count(FULL)==1,requests
     assert '/site/atlas-semantic-model-v1.json' not in requests,requests
-    print('PASS real '+('Firefox' if FIREFOX else 'Chromium')+' packed model digest, worker, stale query rejection, Korean and Arabic retrieval, constraint and ungrounded abstention, corrupt payload rejection, fresh single-model install, real worker activation, cancellation and retry, verified cache restore and deletion, MIME/404/truncated/network rejection, bounded non-stream fallback and session-only storage denial, localized broad topics and polite request constraints, bounded stalled storage and oversized cache rejection, uncooperative fetch/digest/stream deadline and late activation disposal, full gzip model transfer and 36 cold/warm worker queries')
+    print('PASS real '+('Firefox' if FIREFOX else 'Chromium')+' packed model digest, worker, stale query rejection, Korean and Arabic retrieval, constraint and ungrounded abstention, corrupt payload rejection, fresh single-model install, real worker activation, cancellation and retry, verified cache restore and deletion, MIME/404/truncated/network rejection, bounded non-stream fallback and session-only storage denial, localized broad topics and polite request constraints, bounded stalled storage and oversized cache rejection, uncooperative fetch/digest/stream deadline and late activation disposal, full gzip model transfer, 36 cold/warm worker queries, explicit suggestion selection and stale suggestion suppression')
     server.shutdown()
