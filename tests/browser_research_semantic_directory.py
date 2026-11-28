@@ -131,11 +131,11 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent)));
  yes(w.document.querySelector('#atlasResults .atlas-semantic-match'),'semantic result not labelled');
  // Mixed language and reviewed typing variants must reach real worker retrieval.
- for(const q of ['生成 QR code','genrate a qr code','QR code 만들기']){
+ for(const q of ['生成 QR code','genrate a qr code','QR code 만들기','genertae a qr code']){
   query(q);
   await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent))&&w.document.querySelector('#atlasResults .atlas-semantic-match'));
  }
- query('生成 QR code without upload');
+ query('genertae a qr code without upload');
  await wait(()=>!w.document.querySelector('#atlasResults .atlas-semantic-match'));
  query('QR 코드 생성');
  await wait(()=>w.document.querySelector('#atlasResults .atlas-semantic-match'));
