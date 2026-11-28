@@ -46,13 +46,30 @@ python3 tests/browser_research_semantic_worker.py --firefox
 python3 tests/browser_research_semantic_directory.py --packaged --firefox
 ```
 
-Generate the staging directory outside the repository. Record its revision,
+Generate the staging directory outside the repository. For example, with a
+fresh temporary parent directory:
+
+```sh
+stage_parent=$(mktemp -d)
+node scripts/build_semantic_candidate.cjs "$stage_parent/site"
+python3 scripts/audit_semantic_candidate.py "$stage_parent/site" > "$stage_parent/candidate-manifest.json"
+```
+
+Keep the manifest outside the public web root. The audit is read-only and does
+not connect to the host. Record its revision,
 complete file manifest, full model digest and decoded byte count. Compare two
 independent builds. Keep the immutable model digest separate from runtime
 revision and record the full staged site file manifest. Confirm the model is absent from shell precache and the
 legacy downloader is absent from the staged directory. Check deployed file
 allowlist and dependency-first transfer order. Do not upload research fixtures,
 test sources, credentials, or private host paths.
+
+The normal FTPS workflow still reads the repository's `site/` directory; the
+external staged candidate is not selected by that workflow. Before release,
+review an explicitly authorized candidate promotion procedure that uses the
+exact audited staged tree and verifies the manifest, without changing the
+ordinary default-branch deployment silently. A green candidate build alone
+does not authorize or accomplish that promotion.
 
 Do not merge, upload or activate the candidate unless the user has authorized
 release after review. Desktop browser evidence does not establish Android or
