@@ -183,6 +183,29 @@ async function verified(p){
  await late.remove();
  const stalledReader=()=>({ok:true,status:200,headers:new Headers({'Content-Type':'application/json','Content-Length':String(bytes.length)}),body:{getReader:()=>({read:hang,cancel:hang})}});
  await deadlineCase('stream',envFor(stalledReader,undefined),dummy);
+
+ // A pending removal must exclude both activation and another removal.
+ let finishRemoval=null,closeCount=0;
+ const removalCache={open:async()=>({put:async()=>{}}),delete:()=>new Promise(resolve=>{finishRemoval=resolve;})};
+ const serialRemoval=AVENQIR_RESEARCH_LOADER.create(specs,envFor(good,removalCache),1000);
+ await serialRemoval.load({consent:true,activate:async()=>({close(){closeCount++;}})});
+ const removing=serialRemoval.remove();
+ await wait(()=>typeof finishRemoval==='function');
+ yes(!serialRemoval.active()&&closeCount===1,'removal must close active session first');
+ let busyLoad='',busyRemove='';
+ try{await serialRemoval.load({consent:true,activate:dummy});}catch(e){busyLoad=e.message;}
+ try{await serialRemoval.remove();}catch(e){busyRemove=e.message;}
+ yes(busyLoad==='busy'&&busyRemove==='busy','removal operation lock missing');
+ finishRemoval(true);await removing;
+ const afterRemove=await serialRemoval.load({consent:true,activate:dummy});
+ yes(afterRemove.state==='ready'&&serialRemoval.active(),'load after completed deletion failed');
+ removalCache.delete=async()=>{throw Error('storage denied');};
+ let failedDeletion=false;
+ try{await serialRemoval.remove();}catch{failedDeletion=true;}
+ yes(failedDeletion&&!serialRemoval.active(),'deletion failure retained activation');
+ const afterFailure=await serialRemoval.load({consent:true,activate:dummy});
+ yes(afterFailure.state==='ready','deletion failure left lock held');
+ removalCache.delete=async()=>true;await serialRemoval.remove();
  // Exercise the full production bundle over real gzip HTTP transfer.
  const fullPath=Object.keys(hashes)[1];
  const fullLoader=AVENQIR_RESEARCH_LOADER.create([{file:fullPath,bytes:sizes[fullPath],sha256:hashes[fullPath]}]);
