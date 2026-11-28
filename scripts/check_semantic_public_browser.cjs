@@ -31,7 +31,7 @@ let ws;
   if(cache?.bytes!==92260||cache.sha!=='dc1c46e99d38a4476592b83f16a80f73e2222b1aa1ce0044d97f46118bcaa0b2')throw Error('Browser cache integrity failure');
   await evaluate("document.getElementById('atlasQuery').value='QR 코드 생성';document.getElementById('atlasForm').requestSubmit();true");
   await wait("[...document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent))&&!!document.querySelector('#atlasResults .atlas-semantic-match')",12000);
-  await wait("[...document.scripts].some(s=>s.src.includes('atlas-semantic-directory-adapter.js?v=154-6c5bde1d762cc189'))&&document.getElementById('atlasSemanticQueryState')?.dataset.state==='hit'",12000);
+  await wait("[...document.scripts].some(s=>s.src.includes('atlas-semantic-directory-adapter.js?v=154-b0d9c9346e79cd3c'))&&document.getElementById('atlasSemanticQueryState')?.dataset.state==='hit'",12000);
   await evaluate("document.getElementById('atlasQuery').value='큐알코드 만들기';document.getElementById('atlasForm').requestSubmit();true");
   await wait("document.getElementById('atlasSemanticQueryState')?.dataset.state==='hit'&&[...document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent))",12000);
   await evaluate("document.getElementById('atlasQuery').value='코드 생성';document.getElementById('atlasForm').requestSubmit();true");
@@ -50,7 +50,23 @@ let ws;
   await wait("document.getElementById('atlasSemanticPanel')?.dataset.state==='ready'&&"+closed,30000);
   await evaluate("document.getElementById('atlasQuery').value='QR 코드 생성';document.getElementById('atlasForm').requestSubmit();true");
   await wait("document.getElementById('atlasSemanticQueryState')?.dataset.state==='hit'&&"+closed,12000);
-  console.log('PUBLIC_V154_BROWSER_PASS',JSON.stringify({consent:true,download:true,cacheBytes:cache.bytes,cacheSHA256:cache.sha,semanticQuery:true,revision:'6c5bde1d762cc189',shortKorean:true,ambiguityChoice:true,queryState:true,manualPanelOnly:true,cachedReloadClosed:true}));
+  // Real public results for the newly audited capability-specific intents.
+  const taskProbes=[
+   ['把长视频剪短','VEED|Kapwing'],
+   ['我想把这张照片裁小一点','Photopea'],
+   ['把照片合成PDF','iLovePDF|Smallpdf|PDF24'],
+   ['想自学新知识','Khan Academy|OpenCourseWare|OpenLearn|edX|Coursera'],
+   ['提高英语阅读能力','British Council|BBC Learning English'],
+   ['番茄钟学习','Pomofocus'],
+   ['查DNS泄漏','DNS Leak Test'],
+   ['查看飞机实时位置','Flightradar24']
+  ];
+  for(const [q,expected] of taskProbes){
+   await evaluate("document.getElementById('atlasQuery').value="+JSON.stringify(q)+";document.getElementById('atlasForm').requestSubmit();true");
+   await wait("document.getElementById('atlasQuery').value==="+JSON.stringify(q)+"&&[...document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>new RegExp("+JSON.stringify(expected)+",'i').test(a.textContent))&&"+closed,12000);
+   if(!await evaluate("!/Worker|Compatibility|兼容模式|相容模式/.test(document.getElementById('atlasSemanticQueryState').textContent)"))throw Error('Internal mode exposed');
+  }
+  console.log('PUBLIC_V154_BROWSER_PASS',JSON.stringify({consent:true,download:true,cacheBytes:cache.bytes,cacheSHA256:cache.sha,semanticQuery:true,revision:'b0d9c9346e79cd3c',shortKorean:true,ambiguityChoice:true,queryState:true,manualPanelOnly:true,cachedReloadClosed:true,practicalTaskProbes:taskProbes.length,internalModeHidden:true}));
  }catch(e){console.error('PUBLIC_V154_BROWSER_FAIL',e.message);process.exitCode=1;}
  finally{try{ws?.close()}catch{}child.kill('SIGTERM');}
 })().catch(e=>{console.error(e.message);process.exitCode=1;child.kill('SIGTERM');});

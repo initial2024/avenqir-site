@@ -146,7 +146,7 @@ jobs:
           set -euo pipefail
           mkdir "$RUNNER_TEMP/avenqir-approved-release"
           node scripts/build_semantic_candidate.cjs "$RUNNER_TEMP/avenqir-approved-release/site"
-          python3 scripts/ftps_deploy.py --semantic-stage "$RUNNER_TEMP/avenqir-approved-release/site" --candidate-commit "$GITHUB_SHA" --manifest-sha256 e42959a8f3614360c83dc203da8f31a187166eb49db4a9b33dfb962cd9ba9dca --plan-only
+          python3 scripts/ftps_deploy.py --semantic-stage "$RUNNER_TEMP/avenqir-approved-release/site" --candidate-commit "$GITHUB_SHA" --manifest-sha256 901417110b3304e906594433b378cde8a78818c04d6b722aaf89c983f94647ce --plan-only
       - name: Verify previous public deployment marker (read only)
         env:
           FTPS_USERNAME: ${{ secrets.AVENQIR_FTPS_USERNAME }}
@@ -161,8 +161,8 @@ jobs:
               ftp.connect(HOST,21,timeout=25);ftp.login(credential('FTPS_USERNAME'),credential('FTPS_PASSWORD'))
               ftp.prot_p();ftp.set_pasv(True);ftp.cwd(REMOTE)
               marker=json.loads(retrieve(ftp,'deploy-state.json'))
-              prior=marker.get('commit')=='876e011e7722546e7c39baea157d07e2fbc9820c' and marker.get('candidate_revision')=='15ca06299ff36d17' and marker.get('candidate_manifest_sha256')=='9c3aea4dfab690c5d09b4a30b8956a8046fbde80753a94f842907dab305be41c'
-              same=marker.get('candidate_revision')=='6c5bde1d762cc189' and marker.get('candidate_manifest_sha256')=='e42959a8f3614360c83dc203da8f31a187166eb49db4a9b33dfb962cd9ba9dca'
+              prior=marker.get('commit')=='7c5abed9b41338d95f999b428a856e23b3c88f4a' and marker.get('candidate_revision')=='6c5bde1d762cc189' and marker.get('candidate_manifest_sha256')=='e42959a8f3614360c83dc203da8f31a187166eb49db4a9b33dfb962cd9ba9dca'
+              same=marker.get('candidate_revision')=='b0d9c9346e79cd3c' and marker.get('candidate_manifest_sha256')=='901417110b3304e906594433b378cde8a78818c04d6b722aaf89c983f94647ce'
               if not (prior or same):raise RuntimeError('Unexpected prior deployment marker; stop')
               print('PREVIOUS_DEPLOYMENT_MARKER_PASS',marker.get('commit'),flush=True)
           finally:
@@ -176,13 +176,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          export AVENQIR_SEMANTIC_RELEASE_APPROVAL="$GITHUB_SHA:e42959a8f3614360c83dc203da8f31a187166eb49db4a9b33dfb962cd9ba9dca"
-          python3 -u scripts/ftps_deploy.py --semantic-stage "$RUNNER_TEMP/avenqir-approved-release/site" --candidate-commit "$GITHUB_SHA" --manifest-sha256 e42959a8f3614360c83dc203da8f31a187166eb49db4a9b33dfb962cd9ba9dca
+          export AVENQIR_SEMANTIC_RELEASE_APPROVAL="$GITHUB_SHA:901417110b3304e906594433b378cde8a78818c04d6b722aaf89c983f94647ce"
+          python3 -u scripts/ftps_deploy.py --semantic-stage "$RUNNER_TEMP/avenqir-approved-release/site" --candidate-commit "$GITHUB_SHA" --manifest-sha256 901417110b3304e906594433b378cde8a78818c04d6b722aaf89c983f94647ce
       - name: Independently read back candidate runtime and public core
         env:
           FTPS_USERNAME: ${{ secrets.AVENQIR_FTPS_USERNAME }}
           FTPS_PASSWORD: ${{ secrets.AVENQIR_FTPS_PASSWORD }}
-        run: python3 scripts/verify_semantic_candidate_receipt.py "$RUNNER_TEMP/avenqir-approved-release/site" "e42959a8f3614360c83dc203da8f31a187166eb49db4a9b33dfb962cd9ba9dca"
+        run: python3 scripts/verify_semantic_candidate_receipt.py "$RUNNER_TEMP/avenqir-approved-release/site" "901417110b3304e906594433b378cde8a78818c04d6b722aaf89c983f94647ce"
       - name: Verify public model through ordinary Chromium browser and activate local search
         run: node scripts/check_semantic_public_browser.cjs
       - name: Raw public HTTP probe (host challenge may block non-browser clients)
