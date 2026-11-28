@@ -26,7 +26,8 @@ function build(dest){
  }
  fs.writeFileSync(path.join(sub,hostedName),bundle);
  // Bind the shell revision to the candidate's actual runtime and weight bytes.
- const revision=digest(Buffer.concat([...assets,hostedName].map(name=>fs.readFileSync(path.join(sub,name))).concat([fs.readFileSync(path.join(target,'directory.js')),fs.readFileSync(path.join(target,'directory.html')),fs.readFileSync(path.join(target,'sw.js'))]))).slice(0,16);
+ const revisionInputs=[...assets.map(name=>'semantic-v2/'+name),'semantic-v2/'+hostedName,'directory.js','directory.html','sw.js','atlas-domain-embedding.js','atlas-catalog-core.js','atlas-expansion.js','atlas-personalize.js','atlas-personalize-ui.js'];
+ const revision=digest(Buffer.from(JSON.stringify(revisionInputs.map(name=>[name,digest(fs.readFileSync(path.join(target,name)))])))).slice(0,16);
  const htmlPath=path.join(target,'directory.html');
  let html=fs.readFileSync(htmlPath,'utf8');
  html=replaceOnce(html,'<script src="atlas-semantic-download.js?v=150" defer></script>',entries.map(n=>'<script src="semantic-v2/'+n+'?v=154-'+revision+'" defer></script>').join(''));
@@ -36,6 +37,9 @@ function build(dest){
  sw=replaceOnce(sw,"'avenqir-v152-static-20261127-search-refinement'","'avenqir-v154-semantic-candidate-"+revision+"'");
  sw=replaceOnce(sw,"'./atlas-semantic-download.js'",assets.map(n=>"'./semantic-v2/"+n+"'").join(','));
  sw=replaceOnce(sw,"'atlas-semantic-download.js'",entries.map(n=>"'semantic-v2/"+n+"'").join(','));
+ // A controlled page from another candidate revision must not receive this
+ // shell's runtime. Fail closed; ordinary search can run after a fresh load.
+ sw=replaceOnce(sw,"  const key=canonical(req.url);if(!key)return;","  const key=canonical(req.url);if(!key)return;\n  const revision=u.searchParams.get('v');\n  if(revision&&/^154-[a-f0-9]{16}$/.test(revision)&&revision!=='154-"+revision+"'&&(u.pathname.includes('/semantic-v2/')||u.pathname.endsWith('/atlas-domain-embedding.js'))){event.respondWith(Promise.resolve(Response.error()));return;}");
  assert.ok(!sw.includes(spec.file)&&!sw.includes(hostedName),'Model must never be precached by shell');
  fs.writeFileSync(swPath,sw);
  // The candidate needs neither legacy downloader nor its weight payload.
