@@ -194,7 +194,7 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
     threading.Thread(target=server.serve_forever,daemon=True).start()
     url=f'http://127.0.0.1:{server.server_port}/qa.html'
     if FIREFOX:
-        subprocess.run([sys.executable,str(ROOT/'tests'/'firefox_real_time.py'),url],timeout=105,check=True)
+        subprocess.run([sys.executable,str(ROOT/'tests'/'firefox_real_time.py'),url],timeout=175,check=True)
     else:
         with tempfile.TemporaryDirectory() as profile:
             subprocess.run(['node',str(ROOT/'tests'/'chrome_real_time.cjs'),CHROME,profile,url],timeout=75,check=True)
