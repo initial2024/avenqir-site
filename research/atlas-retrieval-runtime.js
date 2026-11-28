@@ -73,8 +73,10 @@ function intent(q,model){
  const normalized=multilingual.normalize(q);
  for(const [, , ,join] of multilingual.negativeFrames){const sep=join.normalize('NFKC').toLowerCase();const at=normalized.indexOf(sep);if(at<=0)continue;const left=normalized.slice(0,at).trim(),right=normalized.slice(at+sep.length).trim();const a=multilingual.resolve(left).id||topics.resolve(left),b=multilingual.resolve(right).id||topics.resolve(right);if(a&&b&&a!==b)return null;}
  const direct=multilingual.resolve(q).id||topics.resolve(q);
- const bodies=direct?[]:topics.unwrapCandidates(q).filter(b=>multilingual.resolve(b).id||topics.resolve(b));
- const ids=new Set(bodies.map(b=>multilingual.resolve(b).id||topics.resolve(b)));
+ // Recognize only a reviewed single request wrapper around a unique correction.
+ // All constraints are checked on the original query, never just its body.
+ const bodies=direct?[]:topics.unwrapCandidates(q).filter(b=>multilingual.resolve(b).id||topics.resolve(b)||multilingual.recoverSwap(b));
+ const ids=new Set(bodies.map(b=>multilingual.resolve(b).id||topics.resolve(b)||multilingual.recoverSwap(b)?.id));
  if(ids.size>1)return null;
  const body=bodies[0]||q;
  const alias=multilingual.resolve(body);if(alias.blocked||multilingual.hasConstraint(multilingual.normalize(q)))return null;
