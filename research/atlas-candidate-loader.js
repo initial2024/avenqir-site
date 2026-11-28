@@ -110,7 +110,15 @@
    }finally{clearTimeout(deadline);running=false;controller=null;}
   }
   function cancel(){controller?.abort();}
-  async function remove(){if(running)throw Error('busy');revision++;active?.close();active=null;await discardCache();}
+  // Removal and activation share one operation lock. Otherwise a new load
+  // could persist into the same cache while an earlier remove is deleting it.
+  async function remove(){
+   if(running)throw Error('busy');
+   running=true;revision++;
+   const previous=active;active=null;
+   try{try{previous?.close();}finally{await discardCache();}}
+   finally{running=false;controller=null;}
+  }
   return Object.freeze({load,cancel,remove,active:()=>!!active,total});
  }
  const api=Object.freeze({create,CACHE});if(typeof module==='object'&&module.exports)module.exports=api;else root.AVENQIR_RESEARCH_LOADER=api;
