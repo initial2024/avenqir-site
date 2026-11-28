@@ -913,3 +913,26 @@ for(const x of propertyPairs)assert.ok(!priorKeys.has(fine.normalize(x.q)),x.q);
 const propertyPairScored=precompute(propertyPairs,'unknown','global');
 const propertyPairMetrics=compact(selective(propertyGuard(evidenceRows(propertyPairScored,evidenceWinner?.minimum??Infinity,evidenceWinner?.margin??Infinity)),evidencePolicy));
 console.log('PDF_PROPERTY_SHADOW_REPORT',JSON.stringify({previouslyInspected:propertyReports,previouslyInspectedFresh:propertyFresh,newPairs:12,contrast:propertyPairMetrics,releaseEligible:false}));
+
+
+// Explore recoverable abstentions: report whether the expected class exists
+// among the top three independently grounded candidates. No candidate is ever
+// promoted automatically. Explicit constraints must suppress the whole list.
+function suggestionStudy(cases){
+ let positives=0,negatives=0,top1=0,top3=0,negativeLists=0,blocked=0;
+ const misses=[];
+ for(const c of cases){
+  if(c.expected)positives++;else negatives++;
+  const r=propertyGuard(precompute([c],'unknown','global'))[0];
+  const info=residualRank(c.q);
+  if(r.blocked){blocked++;continue;}
+  const semantic=shadowEngine.rank(c.q,null).map(x=>({...x,score:.9*x.global+.1*x.prototype}));
+  const candidates=semantic.filter(x=>x.score>=.25&&(!info.info.groups.length||info.info.groups.every(ids=>ids.includes(x.id)))&&(info.scores.get(x.id)||0)>=.15&&(x.id!=='qr-create'||qrAction(c.q))).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id)).slice(0,3);
+  if(!c.expected){if(candidates.length)negativeLists++;continue;}
+  if(candidates[0]?.id===c.expected)top1++;
+  if(candidates.some(x=>x.id===c.expected))top3++;
+  else misses.push({locale:c.locale,expected:c.expected,listed:candidates.map(x=>x.id)});
+ }
+ return {positives,negatives,top1,top3,negativeLists,blocked,misses};
+}
+console.log('SUGGESTION_ONLY_SHADOW_REPORT',JSON.stringify({prior:suggestionStudy(shadowTest),fresh:suggestionStudy(freshCases),contrast:suggestionStudy(propertyPairs),automaticPromotion:false,releaseEligible:false}));
