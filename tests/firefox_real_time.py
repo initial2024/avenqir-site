@@ -22,12 +22,12 @@ def main(url):
         sock.bind(('127.0.0.1',0)); port=sock.getsockname()[1]
     endpoint=f'http://127.0.0.1:{port}'
     opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
-    def call(method,path,data=None):
+    def call(method,path,data=None,timeout=15):
         req=urllib.request.Request(endpoint+path,method=method,data=None if data is None else json.dumps(data).encode(),headers={'Content-Type':'application/json'})
-        with opener.open(req,timeout=10) as res:
+        with opener.open(req,timeout=timeout) as res:
             return json.load(res)['value']
-    with tempfile.TemporaryFile() as logs:
-        process=subprocess.Popen([driver,'--host','127.0.0.1','--port',str(port)],stdout=logs,stderr=subprocess.STDOUT)
+    with tempfile.TemporaryDirectory(prefix='aq-firefox-',dir=pathlib.Path.home()) as profile_root, tempfile.TemporaryFile() as logs:
+        process=subprocess.Popen([driver,'--host','127.0.0.1','--port',str(port),'--profile-root',profile_root],stdout=logs,stderr=subprocess.STDOUT)
         session=None
         try:
             for _ in range(100):
@@ -37,12 +37,12 @@ def main(url):
                 except OSError: pass
                 time.sleep(.1)
             else: raise RuntimeError('geckodriver not ready')
-            caps=call('POST','/session',{'capabilities':{'alwaysMatch':{'browserName':'firefox','moz:firefoxOptions':{'binary':binary,'args':['-headless'],'prefs':{'network.proxy.type':0,'network.trr.mode':5,'browser.shell.checkDefaultBrowser':False,'browser.safebrowsing.downloads.remote.enabled':False}}}}})
+            caps=call('POST','/session',{'capabilities':{'alwaysMatch':{'browserName':'firefox','moz:firefoxOptions':{'binary':binary,'args':['-headless'],'prefs':{'network.proxy.type':0,'network.trr.mode':5,'browser.shell.checkDefaultBrowser':False}}}}},timeout=55)
             session='/session/'+caps['sessionId']
             print('FIREFOX_ACTUAL_VERSION',caps['capabilities'].get('browserVersion'),flush=True)
             call('POST',session+'/timeouts',{'pageLoad':20000,'script':10000,'implicit':0})
             call('POST',session+'/window/rect',{'width':430,'height':920})
-            call('POST',session+'/url',{'url':url})
+            call('POST',session+'/url',{'url':url},timeout=25)
             deadline=time.monotonic()+65
             while time.monotonic()<deadline:
                 state=call('POST',session+'/execute/sync',{'script':"return {result:document.documentElement?.dataset.result||'',error:document.documentElement?.dataset.error||'',metrics:document.documentElement?.dataset.metrics||''}",'args':[]})
