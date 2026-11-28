@@ -116,6 +116,34 @@ function technicalAbstention(raw){
  return technicalExplanation.some(re=>re.test(q));
 }
 
+
+// Full-query compositional grammar, not unrestricted keyword matching.
+// Only reviewed action/object/argument combinations are accepted. No trailing
+// text, arbitrary filenames, URLs, or unsupported constraints are discarded.
+const structuredPatterns=normalizedPatterns([
+ /^(?:i (?:want|need) to )?(?:combine|merge|join) (?:my |these |the )?(?:(?:two|three|four|five|several|[2-9]) )?pdfs?(?: files| documents)? into (?:one|a single) (?:pdf|file|document)$/iu,
+ /^(?:i (?:want|need) to )?(?:split|divide|separate) (?:my |this |the )?pdf(?: file| document| report)? into (?:separate|individual) (?:pages|files)$/iu,
+ /^(?:i (?:want|need) to )?(?:reduce|shrink|compress) (?:the )?(?:file size of )?(?:my |this |the )?(?:jpeg|png|photo|image|picture)(?: file)?(?: for (?:email|sharing))?$/iu,
+ /^(?:i (?:want|need) to )?(?:make|set) (?:the )?(?:background of )?(?:my |this |the )?(?:photo|image|picture)(?: background)? transparent$/iu,
+ /^(?:i (?:want|need) to )?(?:check|see|find out) whether (?:my |the )?dns (?:change|update) (?:has|have) (?:spread|propagated) (?:worldwide|globally|to other countries)$/iu,
+ /^(?:i (?:want|need) to )?(?:look up|check|find) (?:the )?(?:mx|txt|aaaa|cname|a) records? (?:of|for) (?:my |a |this |the )?domain$/iu,
+ /^(?:i (?:want|need) to )?(?:test|check|validate) (?:whether|if) (?:my|this|the) (?:regex|regular expression) (?:matches|can match) (?:a string|text|sample text)$/iu,
+ /^(?:我想|帮我|请帮我)?把(?:这|那)?(?:两|三|四|五|几|[2-9])份pdf(?:文件|文档)?(?:合成|拼成|合併|合并成)(?:一份|一个)(?:文件|文档|pdf)$/iu,
+ /^(?:我想|帮我|请帮我)?把(?:这份|这个|该)?pdf(?:文件|文档)?(?:按页|逐页)(?:拆分|拆成|分成)(?:多个|单独的)(?:文件|文档)$/iu,
+ /^(?:我想|帮我|请帮我)?把(?:这张|我的|这幅)?(?:照片|图片|图像)(?:的)?(?:文件体积|文件大小|容量)(?:压小|减小|缩小)(?:一点|一些)?$/u,
+ /^(?:我想|帮我|请帮我)?把(?:这张|我的)?(?:照片|图片)(?:的)?背景(?:变成|设为)透明(?:的)?$/u,
+ /^(?:我想|帮我|请帮我)?(?:看看|检查|确认)(?:我的|这个)?dns(?:变更|修改|更新)(?:在全球|在各地|在不同国家)(?:是否|有没有)生效$/iu,
+ /^(?:我想|帮我|请帮我)?(?:查询|查看|查找)(?:我的|这个)?域名的(?:mx|txt|aaaa|cname|a)记录$/iu,
+ /^(?:我想|帮我|请帮我)?(?:检查|测试|验证)(?:这段|我的)?正则表达式(?:是否|能否)(?:匹配|匹配到)(?:字符串|文本|测试文本)$/u
+]);
+const structuredIds=['pdf-merge','pdf-split','image-compress','image-background','dns-propagation','dns-lookup','regex-test','pdf-merge','pdf-split','image-compress','image-background','dns-propagation','dns-lookup','regex-test'];
+function structuredIntent(raw){
+ const q=multilingual.normalize(raw);
+ if(!q||q.length>160||constraints.test(q)||incompatible.test(q)||technicalAbstention(q)||compound(q)||multilingual.negated(q)||multilingual.hasConstraint(q)||multilingual.resolve(q).blocked)return null;
+ const ids=new Set(structuredPatterns.flatMap((re,i)=>re.test(q)?[structuredIds[i]]:[]));
+ return ids.size===1?[...ids][0]:null;
+}
+
 function intent(q,model){
  if(!q||q.length>512||constraints.test(q)||incompatible.test(q)||technicalAbstention(q)||compound(q)||multilingual.negated(q))return null;
  // Do not broaden a conjunction between independently recognizable tasks to OR.
@@ -136,7 +164,9 @@ function intent(q,model){
  const rawMatches=alias.id?[]:rules.filter(([,p])=>p.test(q));
  // A typo correction cannot override a conflicting recognized operation.
  if(swap&&rawMatches.some(([id])=>id!==swap.id))return null;
- const matches=alias.id||swap?rules.filter(([id])=>id===(alias.id||swap.id)):rawMatches;
+ const structured=!alias.id&&!swap?structuredIntent(body):null;
+ if(structured&&rawMatches.some(([id])=>id!==structured))return null;
+ const matches=alias.id||swap||structured?rules.filter(([id])=>id===(alias.id||swap?.id||structured)):rawMatches;
  if(matches.length>1)return null;
  if(!matches.length)return {fallback:true};
  const [id,,guard]=matches[0];
@@ -183,6 +213,6 @@ function createSession(items,model,features,baseline,unicode=null){
  },stats(){return {computed,hits,featureCalls,cachedIntents:cache.size};}});
 }
 
-const api=Object.freeze({candidate,classify,compound,unsupportedProperties,technicalAbstention,createSession});
+const api=Object.freeze({candidate,classify,compound,unsupportedProperties,technicalAbstention,structuredIntent,createSession});
 if(typeof module==="object"&&module.exports)module.exports=api;else root.AVENQIR_RESEARCH_RETRIEVAL=api;
 })(typeof self!=="undefined"?self:globalThis);
