@@ -263,6 +263,9 @@ function intent(q,model){
  const broad=!alias.id&&topics.resolve(body);
  if(broad){const row=model.classes.find(x=>x[0]===broad);return row&&evidence[broad]?{id:broad,guard:evidence[broad],weights:row[1],broad:true}:null;}
  const swap=alias.id?null:multilingual.recoverSwap(body);
+ // A reviewed whole-query operation takes precedence over a loose legacy
+ // keyword pattern, but never overrides established aliases, wrappers or grammar.
+ if(!alias.id&&!grammar&&!swap){const specific=videoTask(q,model)||practicalTask(q,model);if(specific)return specific;}
  const rawMatches=alias.id?[]:rules.filter(([,p])=>p.test(q));
  // A typo correction cannot override a conflicting recognized operation.
  if(swap&&rawMatches.some(([id])=>id!==swap.id))return null;
@@ -270,7 +273,7 @@ function intent(q,model){
  if(structured&&rawMatches.some(([id])=>id!==structured))return null;
  const matches=alias.id||swap||structured?rules.filter(([id])=>id===(alias.id||swap?.id||structured)):rawMatches;
  if(matches.length>1)return null;
- if(!matches.length)return videoTask(q,model)||practicalTask(q,model)||{fallback:true};
+ if(!matches.length)return {fallback:true};
  const [id,,guard]=matches[0];
  const row=model.classes.find(x=>x[0]===id);
  return row?{id,guard,weights:row[1]}:null;
