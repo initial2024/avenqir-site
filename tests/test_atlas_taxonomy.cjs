@@ -19,10 +19,10 @@ const catalog=require(path.join(site,'atlas-catalog-core.js'));
 const gate=require(path.join(site,'link-gate.js'));
 const all=catalog.catalog();
 const expected=catalog.base.length+catalog.extras.length+atlas.links.length+expanded.links.length+specialist.links.length+depth.reduce((n,x)=>n+x.links.length,0)+ai.links.length+regional.links.length+everyday.links.length+regionalExt.links.length+everydayExt.links.length+popularLinks.links.length;
-assert.equal(expected,1240+popularLinks.links.length,'expected complete dynamic merged catalog');
-assert.equal(all.length,1240+popularLinks.links.length,'live merged catalog must include all curated resources');
+assert.equal(expected,1244+popularLinks.links.length,'expected complete dynamic merged catalog');
+assert.equal(all.length,1244+popularLinks.links.length,'live merged catalog must include all curated resources');
 assert.equal(depth.reduce((n,x)=>n+x.links.length,0),310,'310 new resources in four distinct depth files');
-assert.equal(new Set(all.map(x=>new URL(x.url).href)).size,1240+popularLinks.links.length,'no normalized URL duplicates');
+assert.equal(new Set(all.map(x=>new URL(x.url).href)).size,1244+popularLinks.links.length,'no normalized URL duplicates');
 const counts=new Map();
 const ids=new Set();
 for(const x of all){
@@ -89,7 +89,7 @@ assert.ok(js.includes("atlasTaxonomySummary"),'category count is runtime generat
 assert.ok(summary.includes("new Set(info.items.map(x=>x.category))"),'home category counts are dynamic');
 assert.ok(!home.includes("1239 个精选网址"),'do not hardcode promotional URL totals');
 assert.ok(!dir.includes("1239 个独立网址"),'directory total must be runtime generated');
-assert.equal(catalog.catalog([{name:'追加',url:'https://new-public-resource.example/',category:'新的后台分类',description:'测试动态后台条目'} ]).length,1241+popularLinks.links.length,'backend entries must remain dynamic after expansion');
+assert.equal(catalog.catalog([{name:'追加',url:'https://new-public-resource.example/',category:'新的后台分类',description:'测试动态后台条目'} ]).length,1245+popularLinks.links.length,'backend entries must remain dynamic after expansion');
 const newCount=new Map(counts);newCount.set('新的后台分类',1);
 assert.equal(newCount.size,51,'backend may introduce a new dynamic category');
 assert.ok(all.some(x=>x.url==='https://read.claua.de/'),'public English reader remains in catalog');

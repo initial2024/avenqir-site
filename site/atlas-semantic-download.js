@@ -13,10 +13,11 @@
   const format=n=>n>=1048576?(n/1048576).toFixed(2)+' MiB':(n/1024).toFixed(1)+' KiB';
   const notify=()=>{memo=null;onChange?.();};
   async function verified(bytes){
-   if(bytes.byteLength!==spec.bytes||!root.crypto?.subtle)throw Error('integrity');
+   if(!root.crypto?.subtle)throw Error('crypto_unavailable');
+   if(bytes.byteLength!==spec.bytes)throw Error('integrity');
    const hex=[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(v=>v.toString(16).padStart(2,'0')).join('');
    if(hex!==spec.sha256)throw Error('integrity');
-   return engine.create(JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes)));
+   try{return engine.create(JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes)));}catch{throw Error('model_format');}
   }
   function draw(){
    panel.dataset.state=phase;
@@ -29,7 +30,8 @@
    start.hidden=!!model||busy;later.hidden=!!model||busy;cancel.hidden=!busy||!controller;remove.hidden=!model||busy;
    progress.hidden=!busy&&phase!=='ready';progress.max=spec.bytes;progress.value=readBytes;
    detail.textContent=(busy||phase==='ready')?format(readBytes)+' / '+format(spec.bytes)+' · '+Math.min(100,Math.floor(readBytes/spec.bytes*100))+'% · '+(busy&&rate>0?format(rate)+'/s':phase==='ready'?t('下载完成','Complete'):t('计算速度中','Measuring speed')):'';
-   const messages={idle:t('下载需你确认，不会自动开始。','Download requires approval.'),checking:t('正在校验本地模型…','Checking local model…'),downloading:t('正在下载模型…','Downloading model…'),verifying:t('正在校验 SHA-256…','Verifying SHA-256…'),ready:persisted?t('已启用 · 本机缓存可离线复用','Enabled · cached for offline reuse'):t('已启用 · 本次会话可用，未保存到浏览器缓存','Enabled for this session; cache unavailable'),error:errorKind==='integrity'?t('模型校验失败；普通搜索仍可用。','Integrity check failed; normal search still works.'):t('下载、加载或存储操作失败；普通搜索仍可用。','Download, load or storage operation failed; normal search still works.'),cancelled:t('已取消，未保存不完整模型。','Cancelled; no partial model stored.')};
+   const errorMessages={integrity:t('模型完整性校验失败','Model integrity check failed'),crypto_unavailable:t('浏览器缺少安全校验能力','Secure verification unavailable'),model_format:t('模型格式不兼容','Incompatible model format'),timeout:t('下载超时','Download timed out'),http:t('服务器未返回模型文件','Server did not return the model'),mime:t('服务器返回了非模型内容，可能是验证页面','Unexpected response type; possibly a verification page'),stream:t('浏览器无法读取下载流','Download stream unavailable'),network:t('网络请求失败或被重定向','Network request failed or redirected'),storage:t('浏览器缓存操作失败','Browser cache operation failed')};
+   const messages={idle:t('下载需你确认，不会自动开始。','Download requires approval.'),checking:t('正在校验本地模型…','Checking local model…'),downloading:t('正在下载模型…','Downloading model…'),verifying:t('正在校验 SHA-256…','Verifying SHA-256…'),ready:persisted?t('已启用 · 本机缓存可离线复用','Enabled · cached for offline reuse'):t('已启用 · 本次会话可用，未保存到浏览器缓存','Enabled for this session; cache unavailable'),error:(errorMessages[errorKind]||t('下载或加载失败','Download or load failed'))+' ['+(errorKind||'unknown')+'] '+t('；普通搜索仍可用。','; normal search still works.'),cancelled:t('已取消，未保存不完整模型。','Cancelled; no partial model stored.')};
    status.textContent=messages[phase]||messages.idle;
   }
   function show(){panel.hidden=false;draw();}
@@ -52,11 +54,17 @@
   async function download(){
    if(busy||model)return;
    const id=++attempt,ctl=new AbortController(),signal=ctl.signal;controller=ctl;busy=true;phase='downloading';readBytes=0;rate=0;errorKind='';show();
-   const started=performance.now(),deadline=setTimeout(()=>ctl.abort(),45000);
+   let timedOut=false;
+   const started=performance.now(),deadline=setTimeout(()=>{timedOut=true;ctl.abort();},45000);
    let reader;
    try{
-    const res=await fetch(url,{cache:'no-store',credentials:'omit',redirect:'error',signal,referrerPolicy:'no-referrer'});
-    if(!res.ok||!res.body?.getReader||!String(res.headers.get('content-type')||'').toLowerCase().includes('application/json'))throw Error('download');
+    let res;try{res=await fetch(url,{cache:'no-store',credentials:'omit',redirect:'error',signal,referrerPolicy:'no-referrer'});}catch{throw Error('network');}
+    if(!res.ok)throw Error('http');
+    // Static hosts may label JSON as a binary or plain-text file. Exact length,
+    // pinned SHA-256, strict UTF-8 and model schema still gate every byte.
+    const mime=String(res.headers.get('content-type')||'').split(';')[0].trim().toLowerCase();
+    if(!['application/json','application/octet-stream','text/plain','text/json'].includes(mime))throw Error('mime');
+    if(!res.body?.getReader)throw Error('stream');
     reader=res.body.getReader();const bytes=new Uint8Array(spec.bytes);
     while(true){const {done,value}=await reader.read();if(id!==attempt||signal.aborted)throw Error('cancelled');if(done)break;
      if(readBytes+value.byteLength>spec.bytes)throw Error('integrity');
@@ -69,7 +77,7 @@
     controller=null;draw();let saved=false;
     try{if(root.caches){const c=await caches.open(CACHE);await c.put(url,new Response(bytes,{headers:{'Content-Type':'application/json'}}));saved=true;}}catch{}
     model=loaded;persisted=saved;phase='ready';setPref('enabled');notify();
-   }catch(e){if(id===attempt){phase=signal.aborted?'cancelled':'error';errorKind=e.message;readBytes=0;rate=0;}}
+   }catch(e){if(id===attempt){phase=timedOut?'error':signal.aborted?'cancelled':'error';errorKind=timedOut?'timeout':e.message;readBytes=0;rate=0;}}
    finally{clearTimeout(deadline);try{await reader?.cancel();}catch{}if(id===attempt){busy=false;controller=null;draw();}}
   }
   start.addEventListener('click',download);

@@ -27,7 +27,7 @@ const atlas=require('../site/atlas-paths.js');
 const expansion=require('../site/atlas-expansion.js');
 const catalog=require('../site/atlas-catalog-core.js');
 const records=catalog.extras;
-assert.equal(records.length,275);
+assert.equal(records.length,279);
 assert.equal(new Set(records.map(r=>r.url)).size,records.length);
 for(const r of records){
   assert.ok(r.name&&r.category&&r.description&&r.url);
@@ -59,4 +59,4 @@ assert.ok(clickStart>=0&&navigate>clickStart,'external navigation must remain in
 assert.equal((script.match(/location\.assign\(/g)||[]).length,1);
 assert.equal((script.match(/setTimeout\(/g)||[]).length,1);
 assert.ok(script.indexOf('setTimeout(resolve,250)')>clickStart&&script.indexOf('setTimeout(resolve,250)')<navigate,'only a bounded catalog lookup wait is allowed after confirmation');
-console.log('PASS: exact official provenance, guarded offsite links, 64 legacy records and v8.5 page wiring');
+console.log('PASS: exact official provenance, guarded offsite links, 279 curated extras and page wiring');

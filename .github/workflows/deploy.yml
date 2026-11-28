@@ -56,6 +56,15 @@ jobs:
           node tests/test_local_organize.cjs
           node tests/test_atlas_release.cjs
           node scripts/train_atlas_embedding.cjs --check
+          if test -f scripts/research_atlas_embedding_v2.cjs; then node scripts/research_atlas_embedding_v2.cjs --check; fi
+          if test -f scripts/research_atlas_retrieval_v2.cjs; then node scripts/research_atlas_retrieval_v2.cjs; fi
+          if test -f scripts/research_atlas_unicode.cjs; then node scripts/research_atlas_unicode.cjs --check; fi
+          if test -f scripts/research_atlas_full_multilingual.cjs; then node scripts/research_atlas_full_multilingual.cjs --check; fi
+          if test -f scripts/research_atlas_paraphrases.cjs; then node scripts/research_atlas_paraphrases.cjs; fi
+          if test -f scripts/research_atlas_locale_fusion.cjs; then node scripts/research_atlas_locale_fusion.cjs; fi
+          if test -f scripts/build_semantic_candidate.cjs; then node scripts/build_semantic_candidate.cjs --check; fi
+          if test -f scripts/research_atlas_pack.cjs; then node scripts/research_atlas_pack.cjs --check; fi
+          if test -f tests/research_atlas_worker_client.cjs; then node tests/research_atlas_worker_client.cjs; node --check research/atlas-search-worker.js; fi
           node tests/test_atlas_semantic.cjs
           node tests/test_transfer_v90.cjs
           node tests/test_orbit_bridge.cjs
@@ -114,6 +123,8 @@ jobs:
           python3 tests/browser_directory_first_paint.py
           python3 tests/browser_popular_mobile.py
           python3 tests/browser_semantic_download.py
+          if test -f tests/browser_research_semantic_worker.py; then python3 tests/browser_research_semantic_worker.py; fi
+          if test -f tests/browser_research_semantic_directory.py; then python3 tests/browser_research_semantic_directory.py; python3 tests/browser_research_semantic_directory.py --packaged; fi
   deploy:
     needs: [verify, recommendations-db, browser]
     if: >-
@@ -129,22 +140,52 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           persist-credentials: false
-      - name: Generate fresh CERT Polska public catalog screening
-        continue-on-error: true
-        run: python3 scripts/build_atlas_threat_snapshot.py
-      - name: Generate official federal domain registration evidence
-        continue-on-error: true
-        run: python3 scripts/build_atlas_registry_snapshot.py
-      - name: Upload site with authenticated TLS
+      - name: Build the reviewed semantic v154 candidate, not the legacy site
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir "$RUNNER_TEMP/avenqir-approved-release"
+          node scripts/build_semantic_candidate.cjs "$RUNNER_TEMP/avenqir-approved-release/site"
+          python3 scripts/ftps_deploy.py --semantic-stage "$RUNNER_TEMP/avenqir-approved-release/site" --candidate-commit "$GITHUB_SHA" --manifest-sha256 c12a766c5457498fb822c9744311570b423d4bb1345a4c44abfef55f956da284 --plan-only
+      - name: Verify previous public deployment marker (read only)
         env:
           FTPS_USERNAME: ${{ secrets.AVENQIR_FTPS_USERNAME }}
           FTPS_PASSWORD: ${{ secrets.AVENQIR_FTPS_PASSWORD }}
-        run: python3 -u scripts/ftps_deploy.py
-      - name: Independently verify deployed files through read-only authenticated FTPS
+        run: |
+          python3 - <<'PY'
+          import sys,json,ssl,ftplib
+          sys.path.insert(0,'scripts')
+          from ftps_deploy import HOST,REMOTE,credential,retrieve
+          ftp=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=25)
+          try:
+              ftp.connect(HOST,21,timeout=25);ftp.login(credential('FTPS_USERNAME'),credential('FTPS_PASSWORD'))
+              ftp.prot_p();ftp.set_pasv(True);ftp.cwd(REMOTE)
+              marker=json.loads(retrieve(ftp,'deploy-state.json'))
+              prior=marker.get('commit')=='13d6f7b3ecc0636da241c1831a8aaa2b7fec6bca'
+              same=marker.get('candidate_revision')=='2d25890ca56228c7' and marker.get('candidate_manifest_sha256')=='c12a766c5457498fb822c9744311570b423d4bb1345a4c44abfef55f956da284'
+              if not (prior or same):raise RuntimeError('Unexpected prior deployment marker; stop')
+              print('PREVIOUS_DEPLOYMENT_MARKER_PASS',marker.get('commit'),flush=True)
+          finally:
+              try:ftp.quit()
+              except Exception:ftp.close()
+          PY
+      - name: Upload only the approved audited candidate with authenticated TLS
         env:
           FTPS_USERNAME: ${{ secrets.AVENQIR_FTPS_USERNAME }}
           FTPS_PASSWORD: ${{ secrets.AVENQIR_FTPS_PASSWORD }}
-        run: python3 scripts/verify_ftps_receipt.py
-      - name: Compare HTTPS deployment marker with commit (host anti-bot may intervene)
+        shell: bash
+        run: |
+          set -euo pipefail
+          export AVENQIR_SEMANTIC_RELEASE_APPROVAL="$GITHUB_SHA:c12a766c5457498fb822c9744311570b423d4bb1345a4c44abfef55f956da284"
+          python3 -u scripts/ftps_deploy.py --semantic-stage "$RUNNER_TEMP/avenqir-approved-release/site" --candidate-commit "$GITHUB_SHA" --manifest-sha256 c12a766c5457498fb822c9744311570b423d4bb1345a4c44abfef55f956da284
+      - name: Independently read back candidate runtime and public core
+        env:
+          FTPS_USERNAME: ${{ secrets.AVENQIR_FTPS_USERNAME }}
+          FTPS_PASSWORD: ${{ secrets.AVENQIR_FTPS_PASSWORD }}
+        run: python3 scripts/verify_semantic_candidate_receipt.py "$RUNNER_TEMP/avenqir-approved-release/site" "c12a766c5457498fb822c9744311570b423d4bb1345a4c44abfef55f956da284"
+      - name: Verify public model through ordinary Chromium browser and activate local search
+        run: node scripts/check_semantic_public_browser.cjs
+      - name: Raw public HTTP probe (host challenge may block non-browser clients)
+        if: always()
         continue-on-error: true
-        run: python3 scripts/check_live.py
+        run: python3 scripts/check_semantic_host.py

@@ -32,6 +32,7 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  yes(panel().dataset.state==='cancelled','cancel not applied');
  $('atlasSemanticDownload').click();
  await wait(()=>panel().dataset.state==='error');
+ yes($('atlasSemanticStatus').textContent.includes('[integrity]'),'integrity diagnostics missing');
  yes(!w.localStorage.getItem('avenqir.semantic.preference.v1')||w.localStorage.getItem('avenqir.semantic.preference.v1')==='declined','corrupt model enabled');
  const failedCache=await w.caches.open('avenqir-semantic-model-v1');
  yes(!await failedCache.match(modelURL()),'corrupt model saved');
@@ -75,7 +76,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         elif p=='/atlas-semantic-model-v1.json':
             requests.append((mode,self.path))
             if mode=='block':self.send_error(503);return
-            data=MODEL if mode=='valid' else b'X'+MODEL[1:];kind='application/json'
+            data=MODEL if mode=='valid' else b'X'+MODEL[1:];kind='application/octet-stream' if mode=='valid' else 'application/json'
         elif p=='/public-api.php':data=b'{"ok":true,"items":[]}';kind='application/json'
         elif p=='/recommendations-api.php':data=b'{"ok":true,"items":[]}';kind='application/json'
         elif p.endswith('.php'):self.send_error(404);return

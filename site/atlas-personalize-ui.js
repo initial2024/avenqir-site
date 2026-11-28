@@ -11,7 +11,7 @@
  };
  const T=(zh,en)=>E()?en:zh;
  const category=name=>root.AVENQIR_I18N?.category(name)||name;
- function mount({items,favorites,open,reviewed}){
+ function mount({items,favorites,open,reviewed,allowed=()=>false,priority=()=>0,recent=()=>[]}){
   if(!engine||typeof document==='undefined')return null;
   const $=id=>document.getElementById(id);
   const toggle=$('atlasLocalToggle'),body=$('atlasLocalBody'),categories=$('atlasLocalCategories'),cards=$('atlasLocalCards'),status=$('atlasLocalStatus'),clear=$('atlasLocalClear');
@@ -23,6 +23,7 @@
    const state=model.read();toggle.checked=state.enabled;body.hidden=!state.enabled;
    toggle.setAttribute('aria-checked',String(state.enabled));
    if(!state.enabled){
+     categories.replaceChildren();cards.replaceChildren();
      status.textContent=T('目前关闭。只有你主动开启后才记录站内目录的分类操作。','Disabled. No category activity is recorded unless you opt in.');
      return;
    }
@@ -41,7 +42,8 @@
      categories.append(b);
    }
    cards.replaceChildren();
-   const picks=model.recommend(items(),favorites(),6);
+   const excluded=[...favorites(),...recent().slice(0,20)];
+   const picks=model.recommend(items(),excluded,6,{allowed,priority});
    if(!picks.length){
      const box=el('p','atlas-local-empty',T('还没有足够的本地偏好。请选择感兴趣的分类，或在开启后访问、收藏公开网址。','Not enough local preferences yet. Choose interests or open/save public websites after enabling this feature.'));
      cards.append(box);return;
@@ -57,7 +59,7 @@
      a.rel='noopener noreferrer';a.referrerPolicy='no-referrer';
      a.addEventListener('click',e=>{
        if(e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
-       e.preventDefault();open(item.url,item.name);
+       e.preventDefault();if(allowed(item))open(item.url,item.name);else render();
      });
      const desc=el('p','atlas-local-description',E()&&/[\u3400-\u9fff]/.test(item.description||'')?'Source description is available in Chinese. Open the site for original details.':item.description);
      const trust=el('small','atlas-local-trust',reviewed(item.url)?T('来源已核对（非安全认证）','Exact source checked (not a security certificate)'):T('第三方来源未核对 · 跳转前确认','Unverified external source · confirm before leaving'));

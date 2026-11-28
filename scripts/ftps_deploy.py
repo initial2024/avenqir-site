@@ -54,12 +54,14 @@ def retrieve(ftp, name):
 def sha(data):
     return hashlib.sha256(data).hexdigest()
 
-def upload(ftp, file, commit, target_root, root=SITE, listing_cache=None):
+def upload(ftp, file, commit, target_root, root=SITE, listing_cache=None, expected_sha256=None):
     rel=file.relative_to(root).as_posix()
     parent=rel.rsplit('/',1)[0] if '/' in rel else ''
-    safe_mkdir(ftp,parent,target_root)
     name=file.name
     new=file.read_bytes()
+    if expected_sha256 is not None and sha(new)!=expected_sha256:
+        raise RuntimeError('Audited file changed before upload: '+rel)
+    safe_mkdir(ftp,parent,target_root)
     # Cached positive names are only a read-only hint, never authorization to write.
     # Every existing file is still retrieved and compared by SHA-256.
     current=listing_cache.get(parent) if listing_cache is not None else None
@@ -70,23 +72,29 @@ def upload(ftp, file, commit, target_root, root=SITE, listing_cache=None):
     if old is not None and sha(old)==sha(new):
         print('UNCHANGED',rel)
         return
+    if old is not None and rel.startswith('semantic-v2/atlas-semantic-bundle-v2-') and rel.endswith('.json'):
+        raise RuntimeError('Immutable model path already contains different bytes: '+rel)
     if old is not None and file.suffix.lower() in PRESERVE_EXISTING_MEDIA:
         # The server copy wins for binaries unless an owner-approved asset
         # replacement procedure is used separately from routine code deploys.
         print('PRESERVED_REMOTE_MEDIA',rel,'remote_bytes='+str(len(old)))
         return
-    if listing_cache is not None:
-        # Fresh listing before any mutation; abort if presence changed during this pass.
-        listing_cache.pop(parent,None)
-        current=remote_names(ftp)
-        if (name in current)!=(old is not None):
-            raise RuntimeError('Remote file presence changed during deployment: '+rel)
+    # Recheck even without a listing cache; never use a stale listing to own a scratch file.
+    if listing_cache is not None:listing_cache.pop(parent,None)
+    current=remote_names(ftp)
+    if (name in current)!=(old is not None):
+        raise RuntimeError('Remote file presence changed during deployment: '+rel)
     temp=name+'.avenqir-upload-'+commit[:12]+'.tmp'
     if temp in current: raise RuntimeError('Unexpected pre-existing temporary file: '+rel)
     try:
         ftp.storbinary('STOR '+temp,io.BytesIO(new),blocksize=65536)
         if sha(retrieve(ftp,temp))!=sha(new):
             raise RuntimeError('Temp integrity check failed: '+rel)
+        # Recheck remote content immediately before final publication. This
+        # narrows but cannot eliminate races with a separate FTPS writer.
+        latest=remote_names(ftp)
+        if (name in latest)!=(old is not None) or (old is not None and sha(retrieve(ftp,name))!=sha(old)):
+            raise RuntimeError('Remote file changed before publication: '+rel)
         if old is None:
             ftp.rename(temp,name)
         else:
@@ -130,13 +138,47 @@ def deploy_order(file, root=SITE):
     return priority,rel
 
 def main():
+    # The normal workflow remains unchanged. Candidate mode is an explicit
+    # operator-only entry point and is disabled without a matching approval.
+    import argparse
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--semantic-stage')
+    parser.add_argument('--manifest-sha256')
+    parser.add_argument('--candidate-commit')
+    parser.add_argument('--plan-only',action='store_true')
+    args=parser.parse_args()
+    root=SITE
+    expected={}
+    candidate=None
+    if any((args.semantic_stage,args.manifest_sha256,args.candidate_commit,args.plan_only)):
+        if not all((args.semantic_stage,args.manifest_sha256,args.candidate_commit)):
+            raise RuntimeError('Candidate mode requires stage, reviewed manifest SHA-256 and reviewed commit')
+        from prepare_semantic_release import prepare
+        candidate=prepare(args.semantic_stage,args.manifest_sha256,args.candidate_commit)
+        root=Path(args.semantic_stage).resolve(strict=True)
+        expected={entry['path']:entry['sha256'] for entry in candidate['files']}
+        if args.plan_only:
+            print('SEMANTIC_RELEASE_PLAN',json.dumps({k:v for k,v in candidate.items() if k!='files'},sort_keys=True))
+            return
+        if os.environ.get('AVENQIR_SEMANTIC_RELEASE_APPROVAL')!=args.candidate_commit+':'+args.manifest_sha256:
+            raise RuntimeError('Explicit candidate upload approval required')
     commit=credential('GITHUB_SHA')
     if len(commit)!=40 or any(x not in '0123456789abcdef' for x in commit):
         raise RuntimeError('Invalid GitHub commit SHA')
-    files=validate()
+    if candidate is not None and commit!=args.candidate_commit:
+        raise RuntimeError('Reviewed candidate commit does not match GITHUB_SHA')
+    files=validate(root)
+    if candidate is not None and {p.relative_to(root).as_posix() for p in files}!=set(expected):
+        raise RuntimeError('Candidate file set changed after audit')
+    # Verify the entire staged tree again before connecting. The per-file
+    # digest guard also protects against changes later in the transfer.
+    if candidate is not None:
+        for file in files:
+            if file.is_symlink() or sha(file.read_bytes())!=expected[file.relative_to(root).as_posix()]:
+                raise RuntimeError('Candidate changed before connection: '+file.relative_to(root).as_posix())
     username=credential('FTPS_USERNAME')
     passwd=credential('FTPS_PASSWORD')
-    if (SITE/'deploy-state.json').exists():
+    if (root/'deploy-state.json').exists():
         raise RuntimeError('deploy-state.json is generated only by CI')
     context=ssl.create_default_context()
     ftp=ftplib.FTP_TLS(context=context,timeout=25)
@@ -150,18 +192,21 @@ def main():
         print('FTPS connected with certificate verification; target:',REMOTE)
         started=time.monotonic()
         listing_cache={}
-        for file in sorted(files,key=deploy_order):
+        for file in sorted(files,key=lambda p:deploy_order(p,root)):
             if (file.name=='atlas-threat-snapshot.js' and b'window.AVENQIR_THREAT_SNAPSHOT = null;' in file.read_bytes()) or (file.name=='atlas-registry-snapshot.js' and b'window.AVENQIR_REGISTRY_SNAPSHOT = null;' in file.read_bytes()):
                 ftp.cwd(target_root)
                 if file.name in remote_names(ftp):
                     print('PRESERVED_LAST_THREAT_SNAPSHOT',file.name)
                     continue
-            upload(ftp,file,commit,target_root,listing_cache=listing_cache)
+            upload(ftp,file,commit,target_root,root=root,listing_cache=listing_cache,expected_sha256=expected.get(file.relative_to(root).as_posix()))
         metadata={'schema':'avenqir-deploy-state-1','commit':commit,'deployed_at':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())}
-        state=SITE/'deploy-state.json'
+        if candidate is not None:
+            metadata['candidate_revision']=candidate['revision']
+            metadata['candidate_manifest_sha256']=candidate['manifestSHA256']
+        state=root/'deploy-state.json'
         try:
             state.write_text(json.dumps(metadata,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-            upload(ftp,state,commit,target_root,listing_cache=listing_cache)
+            upload(ftp,state,commit,target_root,root=root,listing_cache=listing_cache)
             print('FTPS_UPLOAD_COMPLETE',len(files),'validated payload files; elapsed_seconds='+str(round(time.monotonic()-started,1)),flush=True)
         finally:
             state.unlink(missing_ok=True)

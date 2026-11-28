@@ -29,7 +29,7 @@ const supplied=[
 ];
 assert.equal(specialist.links.length,31,'new resources must all be distinct (not double count Desmos/Regex101)');
 assert.equal(new Set(specialist.links.map(x=>x.url)).size,specialist.links.length);
-assert.equal(catalog.catalog().length,1240+popularLinks.links.length,'all static curated links should now be addressable');
+assert.equal(catalog.catalog().length,1244+popularLinks.links.length,'all static curated links should now be addressable');
 for(const url of supplied){
  const x=catalog.catalog().find(r=>r.url===url);
  assert.ok(x,'missing user-requested destination '+url);

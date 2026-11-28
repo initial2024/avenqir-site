@@ -65,7 +65,10 @@
      Object.defineProperty(s.activity,c,{value:counts,enumerable:true,writable:true,configurable:true});
      return save(s);
    }
-   function recommend(items,excluded=[],limit=6){
+   function recommend(items,excluded=[],limit=6,policy={}){
+     limit=Number.isFinite(limit)?Math.max(0,Math.min(10,Math.floor(limit))):6;if(!limit)return [];
+     const allowed=typeof policy.allowed==='function'?policy.allowed:()=>true;
+     const priority=typeof policy.priority==='function'?policy.priority:()=>0;
      const s=read();if(!s.enabled||!Array.isArray(items))return [];
      const favs=new Set(excluded);const day=current(),weights=Object.create(null),reasons=Object.create(null);
      for(const c of s.interests){weights[c]=5;reasons[c]='你主动选择了「'+c+'」兴趣';}
@@ -82,17 +85,18 @@
      const seen=new Set(),candidates=[];
      for(const x of items){
        if(!x||!category(x.category)||typeof x.url!=='string'||favs.has(x.url)||seen.has(x.url)||!own(weights,x.category))continue;
+       let host,bonus=0;try{const u=new URL(x.url);if(u.protocol!=='https:'||u.username||u.password||!allowed(x))continue;host=u.hostname;const p=Number(priority(x));if(Number.isFinite(p))bonus=Math.max(0,Math.min(.35,p));}catch{continue;}
        seen.add(x.url);
-       candidates.push({item:x,reason:reasons[x.category]||'本地兴趣相关',score:weights[x.category]+hash(x.url+'|'+day)*0.42});
+       candidates.push({item:x,host,reason:reasons[x.category]||'本地兴趣相关',score:weights[x.category]+bonus+hash(x.url+'|'+day)*0.42});
      }
      candidates.sort((a,b)=>b.score-a.score||a.item.url.localeCompare(b.item.url));
-     const chosen=[],used=Object.create(null);
+     const chosen=[],used=Object.create(null),hosts=new Map(),chosenURLs=new Set();
      for(let pass=1;pass<=Math.max(1,Math.min(limit,10));pass++){
        for(const x of candidates){
          if(chosen.length>=limit)break;
          const c=x.item.category;
-         if((used[c]||0)>=pass||chosen.some(y=>y.item.url===x.item.url))continue;
-         chosen.push(x);used[c]=(used[c]||0)+1;
+         if((used[c]||0)>=pass||(hosts.get(x.host)||0)>=pass||chosenURLs.has(x.item.url))continue;
+         chosen.push(x);chosenURLs.add(x.item.url);hosts.set(x.host,(hosts.get(x.host)||0)+1);used[c]=(used[c]||0)+1;
        }
        if(chosen.length>=limit)break;
      }
