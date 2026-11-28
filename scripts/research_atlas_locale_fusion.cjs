@@ -870,3 +870,46 @@ const directionReports=Object.fromEntries(localeModes.map(mode=>[mode,compact(se
 const directionFresh=compact(selective(directionGuard(evidenceRows(freshScored,evidenceWinner?.minimum??Infinity,evidenceWinner?.margin??Infinity)),evidencePolicy));
 const directionDev=compact(selective(directionGuard(evidenceRows(residualInputs,evidenceWinner?.minimum??Infinity,evidenceWinner?.margin??Infinity)),evidencePolicy));
 console.log('DIRECTIONAL_QR_SHADOW_REPORT',JSON.stringify({calibration:directionDev,previouslyInspected:directionReports,previouslyInspectedFresh:directionFresh,releaseEligible:false}));
+
+
+// A constraint is not an action. No promise of offline processing or password
+// recovery may be inferred from a neighboring PDF operation's class.
+const unsupportedPdfProperties=[
+ /\b(?:password|passcode|encrypted|watermark|digital signature|offline|without (?:uploading|internet)|never upload)\b/iu,
+ /密码|密碼|口令|加密|解密|水印|浮水印|数字签名|數位簽章|离线|離線|不上传|不上傳|不用联网|無需上傳/u,
+ /パスワード|暗号化|電子署名|透かし|オフライン|アップロード(?:しない|せず)|비밀번호|암호|전자 서명|오프라인|업로드 없이/u,
+ /mot de passe|signature numérique|hors ligne|sans (?:envoi|téléversement)|passwort|kennwort|digitale signatur|ohne (?:upload|hochladen)|contraseña|firma digital|sin subir|sem enviar|senha|assinatura digital|password|firma digitale|senza caricare/iu,
+ /wachtwoord|zonder upload|lösenord|utan att ladda upp|passord|uten at|uten opplasting|adgangskode|uden upload|salasana|ilman lataamista|hasło|bez przesyłania|heslo|bez nahrávání|jelszó|parol[ăa]|fără încărcare/iu,
+ /парол|цифровая подпись|без загрузки|лозинк|geslo|κωδικό πρόσβασης|χωρίς μεταφόρτωση|şifre|parola|yüklemeden/iu,
+ /كلمة المرور|توقيع رقمي|دون رفع|بدون رفع|סיסמה|חתימה דיגיטלית|رمز عبور|بدون بارگذاری|पासवर्ड|डिजिटल हस्ताक्षर|बिना अपलोड|পাসওয়ার্ড|পাসওয়ার্ড|پاس ورڈ|پاسورڈ/u,
+ /รหัสผ่าน|ลายเซ็นดิจิทัล|ไม่อัปโหลด|mật khẩu|không tải lên|kata sandi|kata laluan|tanpa memuat naik|wagwoord|sonder oplaai/iu
+];
+function propertyGuard(rows){
+ return directionGuard(rows).map(r=>{
+  const pdf=/\bpdf\b|पीडीएफ|পিডিএফ/iu.test(r.q);
+  return {...r,blocked:r.blocked||(pdf&&unsupportedPdfProperties.some(re=>re.test(r.q)))};
+ });
+}
+const propertyReports=Object.fromEntries(localeModes.map(mode=>[mode,compact(selective(propertyGuard(evidenceRows(precompute(shadowTest,mode,'global'),evidenceWinner?.minimum??Infinity,evidenceWinner?.margin??Infinity)),evidencePolicy))]));
+const propertyFresh=compact(selective(propertyGuard(evidenceRows(freshScored,evidenceWinner?.minimum??Infinity,evidenceWinner?.margin??Infinity)),evidencePolicy));
+// New contrast pairs: not used to adjust thresholds. As before, all authored
+// examples are development diagnostics, not independent real search traffic.
+const propertyPairs=[
+ ['en','Combine my lecture PDFs into one document','pdf-merge','Combine my lecture PDFs without uploading them'],
+ ['zh-Hans','把论文PDF体积压小一点','pdf-compress','把论文PDF体积压小一点但是不上传文件'],
+ ['ja','複数のPDFをひとつに結合したい','pdf-merge','PDFをパスワードで保護したい'],
+ ['ko','PDF 문서의 크기를 줄이고 싶어요','pdf-compress','PDF 문서의 암호를 복구하고 싶어요'],
+ ['fr','Assembler plusieurs fichiers PDF en un seul','pdf-merge','Assembler plusieurs fichiers PDF hors ligne'],
+ ['de','Mehrere PDF Dokumente zusammenfügen','pdf-merge','Ein PDF mit vergessenen Passwort öffnen'],
+ ['es','Reducir el tamaño de un documento PDF','pdf-compress','Reducir el tamaño de un documento PDF sin subir archivos'],
+ ['pt','Juntar vários arquivos PDF em um só','pdf-merge','Recuperar a senha de um arquivo PDF'],
+ ['ru','Соединить несколько документов PDF','pdf-merge','Соединить несколько документов PDF без загрузки'],
+ ['ar','دمج عدة ملفات PDF في ملف واحد','pdf-merge','دمج عدة ملفات PDF دون رفع الملفات'],
+ ['hi','अलग अलग PDF दस्तावेजों को जोड़ना है','pdf-merge','PDF दस्तावेज का पासवर्ड हटाना है'],
+ ['th','อยากรวมไฟล์ PDF หลายไฟล์เข้าด้วยกัน','pdf-merge','อยากรวมไฟล์ PDF โดยไม่อัปโหลดไฟล์']
+].flatMap(([locale,q,expected,negative])=>[{locale,q,expected},{locale,q:negative,expected:null}]);
+const priorKeys=new Set([...allKnown,...freshCases.map(x=>fine.normalize(x.q))]);
+for(const x of propertyPairs)assert.ok(!priorKeys.has(fine.normalize(x.q)),x.q);
+const propertyPairScored=precompute(propertyPairs,'unknown','global');
+const propertyPairMetrics=compact(selective(propertyGuard(evidenceRows(propertyPairScored,evidenceWinner?.minimum??Infinity,evidenceWinner?.margin??Infinity)),evidencePolicy));
+console.log('PDF_PROPERTY_SHADOW_REPORT',JSON.stringify({previouslyInspected:propertyReports,previouslyInspectedFresh:propertyFresh,newPairs:12,contrast:propertyPairMetrics,releaseEligible:false}));
