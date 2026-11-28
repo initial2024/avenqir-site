@@ -11,7 +11,7 @@
   const revision=scriptURL.searchParams.get('v');
   if(/^154-[a-f0-9]{16}$/.test(revision||''))workerURL.searchParams.set('v',revision);
   const loader=root.AVENQIR_RESEARCH_LOADER.create([{...spec,file:new URL(spec.file,baseURL).href}]);
-  let busy=false,phase='idle',error='',session=null,persisted=false,offered=false,bytes=0,rate=0,lastItems=null,lastQuery='',result=null,serial=0,rankTimer=null,suggested=null;
+  let busy=false,phase='idle',error='',session=null,persisted=false,offered=false,bytes=0,rate=0,lastItems=null,lastQuery='',result=null,serial=0,rankTimer=null,suggested=null,composing=false;
   const pref=()=>{try{return localStorage.getItem(PREF)||'';}catch{return '';}};
   const save=v=>{try{localStorage.setItem(PREF,v);}catch{}};
   const lang=()=>locales.get(root.AVENQIR_I18N?.locale||'en');
@@ -21,10 +21,10 @@
   const suggestionViews=[];
   function makeSuggestionView(id,anchor){
    if(!anchor||!input||!form)return;
-   const box=document.createElement('div');box.id=id;box.hidden=true;
+   const box=document.createElement('div');box.id=id;box.hidden=true;box.setAttribute('role','group');box.setAttribute('aria-labelledby',id+'Label');box.style.overflowWrap='anywhere';
    const label=document.createElement('span');label.id=id+'Label';
    const button=document.createElement('button');button.type='button';button.className='btn ghost';
-   button.setAttribute('aria-describedby',label.id);button.dir='ltr';button.lang='en';
+   button.setAttribute('aria-describedby',label.id);button.dir='ltr';button.lang='en';button.style.whiteSpace='normal';button.style.maxWidth='100%';
    box.append(label,document.createTextNode(' '),button);
    anchor.before(box);suggestionViews.push({box,label,button});
    button.addEventListener('click',()=>{
@@ -35,7 +35,7 @@
    });
   }
   function canSuggest(){
-   return !!session&&!!suggested&&!!result&&result.size===0&&!!lastQuery&&input?.value.trim()===lastQuery.trim()&&
+   return !composing&&!!session&&!!suggested&&!!result&&result.size===0&&!!lastQuery&&input?.value.trim()===lastQuery.trim()&&
     $('atlasEmpty')?.hidden===false&&$('atlasFilteredHint')?.hidden!==false;
   }
   function drawSuggestions(){
@@ -48,8 +48,12 @@
   }
   makeSuggestionView('atlasSemanticSuggestion',$('atlasQuickCategories'));
   makeSuggestionView('atlasSemanticDialogSuggestion',dialog?.querySelector('.atlas-no-match-actions'));
-  input?.addEventListener('input',()=>{suggested=null;drawSuggestions();});
-  input?.addEventListener('compositionstart',()=>{suggested=null;drawSuggestions();});
+  // Keep the immutable result for the last query: the visibility predicate
+  // hides it during edits and restores it if the same query is resubmitted.
+  // Composition must never expose a suggestion while the IME is active.
+  input?.addEventListener('input',drawSuggestions);
+  input?.addEventListener('compositionstart',()=>{composing=true;drawSuggestions();});
+  input?.addEventListener('compositionend',()=>{composing=false;drawSuggestions();});
   // Result visibility can change independently through filters or lexical
   // matching. Observe only the two flags, not the rendered result subtree.
   if(root.MutationObserver){
