@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Actual directory UI with full v2 candidate injected only into localhost QA."""
-import http.server, pathlib, shutil, subprocess, tempfile, threading, time, sys, atexit, socket
+import http.server, pathlib, shutil, subprocess, tempfile, threading, time, sys, atexit, socket, hashlib
 from urllib.parse import urlsplit
 SITE=pathlib.Path(__file__).resolve().parents[1]/'site'
 CHROME=shutil.which('google-chrome') or shutil.which('chromium')
@@ -13,8 +13,11 @@ if PACKAGED:
     atexit.register(staging.cleanup)
     SITE=pathlib.Path(staging.name)/'site'
     subprocess.run(['node',str(ROOT/'scripts'/'build_semantic_candidate.cjs'),str(SITE)],check=True)
-    MODEL=(SITE/'semantic-v2'/'atlas-semantic-bundle-v2.json').read_bytes()
-    MODEL_PATH='/semantic-v2/atlas-semantic-bundle-v2.json'
+    MODEL=(ROOT/'research'/'atlas-semantic-bundle-v2.json').read_bytes()
+    hosted_name='atlas-semantic-bundle-v2-'+hashlib.sha256(MODEL).hexdigest()[:24]+'.json'
+    MODEL_PATH='/semantic-v2/'+hosted_name
+    assert (SITE/MODEL_PATH.lstrip('/')).read_bytes()==MODEL
+    assert not (SITE/'semantic-v2'/'atlas-semantic-bundle-v2.json').exists()
     DIRECTORY=(SITE/'directory.html').read_text(encoding='utf-8')
 else:
     MODEL=(ROOT/'research'/'atlas-semantic-bundle-v2.json').read_bytes()
@@ -67,7 +70,7 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
   await fetch(endpoint);
   $('atlasSemanticDownload').click();
   await wait(()=>panel().dataset.state==='error');
-  yes($('atlasSemanticStatus').textContent.includes('['+code+']'),'missing real HTTP failure diagnostic '+code);
+  yes($('atlasSemanticStatus').textContent.includes('['+code+']'),'missing real HTTP failure diagnostic '+code+' actual='+$('atlasSemanticStatus').textContent);
   yes(!await failedCache.match(modelURL()),'unverified host response cached');
   query('GitHub');
   yes([...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>a.textContent.includes('GitHub')),'ordinary search failed during outage');
