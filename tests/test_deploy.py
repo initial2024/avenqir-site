@@ -12,7 +12,7 @@ from verify_site import validate
 class FakeFTP:
     def __init__(self):
         self.files={};self.dirs={'/','/avenqir.bg5.net','/avenqir.bg5.net/htdocs'};self.here='/';self.fail_one_overwrite=False
-        self.deleted=[];self.list_calls=0;self.read_calls=0
+        self.deleted=[];self.list_calls=0;self.read_calls=0;self.read_names=[]
     def _path(self,name):return (Path(self.here)/name).as_posix()
     def cwd(self,path):
         dest=Path(path) if path.startswith('/') else Path(self.here)/path
@@ -27,6 +27,7 @@ class FakeFTP:
     def retrbinary(self,cmd,callback,blocksize=65536):
         self.read_calls+=1
         _,name=cmd.split(' ',1)
+        self.read_names.append(name)
         path=self._path(name)
         if path not in self.files:raise d.ftplib.error_perm('550 not found')
         callback(self.files[path])
@@ -99,8 +100,10 @@ class DeployTests(unittest.TestCase):
         d.upload(self.ftp,asset,self.commit,self.target,self.base,cache)
         self.assertEqual(self.ftp.files[self.target+'/index.html'],b'NEW')
         self.assertNotIn('',cache)
-        self.assertEqual(self.ftp.read_calls,3)
-        self.assertEqual(self.ftp.list_calls,2)
+        # Old snapshot, staged bytes, fresh remote precondition, final readback.
+        self.assertEqual(self.ftp.read_calls,4)
+        self.assertEqual(self.ftp.read_names,['index.html','index.html.avenqir-upload-'+self.commit[:12]+'.tmp','index.html','index.html'])
+        self.assertEqual(self.ftp.list_calls,3)
     def test_batch_stale_positive_fails_closed(self):
         with self.assertRaises(d.ftplib.error_perm):
             d.upload(self.ftp,self.base/'index.html',self.commit,self.target,self.base,{'':{'index.html'}})
