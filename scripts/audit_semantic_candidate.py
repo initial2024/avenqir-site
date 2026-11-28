@@ -13,12 +13,14 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 def audit(root):
-    root=Path(root).resolve(strict=True)
+    root=Path(root)
+    if root.is_symlink():raise ValueError('Staging root must not be a symlink')
+    root=root.resolve(strict=True)
     files=validate(root)
     spec,hosted=pinned()
     model=root/hosted.lstrip('/')
-    assert model in files and model.stat().st_size==spec['bytes']
-    assert sha(model.read_bytes())==spec['sha256']
+    if model not in files or model.stat().st_size!=spec['bytes'] or sha(model.read_bytes())!=spec['sha256']:
+        raise ValueError('Pinned model integrity mismatch')
     shell=(root/'sw.js').read_text(encoding='utf-8')
     revision=re.search(r"avenqir-v154-semantic-candidate-([0-9a-f]{16})",shell)
     if not revision:raise ValueError('Not a semantic candidate')
