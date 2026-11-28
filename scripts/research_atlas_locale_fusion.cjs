@@ -716,3 +716,86 @@ calibrated.sort((a,b)=>(b.selected?.m.correct||0)-(a.selected?.m.correct||0));
 const winner=calibrated[0],frozenPolicy=winner.selected?.policy||{score:Infinity,margin:Infinity,agreement:true};
 const frozenResults=Object.fromEntries(localeModes.map(mode=>[mode,compact(selective(precompute(shadowTest,mode,winner.scoring),frozenPolicy))]));
 console.log('ROBUST_SHADOW_REPORT',JSON.stringify({calibrationHard:calibrationHard.length,variants:calibrated.map(x=>({scoring:x.scoring,guarded:x.selected?{policy:x.selected.policy,metrics:compact(x.selected.m)}:null,unguarded:x.ablation?{policy:x.ablation.policy,metrics:compact(x.ablation.m)}:null})),chosen:winner.scoring,policy:winner.selected?.policy||null,frozenResults,releaseEligible:false}));
+
+
+// Research: distinguish an operation from the shared technical object. This
+// lexically grounded channel uses exact strings, not hashed feature collisions.
+// The existing calibration and frozen sets are never added to the references.
+const anchorGroups=[
+ [/\bpdfs?\b/giu,['pdf','pdf-merge','pdf-split','pdf-compress','pdf-view']],
+ [/\bqr(?:\s*code)?\b|\bqrcode\b|二维码|二維碼|qrコード/giu,['qr-create']],
+ [/\bdns\b/giu,['dns','dns-lookup','dns-propagation']],
+ [/\bjson\b/giu,['json-edit','files','code']],
+ [/\bhtml\b/giu,['html-validate','code']],
+ [/\bcss\b/giu,['css-validate','code']],
+ [/\bwebrtc\b/giu,['webrtc','privacy']],
+ [/\b(?:ssl|tls)\b/giu,['tls-check','security']],
+ [/\bdoi\b/giu,['doi-lookup','papers']]
+];
+function anchorInfo(raw){
+ let q=fine.normalize(raw);const groups=[];
+ for(const [pattern,ids] of anchorGroups){
+  pattern.lastIndex=0;if(pattern.test(q)){groups.push(ids);pattern.lastIndex=0;q=q.replace(pattern,' ');}
+ }
+ return {q:q.trim(),groups};
+}
+function residualFeatures(raw){
+ const {q}=anchorInfo(raw),set=new Set();
+ for(const token of q.match(/[\p{L}\p{M}\p{N}]+/gu)||[]){
+  const chars=Array.from(token),unspaced=/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Thai}]/u.test(token);
+  if(!unspaced&&chars.length>=3)set.add('w:'+token);
+  const n=unspaced?2:3;
+  for(let i=0;i<=chars.length-n;i++)set.add('g:'+chars.slice(i,i+n).join(''));
+ }
+ return set;
+}
+const referenceRows=[];
+for(let i=0;i<expanded.rows.length;i++)for(const [pack,row] of [[expanded,expanded.rows[i]],[topics,topics.rows[i]]])for(let j=0;j<pack.tasks.length;j++){
+ if(row[j+1])referenceRows.push({id:pack.tasks[j],features:residualFeatures(row[j+1])});
+}
+const featureClasses=new Map();
+for(const r of referenceRows)for(const key of r.features){
+ if(!featureClasses.has(key))featureClasses.set(key,new Set());
+ featureClasses.get(key).add(r.id);
+}
+const featureWeight=new Map([...featureClasses].map(([k,ids])=>[k,Math.pow(Math.log(65/(1+ids.size)),2)]));
+const totalWeight=set=>[...set].reduce((n,k)=>n+(featureWeight.get(k)||0),0);
+for(const r of referenceRows)r.weight=totalWeight(r.features);
+const residualCache=new Map();
+function residualRank(q){
+ if(residualCache.has(q))return residualCache.get(q);
+ const info=anchorInfo(q),f=residualFeatures(q),weight=totalWeight(f),scores=new Map();
+ for(const r of referenceRows){
+  if(info.groups.length&&!info.groups.every(ids=>ids.includes(r.id)))continue;
+  let overlap=0;
+  for(const k of f)if(r.features.has(k))overlap+=featureWeight.get(k)||0;
+  const score=weight&&r.weight?overlap/Math.sqrt(weight*r.weight):0;
+  scores.set(r.id,Math.max(score,scores.get(r.id)||0));
+ }
+ const result={info,scores,rank:[...scores].map(([id,score])=>({id,score})).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id))};
+ residualCache.set(q,result);return result;
+}
+assert.equal(anchorInfo('PDF and QR code').groups.length,2);
+assert.ok(!residualFeatures('PDF QR DNS').size);
+assert.ok(residualFeatures('combine documents').size>0);
+const residualInputs=precompute(calibrationCases,'unknown','global');
+function evidenceRows(rows,minimum,margin){
+ return rows.map(r=>{
+  const {info,scores,rank}=residualRank(r.q),top=rank[0],second=rank[1];
+  const objectConflict=info.groups.length>0&&!info.groups.every(ids=>ids.includes(r.id));
+  const noEvidence=!(top?.id===r.id&&top.score>=minimum&&top.score-(second?.score||0)>=margin);
+  return {...r,blocked:r.blocked||objectConflict||noEvidence,objectConflict,noEvidence,evidenceScore:scores.get(r.id)||0};
+ });
+}
+const evidencePolicies=[];
+for(const minimum of [.10,.20,.30,.40,.50])for(const margin of [.02,.05,.10]){
+ const rows=evidenceRows(residualInputs,minimum,margin);
+ const selected=calibrate(rows);
+ if(selected)evidencePolicies.push({minimum,margin,...selected});
+}
+evidencePolicies.sort((a,b)=>b.m.correct-a.m.correct||a.m.wrongPositive-b.m.wrongPositive||b.minimum-a.minimum||b.margin-a.margin);
+const evidenceWinner=evidencePolicies[0];
+const evidencePolicy=evidenceWinner?.policy||{score:Infinity,margin:Infinity,agreement:true};
+const evidenceReport=Object.fromEntries(localeModes.map(mode=>[mode,compact(selective(evidenceRows(precompute(shadowTest,mode,'global'),evidenceWinner?.minimum??Infinity,evidenceWinner?.margin??Infinity),evidencePolicy))]));
+const evidenceRelease=false;
+console.log('OPERATION_EVIDENCE_SHADOW_REPORT',JSON.stringify({referenceCount:referenceRows.length,features:featureWeight.size,chosen:evidenceWinner?{minimum:evidenceWinner.minimum,margin:evidenceWinner.margin,policy:evidenceWinner.policy,metrics:compact(evidenceWinner.m)}:null,holdout:evidenceReport,releaseEligible:evidenceRelease}));
