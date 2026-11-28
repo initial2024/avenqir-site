@@ -1074,3 +1074,57 @@ function compositionStudy(cases){
  return {original:compact(original),combined:compact(selective(combined,evidencePolicy))};
 }
 console.log('COMPOSITIONAL_SHADOW_REPORT',JSON.stringify({scope:'PDF operations and QR creation, authored research only',previouslyInspected:compositionStudy(shadowTest),freshAuthored:compositionStudy(compositionChallenge),releaseEligible:false}));
+
+
+// The earlier experiment applied explanation guards only to rescued queries,
+// leaving the original model's accepted results unchecked. Apply the shared
+// guard BEFORE either route. Do not express rule matches as probabilities.
+const technicalAbstention=require('../research/atlas-retrieval-runtime.js').technicalAbstention;
+function guardedComposition(cases){
+ const baseline=propertyGuard(evidenceRows(precompute(cases,'unknown','global'),evidenceWinner?.minimum??Infinity,evidenceWinner?.margin??Infinity));
+ let positives=0,negatives=0,correct=0,wrongPositive=0,falseAccept=0,accepted=0,hardBlocked=0,modelAccepted=0,compositionAccepted=0;
+ const errors=[],misses=[];
+ for(const r of baseline){
+  if(r.expected)positives++;else negatives++;
+  let id=null,source=null;
+  if(shadowBlock(r.q)||technicalAbstention(r.q)||explanatory.test(r.q))hardBlocked++;
+  else if(!r.blocked&&r.score>=evidencePolicy.score&&r.margin>=evidencePolicy.margin&&(!evidencePolicy.agreement||r.agreement)){id=r.id;source='model';modelAccepted++;}
+  else {id=composedClass(r.q);if(id){source='composition';compositionAccepted++;}}
+  if(!id){if(r.expected)misses.push({locale:r.locale,q:r.q,expected:r.expected});continue;}
+  accepted++;
+  if(r.expected===id)correct++;
+  else {if(r.expected)wrongPositive++;else falseAccept++;errors.push({locale:r.locale,q:r.q,expected:r.expected,predicted:id,source});}
+ }
+ return {positives,negatives,accepted,correct,wrongPositive,falseAccept,precision:accepted?correct/accepted:null,positiveCoverage:correct/Math.max(1,positives),hardBlocked,modelAccepted,compositionAccepted,errors,misses};
+}
+// New authored challenge: do not tune thresholds on these examples.
+const compositionNext=[
+ ['en','Create a QR code for my club website','qr-create','Explain the mathematics behind a QR code'],
+ ['en','Divide the PDF report into separate pages','pdf-split','Repair the corrupted pages of a PDF'],
+ ['zh-Hans','给社团网址制作一个二维码','qr-create','二维码解码算法的实现原理'],
+ ['zh-Hans','把这三份PDF合并成一份报告','pdf-merge','将PDF中的水印去除'],
+ ['zh-Hant','替活動網頁製作一個二維碼','qr-create','二維碼和條碼的原理有何不同'],
+ ['zh-Hant','把掃描的PDF檔案容量減小','pdf-compress','修復損壞的PDF檔案'],
+ ['ja','イベントのURLからQRコードを作る','qr-create','QRコードの仕組みを調べたい'],
+ ['ja','PDFをページ単位で分割したい','pdf-split','PDFの暗号化方式を調べたい'],
+ ['ko','동아리 웹사이트의 QR 코드를 만들기','qr-create','QR 코드의 원리 설명'],
+ ['ko','PDF 문서를 여러 개로 분할하고 싶어요','pdf-split','손상된 PDF 문서를 복구하고 싶어요'],
+ ['fr','Créer un code QR pour mon association','qr-create','Expliquer le fonctionnement du code QR'],
+ ['fr','Assembler ces trois factures en un PDF','pdf-merge','Réparer un PDF endommagé'],
+ ['de','Einen QR-Code für meine Veranstaltung erstellen','qr-create','Die Funktionsweise eines QR-Codes erklären'],
+ ['de','Eine PDF-Datei in einzelne Seiten aufteilen','pdf-split','Ein beschädigtes PDF reparieren'],
+ ['es','Crear un código QR para el evento','qr-create','Explicar el funcionamiento de un QR'],
+ ['es','Comprimir el PDF del informe','pdf-compress','Comprimir un PDF sin enviar datos a nadie'],
+ ['pt','Criar um código QR para a festa','qr-create','Explicar a estrutura de um código QR'],
+ ['pt','Dividir o relatório PDF em várias partes','pdf-split','Reparar um arquivo PDF danificado'],
+ ['ru','Создать QR код для сайта клуба','qr-create','Объяснить принцип работы QR кода'],
+ ['ru','Разделить мой PDF на отдельные страницы','pdf-split','Восстановить поврежденный PDF'],
+ ['ar','إنشاء رمز QR لموقع النادي','qr-create','شرح طريقة عمل رمز QR'],
+ ['ar','دمج ثلاثة تقارير في ملف PDF واحد','pdf-merge','إصلاح مستند PDF تالف'],
+ ['hi','क्लब के लिए QR कोड बनाना है','qr-create','QR कोड कैसे काम करता है'],
+ ['th','สร้าง QR สำหรับเว็บไซต์ของชมรม','qr-create','อธิบายการทำงานของ QR']
+].flatMap(([locale,q,expected,bad])=>[{locale,q,expected},{locale,q:bad,expected:null}]);
+const compositionPrevious=new Set([...compositionKnown,...compositionChallenge.map(x=>fine.normalize(x.q))]);
+const uniqueNext=new Set();
+for(const c of compositionNext){const k=fine.normalize(c.q);assert.ok(!compositionPrevious.has(k)&&!uniqueNext.has(k),c.q);uniqueNext.add(k);}
+console.log('GUARDED_COMPOSITION_REPORT',JSON.stringify({previouslyInspected:guardedComposition(shadowTest),inspectedComposition:guardedComposition(compositionChallenge),newAuthored:guardedComposition(compositionNext),releaseEligible:false}));
