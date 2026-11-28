@@ -903,3 +903,25 @@ for(const row of multilingual.rows)for(const id of ['dns-lookup','dns-propagatio
  assert.ok(!technicalAbstention(q)&&fused.rank(q).length,q+' positive regression');
 }
 console.log('LIVE_CATALOG_REFUSAL_REPORT',JSON.stringify({refused:liveFalseAccepts.length,canonicalControls:multilingual.rows.length*5}));
+
+// Video operations use separate cache keys and a verified tool allowlist. All
+// 40 locale packs must work against the actual directory, not synthetic URLs.
+const videoRuntime=require('../research/atlas-retrieval-runtime.js');
+const verifiedVideo=new Set(['https://www.veed.io/','https://www.kapwing.com/','https://shotcut.org/']);
+const webVideo=new Set(['https://www.veed.io/','https://www.kapwing.com/']);
+const videoIds=['video-trim','video-split','video-merge'];
+const extraVideo=[['我想把这段长视频剪短一点','video-trim'],['帮我剪掉视频的开头','video-trim'],['请把视频分成三段','video-split'],['我想把多个视频合并成一个','video-merge'],['help me trim my long video','video-trim']];
+// The grammar does not silently discard unsupported modifiers or conditions.
+const videoNegatives=['把长视频剪短 免费','把长视频剪短 不上传','把长视频剪短且无水印','不要把长视频剪短','自动提取长视频精彩片段','把长视频压缩到10MB','裁掉视频四周','把视频加速','trim a video without upload','trim a video and merge videos','trim a video to 10 seconds','cut audio','영상 길이 줄이기 무료','把长视频剪短并生成二维码'];
+assert.equal(videoRuntime.videoOperationRows.length,40);
+let videoProbes=0;
+for(const [loc,...qs] of videoRuntime.videoOperationRows)for(let i=0;i<qs.length;i++){
+ const q=qs[i];assert.equal(videoRuntime.videoOperation(q),videoIds[i],loc+': '+q);
+ const a=candidate(q,catalog,model,runtime.features,baseline),b=fused.rank(q);
+ assert.equal(a.length,3,q);assert.equal(b.length,3,q);assert.ok(a.every(u=>verifiedVideo.has(u))&&b.every(u=>verifiedVideo.has(u)),q);
+ assert.ok(webVideo.has(a[0])&&webVideo.has(b[0]),q+' online priority');videoProbes++;
+}
+for(const [q,id] of extraVideo){assert.equal(videoRuntime.videoOperation(q),id,q);assert.ok(fused.rank(q).length===3,q);}
+for(const q of videoNegatives)assert.equal(videoRuntime.videoOperation(q),null,q);
+assert.deepEqual(candidate('把长视频剪短',catalog.filter(x=>!verifiedVideo.has(x.url)),model,runtime.features,baseline),[]);
+console.log('VIDEO_OPERATION_REPORT',JSON.stringify({localeQueries:videoProbes,naturalRequests:extraVideo.length,nonMatchingRequests:videoNegatives.length,verifiedTools:verifiedVideo.size,weightClass:'video',unchangedWeights:true}));

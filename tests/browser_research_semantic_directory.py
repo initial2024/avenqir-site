@@ -149,6 +149,12 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
   await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent))&&w.document.querySelector('#atlasResults .atlas-semantic-match'));
  }
 
+ // User-reported duration request and related video operations.
+ for(const q of ['把长视频剪短','我想把这段长视频剪短一点','把视频分成几段','把几个视频拼在一起','긴 동영상 자르기','長い動画を短くする','trim a video']){
+  query(q);
+  await wait(()=>$('atlasSemanticQueryState').dataset.state==='hit'&&[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/VEED|Kapwing/i.test(a.textContent))&&w.document.querySelector('#atlasResults .atlas-semantic-match'));
+  yes(panel().hidden,'video search opened model management panel');
+ }
  // Short colloquial Korean expressions and ambiguous user-reported query.
  for(const q of ['큐알코드 만들기','qr코드 생성','qr코드를 만들고 싶어요']){
   query(q);await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent)));
@@ -283,7 +289,7 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  query('QR 코드 생성');
  await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent))&&w.document.querySelector('#atlasResults .atlas-semantic-match'));
  w.Worker=beforeCompat;
- document.documentElement.dataset.metrics=JSON.stringify({...JSON.parse(document.documentElement.dataset.metrics),compatibleDirectoryActivation:true,manualPanelOnly:true,activeSearchCollapsesPanel:true,cachedQueryReloadClosed:true});
+ document.documentElement.dataset.metrics=JSON.stringify({...JSON.parse(document.documentElement.dataset.metrics),compatibleDirectoryActivation:true,manualPanelOnly:true,activeSearchCollapsesPanel:true,cachedQueryReloadClosed:true,videoOperationSearch:true});
  await fetch('/fixture-block');
  w.confirm=()=>true;
  if(panel().hidden)$('atlasSemanticOpen').click();$('atlasSemanticRemove').click();

@@ -201,9 +201,37 @@ function structuredIntent(raw){
  return multilingual.structuredCompatible(q,id)?id:null;
 }
 
+// Catalog-grounded video operations. Reuse the existing video class weights,
+// but isolate operation cache keys and restrict results to tools whose official
+// product documentation confirms all three editing operations.
+// No additional model download or external query service.
+const videoOperationIds=['video-trim','video-split','video-merge'];
+const videoOperationRows=[["en","trim a video","split a video","merge videos"],["zh-Hans","把长视频剪短","分割视频","合并视频"],["zh-Hant","把長影片剪短","分割影片","合併影片"],["ja","長い動画を短くする","動画を分割する","動画を結合する"],["ko","긴 동영상 자르기","동영상 분할","동영상 합치기"],["fr","raccourcir une vidéo","diviser une vidéo","fusionner des vidéos"],["de","ein Video kürzen","ein Video teilen","Videos zusammenfügen"],["es","recortar un vídeo","dividir un vídeo","unir vídeos"],["pt","encurtar um vídeo","dividir um vídeo","juntar vídeos"],["it","accorciare un video","dividere un video","unire video"],["nl","een video inkorten","een video splitsen","video's samenvoegen"],["sv","korta ner en video","dela upp en video","sammanfoga videor"],["no","forkorte en video","dele opp en video","slå sammen videoer"],["da","forkorte en video","opdele en video","flette videoer"],["fi","lyhentää videota","jakaa video osiin","yhdistää videoita"],["pl","skrócić film","podzielić film","połączyć filmy"],["cs","zkrátit video","rozdělit video","spojit videa"],["sk","skrátiť video","rozdeliť video","spojiť videá"],["hu","videó rövidítése","videó felosztása","videók egyesítése"],["ro","scurtarea unui videoclip","împărțirea unui videoclip","unirea videoclipurilor"],["bg","съкращаване на видео","разделяне на видео","обединяване на видеа"],["hr","skratiti video","podijeliti video","spojiti videozapise"],["sr","skratiti snimak","podeliti video","spojiti video snimke"],["sl","skrajšati videoposnetek","razdeliti videoposnetek","združiti videoposnetke"],["el","συντόμευση βίντεο","διαχωρισμός βίντεο","ένωση βίντεο"],["ru","укоротить видео","разделить видео","объединить видео"],["uk","скоротити відео","розділити відео","об'єднати відео"],["tr","videoyu kısaltmak","videoyu bölmek","videoları birleştirmek"],["ar","تقصير فيديو","تقسيم فيديو","دمج مقاطع فيديو"],["he","לקצר סרטון","לפצל סרטון","לחבר סרטונים"],["fa","کوتاه کردن ویدیو","تقسیم ویدیو","ادغام ویدیوها"],["hi","वीडियो छोटा करना","वीडियो को भागों में बाँटना","वीडियो जोड़ना"],["bn","ভিডিও ছোট করা","ভিডিও ভাগ করা","ভিডিও জোড়া লাগানো"],["ur","ویڈیو مختصر کرنا","ویڈیو کو حصوں میں تقسیم کرنا","ویڈیوز جوڑنا"],["th","ตัดวิดีโอให้สั้นลง","แบ่งวิดีโอ","รวมวิดีโอ"],["vi","cắt ngắn video","chia video thành nhiều đoạn","ghép video"],["id","memendekkan video","membagi video","menggabungkan video"],["ms","memendekkan video","membahagikan video","menggabungkan video"],["fil","paikliin ang video","hatiin ang video","pagsamahin ang mga video"],["af","verkort 'n video","verdeel 'n video","voeg video's saam"]];
+const videoOperationExtra=[["video-trim",["剪短视频","视频剪短","长视频剪短","长视频剪成短视频","长视频变短视频","截取视频片段","截取视频的一段","剪掉视频开头","剪掉视频结尾","视频时长缩短","缩短视频时长","视频裁剪","视频剪辑","影片剪輯","剪短影片","縮短影片時長","截取影片片段","cut a long video short","shorten a video","trim video","video trimmer","cut a clip from a video","trim the beginning of a video","trim the end of a video","動画を短く切る","動画のトリミング","동영상 자르기","영상 길이 줄이기","동영상 길이 줄이기"]],["video-split",["视频分段","把视频分成几段","将视频拆分成多段","拆分视频","视频切成几段","影片分段","split a long video into clips","split video into parts","video splitter","動画を複数に分割","동영상을 여러 부분으로 나누기"]],["video-merge",["把几个视频拼在一起","将多个视频合成一个","多个视频合并","拼接视频","视频拼接","合併多段影片","join videos","combine video clips","video merger","動画をつなげる","여러 동영상 합치기"]]];
+const videoOperationIndex=new Map();
+function addVideoOperation(q,id){const k=multilingual.normalize(q),old=videoOperationIndex.get(k);if(old&&old!==id)throw Error('video operation collision');videoOperationIndex.set(k,id);}
+for(const [, ...qs] of videoOperationRows)qs.forEach((q,i)=>addVideoOperation(q,videoOperationIds[i]));
+for(const [id,qs] of videoOperationExtra)for(const q of qs)addVideoOperation(q,id);
+// Whole-query grammar, deliberately restricted to duration and clip operations.
+// Do not strip conditions such as no watermark, no upload, size or AI automation.
+const videoOperationPatterns=[
+ ['video-trim',/^(?:我)?(?:想要?|希望|需要|可以)?(?:请|請)?(?:帮我|幫我)?(?:把|将|將)(?:这段|這段|这个|這個|一段|一个|一個)?(?:很|比较|比較)?(?:长|長)?(?:视频|影片|視頻)(?:剪短(?:一点|一點|一些)?|剪成(?:一个|一個)?短(?:视频|影片|視頻)|剪得(?:短一点|短一點|更短)|缩短(?:时长|時間)?|縮短(?:時長|時間)?|变短|變短|截取一段)(?:吗|嗎|吧)?$/u],
+ ['video-trim',/^(?:我)?(?:想要?|希望|需要)?(?:请|請)?(?:帮我|幫我)?(?:剪掉|去掉|删除|刪除)(?:这段|這段|这个|這個)?(?:视频|影片|視頻)(?:的)?(?:开头|開頭|结尾|結尾|片头|片頭|片尾|前面|后面|後面)(?:一段)?$/u],
+ ['video-split',/^(?:我)?(?:想要?|希望|需要)?(?:请|請)?(?:帮我|幫我)?(?:把|将|將)(?:这段|這段|长|長)?(?:视频|影片|視頻)(?:分割|拆分|切分|切|剪)(?:成)?(?:几|幾|多|两|兩|三|四|[2-9])段$/u],
+ ['video-merge',/^(?:我)?(?:想要?|希望|需要)?(?:请|請)?(?:帮我|幫我)?(?:把|将|將)(?:多个|多個|几段|幾段|两段|兩段|三段|几個|几个)(?:视频|影片|視頻)(?:合并|合併|拼接|拼|接)(?:成一个|成一個|在一起|起来|起來)?$/u],
+ ['video-trim',/^(?:i (?:want|need) to |please |help me )?(?:trim|shorten|cut down) (?:a |the |my |this )?(?:long )?video(?: a little| into a short clip)?$/i]
+];
+function videoOperation(raw){const q=multilingual.normalize(raw);if(!q||q.length>128||constraints.test(q)||incompatible.test(q)||technicalAbstention(q)||compound(q)||multilingual.hasConstraint(q)||multilingual.negated(q))return null;
+ const direct=videoOperationIndex.get(q);if(direct)return direct;
+ const ids=new Set(videoOperationPatterns.filter(([,re])=>re.test(q)).map(([id])=>id));return ids.size===1?[...ids][0]:null;
+}
+const videoTools=new Map([['https://www.veed.io/',2],['https://www.kapwing.com/',2],['https://shotcut.org/',0]]);
+function videoTask(raw,model){const id=videoOperation(raw);if(!id)return null;const row=model.classes.find(x=>x[0]==='video');return row?{id,weightId:'video',weights:row[1],guard:/(?:VEED|Kapwing|Shotcut)/i,accept:item=>videoTools.has(item.url),priority:item=>videoTools.get(item.url)||0}:null;}
+
 function intent(q,model){
  if(multilingual.clarify(q))return null;
  if(!q||q.length>512||constraints.test(q)||incompatible.test(q)||technicalAbstention(q)||compound(q)||multilingual.negated(q))return null;
+ const media=videoTask(q,model);if(media)return media;
  // Do not broaden a conjunction between independently recognizable tasks to OR.
  const normalized=multilingual.normalize(q);
  for(const [, , ,join] of multilingual.negativeFrames){const sep=join.normalize('NFKC').toLowerCase();const at=normalized.indexOf(sep);if(at<=0)continue;const left=normalized.slice(0,at).trim(),right=normalized.slice(at+sep.length).trim();const a=multilingual.resolve(left).id||topics.resolve(left),b=multilingual.resolve(right).id||topics.resolve(right);if(a&&b&&a!==b)return null;}
@@ -235,10 +263,11 @@ function intent(q,model){
 function rankedCandidates(items,features,task,docFeatures,unicode=null,unicodeDoc=null){
  const weights=new Map(task.weights),ranked=new Map(),original=new Map();
  for(const item of items){
-  if(!item?.url||!task.guard.test([item.name,item.description].join(' ')))continue;
+  if(!item?.url||!task.guard.test([item.name,item.description].join(' '))||(task.accept&&!task.accept(item)))continue;
   let score=0;for(const [k,v] of docFeatures(item))score+=v*(weights.get(k)||0)/4096;
   original.set(item.url,Math.max(score,original.get(item.url)||0));
-  if(unicode&&unicodeDoc)score=.9*score+.1*unicode.score(task.id,unicodeDoc(item));
+  if(unicode&&unicodeDoc)score=.9*score+.1*unicode.score(task.weightId||task.id,unicodeDoc(item));
+  if(task.priority)score+=task.priority(item);
   ranked.set(item.url,Math.max(score,ranked.get(item.url)||0));
  }
  const ordered=m=>[...m].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).map(x=>x[0]);
@@ -283,6 +312,6 @@ function createSession(items,model,features,baseline,unicode=null){
  return Object.freeze({rank,suggest,stats(){return {computed,hits,featureCalls,cachedIntents:cache.size};}});
 }
 
-const api=Object.freeze({candidate,classify,compound,unsupportedProperties,technicalAbstention,structuredIntent,createSession});
+const api=Object.freeze({videoOperation,videoOperationRows:Object.freeze(videoOperationRows.map(Object.freeze)),candidate,classify,compound,unsupportedProperties,technicalAbstention,structuredIntent,createSession});
 if(typeof module==="object"&&module.exports)module.exports=api;else root.AVENQIR_RESEARCH_RETRIEVAL=api;
 })(typeof self!=="undefined"?self:globalThis);
