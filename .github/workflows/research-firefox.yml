@@ -29,5 +29,6 @@ jobs:
           geckodriver --version
       - name: Test Firefox directory and packaged candidate without deployment
         run: |
+          python3 tests/browser_research_semantic_worker.py --firefox
           python3 tests/browser_research_semantic_directory.py --firefox
           python3 tests/browser_research_semantic_directory.py --firefox --packaged
