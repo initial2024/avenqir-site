@@ -1,0 +1,78 @@
+name: AVENQIR v154 approved model delivery gate
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/semantic-v154-model-delivery.yml']
+permissions:
+  contents: read
+concurrency:
+  group: avenqir-production
+  cancel-in-progress: false
+jobs:
+  preflight:
+    if: >-
+      vars.AVENQIR_DEPLOY_PAUSED != 'true' &&
+      github.repository == 'initial2024/avenqir-site' &&
+      github.actor == 'initial2024' &&
+      github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 10
+    steps:
+      - name: Checkout approved frozen source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 17fdcb363194ae24f21a88ccc8a506b392e70691
+          persist-credentials: false
+      - name: Reproduce and validate exact approved staged payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir "$RUNNER_TEMP/avenqir-model-delivery"
+          node scripts/build_semantic_candidate.cjs "$RUNNER_TEMP/avenqir-model-delivery/site"
+          python3 scripts/ftps_deploy.py --semantic-stage "$RUNNER_TEMP/avenqir-model-delivery/site" --candidate-commit 17fdcb363194ae24f21a88ccc8a506b392e70691 --manifest-sha256 c12a766c5457498fb822c9744311570b423d4bb1345a4c44abfef55f956da284 --plan-only
+      - name: Deliver only the approved immutable model, without activating directory
+        env:
+          FTPS_USERNAME: ${{ secrets.AVENQIR_FTPS_USERNAME }}
+          FTPS_PASSWORD: ${{ secrets.AVENQIR_FTPS_PASSWORD }}
+          REVIEWED_COMMIT: '17fdcb363194ae24f21a88ccc8a506b392e70691'
+          REVIEWED_MANIFEST: 'c12a766c5457498fb822c9744311570b423d4bb1345a4c44abfef55f956da284'
+          PRIOR_COMMIT: '13d6f7b3ecc0636da241c1831a8aaa2b7fec6bca'
+        run: |
+          python3 - <<'PY'
+          import os,sys,json,ssl,ftplib
+          from pathlib import Path
+          sys.path.insert(0,'scripts')
+          from prepare_semantic_release import prepare
+          from ftps_deploy import HOST,REMOTE,credential,upload,retrieve,sha
+          root=Path(os.environ['RUNNER_TEMP'])/'avenqir-model-delivery'/'site'
+          commit=os.environ['REVIEWED_COMMIT']
+          report=prepare(root,os.environ['REVIEWED_MANIFEST'],commit)
+          path=report['modelPath'].lstrip('/')
+          model=root/path
+          digest=report['modelSHA256']
+          if sha(model.read_bytes())!=digest:raise RuntimeError('Model integrity mismatch')
+          ftp=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=25)
+          try:
+              ftp.connect(HOST,21,timeout=25)
+              ftp.login(credential('FTPS_USERNAME'),credential('FTPS_PASSWORD'))
+              ftp.prot_p();ftp.set_pasv(True);ftp.cwd(REMOTE)
+              target=ftp.pwd()
+              marker=json.loads(retrieve(ftp,'deploy-state.json'))
+              if marker.get('commit')!=os.environ['PRIOR_COMMIT']:
+                  raise RuntimeError('Production marker changed; stop before uploading model')
+              upload(ftp,model,commit,target,root=root,expected_sha256=digest)
+              ftp.cwd(target)
+              actual=retrieve(ftp,path)
+              if len(actual)!=report['modelBytes'] or sha(actual)!=digest:
+                  raise RuntimeError('Independent model readback mismatch')
+              if json.loads(retrieve(ftp,'deploy-state.json')).get('commit')!=os.environ['PRIOR_COMMIT']:
+                  raise RuntimeError('Production marker changed during preflight')
+              print('MODEL_FTPS_DELIVERY_PASS',len(actual),sha(actual),flush=True)
+              print('DIRECTORY_ACTIVATION_NOT_PERFORMED',flush=True)
+          finally:
+              try:ftp.quit()
+              except Exception:ftp.close()
+          PY
+      - name: Require public model bytes to match before directory activation
+        run: python3 scripts/check_semantic_host.py
