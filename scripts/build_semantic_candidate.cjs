@@ -36,7 +36,9 @@ function build(dest){
  const swPath=path.join(target,'sw.js');let sw=fs.readFileSync(swPath,'utf8');
  sw=replaceOnce(sw,"'avenqir-v152-static-20261127-search-refinement'","'avenqir-v154-semantic-candidate-"+revision+"'");
  sw=replaceOnce(sw,"'./atlas-semantic-download.js'",assets.map(n=>"'./semantic-v2/"+n+"'").join(','));
- sw=replaceOnce(sw,"'atlas-semantic-download.js'",entries.map(n=>"'semantic-v2/"+n+"'").join(','));
+ sw=replaceOnce(sw,"'atlas-semantic-download.js'",assets.map(n=>"'semantic-v2/"+n+"'").join(','));
+ // A partially installed semantic runtime cannot replace a working offline shell.
+ sw=replaceOnce(sw,"if(!response.ok||response.type==='opaque')return false;","if(!response.ok||response.status!==200||response.headers.has('content-range')||response.type==='opaque')return false;");
  // A controlled page from another candidate revision must not receive this
  // shell's runtime. Fail closed; ordinary search can run after a fresh load.
  sw=replaceOnce(sw,"  const key=canonical(req.url);if(!key)return;","  const key=canonical(req.url);if(!key)return;\n  const revision=u.searchParams.get('v');\n  if(revision&&/^154-[a-f0-9]{16}$/.test(revision)&&revision!=='154-"+revision+"'&&(u.pathname.includes('/semantic-v2/')||u.pathname.endsWith('/atlas-domain-embedding.js'))){event.respondWith(Promise.resolve(Response.error()));return;}");
