@@ -4,7 +4,8 @@ import http.server, pathlib, shutil, subprocess, tempfile, threading, time, sys,
 from urllib.parse import urlsplit
 SITE=pathlib.Path(__file__).resolve().parents[1]/'site'
 CHROME=shutil.which('google-chrome') or shutil.which('chromium')
-assert CHROME
+FIREFOX='--firefox' in sys.argv
+if not FIREFOX: assert CHROME
 ROOT=SITE.parent
 PACKAGED='--packaged' in sys.argv
 if PACKAGED:
@@ -191,11 +192,15 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         except (BrokenPipeError,ConnectionResetError):pass
 with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
     threading.Thread(target=server.serve_forever,daemon=True).start()
-    with tempfile.TemporaryDirectory() as profile:
-        subprocess.run(['node',str(ROOT/'tests'/'chrome_real_time.cjs'),CHROME,profile,f'http://127.0.0.1:{server.server_port}/qa.html'],timeout=75,check=True)
+    url=f'http://127.0.0.1:{server.server_port}/qa.html'
+    if FIREFOX:
+        subprocess.run([sys.executable,str(ROOT/'tests'/'firefox_real_time.py'),url],timeout=105,check=True)
+    else:
+        with tempfile.TemporaryDirectory() as profile:
+            subprocess.run(['node',str(ROOT/'tests'/'chrome_real_time.cjs'),CHROME,profile,url],timeout=75,check=True)
     assert len([x for x in requests if x[0]=='valid'])==3,requests
     assert not any(x[0]=='block' or '?' in x[1] for x in requests),requests
     assert sum(x[0]=='html' for x in requests)==1 and sum(x[0]=='unavailable' for x in requests)==1,requests
     assert sum(x[0]=='rate-limit' for x in requests)==1 and sum(x[0]=='truncated' for x in requests)==1,requests
-    print('PACKAGED' if PACKAGED else 'RESEARCH', 'PASS real 390x844 candidate directory, full bundle consent, cancel/retry, integrity, progress, Korean result, locale switch, real HTTP HTML/503/429/truncated-body failure and retry, worker activation/cache race, quota session fallback, reload and deletion')
+    print('PACKAGED' if PACKAGED else 'RESEARCH', 'FIREFOX' if FIREFOX else 'CHROMIUM', 'PASS real 390x844 candidate directory, full bundle consent, cancel/retry, integrity, progress, Korean result, locale switch, real HTTP HTML/503/429/truncated-body failure and retry, worker activation/cache race, quota session fallback, reload and deletion')
     server.shutdown()
