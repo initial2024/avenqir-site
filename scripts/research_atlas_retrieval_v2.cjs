@@ -877,3 +877,29 @@ for(const q of ['generate a rq code','generate a qr cod','genertae a qr code','g
  assert.deepEqual(fused.suggest(q),[],q);
 }
 console.log('OPERATION_SUGGESTION_REPORT',JSON.stringify({probes:suggestionProbes.size,lexicalSuggestions,catalogSuggestions,existingResults,rejectedSuggestions,automaticPromotion:false,scope:'reviewed verb only'}));
+
+const liveFalseAccepts=[
+ 'Wie funktioniert das DNS-Protokoll auf Paketebene?',
+ 'Een PDF verkleinen zonder het bestand te uploaden',
+ 'Hvordan virker DNS-protokollen teknisk?',
+ 'Ako funguje protokol DNS na úrovni paketov?',
+ 'Želim vratiti zaboravljenu lozinku PDF dokumenta',
+ 'Kako DNS protokol radi na nivou paketa?',
+ 'Explain how DNS propagation works',
+ 'Change nameserver settings for my DNS',
+ '把JSON转换成其他文件格式',
+ 'DNSの仕組みを説明してほしい',
+ 'Warum dauert DNS Propagation so lange',
+ 'Explicar qué son los registros DNS',
+ 'อธิบายการทำงานของ DNS'
+];
+for(const q of liveFalseAccepts){
+ assert.ok(technicalAbstention(q),q+' missing scoped guard');
+ assert.deepEqual(fused.rank(q),[],q+' actual false acceptance');
+ assert.deepEqual(fused.suggest(q),[],q+' suggestion must not bypass guard');
+}
+for(const row of multilingual.rows)for(const id of ['dns-lookup','dns-propagation','json-edit','pdf-compress','pdf-merge']){
+ const q=row[multilingual.tasks.indexOf(id)+1];
+ assert.ok(!technicalAbstention(q)&&fused.rank(q).length,q+' positive regression');
+}
+console.log('LIVE_CATALOG_REFUSAL_REPORT',JSON.stringify({refused:liveFalseAccepts.length,canonicalControls:multilingual.rows.length*5}));
