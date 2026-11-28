@@ -130,6 +130,15 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  yes(!$('atlasNoMatchDialog').open,'premature no-match dialog while worker is pending');
  await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent)));
  yes(w.document.querySelector('#atlasResults .atlas-semantic-match'),'semantic result not labelled');
+ // Mixed language and reviewed typing variants must reach real worker retrieval.
+ for(const q of ['生成 QR code','genrate a qr code','QR code 만들기']){
+  query(q);
+  await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent))&&w.document.querySelector('#atlasResults .atlas-semantic-match'));
+ }
+ query('生成 QR code without upload');
+ await wait(()=>!w.document.querySelector('#atlasResults .atlas-semantic-match'));
+ query('QR 코드 생성');
+ await wait(()=>w.document.querySelector('#atlasResults .atlas-semantic-match'));
  w.AVENQIR_I18N.set('ar');yes($('atlasSemanticTitle').textContent==='البحث الدلالي المحلي','Arabic localization');
  w.AVENQIR_I18N.set('ja');yes($('atlasSemanticDownload').textContent==='ダウンロードして有効化','Japanese localization');
  w.AVENQIR_I18N.set('en');
@@ -218,5 +227,5 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
     assert not any(x[0]=='block' or '?' in x[1] for x in requests),requests
     assert sum(x[0]=='html' for x in requests)==1 and sum(x[0]=='unavailable' for x in requests)==1,requests
     assert sum(x[0]=='rate-limit' for x in requests)==1 and sum(x[0]=='truncated' for x in requests)==1,requests
-    print('PACKAGED' if PACKAGED else 'RESEARCH', 'FIREFOX' if FIREFOX else 'CHROMIUM', 'PASS real 390x844 candidate directory, full bundle consent, cancel/retry, integrity, progress, Korean result, locale switch, real HTTP HTML/503/429/truncated-body failure and retry, worker activation/cache race, quota session fallback, corrupted cache restore, reload and deletion')
+    print('PACKAGED' if PACKAGED else 'RESEARCH', 'FIREFOX' if FIREFOX else 'CHROMIUM', 'PASS real 390x844 candidate directory, full bundle consent, cancel/retry, integrity, progress, Korean result, locale switch, real HTTP HTML/503/429/truncated-body failure and retry, worker activation/cache race, quota session fallback, corrupted cache restore, mixed language and typo retrieval, reload and deletion')
     server.shutdown()
