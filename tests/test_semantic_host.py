@@ -10,11 +10,13 @@ import subprocess
 import shutil
 import hashlib
 import re
+import json
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts'))
 from check_semantic_host import pinned,probe
 from verify_site import validate
 from ftps_deploy import deploy_order
+from audit_semantic_candidate import audit
 SPEC,PATH=pinned()
 RAW=(ROOT/'research'/SPEC['file']).read_bytes()
 class Handler(http.server.BaseHTTPRequestHandler):
@@ -84,6 +86,24 @@ class SemanticHost(unittest.TestCase):
             ordered=sorted(files,key=lambda p:deploy_order(p,target))
             self.assertLess(ordered.index(model),ordered.index(target/'directory.html'))
             self.assertEqual(ordered[-1],target/'sw.js')
+            critical=re.search(r'const critical=\[(.*?)\];',shell,re.S).group(1)
+            runtime=list((target/'semantic-v2').glob('*.js'))
+            self.assertEqual(len(runtime),12)
+            for script in runtime:self.assertIn("'semantic-v2/"+script.name+"'",critical)
+            self.assertIn("response.status!==200",shell)
+            self.assertIn("response.headers.has('content-range')",shell)
+            one,two=audit(target),audit(second)
+            self.assertEqual(one,two)
+            self.assertEqual(one['fileCount'],len(files))
+            self.assertEqual(one['modelSHA256'],SPEC['sha256'])
+            self.assertEqual(one['files'][-1]['path'],'sw.js')
+            print('CANDIDATE_MANIFEST_REPORT',json.dumps({k:v for k,v in one.items() if k!='files'},sort_keys=True))
+            # Verify content changes affect manifest, and a corrupted pinned weight fails.
+            directory=second/'directory.html'
+            directory.write_bytes(directory.read_bytes()+b'\\n')
+            self.assertNotEqual(audit(second)['manifestSHA256'],one['manifestSHA256'])
+            (second/PATH.lstrip('/')).write_bytes(b'X'+RAW[1:])
+            with self.assertRaises((ValueError,AssertionError)):audit(second)
     def test_origin_restrictions(self):
         for origin in ['http://avenqir.bg5.net','https://example.com','https://avenqir.bg5.net/other','https://avenqir.bg5.net?token=x','https://avenqir.bg5.net.evil.example']:
             with self.subTest(origin=origin),self.assertRaises(ValueError):probe(origin)
