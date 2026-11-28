@@ -1160,3 +1160,75 @@ for(let i=0;i<fine.rows.length;i++){
 assert.equal(composedRestrictionProbes,800);
 assert.equal(composedRestrictionLeaks,0);
 console.log('COMPOSITION_NORMALIZATION_REPORT',JSON.stringify({guardVariants,guardMismatch,composedRestrictionProbes,composedRestrictionLeaks,releaseEligible:false}));
+
+
+// Extend the object/action experiment beyond PDF and QR. This remains
+// development-only; it is not imported by the browser Worker.
+const normalizedRe=re=>new RegExp(re.source.normalize('NFKC'),re.flags);
+const extendedFamilies=[
+ ['image',/\b(?:photo|photos|image|images|picture|pictures|jpeg|png|foto|fotos|fotografía|fotografías|bild|bilder|fotografie|fotografien)\b|照片|图片|圖像|圖片|画像|写真|사진|이미지|изображени|фотограф|صورة|صور|รูปภาพ|ภาพถ่าย/iu,[
+  ['image-compress',/\b(?:compress|compresser|komprimieren|comprimir|shrink)\b|file size|taille du fichier|dateigröße|tamaño del archivo|文件体积|檔案容量|压缩|壓縮|容量を減|容量を小|용량을 줄|размер файла|حجم الملف|ลดขนาดไฟล์/iu],
+  ['image-background',/background.{0,30}(?:transparent|remove)|(?:remove|erase).{0,30}background|fond.{0,20}transparent|supprimer.{0,20}fond|hintergrund.{0,20}(?:entfernen|transparent)|fondo.{0,20}transparente|(?:quitar|eliminar).{0,20}fondo|背景.{0,12}(?:透明|删除|刪除|消す|取り除)|배경.{0,15}(?:투명|제거)|убрать фон|إزالة الخلفية|ลบพื้นหลัง/iu],
+  ['image-resize',/\b(?:resize|dimensions|pixels|abmessungen|pixel|dimensiones)\b|宽高|寬高|像素|尺寸|ピクセル|幅と高さ|가로 세로|ширину|высоту|أبعاد|بكسل|พิกเซล/iu]
+ ]],
+ ['dns',/\bdns\b/iu,[
+  ['dns-propagation',/propagat|worldwide|global|monde entier|weltweit|otros países|全球|各地|生效|反映|전파|전 세계|по всему миру|حول العالم|ทั่วโลก/iu],
+  ['dns-lookup',/\b(?:records?|mx|txt|aaaa|cname|enregistrements?|einträge|registros?)\b|记录|記錄|レコード|레코드|запис|سجل|ระเบียน/iu]
+ ]],
+ ['json',/\bjson\b/iu,[
+  ['json-edit',/format|indent|pretty.print|formater|formatieren|formatear|格式化|缩进|縮排|整形|정렬|들여쓰기|форматир|تنسيق|จัดรูปแบบ/iu]
+ ]],
+ ['regex',/\bregex\b|regular expression|expression régulière|regulären ausdruck|expresión regular|正则表达式|正規表現|정규식|регулярн.{0,8}выражен|تعبير نمطي/iu,[
+  ['regex-test',/\b(?:test|tester|check|match|matches|testen|prüfen|probar|coincide)\b|测试|測試|匹配|テスト|一致|테스트|일치|провер|مطابق|اختبار/iu]
+ ]]
+].map(([family,object,actions])=>[family,normalizedRe(object),actions.map(([id,re])=>[id,normalizedRe(re)])]);
+const extendedExclusions=normalizedRe(/watermark|metadata|repair|corrupted|rotate|crop|ocr|remove text|extract text|colorize|exif|水印|元数据|修复|旋转|裁剪|文字识别|文字提取|透かし|回転|文字認識|워터마크|회전|메타데이터|filigrane|métadonnées|wasserzeichen|metadaten|marca de agua|metadatos|водян|метаданн|علامة مائية|بيانات وصفية|dns.{0,20}(?:change nameserver|configure server)|json.{0,20}(?:convert to|schema generation)|regex.{0,20}(?:replace text|generate pattern)/iu);
+function extendedClass(raw){
+ const q=fine.normalize(raw);
+ if(shadowBlock(q)||technicalAbstention(q)||normalizedRe(explanatory).test(q)||extendedExclusions.test(q))return null;
+ const families=extendedFamilies.filter(([,object])=>object.test(q));
+ if(families.length!==1)return null;
+ const [, ,actions]=families[0],matches=actions.filter(([,re])=>re.test(q));
+ if(matches.length!==1)return null;
+ const id=matches[0][0];
+ const objects=anchorInfo(q).groups;
+ if(objects.length>1||objects.some(ids=>!ids.includes(id)))return null;
+ const rank=shadowEngine.rank(q,null).map(x=>({...x,score:.9*x.global+.1*x.prototype})).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id));
+ const residual=residualRank(q).rank;
+ return rank.slice(0,3).some(x=>x.id===id)||residual.slice(0,3).some(x=>x.id===id&&x.score>=.15)?id:null;
+}
+const extendedChallenge=[
+ ['en','Shrink the file size of the photo for my presentation','image-compress','Read EXIF metadata from the photo'],
+ ['en','Make the background of the picture transparent for a slide','image-background','Rotate the picture by ninety degrees'],
+ ['en','Check whether the DNS update has propagated worldwide','dns-propagation','Explain how DNS propagation works'],
+ ['en','Look up the MX records for a domain','dns-lookup','Change nameserver settings for my DNS'],
+ ['zh-Hans','把手机照片的文件体积压小一点','image-compress','识别照片里面的文字'],
+ ['zh-Hans','把产品图片背景改成透明的','image-background','给图片加水印'],
+ ['zh-Hans','看看DNS更新在不同国家是否生效','dns-propagation','解释DNS传播原理'],
+ ['zh-Hans','把这段JSON格式化并缩进','json-edit','把JSON转换成其他文件格式'],
+ ['ja','写真の容量を減らしてメールで送りたい','image-compress','写真を回転させたい'],
+ ['ja','写真の背景を透明にするサイトを探す','image-background','写真の文字認識をしたい'],
+ ['ja','DNSの変更が世界各地に反映されたか調べる','dns-propagation','DNSの仕組みを説明してほしい'],
+ ['ko','사진의 용량을 줄여서 보내고 싶어요','image-compress','사진의 메타데이터를 읽고 싶어요'],
+ ['ko','제품 이미지의 배경을 투명하게 바꾸기','image-background','사진을 회전시키고 싶어요'],
+ ['fr','Réduire la taille du fichier de ma photo','image-compress','Lire les métadonnées de la photo'],
+ ['fr','Rendre le fond de cette image transparent','image-background','Ajouter un filigrane à une image'],
+ ['fr','Tester si mon expression régulière correspond au texte','regex-test','Expliquer une expression régulière'],
+ ['de','Die Dateigröße meiner Fotos verkleinern','image-compress','Metadaten eines Fotos auslesen'],
+ ['de','Die DNS Einträge meiner Domain abfragen','dns-lookup','Warum dauert DNS Propagation so lange'],
+ ['es','Reducir el tamaño del archivo de una fotografía','image-compress','Leer los metadatos de la fotografía'],
+ ['es','Hacer el fondo de una imagen transparente','image-background','Añadir una marca de agua a una imagen'],
+ ['es','Comprobar los registros DNS de mi dominio','dns-lookup','Explicar qué son los registros DNS'],
+ ['ru','Уменьшить размер файла фотографии для отправки','image-compress','Извлечь метаданные фотографии'],
+ ['ar','تقليل حجم الملف للصورة قبل إرسالها','image-compress','إضافة علامة مائية على صورة'],
+ ['th','ลดขนาดไฟล์รูปภาพเพื่อส่งอีเมล','image-compress','อธิบายการทำงานของ DNS']
+].flatMap(([locale,q,expected,bad])=>[{locale,q,expected},{locale,q:bad,expected:null}]);
+const extendedSeen=new Set([...compositionPrevious,...compositionNext.map(x=>fine.normalize(x.q))]);
+for(const x of extendedChallenge){const q=fine.normalize(x.q);assert.ok(!extendedSeen.has(q),x.q);extendedSeen.add(q);}
+let extCorrect=0,extWrong=0,extFalse=0,extAccepted=0;const extErrors=[],extMisses=[];
+for(const x of extendedChallenge){
+ const id=extendedClass(x.q);
+ if(id){extAccepted++;if(id===x.expected)extCorrect++;else{if(x.expected)extWrong++;else extFalse++;extErrors.push({...x,predicted:id});}}
+ else if(x.expected)extMisses.push(x);
+}
+console.log('EXTENDED_COMPOSITION_SHADOW_REPORT',JSON.stringify({classes:7,positives:24,negatives:24,accepted:extAccepted,correct:extCorrect,wrongPositive:extWrong,falseAccept:extFalse,precision:extAccepted?extCorrect/extAccepted:null,positiveCoverage:extCorrect/24,errors:extErrors,misses:extMisses,releaseEligible:false}));
