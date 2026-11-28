@@ -212,7 +212,7 @@ async function verified(p){
  let workerSession=null,resolveRank=null;
  const progressFull=[],start=performance.now();
  const fullState=await fullLoader.load({consent:true,onProgress:p=>progressFull.push(p.bytes),activate:async(values,signal)=>{
-   workerSession=await AVENQIR_RESEARCH_ACTIVATION.activate({values,items,signal,workerURL:'/research/atlas-search-worker.js',onResult:(urls,q,ms)=>resolveRank?.({urls,q,ms}),onError:code=>{errors.push(code);resolveRank?.(null);}});
+   workerSession=await AVENQIR_RESEARCH_ACTIVATION.activate({values,items,signal,workerURL:'/research/atlas-search-worker.js',onResult:(urls,q,ms,suggestions)=>resolveRank?.({urls,q,ms,suggestions}),onError:code=>{errors.push(code);resolveRank?.(null);}});
    return workerSession;
  }});
  const initMs=performance.now()-start;
@@ -224,7 +224,7 @@ async function verified(p){
   const started=performance.now();
   const r=await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('benchmark rank timeout')),4000);resolveRank=x=>{clearTimeout(timer);resolveRank=null;resolve(x);};workerSession.query(q);});
   yes(r&&r.q===q&&(expectHits?r.urls.length>0:r.urls.length===0),'benchmark result mismatch '+q);
-  return {urls:r.urls,worker:r.ms,wall:performance.now()-started};
+  return {urls:r.urls,suggestions:r.suggestions,worker:r.ms,wall:performance.now()-started};
  }
  const cold=[],warm=[];
  for(const q of queries)cold.push(await rank(q));
@@ -293,6 +293,49 @@ async function verified(p){
  metrics.variedQueries=varied.length;metrics.variedWallP95=quantile(variedTimes.sort((a,b)=>a-b),.95);
  metrics.rejectedQueries=rejectTimes.length;metrics.rejectedWallP95=quantile(rejectTimes.sort((a,b)=>a-b),.95);
  yes(metrics.variedWallP95<1000&&metrics.rejectedWallP95<1000,'varied query latency budget exceeded');
+
+ // Verify the real message path and explicit acceptance using the same
+ // reviewed operation edits as the offline suite. Never synthesize a result.
+ const verbs=new Set(['generate','compress','validate','measure','translate','inspect','practice','convert','preview','remove','resize']);
+ const suggestionCases=new Map();
+ for(const [index,phrase] of queries.entries()){
+  const words=AVENQIR_RESEARCH_MULTILINGUAL.normalize(phrase).split(' ');
+  for(const [j,word] of words.entries()){
+   if(!verbs.has(word))continue;
+   const k=Math.floor(word.length/2);
+   for(const typo of [word.slice(0,k)+word.slice(k+1),word.slice(0,k)+word[k]+word.slice(k),word.slice(0,k)+'z'+word.slice(k+1)]){
+    if(typo!==word)suggestionCases.set(words.map((w,n)=>n===j?typo:w).join(' '),index);
+   }
+  }
+ }
+ function responseFor(q){
+  return new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('suggestion timeout')),4000);resolveRank=x=>{clearTimeout(timer);resolveRank=null;resolve(x);};workerSession.query(q);});
+ }
+ let suggestedCount=0,alreadyRanked=0;
+ for(const [q,index] of suggestionCases){
+  const r=await responseFor(q);
+  yes(r&&r.q===q&&Array.isArray(r.suggestions),'missing suggestion response '+q);
+  if(r.urls.length){yes(!r.suggestions.length,'suggestion despite results');alreadyRanked++;continue;}
+  yes(r.suggestions.length===1,'missing reviewed correction '+q);
+  const replacement=r.suggestions[0];
+  yes(replacement.id===AVENQIR_RESEARCH_MULTILINGUAL.tasks[index],'wrong suggestion '+q);
+  const selected=await rank(replacement.phrase);
+  yes(JSON.stringify(selected.urls)===JSON.stringify(cold[index].urls),'explicit selection parity '+q);
+  const rejected=await responseFor(q+' without upload');
+  yes(rejected&&rejected.urls.length===0&&rejected.suggestions.length===0,'constraint bypass '+q);
+  suggestedCount++;
+ }
+ yes(suggestedCount>0&&suggestedCount+alreadyRanked===suggestionCases.size,'suggestion coverage mismatch');
+ // Back-to-back queries must not deliver a stale suggestion.
+ const first=[...suggestionCases.keys()][0],latest='generate a qr code';
+ const last=new Promise((resolve,reject)=>{
+  const timer=setTimeout(()=>reject(Error('latest suggestion timeout')),4000);
+  resolveRank=x=>{clearTimeout(timer);resolveRank=null;resolve(x);};
+  workerSession.query(first);workerSession.query(latest);
+ });
+ const latestResult=await last;
+ yes(latestResult?.q===latest&&latestResult.urls.length&&!latestResult.suggestions.length,'stale suggestion escaped client');
+ console.log('WORKER_SUGGESTION_PASS',JSON.stringify({probes:suggestionCases.size,suggestedCount,alreadyRanked,latestWins:true}));
  await fullLoader.remove();
  yes(!await caches.has(AVENQIR_RESEARCH_LOADER.CACHE),'full model cache retained');
  document.documentElement.dataset.metrics=JSON.stringify(metrics);
