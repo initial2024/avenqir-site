@@ -157,6 +157,32 @@ async function verified(p){
  yes(oversizedError==='integrity'&&!oversizedCache.active(),'oversized cached payload accepted');
  yes(performance.now()-startHang<3000,'storage fault waits exceeded bound');
  await hungOpen.remove().catch(()=>{});await hungPut.remove();
+
+ // An uncooperative API may ignore AbortSignal. Force actual deadline expiry
+ // and check the caller settles, never activates stale bytes, and can retry.
+ async function deadlineCase(name,env,activate){
+  const instance=AVENQIR_RESEARCH_LOADER.create(specs,env,80,250);
+  let reason='';const started=performance.now();
+  try{await instance.load({consent:true,activate});}catch(e){reason=e.message;}
+  yes(reason==='timeout'&&!instance.active(),name+' timeout diagnostic '+reason);
+  yes(performance.now()-started<2000,name+' caller remained blocked');
+ }
+ await deadlineCase('fetch',envFor(hang,undefined),dummy);
+ await deadlineCase('digest',{...envFor(good,undefined),crypto:{subtle:{digest:hang}}},dummy);
+ let lateResolve=null,lateClosed=0;
+ const late=AVENQIR_RESEARCH_LOADER.create(specs,envFor(good,undefined),80,500);
+ let lateReason='';
+ const lateLoad=late.load({consent:true,activate:()=>new Promise(resolve=>{lateResolve=resolve;})}).catch(e=>{lateReason=e.message;});
+ await wait(()=>typeof lateResolve==='function');
+ late.cancel();await lateLoad;
+ yes(lateReason==='cancelled'&&!late.active(),'uncooperative activation not cancelled');
+ lateResolve({close(){lateClosed++;}});
+ await wait(()=>lateClosed===1);
+ const retry=await late.load({consent:true,activate:dummy});
+ yes(retry.state==='ready'&&late.active(),'late activation prevented retry');
+ await late.remove();
+ const stalledReader=()=>({ok:true,status:200,headers:new Headers({'Content-Type':'application/json','Content-Length':String(bytes.length)}),body:{getReader:()=>({read:hang,cancel:hang})}});
+ await deadlineCase('stream',envFor(stalledReader,undefined),dummy);
  // Exercise the full production bundle over real gzip HTTP transfer.
  const fullPath=Object.keys(hashes)[1];
  const fullLoader=AVENQIR_RESEARCH_LOADER.create([{file:fullPath,bytes:sizes[fullPath],sha256:hashes[fullPath]}]);
@@ -239,5 +265,5 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
     assert requests.count(MODEL)==4,requests
     assert requests.count(FULL)==1,requests
     assert '/site/atlas-semantic-model-v1.json' not in requests,requests
-    print('PASS real '+('Firefox' if FIREFOX else 'Chromium')+' packed model digest, worker, stale query rejection, Korean and Arabic retrieval, constraint and ungrounded abstention, corrupt payload rejection, fresh single-model install, real worker activation, cancellation and retry, verified cache restore and deletion, MIME/404/truncated/network rejection, bounded non-stream fallback and session-only storage denial, localized broad topics and polite request constraints, bounded stalled storage and oversized cache rejection, full gzip model transfer and 36 cold/warm worker queries')
+    print('PASS real '+('Firefox' if FIREFOX else 'Chromium')+' packed model digest, worker, stale query rejection, Korean and Arabic retrieval, constraint and ungrounded abstention, corrupt payload rejection, fresh single-model install, real worker activation, cancellation and retry, verified cache restore and deletion, MIME/404/truncated/network rejection, bounded non-stream fallback and session-only storage denial, localized broad topics and polite request constraints, bounded stalled storage and oversized cache rejection, uncooperative fetch/digest/stream deadline and late activation disposal, full gzip model transfer and 36 cold/warm worker queries')
     server.shutdown()
