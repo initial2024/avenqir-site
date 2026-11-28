@@ -620,3 +620,24 @@ for(const [q,ids] of swapAudit){
 }
 assert.ok(autoRecovered>=30,'insufficient scoped correction coverage');
 console.log('ACTION_SWAP_EXHAUSTIVE_REPORT',JSON.stringify({generated:swapAudit.size,autoRecovered,autoAbstained,autoConflicts,autoRejectedExtra}));
+
+let colloquialHits=0,colloquialBlocked=0,colloquialWrapped=0;
+for(const [locale,...phrases] of multilingual.colloquialRows){
+ const i=multilingual.locales.indexOf(locale);
+ assert.ok(i>=0);
+ const [,prefix,suffix]=topics.requestFrames[i];
+ const [,negativePrefix,negativeSuffix,join]=multilingual.negativeFrames[i];
+ for(let j=0;j<phrases.length;j++){
+  const q=phrases[j],id=multilingual.colloquialTasks[j];
+  const canonical=multilingual.rows[i][multilingual.tasks.indexOf(id)+1],expected=fused.rank(canonical);
+  assert.ok(expected.length,id);
+  assert.equal(multilingual.resolve(q).id,id,q);
+  assert.deepEqual(fused.rank(q),expected,q);colloquialHits++;
+  assert.deepEqual(fused.rank(prefix+q+suffix),expected,q);colloquialWrapped++;
+  for(const bad of [...multilingual.localeConstraints[i].slice(1).map(c=>q+' '+c),negativePrefix+q+negativeSuffix,q+join+phrases[(j+1)%phrases.length],q+' zq-unverified-extra']){
+   assert.equal(fused.rank(bad).length,0,bad);colloquialBlocked++;
+  }
+ }
+}
+assert.equal(colloquialHits,48);assert.equal(colloquialWrapped,48);assert.equal(colloquialBlocked,384);
+console.log('COLLOQUIAL_ACTION_REPORT',JSON.stringify({locales:multilingual.colloquialRows.length,colloquialHits,colloquialWrapped,colloquialBlocked,scope:'exact authored variants, not blind generalization'}));
