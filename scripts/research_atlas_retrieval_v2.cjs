@@ -925,3 +925,13 @@ for(const [q,id] of extraVideo){assert.equal(videoRuntime.videoOperation(q),id,q
 for(const q of videoNegatives)assert.equal(videoRuntime.videoOperation(q),null,q);
 assert.deepEqual(candidate('把长视频剪短',catalog.filter(x=>!verifiedVideo.has(x.url)),model,runtime.features,baseline),[]);
 console.log('VIDEO_OPERATION_REPORT',JSON.stringify({localeQueries:videoProbes,naturalRequests:extraVideo.length,nonMatchingRequests:videoNegatives.length,verifiedTools:verifiedVideo.size,weightClass:'video',unchangedWeights:true}));
+
+const practicalRuntime=require('../research/atlas-retrieval-runtime.js');
+let practicalQueries=0;for(const {id,urls,phrases} of practicalRuntime.practicalOperations){
+ for(const q of phrases){assert.equal(practicalRuntime.practicalOperation(q),id,q);const a=candidate(q,catalog,model,runtime.features,baseline),b=fused.rank(q);assert.ok(a.length&&b.length,q+' no catalog result');assert.ok(a.every(u=>urls.includes(u))&&b.every(u=>urls.includes(u)),q+' ungrounded result');practicalQueries++;}
+}
+const practicalNatural=[['我想把这张照片裁小一点','photo-crop'],['帮我把这张照片旋转一下','photo-rotate'],['帮我把图片转换成webp','photo-format'],['我想找一些在线课程','study-courses'],['我想查找几篇研究论文','study-papers'],['帮我画一下函数曲线','study-graph']];
+for(const [q,id] of practicalNatural){assert.equal(practicalRuntime.practicalOperation(q),id,q);assert.ok(fused.rank(q).length,q);}
+const practicalNegative=['把照片裁小 免费','把照片转正 不上传','把照片裁成正方形且无水印','找大学教材 免费','不要找论文','learn English without login','学习英语并生成二维码','求函数证明','把视频转成png','把png转成pdf','图片压缩到100kb','找2028年考研真题'];
+for(const q of practicalNegative)assert.equal(practicalRuntime.practicalOperation(q),null,q);
+console.log('PRACTICAL_OPERATION_REPORT',JSON.stringify({operations:practicalRuntime.practicalOperations.length,phrases:practicalQueries,naturalRequests:practicalNatural.length,unsupportedRequests:practicalNegative.length,unchangedWeights:true}));

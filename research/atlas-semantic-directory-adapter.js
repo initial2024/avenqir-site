@@ -32,7 +32,6 @@
   else if(!same){text=l[1];kind='ready';}
   else if(result===null){text=l[2];kind='pending';}
   else{text=result.size?l[3]+' · '+l[4]+': '+result.size:l[5];if(elapsed!==null)text+=' · '+elapsed.toFixed(1)+' ms';kind=result.size?'hit':'miss';}
-  if(session)text+=' · '+l[session.mode==='local'?7:6];
   for(const target of [status,modalStatus]){target.dataset.state=kind;if(target.textContent!==text)target.textContent=text;}
  }
  const clarificationViews=[];

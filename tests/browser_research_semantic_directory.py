@@ -155,6 +155,12 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
   await wait(()=>$('atlasSemanticQueryState').dataset.state==='hit'&&[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/VEED|Kapwing/i.test(a.textContent))&&w.document.querySelector('#atlasResults .atlas-semantic-match'));
   yes(panel().hidden,'video search opened model management panel');
  }
+ // Practical photo and learning requests with the existing model weights.
+ for(const [q,expected] of [['我想把这张照片裁小一点',/Photopea/i],['把照片转正',/Photopea/i],['把png转成jpg',/Squoosh/i],['想自学新知识',/Khan Academy|OpenCourseWare|OpenLearn|edX|Coursera/i],['去哪里找论文',/Google Scholar|Semantic Scholar|BASE/i],['找大学自学教材',/OpenStax|LibreTexts|Open Textbook Library/i],['帮我画一下函数曲线',/Desmos|GeoGebra/i],['提高英语阅读能力',/British Council|BBC Learning English/i]]){
+  query(q);await wait(()=>$('atlasSemanticQueryState').dataset.state==='hit'&&[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>expected.test(a.textContent)));
+  yes(panel().hidden,'practical search opened model panel');
+  yes(!/Worker|Compatibility/.test($('atlasSemanticQueryState').textContent),'internal mode shown in query status');
+ }
  // Short colloquial Korean expressions and ambiguous user-reported query.
  for(const q of ['큐알코드 만들기','qr코드 생성','qr코드를 만들고 싶어요']){
   query(q);await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent)));
@@ -289,7 +295,7 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  query('QR 코드 생성');
  await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent))&&w.document.querySelector('#atlasResults .atlas-semantic-match'));
  w.Worker=beforeCompat;
- document.documentElement.dataset.metrics=JSON.stringify({...JSON.parse(document.documentElement.dataset.metrics),compatibleDirectoryActivation:true,manualPanelOnly:true,activeSearchCollapsesPanel:true,cachedQueryReloadClosed:true,videoOperationSearch:true});
+ document.documentElement.dataset.metrics=JSON.stringify({...JSON.parse(document.documentElement.dataset.metrics),compatibleDirectoryActivation:true,manualPanelOnly:true,activeSearchCollapsesPanel:true,cachedQueryReloadClosed:true,videoOperationSearch:true,practicalPhotoStudySearch:true,internalModeHidden:true});
  await fetch('/fixture-block');
  w.confirm=()=>true;
  if(panel().hidden)$('atlasSemanticOpen').click();$('atlasSemanticRemove').click();
