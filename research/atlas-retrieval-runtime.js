@@ -202,6 +202,7 @@ function structuredIntent(raw){
 }
 
 function intent(q,model){
+ if(multilingual.clarify(q))return null;
  if(!q||q.length>512||constraints.test(q)||incompatible.test(q)||technicalAbstention(q)||compound(q)||multilingual.negated(q))return null;
  // Do not broaden a conjunction between independently recognizable tasks to OR.
  const normalized=multilingual.normalize(q);

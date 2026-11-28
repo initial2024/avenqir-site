@@ -1933,6 +1933,20 @@ for(const [locale,...phrases] of colloquialRows)phrases.forEach((phrase,i)=>{
  if(old===id)throw Error('duplicate colloquial alias');
  index.set(k,id);strict.add(k);
 });
+
+// Reviewed short and colloquial requests. Extra words and conditions are never
+// silently stripped; the original query remains subject to existing guards.
+const shortAliases=[["qr-create",["큐알코드 만들기","큐알 코드 생성","큐알코드 생성","qr코드 만들기","qr코드 생성","qr 코드 만들고 싶어요","qr코드를 만들고 싶어요","二维码制作工具","二維碼製作工具","qrコードを作りたい","create a qr","make a qr code","générateur de qr","qr-code erzeugen","generador qr"]],["image-compress",["사진 용량 줄이기","사진 압축하기","이미지 용량 줄이기","compress my photo","把照片压小一点","把照片壓小一點"]],["dns-lookup",["dns 확인","dns 조회하기","dns 레코드 확인","查一下域名的dns","查一下網域的dns"]],["typing",["타자 연습","타자 연습하기","练习英文打字","練習英文打字","practice typing"]],["image-background",["사진 배경 없애기","사진 배경 지우기","图片背景去掉","圖片背景去掉","remove my photo background"]]];
+for(const [id,phrases] of shortAliases)for(const phrase of phrases){
+ const k=normalize(phrase),old=index.get(k);
+ if(old&&old!==id)throw Error('short alias collision');
+ index.set(k,id);strict.add(k);
+}
+// Ambiguous requests are choices, not automatic intent assignments.
+const clarificationRows=[["en","generate code","generate a qr code","programming resources","AI tools"],["zh-Hans","生成代码","生成二维码","编程资源","人工智能工具"],["zh-Hant","生成程式碼","生成二維碼","程式設計資源","人工智慧工具"],["ja","コード生成","QRコード作成","プログラミング資料","AIツール"],["ko","코드 생성","QR 코드 생성","프로그래밍 자료","AI 도구"],["fr","générer du code","générer un code QR","ressources de programmation","outils IA"],["de","code generieren","QR-Code erstellen","Programmierressourcen","KI-Werkzeuge"],["es","generar código","generar un código QR","recursos de programación","herramientas de IA"]];
+const clarificationIndex=new Map(clarificationRows.map(([locale,q,...phrases])=>[normalize(q),Object.freeze({locale,phrases:Object.freeze(phrases)})]));
+function clarify(raw){const q=normalize(raw);if(!q||q.length>128||hasConstraint(q)||negated(q))return null;return clarificationIndex.get(q)||null;}
+
 const negativeFrames=[["en","do not recommend ",""," and "],["zh-Hans","不要推荐","","以及"],["zh-Hant","不要推薦","","以及"],["ja",""," は不要です"," と "],["ko",""," 추천하지 마세요"," 그리고 "],["fr","ne recommande pas ",""," et "],["de","nicht empfehlen: ",""," und "],["es","no recomiendes ",""," y "],["pt","não recomende ",""," e "],["it","non consigliare ",""," e "],["nl","raad niet aan: ",""," en "],["sv","rekommendera inte ",""," och "],["no","ikke anbefal ",""," og "],["da","anbefal ikke ",""," og "],["fi","älä suosittele ",""," ja "],["pl","nie polecaj ",""," i "],["cs","nedoporučuj ",""," a "],["sk","neodporúčaj ",""," a "],["hu","ne ajánld: ",""," és "],["ro","nu recomanda ",""," și "],["bg","не препоръчвай ",""," и "],["hr","nemoj preporučiti ",""," i "],["sr","nemoj preporučiti ",""," i "],["sl","ne priporočaj ",""," in "],["el","μην προτείνεις ",""," και "],["ru","не рекомендуй ",""," и "],["uk","не рекомендуй ",""," і "],["tr",""," önerme"," ve "],["ar","لا تقترح ",""," و "],["he","אל תמליץ על ",""," וגם "],["fa",""," پیشنهاد نده"," و "],["hi",""," की सिफारिश मत करें"," और "],["bn",""," সুপারিশ করবেন না"," এবং "],["ur",""," تجویز نہ کریں"," اور "],["th","อย่าแนะนำ",""," และ "],["vi","đừng đề xuất ",""," và "],["id","jangan rekomendasikan ",""," dan "],["ms","jangan cadangkan ",""," dan "],["fil","huwag irekomenda ang ",""," at "],["af","moenie aanbeveel nie: ",""," en "]];
 const constraintIndex=new Set(localeConstraints.flatMap(r=>r.slice(1)).map(normalize));
 const nonWord=ch=>!ch||!/[\p{L}\p{M}\p{N}]/u.test(ch);
@@ -2034,6 +2048,6 @@ function suggestOperation(raw){
  const [phrase,id]=matches.entries().next().value;
  return {phrase,id};
 }
-const api=Object.freeze({suggestOperation,structuredCompatible,colloquialTasks:Object.freeze(colloquialTasks),colloquialRows:Object.freeze(colloquialRows.map(Object.freeze)),recoverSwap,mixedAliases:Object.freeze(mixedAliases.map(([id,phrases])=>Object.freeze([id,Object.freeze(phrases)]))),variantTasks:Object.freeze(variantTasks),variantRows:Object.freeze(variantRows.map(Object.freeze)),tasks,locales:Object.freeze(rows.map(x=>x[0])),rows:Object.freeze(rows.map(x=>Object.freeze(x))),resolve,normalize,hasConstraint,negated,negativeFrames:Object.freeze(negativeFrames.map(Object.freeze)),localeConstraints:Object.freeze(localeConstraints.map(r=>Object.freeze(r)))});
+const api=Object.freeze({clarify,suggestOperation,structuredCompatible,colloquialTasks:Object.freeze(colloquialTasks),colloquialRows:Object.freeze(colloquialRows.map(Object.freeze)),recoverSwap,mixedAliases:Object.freeze(mixedAliases.map(([id,phrases])=>Object.freeze([id,Object.freeze(phrases)]))),variantTasks:Object.freeze(variantTasks),variantRows:Object.freeze(variantRows.map(Object.freeze)),tasks,locales:Object.freeze(rows.map(x=>x[0])),rows:Object.freeze(rows.map(x=>Object.freeze(x))),resolve,normalize,hasConstraint,negated,negativeFrames:Object.freeze(negativeFrames.map(Object.freeze)),localeConstraints:Object.freeze(localeConstraints.map(r=>Object.freeze(r)))});
 if(typeof module==='object'&&module.exports)module.exports=api;else root.AVENQIR_RESEARCH_MULTILINGUAL=api;
 })(typeof self!=='undefined'?self:globalThis);

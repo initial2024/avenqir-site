@@ -141,6 +141,28 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
   await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent))&&w.document.querySelector('#atlasResults .atlas-semantic-match'));
  }
 
+ // Short colloquial Korean expressions and ambiguous user-reported query.
+ for(const q of ['큐알코드 만들기','qr코드 생성','qr코드를 만들고 싶어요']){
+  query(q);await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent)));
+ }
+ query('코드 생성');
+ await wait(()=>$('atlasNoMatchDialog').open&&!$('atlasSemanticDialogClarification').hidden);
+ yes($('atlasQuery').value==='코드 생성','ambiguous query rewritten automatically');
+ yes($('atlasSemanticQueryState').dataset.state==='miss','no-match model state missing');
+ const choice=$('atlasSemanticDialogClarification').querySelector('button');
+ yes(choice.textContent==='QR 코드 생성','missing Korean clarification choice');
+ choice.click();
+ await wait(()=>$('atlasQuery').value==='QR 코드 생성'&&$('atlasSemanticQueryState').dataset.state==='hit');
+ yes($('atlasSemanticQueryState').textContent.includes('ms'),'elapsed runtime missing');
+ query('코드 생성');
+ await wait(()=>$('atlasNoMatchDialog').open&&!$('atlasSemanticDialogClarification').hidden);
+ $('atlasNoMatchClose').click();
+ $('atlasQuery').value='코드 생성 무료';$('atlasQuery').dispatchEvent(new w.Event('input',{bubbles:true}));
+ yes($('atlasSemanticClarification').hidden,'stale ambiguous choice visible');
+ query('코드 생성 무료');
+ await wait(()=>$('atlasNoMatchDialog').open||w.document.querySelector('#atlasResults article'));
+ yes($('atlasSemanticDialogClarification').hidden,'constraint stripped');
+ if($('atlasNoMatchDialog').open)$('atlasNoMatchClose').click();
  // Find a genuine no-result typo with a reviewed operation repair. A normal
  // lexical hit is intentionally allowed to suppress the optional suggestion.
  const suggestionQueries=['generat a qr code','geneate a qr code','genezate a qr code','valdate html','valizate html','valiidate html','practce touch typing','praczice touch typing','prevew a pdf','prevzew a pdf','measre page loading performance','meaz ure page loading performance','transate a paragraph','transzate a paragraph','inspec a tls certificate','inszect a tls certificate','remve image background','remzve image background','resze an image','rezize an image','compresz a pdf','compess a pdf'];
@@ -188,7 +210,7 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  yes(suggestionBox().hidden&&$('atlasSemanticSuggestion').hidden,'old suggestion remained on input change');
  query('GitHub');await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/GitHub/i.test(a.textContent)));
  yes(suggestionBox().hidden,'suggestion shown alongside ordinary search results');
- document.documentElement.dataset.metrics=JSON.stringify({suggestionSelection:true,reversibleEdit:true,imeSuppressed:true,localizedPrompts:3,staleHidden:true,ordinaryResultsTakePriority:true,explicitConstraintsPreserved:true});
+ document.documentElement.dataset.metrics=JSON.stringify({suggestionSelection:true,reversibleEdit:true,imeSuppressed:true,localizedPrompts:3,staleHidden:true,ordinaryResultsTakePriority:true,explicitConstraintsPreserved:true,shortKorean:true,ambiguousChoice:true,queryState:true});
  query('genertae a qr code without upload');
  await wait(()=>!w.document.querySelector('#atlasResults .atlas-semantic-match'));
  query('QR 코드 생성');
