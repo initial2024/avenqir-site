@@ -1989,6 +1989,51 @@ function structuredCompatible(raw,id){
  for(const phrase of swapIndex.keys())if(q.includes(phrase))return false;
  return true;
 }
-const api=Object.freeze({structuredCompatible,colloquialTasks:Object.freeze(colloquialTasks),colloquialRows:Object.freeze(colloquialRows.map(Object.freeze)),recoverSwap,mixedAliases:Object.freeze(mixedAliases.map(([id,phrases])=>Object.freeze([id,Object.freeze(phrases)]))),variantTasks:Object.freeze(variantTasks),variantRows:Object.freeze(variantRows.map(Object.freeze)),tasks,locales:Object.freeze(rows.map(x=>x[0])),rows:Object.freeze(rows.map(x=>Object.freeze(x))),resolve,normalize,hasConstraint,negated,negativeFrames:Object.freeze(negativeFrames.map(Object.freeze)),localeConstraints:Object.freeze(localeConstraints.map(r=>Object.freeze(r)))});
+
+// Suggestion-only single-edit recovery for reviewed operation verbs. This
+// deliberately excludes identifiers, object names and automatic transpositions.
+// No query-derived string is ever used as the suggested replacement.
+let operationContexts=null;
+function oneEdit(a,b){
+ if(a===b||Math.abs(a.length-b.length)>1)return false;
+ if(a.length===b.length){
+  let n=0;for(let i=0;i<a.length;i++)if(a[i]!==b[i]&&++n>1)return false;
+  return n===1;
+ }
+ if(a.length>b.length)[a,b]=[b,a];
+ let i=0,j=0,skipped=false;
+ while(i<a.length&&j<b.length){
+  if(a[i]===b[j]){i++;j++;}
+  else{if(skipped)return false;skipped=true;j++;}
+ }
+ return true;
+}
+function suggestOperation(raw){
+ const q=normalize(raw),resolved=resolve(q);
+ if(q.length>128||resolved.id||resolved.blocked||recoverSwap(q)||!/^[a-z]+(?: [a-z]+){1,7}$/.test(q))return null;
+ if(!operationContexts){
+  operationContexts=new Map();
+  for(const [phrase,id] of index){
+   if(!/^[a-z]+(?: [a-z]+){1,7}$/.test(phrase))continue;
+   const words=phrase.split(' ');
+   words.forEach((word,i)=>{
+    if(!swapActions.has(word))return;
+    const key=words.map((w,j)=>i===j?'*':w).join(' ');
+    if(!operationContexts.has(key))operationContexts.set(key,[]);
+    operationContexts.get(key).push({phrase,id,word});
+   });
+  }
+ }
+ const words=q.split(' '),matches=new Map();
+ words.forEach((word,i)=>{
+  if(word.length<5||word.length>25||knownWords.has(word))return;
+  const key=words.map((w,j)=>i===j?'*':w).join(' ');
+  for(const row of operationContexts.get(key)||[])if(oneEdit(word,row.word))matches.set(row.phrase,row.id);
+ });
+ if(matches.size!==1)return null;
+ const [phrase,id]=matches.entries().next().value;
+ return {phrase,id};
+}
+const api=Object.freeze({suggestOperation,structuredCompatible,colloquialTasks:Object.freeze(colloquialTasks),colloquialRows:Object.freeze(colloquialRows.map(Object.freeze)),recoverSwap,mixedAliases:Object.freeze(mixedAliases.map(([id,phrases])=>Object.freeze([id,Object.freeze(phrases)]))),variantTasks:Object.freeze(variantTasks),variantRows:Object.freeze(variantRows.map(Object.freeze)),tasks,locales:Object.freeze(rows.map(x=>x[0])),rows:Object.freeze(rows.map(x=>Object.freeze(x))),resolve,normalize,hasConstraint,negated,negativeFrames:Object.freeze(negativeFrames.map(Object.freeze)),localeConstraints:Object.freeze(localeConstraints.map(r=>Object.freeze(r)))});
 if(typeof module==='object'&&module.exports)module.exports=api;else root.AVENQIR_RESEARCH_MULTILINGUAL=api;
 })(typeof self!=='undefined'?self:globalThis);
