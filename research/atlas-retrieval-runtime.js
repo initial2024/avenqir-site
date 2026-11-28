@@ -245,14 +245,25 @@ function createSession(items,model,features,baseline,unicode=null){
   return docCache.get(item);
  }
  function unicodeDoc(item){if(!unicodeCache.has(item))unicodeCache.set(item,unicode.features([item.name,item.description].join(' ')));return unicodeCache.get(item);}
- return Object.freeze({rank(query){
+ function rank(query){
   const q=String(query||'').normalize('NFKC').trim(),task=intent(q,model);
   if(!task)return [];
   if(task.fallback)return [...baseline.rank(q,snapshot).keys()];
   if(cache.has(task.id)){hits++;return cache.get(task.id).slice();}
   const urls=rankedCandidates(snapshot,features,task,docFeatures,unicode,unicodeDoc);
   cache.set(task.id,Object.freeze(urls));computed++;return urls.slice();
- },stats(){return {computed,hits,featureCalls,cachedIntents:cache.size};}});
+ }
+ // Suggestions are deliberately separate from rank(). The caller must obtain
+ // explicit user selection; unresolved constraints and empty catalog evidence veto.
+ function suggest(query){
+  const q=String(query||'').normalize('NFKC').trim();
+  const task=intent(q,model);
+  if(!task?.fallback)return [];
+  const repair=multilingual.suggestOperation(q);
+  if(!repair||rank(q).length||!rank(repair.phrase).length)return [];
+  return [{id:repair.id,phrase:repair.phrase}];
+ }
+ return Object.freeze({rank,suggest,stats(){return {computed,hits,featureCalls,cachedIntents:cache.size};}});
 }
 
 const api=Object.freeze({candidate,classify,compound,unsupportedProperties,technicalAbstention,structuredIntent,createSession});
