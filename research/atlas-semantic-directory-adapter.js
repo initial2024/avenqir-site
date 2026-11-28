@@ -47,9 +47,12 @@
      },onError:()=>workerFailure(id)});
      lastItems=items;return next;
     }});
+    // A worker can fail after its ready acknowledgement but during cache finalization.
+    // Do not resurrect a closed session or retain the failed activation's cache.
+    if(id!==serial){next?.close();try{await loader.remove();persisted=false;}catch{error='storage';}return;}
     if(state.state==='missing'){phase='idle';persisted=false;save('');return;}
     session=next;persisted=state.persisted;bytes=spec.bytes;rate=0;phase='ready';save('enabled');resetRank();notify();
-   }catch(e){phase=e.message==='cancelled'?'cancelled':'error';error=String(e.message||'load');bytes=0;rate=0;}
+   }catch(e){if(id===serial){phase=e.message==='cancelled'?'cancelled':'error';error=String(e.message||'load');}bytes=0;rate=0;}
    finally{busy=false;draw();if(!session)notify();}
   }
   open.addEventListener('click',()=>{panel.hidden?show():panel.hidden=true;});
