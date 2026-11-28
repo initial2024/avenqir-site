@@ -57,11 +57,11 @@ def sha(data):
 def upload(ftp, file, commit, target_root, root=SITE, listing_cache=None, expected_sha256=None):
     rel=file.relative_to(root).as_posix()
     parent=rel.rsplit('/',1)[0] if '/' in rel else ''
-    safe_mkdir(ftp,parent,target_root)
     name=file.name
     new=file.read_bytes()
     if expected_sha256 is not None and sha(new)!=expected_sha256:
         raise RuntimeError('Audited file changed before upload: '+rel)
+    safe_mkdir(ftp,parent,target_root)
     # Cached positive names are only a read-only hint, never authorization to write.
     # Every existing file is still retrieved and compared by SHA-256.
     current=listing_cache.get(parent) if listing_cache is not None else None
