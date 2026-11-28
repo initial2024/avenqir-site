@@ -1920,6 +1920,36 @@ function resolve(q){const n=normalize(q);if(n.length>512||hasConstraint(n)||nega
  for(const phrase of strict)if(n.includes(phrase))return {id:null,blocked:true};
  return {id:null,blocked:false};
 }
-const api=Object.freeze({mixedAliases:Object.freeze(mixedAliases.map(([id,phrases])=>Object.freeze([id,Object.freeze(phrases)]))),variantTasks:Object.freeze(variantTasks),variantRows:Object.freeze(variantRows.map(Object.freeze)),tasks,locales:Object.freeze(rows.map(x=>x[0])),rows:Object.freeze(rows.map(x=>Object.freeze(x))),resolve,normalize,hasConstraint,negated,negativeFrames:Object.freeze(negativeFrames.map(Object.freeze)),localeConstraints:Object.freeze(localeConstraints.map(r=>Object.freeze(r)))});
+
+// Narrow candidate scope: swap adjacent letters in a reviewed English operation
+// word, preserving every other token. No substitutions, deletes or identifier edits.
+const swapActions=new Set(['generate','compress','validate','measure','translate','inspect','practice','convert','preview','remove','resize']);
+const swapIndex=new Map(),knownWords=new Set();
+for(const phrase of index.keys())for(const w of phrase.split(' '))knownWords.add(w);
+for(const [phrase,id] of index){
+ const words=phrase.split(' ');
+ if(words.length<2||words.length>8)continue;
+ for(let i=0;i<words.length;i++){
+  const w=words[i];if(!swapActions.has(w))continue;
+  for(let j=0;j<w.length-1;j++){
+   if(w[j]===w[j+1])continue;
+   const changed=w.slice(0,j)+w[j+1]+w[j]+w.slice(j+2);
+   if(knownWords.has(changed))continue;
+   const q=words.map((x,k)=>k===i?changed:x).join(' ');
+   if(index.has(q))continue;
+   if(!swapIndex.has(q))swapIndex.set(q,new Map());
+   swapIndex.get(q).set(phrase,id);
+  }
+ }
+}
+function recoverSwap(raw){
+ const q=normalize(raw),r=resolve(q);
+ if(q.length>128||r.id||r.blocked)return null;
+ const options=swapIndex.get(q);
+ if(options?.size!==1)return null;
+ const [phrase,id]=options.entries().next().value;
+ return {phrase,id};
+}
+const api=Object.freeze({recoverSwap,mixedAliases:Object.freeze(mixedAliases.map(([id,phrases])=>Object.freeze([id,Object.freeze(phrases)]))),variantTasks:Object.freeze(variantTasks),variantRows:Object.freeze(variantRows.map(Object.freeze)),tasks,locales:Object.freeze(rows.map(x=>x[0])),rows:Object.freeze(rows.map(x=>Object.freeze(x))),resolve,normalize,hasConstraint,negated,negativeFrames:Object.freeze(negativeFrames.map(Object.freeze)),localeConstraints:Object.freeze(localeConstraints.map(r=>Object.freeze(r)))});
 if(typeof module==='object'&&module.exports)module.exports=api;else root.AVENQIR_RESEARCH_MULTILINGUAL=api;
 })(typeof self!=='undefined'?self:globalThis);
