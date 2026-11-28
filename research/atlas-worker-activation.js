@@ -13,7 +13,7 @@
     const url=new URL(workerURL,root.location.href);
     if(url.origin!==root.location.origin||url.username||url.password||url.hash)throw Error('origin');
     worker=new root.Worker(url);
-    client=root.AVENQIR_RESEARCH_WORKER_CLIENT.create(worker,(urls,q,ms)=>{if(!closed&&settled)onResult(urls,q,ms);},fail,count=>{
+    client=root.AVENQIR_RESEARCH_WORKER_CLIENT.create(worker,(urls,q,ms,suggestions)=>{if(!closed&&settled)onResult(urls,q,ms,suggestions);},fail,count=>{
      if(closed||settled)return;
      if(signal.aborted){abort();return;}
      if(!Number.isSafeInteger(count)||count<1||count>items.length){fail();return;}
