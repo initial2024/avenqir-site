@@ -76,7 +76,7 @@ const pdfUnsupported=[
  /password|passcode|digital signature|watermark|encrypted|encryption|decryption|without (?:uploading|internet)|never upload/iu,
  /密码|密碼|口令|加密|解密|水印|浮水印|数字签名|數位簽章|不上傳|不上传|離線|离线/u,
  /パスワード|暗号化|電子署名|透かし|アップロード(?:しない|せず)|비밀번호|암호|전자 서명|업로드 없이/u,
- /mot de passe|signature numérique|hors ligne|sans (?:envoi|téléversement)|passwort|kennwort|digitale signatur|ohne (?:upload|hochladen)|contraseña|firma digital|sin subir|senha|assinatura digital|sem enviar|firma digitale|senza caricare/iu,
+ /mot de passe|signature numérique|hors ligne|sans (?:envoi|téléversement)|passwort|kennwort|digitale signatur|ohne (?:upload|hochladen)|contraseña|firma digital|sin subir|nunca (?:suba|subir|envíe)|no (?:suba|envíe) datos|senha|assinatura digital|sem enviar|firma digitale|senza caricare/iu,
  /wachtwoord|zonder upload|lösenord|utan att ladda upp|passord|uten at.{0,40}sendes|uten opplasting|adgangskode|uden upload|salasana|ilman lataamista|hasło|bez przesyłania|heslo|bez nahrávání|jelszó|parol[ăa]|fără încărcare/iu,
  /парол|цифровая подпись|без загрузки|лозинк|geslo|κωδικό πρόσβασης|χωρίς μεταφόρτωση|şifre|parola|yüklemeden/iu,
  /كلمة المرور|توقيع رقمي|دون رفع|بدون رفع|סיסמה|חתימה דיגיטלית|رمز عبور|بدون بارگذاری|पासवर्ड|डिजिटल हस्ताक्षर|बिना अपलोड|পাসওয়ার্ড|পাসওয়ার্ড|پاس ورڈ|پاسورڈ/u,
@@ -95,8 +95,24 @@ function unsupportedProperties(raw){
         (qrObject.test(q)&&qrRead.some(p=>p.test(q)));
 }
 
+
+// Tool-finding and learning about a technical object are different intents.
+// Scope this abstention to PDF/QR so unrelated catalog searches are unchanged.
+const technicalExplanation=[
+ /\b(?:why|what is|what are|how does|how do|explain|definition|theory|source code|tutorial|documentation|compare|comparison)\b/iu,
+ /为什么|為什麼|是什么|是什麼|原理|教程|比较|比較|仕組み|とは何|なぜ|원리|비교|설명/u,
+ /\b(?:pourquoi|expliquer|vergleich|warum|explicar|por qué|explicação|perché|spiegare|waarom|uitleg|varför|hvorfor|hvordan|proč|dlaczego)\b/iu,
+ /почему|принцип|объясн|сравнен|чому|كيف يعمل|لماذا|ما هو|شرح|क्या है|क्यों|कैसे काम|ทำงานอย่างไร|อธิบาย/u
+];
+function technicalAbstention(raw){
+ const q=multilingual.normalize(raw);
+ if(unsupportedProperties(q))return true;
+ if(!(pdfObject.test(q)||qrObject.test(q)))return false;
+ return technicalExplanation.some(re=>re.test(q));
+}
+
 function intent(q,model){
- if(!q||q.length>512||constraints.test(q)||incompatible.test(q)||unsupportedProperties(q)||compound(q)||multilingual.negated(q))return null;
+ if(!q||q.length>512||constraints.test(q)||incompatible.test(q)||technicalAbstention(q)||compound(q)||multilingual.negated(q))return null;
  // Do not broaden a conjunction between independently recognizable tasks to OR.
  const normalized=multilingual.normalize(q);
  for(const [, , ,join] of multilingual.negativeFrames){const sep=join.normalize('NFKC').toLowerCase();const at=normalized.indexOf(sep);if(at<=0)continue;const left=normalized.slice(0,at).trim(),right=normalized.slice(at+sep.length).trim();const a=multilingual.resolve(left).id||topics.resolve(left),b=multilingual.resolve(right).id||topics.resolve(right);if(a&&b&&a!==b)return null;}
@@ -162,6 +178,6 @@ function createSession(items,model,features,baseline,unicode=null){
  },stats(){return {computed,hits,featureCalls,cachedIntents:cache.size};}});
 }
 
-const api=Object.freeze({candidate,classify,compound,unsupportedProperties,createSession});
+const api=Object.freeze({candidate,classify,compound,unsupportedProperties,technicalAbstention,createSession});
 if(typeof module==="object"&&module.exports)module.exports=api;else root.AVENQIR_RESEARCH_RETRIEVAL=api;
 })(typeof self!=="undefined"?self:globalThis);
