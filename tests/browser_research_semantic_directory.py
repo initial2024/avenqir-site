@@ -72,6 +72,25 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
   yes([...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>a.textContent.includes('GitHub')),'ordinary search failed during outage');
  }
  await fetch('/fixture-valid');
+ // Fault injection at the real Cache API commit boundary, after real Worker ready.
+ const NativeWorker=w.Worker, originalPut=w.Cache.prototype.put;
+ let activatedWorker=null, injected=false;
+ w.Worker=class extends NativeWorker{constructor(...args){super(...args);activatedWorker=this;}};
+ w.Cache.prototype.put=async function(key,response){
+  const result=await originalPut.call(this,key,response);
+  if(!injected&&String(key)===modelURL()&&activatedWorker){
+   injected=true;activatedWorker.dispatchEvent(new w.Event('error'));
+  }
+  return result;
+ };
+ $('atlasSemanticDownload').click();
+ await wait(()=>injected&&panel().dataset.state==='error'&&!$('atlasSemanticDownload').hidden);
+ yes($('atlasSemanticStatus').textContent.includes('[worker]'),'worker commit-race diagnostic lost');
+ yes(!await w.caches.has('avenqir-semantic-model-v2-candidate'),'failed activation cache retained');
+ yes(w.localStorage.getItem('avenqir.semantic.preference.v2')!=='enabled','failed activation enabled');
+ w.Worker=NativeWorker;w.Cache.prototype.put=originalPut;
+ query('GitHub');
+ yes([...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>a.textContent.includes('GitHub')),'ordinary search failed after worker error');
  let intermediate=false;
  const obs=new w.MutationObserver(()=>{const v=$('atlasSemanticProgress').value;const txt=$('atlasSemanticDetail').textContent;if(v>0&&v<w.AVENQIR_RESEARCH_MANIFEST.bytes&&txt.includes('/s'))intermediate=true;});
  obs.observe($('atlasSemanticDetail'),{childList:true,subtree:true,characterData:true});
@@ -143,8 +162,8 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
     threading.Thread(target=server.serve_forever,daemon=True).start()
     with tempfile.TemporaryDirectory() as profile:
         subprocess.run(['node',str(ROOT/'tests'/'chrome_real_time.cjs'),CHROME,profile,f'http://127.0.0.1:{server.server_port}/qa.html'],timeout=75,check=True)
-    assert len([x for x in requests if x[0]=='valid'])==1,requests
+    assert len([x for x in requests if x[0]=='valid'])==2,requests
     assert not any(x[0]=='block' or '?' in x[1] for x in requests),requests
     assert sum(x[0]=='html' for x in requests)==1 and sum(x[0]=='unavailable' for x in requests)==1,requests
-    print('PACKAGED' if PACKAGED else 'RESEARCH', 'PASS real 390x844 candidate directory, full bundle consent, cancel/retry, integrity, progress, Korean result, locale switch, real HTTP HTML/503 failure and retry, reload and deletion')
+    print('PACKAGED' if PACKAGED else 'RESEARCH', 'PASS real 390x844 candidate directory, full bundle consent, cancel/retry, integrity, progress, Korean result, locale switch, real HTTP HTML/503 failure and retry, worker activation/cache race, reload and deletion')
     server.shutdown()
