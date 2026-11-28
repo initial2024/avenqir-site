@@ -9,7 +9,10 @@
    if(m.type==='error'&&m.id===initId){ready=false;onError(m.code);return;}
    if(!inFlight||m.id!==inFlight.id||m.epoch!==epoch)return;
    const done=inFlight;inFlight=null;
-   if(done.id===latest){if(m.type==='result')onResult(m.urls,done.query,m.elapsedMs);else onError(m.code);}
+   if(done.id===latest){if(m.type==='result'){
+    const suggestions=Array.isArray(m.suggestions)&&m.suggestions.length===1&&typeof m.suggestions[0]?.id==='string'&&/^[a-z-]{1,40}$/.test(m.suggestions[0].id)&&typeof m.suggestions[0]?.phrase==='string'&&/^[a-z]+(?: [a-z]+){1,7}$/.test(m.suggestions[0].phrase)&&m.suggestions[0].phrase.length<=128?m.suggestions:[];
+    onResult(m.urls,done.query,m.elapsedMs,Array.isArray(m.urls)&&!m.urls.length?suggestions:[]);
+   }else onError(m.code);}
    send();
   };
   worker.onerror=()=>{if(!closed){ready=false;inFlight=null;onError('WORKER_FAILURE');}};
