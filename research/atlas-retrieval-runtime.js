@@ -80,8 +80,8 @@ const pdfUnsupported=normalizedPatterns([
  /密码|密碼|口令|加密|解密|水印|浮水印|数字签名|數位簽章|不上傳|不上传|離線|离线/u,
  /パスワード|暗号化|電子署名|透かし|アップロード(?:しない|せず)|비밀번호|암호|전자 서명|업로드 없이/u,
  /mot de passe|signature numérique|hors ligne|sans (?:envoi|téléversement)|passwort|kennwort|digitale signatur|ohne (?:upload|hochladen)|contraseña|firma digital|sin subir|nunca (?:suba|subir|envíe)|no (?:suba|envíe) datos|senha|assinatura digital|sem enviar|firma digitale|senza caricare/iu,
- /wachtwoord|zonder upload|lösenord|utan att ladda upp|passord|uten at.{0,40}sendes|uten opplasting|adgangskode|uden upload|salasana|ilman lataamista|hasło|bez przesyłania|heslo|bez nahrávání|jelszó|parol[ăa]|fără încărcare/iu,
- /парол|цифровая подпись|без загрузки|лозинк|geslo|κωδικό πρόσβασης|χωρίς μεταφόρτωση|şifre|parola|yüklemeden/iu,
+ /wachtwoord|zonder upload|zonder.{0,45}te uploaden|lösenord|utan att ladda upp|passord|uten at.{0,40}sendes|uten opplasting|adgangskode|uden upload|salasana|ilman lataamista|hasło|bez przesyłania|heslo|bez nahrávání|jelszó|parol[ăa]|fără încărcare/iu,
+ /парол|цифровая подпись|без загрузки|лозинк|lozink[auieom]|geslo|κωδικό πρόσβασης|χωρίς μεταφόρτωση|şifre|parola|yüklemeden/iu,
  /كلمة المرور|توقيع رقمي|دون رفع|بدون رفع|סיסמה|חתימה דיגיטלית|رمز عبور|بدون بارگذاری|पासवर्ड|डिजिटल हस्ताक्षर|बिना अपलोड|পাসওয়ার্ড|পাসওয়ার্ড|پاس ورڈ|پاسورڈ/u,
  /รหัสผ่าน|ลายเซ็นดิจิทัล|ไม่อัปโหลด|mật khẩu|không tải lên|kata sandi|kata laluan|tanpa memuat naik|wagwoord|sonder oplaai/iu,
  /\b(?:repair|repairing|corrupted|damaged|reparar|reparieren|beschädigt\w*|endommagé\w*|réparer)\b|修复|修復|損壊|破損|손상|поврежд|إصلاح|تالف/iu,
@@ -102,16 +102,32 @@ function unsupportedProperties(raw){
 
 
 // Tool-finding and learning about a technical object are different intents.
-// Scope this abstention to PDF/QR so unrelated catalog searches are unchanged.
+// Apply only object-scoped abstention; ordinary lexical search is unchanged.
 const technicalExplanation=normalizedPatterns([
  /\b(?:why|what is|what are|how does|how do|explain|definition|theory|source code|tutorial|documentation|compare|comparison)\b/iu,
  /为什么|為什麼|是什么|是什麼|原理|教程|比较|比較|仕組み|とは何|なぜ|원리|비교|설명/u,
  /\b(?:pourquoi|expliquer|vergleich|warum|erklären|funktionsweise|explicar|por qué|explicação|perché|spiegare|waarom|uitleg|varför|hvorfor|hvordan|proč|dlaczego)\b/iu,
  /почему|принцип|объясн|сравнен|чому|كيف يعمل|لماذا|ما هو|شرح|क्या है|क्यों|कैसे काम|ทำงานอย่างไร|อธิบาย/u
 ]);
+const dnsObject=/\bdns\b/iu,jsonObject=/\bjson\b/iu;
+// Distinguish diagnostics from protocol explanation and configuration changes.
+const dnsExplanation=normalizedPatterns([
+ /\b(?:explain|why|what (?:is|are)|how (?:does|do)|wie funktioniert|warum|hvordan (?:virker|fungerer)|ako funguje|kako.{0,35}radi|explicar|comment fonctionne|pourquoi)\b/iu,
+ /原理|是什么|是什麼|为什么|為什麼|仕組み|説明|なぜ|원리|설명|почему|как работает|كيف يعمل|شرح|ทำงานอย่างไร|อธิบาย/u
+]);
+const dnsMutation=normalizedPatterns([
+ /\b(?:change|modify|update|configure|set|replace)\s+(?:(?:my|the|a|your)\s+)?(?:nameserver|name server|dns server|dns settings|dns configuration)s?\b/iu,
+ /(?:修改|更改|设置|設定|切换|切換)(?:.{0,12})(?:dns服务器|dns伺服器|名称服务器|名稱伺服器)|(?:ネームサーバー|dnsサーバー).{0,12}(?:変更|設定)/iu
+]);
+const jsonConversion=normalizedPatterns([
+ /\b(?:convert|transform)\b.{0,35}\bjson\b.{0,30}\b(?:to|into)\b|\bjson\b.{0,25}\b(?:to|into)\s+(?:csv|xml|yaml|xlsx|excel|another file format)\b/iu,
+ /json.{0,18}(?:转换|轉換|转成|轉成|变成|變成).{0,20}(?:格式|csv|xml|yaml|excel)|json.{0,20}(?:変換).{0,20}(?:形式|csv|xml|yaml)/iu
+]);
 function technicalAbstention(raw){
  const q=multilingual.normalize(raw);
  if(unsupportedProperties(q))return true;
+ if(dnsObject.test(q)&&(dnsExplanation.some(re=>re.test(q))||dnsMutation.some(re=>re.test(q))))return true;
+ if(jsonObject.test(q)&&jsonConversion.some(re=>re.test(q)))return true;
  if(!(pdfObject.test(q)||qrObject.test(q)))return false;
  return technicalExplanation.some(re=>re.test(q));
 }
