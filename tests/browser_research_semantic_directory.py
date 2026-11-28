@@ -22,7 +22,7 @@ if PACKAGED:
 else:
     MODEL=(ROOT/'research'/'atlas-semantic-bundle-v2.json').read_bytes()
     MODEL_PATH='/research/atlas-semantic-bundle-v2.json'
-    CANDIDATE_SCRIPTS=['atlas-semantic-manifest.js','atlas-semantic-locales.js','atlas-candidate-loader.js','atlas-worker-client.js','atlas-worker-activation.js','atlas-semantic-directory-adapter.js']
+    CANDIDATE_SCRIPTS=['atlas-semantic-manifest.js','atlas-semantic-locales.js','atlas-candidate-loader.js','atlas-worker-client.js','atlas-model-codec.js','atlas-unicode-runtime.js','atlas-multilingual-intents.js','atlas-multilingual-topics.js','atlas-retrieval-runtime.js','atlas-search-worker.js','atlas-worker-activation.js','atlas-semantic-directory-adapter.js']
     DIRECTORY=(SITE/'directory.html').read_text(encoding='utf-8').replace('<script src="atlas-semantic-download.js?v=150" defer></script>',''.join('<script src="/research/'+x+'" defer></script>' for x in CANDIDATE_SCRIPTS))
 assert 'atlas-semantic-directory-adapter.js' in DIRECTORY
 DIRECTORY_JS=(SITE/'directory.js').read_text(encoding='utf-8')
@@ -199,6 +199,24 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  yes([...w.document.querySelectorAll('#atlasResults .atlas-result-title')].every(a=>w.AVENQIR_ATLAS_CATALOG.catalog().some(x=>a.textContent.includes(x.name))),'invented catalog entry');
  const cache=await w.caches.open('avenqir-semantic-model-v2-candidate');
  yes((await cache.match(modelURL()))?.ok,'verified model cache missing');
+ // Use verified cached bytes, exercise the identical local ranking runtime
+ // with Worker constructor rejection and asynchronous startup failure.
+ const verifiedText=await (await cache.match(modelURL())).text();
+ const workerScript=[...w.document.scripts].find(s=>s.src.includes('/atlas-search-worker.js')).src;
+ const realWorker=w.Worker;
+ for(const failure of ['constructor','startup']){
+  const hits=[],errors=[],ctrl=new w.AbortController();
+  w.Worker=failure==='constructor'?class{constructor(){throw new w.DOMException('fixture','SecurityError');}}:class{postMessage(){w.setTimeout(()=>this.onerror?.(new w.Event('error')),0);}terminate(){this.closed=true;}};
+  const local=await w.AVENQIR_RESEARCH_ACTIVATION.activate({values:[verifiedText],items:w.AVENQIR_ATLAS_CATALOG.catalog(),signal:ctrl.signal,workerURL:workerScript,onResult:(urls,q,ms,suggestions)=>hits.push({urls,q,suggestions}),onError:e=>errors.push(e)});
+  yes(local.mode==='local','local engine not activated '+failure);
+  local.query('generate a qr code');local.query('QR 코드 생성');
+  await wait(()=>hits.length||errors.length);
+  yes(!errors.length&&hits.length===1&&hits[0].q==='QR 코드 생성'&&hits[0].urls.some(u=>/qrcode-monkey|qrcode-monkey.com/i.test(u)),'compatible local retrieval failed '+failure);
+  local.close();local.query('GitHub');
+  await new Promise(r=>setTimeout(r,30));yes(hits.length===1,'closed local engine returned a result');
+ }
+ w.Worker=realWorker;
+ document.documentElement.dataset.metrics=JSON.stringify({...JSON.parse(document.documentElement.dataset.metrics),workerConstructorFallback:true,workerStartupFallback:true,localLatestWins:true,localClose:true});
  for(const key of await w.caches.keys())if(key!=='avenqir-semantic-model-v2-candidate'){
   yes(!await (await w.caches.open(key)).match(modelURL()),'weight duplicated in shell cache');
  }

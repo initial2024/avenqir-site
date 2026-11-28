@@ -5,7 +5,8 @@ const fs=require('node:fs'),path=require('node:path'),os=require('node:os'),cryp
 const root=path.resolve(__dirname,'..'),source=path.join(root,'site'),research=path.join(root,'research');
 const spec=require('../research/atlas-semantic-manifest.js');
 const assets=['atlas-semantic-manifest.js','atlas-semantic-locales.js','atlas-candidate-loader.js','atlas-worker-client.js','atlas-worker-activation.js','atlas-semantic-directory-adapter.js','atlas-search-worker.js','atlas-model-codec.js','atlas-unicode-runtime.js','atlas-multilingual-intents.js','atlas-multilingual-topics.js','atlas-retrieval-runtime.js'];
-const entries=assets.slice(0,6);
+// Page loads the shared engine dependencies as ordinary scripts, without weights.
+const entries=[...assets.slice(0,4),...assets.slice(7),assets[6],assets[4],assets[5]];
 const digest=b=>crypto.createHash('sha256').update(b).digest('hex');
 function replaceOnce(s,a,b){assert.equal(s.split(a).length,2,'Expected one anchor: '+a);return s.replace(a,b);}
 function build(dest){

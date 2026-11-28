@@ -105,7 +105,7 @@
     return {state:'ready',persisted,bytes:downloaded};
    }catch(e){
     if(restore&&cache&&!ctl.signal.aborted){try{await discardCache();}catch{}}
-    const known=new Set(['integrity','crypto_unavailable','model_format','network','http','rate_limited','origin','mime','stream','cancelled','activate','storage_timeout']);
+    const known=new Set(['integrity','crypto_unavailable','model_format','network','http','rate_limited','origin','mime','stream','cancelled','activate','activate_input','activate_runtime','activate_local','worker_start','worker_start_timeout','storage_timeout']);
     throw Error(timedOut?'timeout':ctl.signal.aborted?'cancelled':known.has(e.message)?e.message:'load');
    }finally{clearTimeout(deadline);running=false;controller=null;}
   }

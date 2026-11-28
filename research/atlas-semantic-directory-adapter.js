@@ -62,11 +62,11 @@
   }
   function format(n){return (n/1024).toFixed(1)+' KiB';}
   function draw(){
-   const l=lang();panel.dataset.state=phase;
+   const l=lang();panel.dataset.state=phase;panel.dataset.execution=session?.mode||'';
    open.textContent=session?l.on:l.title;
    $('atlasSemanticTitle').textContent=l.title;$('atlasSemanticNote').textContent=l.note;
    $('atlasSemanticSize').textContent=format(spec.bytes)+' ('+spec.bytes.toLocaleString()+' B)';
-   $('atlasSemanticStatus').textContent=phase==='ready'?(persisted?l.ready:l.session):phase==='error'?l.error+' ['+error+']':busy?l.loading:phase==='cancelled'?l.cancel:'';
+   $('atlasSemanticStatus').textContent=phase==='ready'?((persisted?l.ready:l.session)+(session?.mode==='local'?' [compat]':'')):phase==='error'?l.error+' ['+error+']':busy?l.loading:phase==='cancelled'?l.cancel:'';
    const progress=$('atlasSemanticProgress');progress.max=spec.bytes;progress.value=bytes;progress.hidden=!busy&&phase!=='ready';progress.setAttribute('aria-label',l.loading);
    $('atlasSemanticDetail').textContent=busy||phase==='ready'?format(bytes)+' / '+format(spec.bytes)+' · '+Math.floor(bytes/spec.bytes*100)+'%'+(rate>0?' · '+format(rate)+'/s':''):'';
    for(const [id,key,hidden] of [['atlasSemanticDownload','download',busy||!!session],['atlasSemanticLater','later',busy||!!session],['atlasSemanticCancel','cancel',!busy],['atlasSemanticRemove','remove',busy||(!session&&pref()!=='enabled'&&!persisted)],['atlasSemanticClose','close',false]]){const e=$(id);e.textContent=l[key];e.hidden=hidden;}

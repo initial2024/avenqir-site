@@ -1,13 +1,15 @@
 "use strict";
 // Research only. The caller must verify the bytes and obtain consent before init.
-const runtimeRevision=new URL(self.location.href).searchParams.get('v');
+(function(root){
+const inWorker=typeof document==='undefined';
+const runtimeRevision=new URL(inWorker?root.location.href:document.currentScript.src).searchParams.get('v');
 const runtimeDependencies=['../site/atlas-domain-embedding.js','atlas-model-codec.js','atlas-unicode-runtime.js','atlas-multilingual-intents.js','atlas-multilingual-topics.js','atlas-retrieval-runtime.js'];
-importScripts(...runtimeDependencies.map(path=>{
+if(inWorker)importScripts(...runtimeDependencies.map(path=>{
  const url=new URL(path,self.location.href);
  if(/^154-[a-f0-9]{16}$/.test(runtimeRevision||''))url.searchParams.set('v',runtimeRevision);
  return url.href;
 }));
-const embed=globalThis.AVENQIR_DOMAIN_EMBEDDING, retrieval=globalThis.AVENQIR_RESEARCH_RETRIEVAL;
+const embed=root.AVENQIR_DOMAIN_EMBEDDING, retrieval=root.AVENQIR_RESEARCH_RETRIEVAL;
 let state=null,epoch=0;
 function validModel(model){
  if(model?.schema!=='aq-domain-embedding-research-2'||model.bins!==4096||!Array.isArray(model.classes)||model.classes.length!==64||!model.parents||typeof model.parents!=='object')throw Error('MODEL_SCHEMA');
@@ -19,23 +21,29 @@ function loadCatalog(raw){
  if(!Array.isArray(raw)||raw.length>10000)throw Error('CATALOG_LIMIT');
  return raw.filter(x=>x&&typeof x.url==='string'&&typeof x.name==='string'&&typeof x.description==='string').map(x=>({url:x.url.slice(0,1800),name:x.name.slice(0,90),category:String(x.category||'').slice(0,40),description:x.description.slice(0,320)})).filter(x=>{try{const u=new URL(x.url);return ['http:','https:'].includes(u.protocol)&&!u.username&&!u.password;}catch{return false;}});
 }
+function createEngine(rawModel,rawItems){
+   const codec=globalThis.AVENQIR_RESEARCH_CODEC;let model,unicode=null;
+   if(typeof rawModel==='string'){
+    const raw=JSON.parse(rawModel);
+    if(raw.schema==='aq-semantic-bundle-2'){
+     model=codec.deserialize(JSON.stringify(raw.domain));validModel(model);
+     unicode=globalThis.AVENQIR_RESEARCH_UNICODE.create(codec.deserialize(JSON.stringify(raw.unicode)),model.classes.map(x=>x[0]));
+    }else model=codec.deserialize(rawModel);
+   }else model=rawModel;
+   validModel(model);
+   const baseline=embed.create({schema:'aq-domain-embedding-1',bins:model.bins,classes:model.classes.slice(0,28)}),items=loadCatalog(rawItems);
+   const session=retrieval.createSession(items,model,embed.features,baseline,unicode);
+   return Object.freeze({session,count:items.length});
+
+}
+if(!inWorker){root.AVENQIR_RESEARCH_LOCAL_ENGINE=Object.freeze({revision:runtimeRevision,createEngine});return;}
 self.onmessage=e=>{
  const m=e.data;if(!m||!Number.isSafeInteger(m.id)||m.id<0)return;
  try{
   if(m.type==='init'){
    state=null;epoch++;
-   const codec=globalThis.AVENQIR_RESEARCH_CODEC;let model,unicode=null;
-   if(typeof m.model==='string'){
-    const raw=JSON.parse(m.model);
-    if(raw.schema==='aq-semantic-bundle-2'){
-     model=codec.deserialize(JSON.stringify(raw.domain));validModel(model);
-     unicode=globalThis.AVENQIR_RESEARCH_UNICODE.create(codec.deserialize(JSON.stringify(raw.unicode)),model.classes.map(x=>x[0]));
-    }else model=codec.deserialize(m.model);
-   }else model=m.model;
-   validModel(model);
-   const baseline=embed.create({schema:'aq-domain-embedding-1',bins:model.bins,classes:model.classes.slice(0,28)}),items=loadCatalog(m.items);
-   state={session:retrieval.createSession(items,model,embed.features,baseline,unicode)};
-   self.postMessage({type:'ready',id:m.id,epoch,count:items.length});return;
+   const engine=createEngine(m.model,m.items);state=engine;
+   self.postMessage({type:'ready',id:m.id,epoch,count:engine.count});return;
   }
   if(m.type==='clear'){state=null;epoch++;self.postMessage({type:'cleared',id:m.id,epoch});return;}
   if(m.type!=='rank'||!state||m.epoch!==epoch||typeof m.query!=='string')throw Error('STALE_OR_NOT_READY');
@@ -46,3 +54,5 @@ self.onmessage=e=>{
   self.postMessage({type:'result',id:m.id,epoch,urls,suggestions,elapsedMs:performance.now()-started});
  }catch(e){self.postMessage({type:'error',id:m.id,epoch,code:String(e.message||'WORKER_ERROR').slice(0,80)});}
 };
+
+})(globalThis);
