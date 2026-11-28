@@ -1,6 +1,12 @@
 "use strict";
 // Research only. The caller must verify the bytes and obtain consent before init.
-importScripts('../site/atlas-domain-embedding.js','atlas-model-codec.js','atlas-unicode-runtime.js','atlas-multilingual-intents.js','atlas-multilingual-topics.js','atlas-retrieval-runtime.js');
+const runtimeRevision=new URL(self.location.href).searchParams.get('v');
+const runtimeDependencies=['../site/atlas-domain-embedding.js','atlas-model-codec.js','atlas-unicode-runtime.js','atlas-multilingual-intents.js','atlas-multilingual-topics.js','atlas-retrieval-runtime.js'];
+importScripts(...runtimeDependencies.map(path=>{
+ const url=new URL(path,self.location.href);
+ if(/^154-[a-f0-9]{16}$/.test(runtimeRevision||''))url.searchParams.set('v',runtimeRevision);
+ return url.href;
+}));
 const embed=globalThis.AVENQIR_DOMAIN_EMBEDDING, retrieval=globalThis.AVENQIR_RESEARCH_RETRIEVAL;
 let state=null,epoch=0;
 function validModel(model){
