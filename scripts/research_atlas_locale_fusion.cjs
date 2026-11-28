@@ -626,15 +626,37 @@ assert.deepEqual(nearDomainNegatives.map(x=>x.locale),fine.locales);
 const shadowTest=challenge.map(([locale,q,expected])=>({locale,q,expected})).concat(novelNegatives,nearDomainNegatives);
 const devKeys=new Set(shadowDev.concat(devNegatives).map(x=>fine.normalize(x.q)));
 for(const x of shadowTest)assert.ok(!devKeys.has(fine.normalize(x.q))&&!exact.has(fine.normalize(x.q)),x.q);
+// Deterministic guard applied BEFORE scores, independently of the UI locale.
+// Exact multilingual constraint/negation checks are shared with retrieval.
+// Split only on reviewed conjunctions and require two distinct known intents;
+// do not treat every occurrence of a conjunction as a compound request.
+function shadowBlock(raw){
+ const q=fine.normalize(raw);
+ if(!q||q.length>512||fine.hasConstraint(q)||fine.negated(q)||fine.resolve(q).blocked)return true;
+ for(const [,prefix,suffix] of fine.negativeFrames){
+  const p=prefix?fine.normalize(prefix):'',s=suffix?fine.normalize(suffix):'';
+  if(p&&q.startsWith(p)||s&&q.endsWith(s))return true;
+ }
+ for(const [,,,join] of fine.negativeFrames){
+  const sep=join.normalize('NFKC').toLowerCase();let at=q.indexOf(sep);
+  while(at>0){
+   const a=q.slice(0,at).trim(),b=q.slice(at+sep.length).trim();
+   const left=fine.resolve(a).id||topics.resolve(a),right=fine.resolve(b).id||topics.resolve(b);
+   if(left&&right)return true;
+   at=q.indexOf(sep,at+sep.length);
+  }
+ }
+ return false;
+}
 function precompute(cases,localeMode='correct'){
  return cases.map(x=>{const rank=shadowEngine.rank(x.q,localeMode==='correct'?x.locale:localeMode==='unknown'?null:x.locale==='en'?'ja':'en');
  const first=rank[0],second=rank[1],global=rank.slice().sort((a,b)=>b.global-a.global||a.id.localeCompare(b.id))[0];
- return {...x,id:first?.id,score:first?.score||0,margin:(first?.score||0)-(second?.score||0),agreement:first?.id===global?.id};});
+ return {...x,blocked:shadowBlock(x.q),id:first?.id,score:first?.score||0,margin:(first?.score||0)-(second?.score||0),agreement:first?.id===global?.id};});
 }
 function selective(rows,policy){
  let positives=0,negatives=0,accepted=0,correct=0,wrongPositive=0,falseAccept=0;const errors=[],byLocale={};
  for(const r of rows){const b=byLocale[r.locale]??={positives:0,negatives:0,correct:0,falseAccept:0,wrongPositive:0};if(r.expected){positives++;b.positives++;}else{negatives++;b.negatives++;}
-  if(!(r.score>=policy.score&&r.margin>=policy.margin&&(!policy.agreement||r.agreement)))continue;
+  if(r.blocked||!(r.score>=policy.score&&r.margin>=policy.margin&&(!policy.agreement||r.agreement)))continue;
   accepted++;if(r.expected&&r.id===r.expected){correct++;b.correct++;}else{if(r.expected){wrongPositive++;b.wrongPositive++;}else{falseAccept++;b.falseAccept++;}errors.push({locale:r.locale,q:r.q,expected:r.expected,predicted:r.id,score:r.score,margin:r.margin});}
  }
  return {positives,negatives,accepted,correct,wrongPositive,falseAccept,precision:accepted?correct/accepted:null,positiveCoverage:positives?correct/positives:0,errors,byLocale};
@@ -647,5 +669,8 @@ for(const score of [.25,.35,.45,.55,.65,.75])for(const margin of [.04,.08,.12,.1
 policies.sort((a,b)=>b.m.correct-a.m.correct||a.m.wrongPositive-b.m.wrongPositive||b.policy.score-a.policy.score||b.policy.margin-a.policy.margin||Number(b.policy.agreement)-Number(a.policy.agreement));
 const chosen=policies[0]?.policy||{score:Infinity,margin:Infinity,agreement:true};
 const holdout=selective(precompute(shadowTest),chosen),unknown=selective(precompute(shadowTest,'unknown'),chosen),wrong=selective(precompute(shadowTest,'wrong'),chosen);
+// Keep the score-only baseline above comparable via an explicit ablation report.
+const guardAudit={devBlocked:devScored.filter(x=>x.blocked).length,devNegativesBlocked:devScored.filter(x=>x.blocked&&!x.expected).length,devPositivesBlocked:devScored.filter(x=>x.blocked&&x.expected).length};
+console.log('SHADOW_GUARD_AUDIT',JSON.stringify(guardAudit));
 const researchGate=!!policies.length&&holdout.accepted>=16&&holdout.falseAccept===0&&holdout.precision>=.95&&holdout.positiveCoverage>=.4&&unknown.falseAccept===0&&wrong.falseAccept===0;
 console.log('SELECTIVE_SHADOW_REPORT',JSON.stringify({policy:policies[0]?.policy||null,dev:policies[0]?.m||null,holdout,unknown,wrong,researchGate,releaseEligible:false,reason:'Author-written tests; not independent production or device validation'}));
