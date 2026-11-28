@@ -1919,6 +1919,7 @@ function resolve(q){const n=normalize(q);if(n.length>512||hasConstraint(n)||nega
  // Added conditions or additional requests are not supported by exact aliases.
  for(const phrase of strict)if(n.includes(phrase))return {id:null,blocked:true};
  // A corrupted reviewed phrase plus extra requirements must not fall back to a broad rule.
+ if(swapIndex.get(n)?.size>1)return {id:null,blocked:true};
  if(!swapIndex.has(n))for(const phrase of swapIndex.keys())if(n.includes(phrase))return {id:null,blocked:true};
  return {id:null,blocked:false};
 }
