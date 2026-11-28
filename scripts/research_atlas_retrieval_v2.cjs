@@ -692,3 +692,25 @@ const nonExplanationControls=[
 ];
 for(const q of nonExplanationControls)assert.ok(!technicalAbstention(q),'explanation guard collision '+q);
 console.log('TECHNICAL_ABSTENTION_REPORT',JSON.stringify({rejected:explanationNegatives.length,controls:nonExplanationControls.length}));
+
+
+// Unicode regressions: Thai SARA AM and compatibility-width Latin identifiers.
+// Check original, NFC/NFD/NFKC/NFKD forms, not just one normalized fixture.
+const normalizationCases=[
+ 'PDF ทำงานอย่างไร','ＰＤＦ ทำงานอย่างไร','อธิบายการทำงานของ QR','QRコードの仕組みを調べたい',
+ 'PDF 압축 원리 설명','Réparer un PDF endommagé','Einen beschädigten PDF reparieren',
+ '修復損壞的ＰＤＦ檔案','إصلاح مستند PDF تالف','Comprimir un PDF sin enviar datos a nadie',
+ 'Die Funktionsweise eines QR-Codes erklären'
+];
+let normalizedRejected=0;
+for(const q of normalizationCases)for(const form of ['NFC','NFD','NFKC','NFKD']){
+ const variant=q.normalize(form);
+ assert.ok(technicalAbstention(variant),form+' guard '+variant);
+ assert.equal(fused.rank(variant).length,0,form+' ranking '+variant);normalizedRejected++;
+}
+const normalizationControls=[
+ 'PDF เครื่องมือ','PDFファイルを結合','QR 코드 생성','QRコードを作成','generate a qr code',
+ '把照片背景变成透明的','ตรวจสอบ DNS','Réunir des documents dans un PDF unique'
+];
+for(const q of normalizationControls)for(const form of ['NFC','NFD','NFKC','NFKD'])assert.ok(!technicalAbstention(q.normalize(form)),'normalization false refusal '+q);
+console.log('UNICODE_GUARD_REGRESSION_REPORT',JSON.stringify({normalizedRejected,controls:normalizationControls.length*4,forms:4}));
