@@ -23,17 +23,8 @@
 // timings or hit counts. Distinguish candidate hits from displayed results.
  const status=document.createElement('p');status.id='atlasSemanticQueryState';status.setAttribute('role','status');status.setAttribute('aria-live','polite');status.style.fontSize='0.85em';
  $('atlasQuickCategories')?.before(status);
- const labels=Object.freeze({
-  en:['Local model inactive','Local model ready','Local model searching…','Local model checked','Candidate matches','No local candidate matches','Worker','Compatibility','Choose a search direction:'],
-  'zh-Hans':['本地模型未启用','本地模型就绪','本地模型检索中…','本地模型已参与','候选命中','本地模型未命中','Worker 模式','兼容模式','请选择搜索方向：'],
-  'zh-Hant':['本機模型未啟用','本機模型就緒','本機模型搜尋中…','本機模型已參與','候選命中','本機模型未命中','Worker 模式','相容模式','請選擇搜尋方向：'],
-  ja:['ローカルモデル無効','ローカルモデル準備完了','ローカルモデル検索中…','ローカルモデル検索済み','候補件数','ローカル候補なし','Worker','互換モード','検索する内容を選択：'],
-  ko:['로컬 모델 비활성','로컬 모델 준비됨','로컬 모델 검색 중…','로컬 모델 검색 완료','후보 결과','로컬 후보 없음','Worker','호환 모드','검색 방향을 선택하세요:'],
-  fr:['Modèle local inactif','Modèle local prêt','Recherche locale…','Modèle local consulté','Résultats candidats','Aucun candidat local','Worker','Compatibilité','Choisir une recherche :'],
-  de:['Lokales Modell inaktiv','Lokales Modell bereit','Lokale Suche…','Lokales Modell geprüft','Kandidaten','Keine lokalen Kandidaten','Worker','Kompatibilität','Suchrichtung auswählen:'],
-  es:['Modelo local inactivo','Modelo local listo','Búsqueda local…','Modelo local consultado','Candidatos','Sin candidatos locales','Worker','Compatibilidad','Elige una búsqueda:']
- });
- const uiLabels=()=>labels[root.AVENQIR_I18N?.locale]||labels.en;
+ const modalStatus=document.createElement('p');modalStatus.id='atlasSemanticDialogQueryState';modalStatus.style.fontSize='0.85em';modalStatus.setAttribute('role','status');modalStatus.setAttribute('aria-live','polite');dialog?.querySelector('.atlas-no-match-actions')?.before(modalStatus);
+ const uiLabels=()=>lang().queryStatus;
  function drawStatus(){
   const l=uiLabels(),same=!!lastQuery&&input?.value.trim()===lastQuery.trim()&&!composing;
   let text,kind;
@@ -42,7 +33,7 @@
   else if(result===null){text=l[2];kind='pending';}
   else{text=result.size?l[3]+' · '+l[4]+': '+result.size:l[5];if(elapsed!==null)text+=' · '+elapsed.toFixed(1)+' ms';kind=result.size?'hit':'miss';}
   if(session)text+=' · '+l[session.mode==='local'?7:6];
-  status.dataset.state=kind;if(status.textContent!==text)status.textContent=text;
+  for(const target of [status,modalStatus]){target.dataset.state=kind;if(target.textContent!==text)target.textContent=text;}
  }
  const clarificationViews=[];
  function clarification(){if(composing||!session||!lastQuery||result?.size!==0||input?.value.trim()!==lastQuery.trim()||$('atlasEmpty')?.hidden!==false||$('atlasFilteredHint')?.hidden===false)return null;

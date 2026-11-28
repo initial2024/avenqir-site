@@ -82,3 +82,19 @@ for(const q of ['ضغط صورة','PDFを圧縮','QR 코드 생성','научн�
  for(let i=0;i<a.length;i++)assert.ok(Math.abs(a[i].score-b[i].score)<1e-10);
 }
 console.log('FULL_BUNDLE_MANIFEST_AND_RUNTIME_PASS',spec.bytes);
+
+// All UI locales have complete status labels, and ambiguous phrases map only
+// to existing reviewed canonical queries; no new intent is fabricated.
+const ui=require('../research/atlas-semantic-locales.js');
+assert.equal(fine.clarificationRows.length,40);
+assert.equal(new Set(fine.clarificationRows.map(r=>fine.normalize(r[1]))).size,40);
+assert.deepEqual(ui.locales,fine.locales);
+for(const [id,q,qr,code,ai] of fine.clarificationRows){
+ const labels=ui.get(id).queryStatus;
+ assert.equal(labels.length,9,id);assert.ok(labels.every(x=>typeof x==='string'&&x.trim().length>0),id);
+ assert.deepEqual(fine.clarify(q)?.phrases,[qr,code,ai],id);
+ assert.equal(fine.clarify(q+' without upload'),null,id);
+ assert.equal(fine.resolve(qr).id,'qr-create',id);
+ assert.equal(topics.resolve(code),'code',id);assert.equal(topics.resolve(ai),'ai',id);
+}
+console.log('CLARIFICATION_LOCALE_REPORT',JSON.stringify({locales:40,statusFields:360,canonicalChoices:120,modifiedQueryRefusals:40}));
