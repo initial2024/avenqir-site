@@ -8,10 +8,13 @@ import unittest
 import tempfile
 import subprocess
 import shutil
+import hashlib
+import re
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts'))
 from check_semantic_host import pinned,probe
 from verify_site import validate
+from ftps_deploy import deploy_order
 SPEC,PATH=pinned()
 RAW=(ROOT/'research'/SPEC['file']).read_bytes()
 class Handler(http.server.BaseHTTPRequestHandler):
@@ -68,6 +71,19 @@ class SemanticHost(unittest.TestCase):
             self.assertNotIn(SPEC['file'],(target/'sw.js').read_text())
             self.assertEqual(list((target/'semantic-v2').glob('*.json')),[model])
             self.assertLessEqual(sum(p.stat().st_size for p in files),12*1024*1024)
+            shell=(target/'sw.js').read_text()
+            revision=re.search(r'avenqir-v154-semantic-candidate-([0-9a-f]{16})',shell).group(1)
+            self.assertIn('?v=154-'+revision,(target/'directory.html').read_text())
+            # Two independent builds must publish byte-identical runtime assets.
+            second=pathlib.Path(temp)/'second'
+            subprocess.run(['node',str(ROOT/'scripts'/'build_semantic_candidate.cjs'),str(second)],check=True,capture_output=True)
+            first_hashes={p.relative_to(target).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
+            second_hashes={p.relative_to(second).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in validate(second)}
+            self.assertEqual(first_hashes,second_hashes)
+            # Existing FTPS order stages dependencies before directory and SW.
+            ordered=sorted(files,key=lambda p:deploy_order(p,target))
+            self.assertLess(ordered.index(model),ordered.index(target/'directory.html'))
+            self.assertEqual(ordered[-1],target/'sw.js')
     def test_origin_restrictions(self):
         for origin in ['http://avenqir.bg5.net','https://example.com','https://avenqir.bg5.net/other','https://avenqir.bg5.net?token=x','https://avenqir.bg5.net.evil.example']:
             with self.subTest(origin=origin),self.assertRaises(ValueError):probe(origin)
