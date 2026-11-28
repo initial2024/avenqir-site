@@ -178,9 +178,11 @@ const extraStructuredRules=[
 
 function structuredIntent(raw){
  const q=multilingual.normalize(raw);
- if(!q||q.length>160||constraints.test(q)||incompatible.test(q)||technicalAbstention(q)||compound(q)||multilingual.negated(q)||multilingual.hasConstraint(q)||multilingual.resolve(q).blocked)return null;
+ if(!q||q.length>160||constraints.test(q)||incompatible.test(q)||technicalAbstention(q)||compound(q)||multilingual.negated(q)||multilingual.hasConstraint(q))return null;
  const ids=new Set([...structuredPatterns.flatMap((re,i)=>re.test(q)?[structuredIds[i]]:[]),...extraStructuredRules.flatMap(([id,re])=>re.test(q)?[id]:[])]);
- return ids.size===1?[...ids][0]:null;
+ if(ids.size!==1)return null;
+ const id=[...ids][0];
+ return multilingual.structuredCompatible(q,id)?id:null;
 }
 
 function intent(q,model){
@@ -188,14 +190,15 @@ function intent(q,model){
  // Do not broaden a conjunction between independently recognizable tasks to OR.
  const normalized=multilingual.normalize(q);
  for(const [, , ,join] of multilingual.negativeFrames){const sep=join.normalize('NFKC').toLowerCase();const at=normalized.indexOf(sep);if(at<=0)continue;const left=normalized.slice(0,at).trim(),right=normalized.slice(at+sep.length).trim();const a=multilingual.resolve(left).id||topics.resolve(left),b=multilingual.resolve(right).id||topics.resolve(right);if(a&&b&&a!==b)return null;}
- const direct=multilingual.resolve(q).id||topics.resolve(q);
+ const direct=multilingual.resolve(q).id||topics.resolve(q)||structuredIntent(q);
  // Recognize only a reviewed single request wrapper around a unique correction.
  // All constraints are checked on the original query, never just its body.
- const bodies=direct?[]:topics.unwrapCandidates(q).filter(b=>multilingual.resolve(b).id||topics.resolve(b)||multilingual.recoverSwap(b));
- const ids=new Set(bodies.map(b=>multilingual.resolve(b).id||topics.resolve(b)||multilingual.recoverSwap(b)?.id));
+ const bodies=direct?[]:topics.unwrapCandidates(q).filter(b=>multilingual.resolve(b).id||topics.resolve(b)||multilingual.recoverSwap(b)||structuredIntent(b));
+ const ids=new Set(bodies.map(b=>multilingual.resolve(b).id||topics.resolve(b)||multilingual.recoverSwap(b)?.id||structuredIntent(b)));
  if(ids.size>1)return null;
  const body=bodies[0]||q;
- const alias=multilingual.resolve(body);if(alias.blocked||multilingual.hasConstraint(multilingual.normalize(q)))return null;
+ const alias=multilingual.resolve(body),grammar=alias.id?null:structuredIntent(body);
+ if((alias.blocked&&!grammar)||multilingual.hasConstraint(multilingual.normalize(q)))return null;
  if(body.length<3&&!alias.id&&!topics.resolve(body))return null;
  const broad=!alias.id&&topics.resolve(body);
  if(broad){const row=model.classes.find(x=>x[0]===broad);return row&&evidence[broad]?{id:broad,guard:evidence[broad],weights:row[1],broad:true}:null;}
@@ -203,7 +206,7 @@ function intent(q,model){
  const rawMatches=alias.id?[]:rules.filter(([,p])=>p.test(q));
  // A typo correction cannot override a conflicting recognized operation.
  if(swap&&rawMatches.some(([id])=>id!==swap.id))return null;
- const structured=!alias.id&&!swap?structuredIntent(body):null;
+ const structured=!alias.id&&!swap?grammar:null;
  if(structured&&rawMatches.some(([id])=>id!==structured))return null;
  const matches=alias.id||swap||structured?rules.filter(([id])=>id===(alias.id||swap?.id||structured)):rawMatches;
  if(matches.length>1)return null;
