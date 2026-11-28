@@ -1232,3 +1232,37 @@ for(const x of extendedChallenge){
  else if(x.expected)extMisses.push(x);
 }
 console.log('EXTENDED_COMPOSITION_SHADOW_REPORT',JSON.stringify({classes:7,positives:24,negatives:24,accepted:extAccepted,correct:extCorrect,wrongPositive:extWrong,falseAccept:extFalse,precision:extAccepted?extCorrect/extAccepted:null,positiveCoverage:extCorrect/24,errors:extErrors,misses:extMisses,releaseEligible:false}));
+
+
+// Suggestion V2: only evaluate unresolved requests. The full-query runtime
+// takes precedence; never duplicate an already accepted intent. A suggestion
+// is a class for explicit user selection, not an automatic URL recommendation.
+const candidateRuntime=require('../research/atlas-retrieval-runtime.js');
+function suggestionOnlyV2(cases){
+ const baseline=propertyGuard(evidenceRows(precompute(cases,'unknown','global'),evidenceWinner?.minimum??Infinity,evidenceWinner?.margin??Infinity));
+ let positives=0,negatives=0,alreadyResolved=0,eligiblePositives=0,eligibleNegatives=0,correct=0,wrong=0,negativeLists=0,blocked=0;
+ const misses=[],errors=[];
+ for(const r of baseline){
+  if(r.expected)positives++;else negatives++;
+  if(shadowBlock(r.q)||technicalAbstention(r.q)){blocked++;continue;}
+  if(fine.resolve(r.q).id||topics.resolve(r.q)||candidateRuntime.structuredIntent(r.q)||fine.recoverSwap(r.q)?.id){alreadyResolved++;continue;}
+  if(!r.blocked&&r.score>=evidencePolicy.score&&r.margin>=evidencePolicy.margin&&(!evidencePolicy.agreement||r.agreement)){alreadyResolved++;continue;}
+  if(r.expected)eligiblePositives++;else eligibleNegatives++;
+  const q=fine.normalize(r.q);
+  const proof=new Set([composedClass(q),extendedClass(q)].filter(Boolean));
+  // No proof, conflicting proof, or extra unsupported properties: no chip.
+  const id=proof.size===1?[...proof][0]:null;
+  if(!id){if(r.expected)misses.push({locale:r.locale,q:r.q,expected:r.expected});continue;}
+  if(!r.expected){negativeLists++;errors.push({locale:r.locale,q:r.q,suggested:id});}
+  else if(id===r.expected)correct++;
+  else{wrong++;errors.push({locale:r.locale,q:r.q,expected:r.expected,suggested:id});}
+ }
+ return {positives,negatives,alreadyResolved,eligiblePositives,eligibleNegatives,correct,wrong,negativeLists,blocked,precision:correct+wrong+negativeLists?correct/(correct+wrong+negativeLists):null,additionalCoverage:positives?correct/positives:0,errors,misses};
+}
+console.log('SUGGESTION_V2_ABSTENTION_REPORT',JSON.stringify({
+ prior:suggestionOnlyV2(shadowTest),
+ propertyContrast:suggestionOnlyV2(propertyPairs),
+ composition:suggestionOnlyV2(compositionNext),
+ extended:suggestionOnlyV2(extendedChallenge),
+ userSelectionRequired:true,automaticPromotion:false,releaseEligible:false
+}));
