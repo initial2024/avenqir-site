@@ -71,8 +71,11 @@ function compound(q){
 // Explicit unsupported PDF properties and QR reading operations must not
 // fall through to an unrelated tool class. This guard makes no assertion
 // about the ordinary lexical search or the actual capabilities of external sites.
+// Match literals in the same Unicode form as normalized queries. In particular
+// Thai SARA AM (U+0E33) expands to U+0E4D U+0E32 under NFKC.
+const normalizedPatterns=patterns=>patterns.map(p=>new RegExp(p.source.normalize('NFKC'),p.flags));
 const pdfObject=/\bpdfs?\b|पीडीएफ|পিডিএফ/iu;
-const pdfUnsupported=[
+const pdfUnsupported=normalizedPatterns([
  /password|passcode|digital signature|watermark|encrypted|encryption|decryption|without (?:uploading|internet)|never upload/iu,
  /密码|密碼|口令|加密|解密|水印|浮水印|数字签名|數位簽章|不上傳|不上传|離線|离线/u,
  /パスワード|暗号化|電子署名|透かし|アップロード(?:しない|せず)|비밀번호|암호|전자 서명|업로드 없이/u,
@@ -80,15 +83,17 @@ const pdfUnsupported=[
  /wachtwoord|zonder upload|lösenord|utan att ladda upp|passord|uten at.{0,40}sendes|uten opplasting|adgangskode|uden upload|salasana|ilman lataamista|hasło|bez przesyłania|heslo|bez nahrávání|jelszó|parol[ăa]|fără încărcare/iu,
  /парол|цифровая подпись|без загрузки|лозинк|geslo|κωδικό πρόσβασης|χωρίς μεταφόρτωση|şifre|parola|yüklemeden/iu,
  /كلمة المرور|توقيع رقمي|دون رفع|بدون رفع|סיסמה|חתימה דיגיטלית|رمز عبور|بدون بارگذاری|पासवर्ड|डिजिटल हस्ताक्षर|बिना अपलोड|পাসওয়ার্ড|পাসওয়ার্ড|پاس ورڈ|پاسورڈ/u,
- /รหัสผ่าน|ลายเซ็นดิจิทัล|ไม่อัปโหลด|mật khẩu|không tải lên|kata sandi|kata laluan|tanpa memuat naik|wagwoord|sonder oplaai/iu
-];
+ /รหัสผ่าน|ลายเซ็นดิจิทัล|ไม่อัปโหลด|mật khẩu|không tải lên|kata sandi|kata laluan|tanpa memuat naik|wagwoord|sonder oplaai/iu,
+ /\b(?:repair|repairing|corrupted|damaged|reparar|reparieren|beschädigt\w*|endommagé\w*|réparer)\b|修复|修復|損壊|破損|손상|поврежд|إصلاح|تالف/iu,
+ /sin enviar datos|sem enviar dados|ne jamais envoyer|never send (?:my |the )?data/iu
+]);
 const qrObject=/\bqr(?:[\s-]*code)?\b|\bqrcode\b|二维码|二維碼|qrコード|คิวอาร์โค้ด|क्यूआर कोड/iu;
-const qrRead=[
+const qrRead=normalizedPatterns([
  /\b(?:scan|scanning|scanner|decode|decoding|decoder|read|reading|reader)\b/iu,
  /扫描|掃描|识别|識別|解码|解碼|读取|讀取|讀出|读出|読み取|読取|スキャン|デコード|스캔|읽기|읽어|해독/u,
  /lire|lecture|décoder|scanner|auslesen|scannen|dekodieren|leer|decodificar|escanear|ler|digitalizar|leggere|decodificare|odczytać|skanować|číst|přečíst|декодир|считыва|прочита|сканир|okumak|tarama/iu,
  /قراءة|فك ترميز|مسح|לקרוא|סריקה|خواندن|اسکن|पढ़ना|स्कैन|ডিকোড|পড়তে|پڑھنا|اسکین|อ่านข้อมูล|สแกน|đọc|quét|membaca|memindai|imbas/iu
-];
+]);
 function unsupportedProperties(raw){
  const q=multilingual.normalize(raw);
  return (pdfObject.test(q)&&pdfUnsupported.some(p=>p.test(q)))||
@@ -98,12 +103,12 @@ function unsupportedProperties(raw){
 
 // Tool-finding and learning about a technical object are different intents.
 // Scope this abstention to PDF/QR so unrelated catalog searches are unchanged.
-const technicalExplanation=[
+const technicalExplanation=normalizedPatterns([
  /\b(?:why|what is|what are|how does|how do|explain|definition|theory|source code|tutorial|documentation|compare|comparison)\b/iu,
  /为什么|為什麼|是什么|是什麼|原理|教程|比较|比較|仕組み|とは何|なぜ|원리|비교|설명/u,
- /\b(?:pourquoi|expliquer|vergleich|warum|explicar|por qué|explicação|perché|spiegare|waarom|uitleg|varför|hvorfor|hvordan|proč|dlaczego)\b/iu,
+ /\b(?:pourquoi|expliquer|vergleich|warum|erklären|funktionsweise|explicar|por qué|explicação|perché|spiegare|waarom|uitleg|varför|hvorfor|hvordan|proč|dlaczego)\b/iu,
  /почему|принцип|объясн|сравнен|чому|كيف يعمل|لماذا|ما هو|شرح|क्या है|क्यों|कैसे काम|ทำงานอย่างไร|อธิบาย/u
-];
+]);
 function technicalAbstention(raw){
  const q=multilingual.normalize(raw);
  if(unsupportedProperties(q))return true;
