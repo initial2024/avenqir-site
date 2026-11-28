@@ -161,6 +161,11 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
   yes(panel().hidden,'practical search opened model panel');
   yes(!/Worker|Compatibility/.test($('atlasSemanticQueryState').textContent),'internal mode shown in query status');
  }
+ // Wider capability coverage, independent of locale and current model panel.
+ for(const [q,expected] of [['把PDF转成Word',/iLovePDF|Smallpdf|PDF24/i],['把视频文件变小',/HandBrake/i],['截取音频片段',/AudioMass|Audacity|Ocenaudio/i],['比较两段文字',/Diffchecker/i],['番茄钟学习',/Pomofocus/i],['听英语单词发音',/Forvo|Cambridge/i],['查DNS泄漏',/DNS Leak Test/i],['测试IPv6连通性',/Test IPv6/i],['查看飞机实时位置',/Flightradar24/i],['看卫星地图',/Google Earth|NASA Worldview/i]]){
+  query(q);await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>expected.test(a.textContent)));
+  yes(panel().hidden,'expanded task reopened panel');
+ }
  // Short colloquial Korean expressions and ambiguous user-reported query.
  for(const q of ['큐알코드 만들기','qr코드 생성','qr코드를 만들고 싶어요']){
   query(q);await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent)));
@@ -295,7 +300,7 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  query('QR 코드 생성');
  await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent))&&w.document.querySelector('#atlasResults .atlas-semantic-match'));
  w.Worker=beforeCompat;
- document.documentElement.dataset.metrics=JSON.stringify({...JSON.parse(document.documentElement.dataset.metrics),compatibleDirectoryActivation:true,manualPanelOnly:true,activeSearchCollapsesPanel:true,cachedQueryReloadClosed:true,videoOperationSearch:true,practicalPhotoStudySearch:true,internalModeHidden:true});
+ document.documentElement.dataset.metrics=JSON.stringify({...JSON.parse(document.documentElement.dataset.metrics),compatibleDirectoryActivation:true,manualPanelOnly:true,activeSearchCollapsesPanel:true,cachedQueryReloadClosed:true,videoOperationSearch:true,practicalPhotoStudySearch:true,internalModeHidden:true,extendedTaskSearch:true});
  await fetch('/fixture-block');
  w.confirm=()=>true;
  if(panel().hidden)$('atlasSemanticOpen').click();$('atlasSemanticRemove').click();

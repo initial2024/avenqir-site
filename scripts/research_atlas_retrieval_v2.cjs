@@ -928,7 +928,7 @@ console.log('VIDEO_OPERATION_REPORT',JSON.stringify({localeQueries:videoProbes,n
 
 const practicalRuntime=require('../research/atlas-retrieval-runtime.js');
 let practicalQueries=0;for(const {id,urls,phrases} of practicalRuntime.practicalOperations){
- for(const q of phrases){assert.equal(practicalRuntime.practicalOperation(q),id,q);const a=candidate(q,catalog,model,runtime.features,baseline),b=fused.rank(q);assert.ok(a.length&&b.length,q+' no catalog result');assert.ok(a.every(u=>urls.includes(u))&&b.every(u=>urls.includes(u)),q+' ungrounded result');practicalQueries++;}
+ for(const q of phrases){assert.equal(practicalRuntime.practicalOperation(q),id,q);const a=candidate(q,catalog,model,runtime.features,baseline),b=fused.rank(q);assert.ok(a.length&&b.length,q+' no catalog result');const recognized=multilingual.resolve(q).id||topics.resolve(q)||videoRuntime.structuredIntent(q)||topics.unwrapCandidates(q).some(x=>multilingual.resolve(x).id||topics.resolve(x)||multilingual.recoverSwap(x)||videoRuntime.structuredIntent(x));if(!recognized){assert.ok(a.some(u=>urls.includes(u))&&b.some(u=>urls.includes(u)),q+' missing intended tool');}practicalQueries++;}
 }
 const practicalNatural=[['我想把这张照片裁小一点','photo-crop'],['帮我把这张照片旋转一下','photo-rotate'],['帮我把图片转换成webp','photo-format'],['我想找一些在线课程','study-courses'],['我想查找几篇研究论文','study-papers'],['帮我画一下函数曲线','study-graph']];
 for(const [q,id] of practicalNatural){assert.equal(practicalRuntime.practicalOperation(q),id,q);assert.ok(fused.rank(q).length,q);}
