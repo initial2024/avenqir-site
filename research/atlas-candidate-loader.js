@@ -24,6 +24,8 @@
    if(!r.ok)throw Error(r.status===429?'rate_limited':'http');
    if(r.url&&new URL(r.url).origin!==env.location.origin)throw Error('origin');
    if(!MIME.has(String(r.headers.get('content-type')||'').split(';')[0].trim().toLowerCase()))throw Error('mime');
+   const wireLength=r.headers.get('content-length'),encoding=(r.headers.get('content-encoding')||'identity').toLowerCase();
+   const declaredComplete=encoding==='identity'&&wireLength===String(s.bytes);
    const out=new Uint8Array(s.bytes);let n=0;
    if(r.body?.getReader){
     const reader=r.body.getReader();try{while(true){let chunk;try{chunk=await reader.read();}catch{throw Error(signal.aborted?'cancelled':'network');}const {done,value}=chunk;if(signal.aborted)throw Error('cancelled');if(done)break;if(n+value.length>s.bytes)throw Error('integrity');out.set(value,n);n+=value.length;report(n);}}finally{try{await reader.cancel();}catch{}}
@@ -32,7 +34,9 @@
     if(r.headers.get('content-length')!==String(s.bytes))throw Error('stream');
     let data;try{data=new Uint8Array(await r.arrayBuffer());}catch{throw Error(signal.aborted?'cancelled':'network');}if(data.length!==s.bytes)throw Error('integrity');out.set(data);n=data.length;report(n);
    }
-   if(n!==s.bytes)throw Error('integrity');return out;
+   // Some engines reject a premature socket EOF; others finish the stream.
+   // When the identity response promised the full length, both mean an interrupted transfer.
+   if(n!==s.bytes)throw Error(n<s.bytes&&declaredComplete?'network':'integrity');return out;
   }
   async function load({consent=false,restore=false,activate,onProgress=()=>{}}={}){
    if(running)throw Error('busy');
