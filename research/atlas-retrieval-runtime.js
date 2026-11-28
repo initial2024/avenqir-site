@@ -137,10 +137,49 @@ const structuredPatterns=normalizedPatterns([
  /^(?:我想|帮我|请帮我)?(?:检查|测试|验证)(?:这段|我的)?正则表达式(?:是否|能否)(?:匹配|匹配到)(?:字符串|文本|测试文本)$/u
 ]);
 const structuredIds=['pdf-merge','pdf-split','image-compress','image-background','dns-propagation','dns-lookup','regex-test','pdf-merge','pdf-split','image-compress','image-background','dns-propagation','dns-lookup','regex-test'];
+
+// Additional reviewed full-query grammars; the language need not match UI locale.
+// Each rule owns its intent ID to avoid positional coupling to other patterns.
+const extraStructuredRules=[
+ ['json-edit',/^(?:i (?:want|need) to )?(?:format|indent|pretty print) (?:my |this |the )?json(?: document| data| file)?(?: with indentation)?$/iu],
+ ['json-edit',/^(?:我想|帮我|请帮我)?把(?:这段|我的|这个)?json(?:数据|文件)?(?:格式化并缩进|整理成缩进格式|重新格式化)$/iu],
+ ['image-resize',/^(?:i (?:want|need) to )?(?:change|adjust) (?:the )?(?:pixel dimensions|width and height) of (?:my |this |the )?(?:photo|image|picture)$/iu],
+ ['image-resize',/^(?:我想|帮我|请帮我)?调整(?:这张|我的)?(?:照片|图片|图像)(?:的)?(?:像素尺寸|宽度和高度)$/u],
+ ['pdf-merge',/^(?:複数の|二つの|三つの)?pdf(?:ファイル)?を(?:一つ|ひとつ)の(?:ファイル|文書)に(?:まとめたい|結合したい)$/iu],
+ ['pdf-split',/^pdf(?:ファイル)?を(?:ページごと|ページ単位)に(?:分割したい|分けたい)$/iu],
+ ['image-compress',/^(?:写真|画像)(?:ファイル)?の(?:容量|ファイルサイズ)を(?:減らしたい|小さくしたい)(?:です)?$/u],
+ ['image-background',/^(?:写真|画像)の背景を透明に(?:したい|するツールを探す)$/u],
+ ['dns-lookup',/^(?:ドメイン|自分のドメイン)の(?:mx|txt|aaaa|cname|a)レコードを(?:調べたい|確認したい)$/iu],
+ ['json-edit',/^json(?:データ|ファイル)?を(?:整形|インデント)したい$/iu],
+ ['pdf-merge',/^pdf (?:파일|문서) (?:여러 개|두 개|세 개)를 하나로 (?:합치고|만들고) 싶어요$/iu],
+ ['image-compress',/^(?:사진|이미지)(?: 파일)?의 용량을 줄여서 (?:보내고|공유하고) 싶어요$/u],
+ ['image-background',/^(?:사진|이미지)의 배경을 투명하게 (?:바꾸고|만들고) 싶어요$/u],
+ ['dns-lookup',/^(?:내 |이 )?도메인의 (?:mx|txt|aaaa|cname|a) 레코드를 (?:확인하고|조회하고) 싶어요$/iu],
+ ['json-edit',/^json (?:데이터|파일)를 (?:정렬하고|포맷하고) 싶어요$/iu],
+ ['pdf-merge',/^(?:unir|combinar|juntar) (?:mis |estos |varios )?(?:dos |tres |cuatro )?pdfs?(?: archivos)? en (?:un único|un solo) (?:archivo|documento|pdf)$/iu],
+ ['image-compress',/^(?:reducir|disminuir) el tamaño del archivo de (?:mi|esta|una) (?:foto|imagen|fotografía)$/iu],
+ ['image-background',/^(?:hacer|dejar) (?:el fondo de (?:mi|esta|una) (?:foto|imagen|fotografía)) transparente$/iu],
+ ['dns-lookup',/^(?:consultar|buscar|comprobar) los registros (?:mx|txt|aaaa|cname|a) de (?:mi|este|un) dominio$/iu],
+ ['json-edit',/^(?:formatear|organizar) (?:mi|este|un) (?:archivo|documento) json$/iu],
+ ['pdf-merge',/^(?:assembler|fusionner|combiner) (?:mes|ces|plusieurs) (?:(?:deux|trois|quatre) )?(?:fichiers )?pdfs? en un seul (?:fichier|document|pdf)$/iu],
+ ['image-compress',/^(?:réduire|diminuer) la taille du fichier de (?:ma|cette|une) (?:photo|image)$/iu],
+ ['image-background',/^rendre le fond de (?:ma|cette|une) (?:photo|image) transparent$/iu],
+ ['dns-lookup',/^(?:consulter|vérifier) les enregistrements (?:mx|txt|aaaa|cname|a) de (?:mon|ce|un) domaine$/iu],
+ ['json-edit',/^(?:formater|indenter) (?:mon|ce|un) fichier json$/iu],
+ ['pdf-merge',/^(?:zwei|drei|vier|mehrere) pdf(?: dateien|-dateien| dokumente) zu (?:einer datei|einem dokument) (?:zusammenfügen|verbinden)$/iu],
+ ['image-compress',/^die dateigröße (?:meines|dieses) (?:fotos|bildes) (?:verkleinern|reduzieren)$/iu],
+ ['image-background',/^den hintergrund (?:meines|dieses) (?:fotos|bildes) transparent machen$/iu],
+ ['dns-lookup',/^die (?:mx|txt|aaaa|cname|a)(?:-| )einträge (?:meiner|dieser) domain (?:abfragen|prüfen)$/iu],
+ ['json-edit',/^(?:meine|diese) json(?:-| )datei (?:formatieren|einrücken)$/iu],
+ ['image-compress',/^ลดขนาดไฟล์(?:รูปภาพ|ภาพถ่าย)(?:เพื่อส่งอีเมล|เพื่อแชร์)?$/u],
+ ['image-background',/^ทำให้พื้นหลัง(?:รูปภาพ|ภาพถ่าย)โปร่งใส$/u],
+ ['dns-lookup',/^ตรวจสอบระเบียน (?:mx|txt|aaaa|cname|a) ของโดเมน(?:ของฉัน)?$/iu]
+].map(([id,re])=>[id,new RegExp(re.source.normalize('NFKC'),re.flags)]);
+
 function structuredIntent(raw){
  const q=multilingual.normalize(raw);
  if(!q||q.length>160||constraints.test(q)||incompatible.test(q)||technicalAbstention(q)||compound(q)||multilingual.negated(q)||multilingual.hasConstraint(q)||multilingual.resolve(q).blocked)return null;
- const ids=new Set(structuredPatterns.flatMap((re,i)=>re.test(q)?[structuredIds[i]]:[]));
+ const ids=new Set([...structuredPatterns.flatMap((re,i)=>re.test(q)?[structuredIds[i]]:[]),...extraStructuredRules.flatMap(([id,re])=>re.test(q)?[id]:[])]);
  return ids.size===1?[...ids][0]:null;
 }
 
