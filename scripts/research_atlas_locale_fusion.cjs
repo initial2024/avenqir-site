@@ -936,3 +936,66 @@ function suggestionStudy(cases){
  return {positives,negatives,top1,top3,negativeLists,blocked,misses};
 }
 console.log('SUGGESTION_ONLY_SHADOW_REPORT',JSON.stringify({prior:suggestionStudy(shadowTest),fresh:suggestionStudy(freshCases),contrast:suggestionStudy(propertyPairs),automaticPromotion:false,releaseEligible:false}));
+
+
+// Research-only one-token typo recovery. Do not remove words, change technical
+// identifiers, or accept a candidate when two distinct reviewed phrases compete.
+const typoRows=[];
+for(const pack of [fine,topics])for(const row of pack.rows)for(let i=0;i<pack.tasks.length;i++)typoRows.push({locale:row[0],q:fine.normalize(row[i+1]),id:pack.tasks[i]});
+for(const row of fine.variantRows)for(let i=0;i<fine.variantTasks.length;i++)typoRows.push({locale:row[0],q:fine.normalize(row[i+1]),id:fine.variantTasks[i]});
+const wordOK=w=>/^[a-z]{6,24}$/.test(w);
+function wordDistanceOne(a,b){
+ if(a===b||Math.abs(a.length-b.length)>1)return false;
+ if(a.length===b.length){
+  const diffs=[];for(let i=0;i<a.length;i++)if(a[i]!==b[i])diffs.push(i);
+  return diffs.length===1||(diffs.length===2&&diffs[1]===diffs[0]+1&&a[diffs[0]]===b[diffs[1]]&&a[diffs[1]]===b[diffs[0]]);
+ }
+ if(a.length>b.length)[a,b]=[b,a];
+ let i=0,j=0,edits=0;while(i<a.length&&j<b.length){if(a[i]===b[j]){i++;j++;}else{j++;if(++edits>1)return false;}}
+ return true;
+}
+const typoIndex=new Map();
+for(const row of typoRows){
+ const words=row.q.split(' ');
+ if(words.length<2||words.length>8)continue;
+ for(let i=0;i<words.length;i++)if(wordOK(words[i])){
+  const key=words.map((w,j)=>i===j?'*':w).join(' ');
+  if(!typoIndex.has(key))typoIndex.set(key,[]);
+  typoIndex.get(key).push({...row,word:words[i]});
+ }
+}
+function recoverTypo(raw){
+ const q=fine.normalize(raw);
+ if(!q||q.length>128||shadowBlock(q)||fine.resolve(q).id||topics.resolve(q))return null;
+ if(unsupportedPdfProperties.some(re=>re.test(q))&&/\bpdfs?\b/i.test(q))return null;
+ const words=q.split(' '),matches=new Map();
+ if(words.length<2||words.length>8)return null;
+ for(let i=0;i<words.length;i++){
+  if(!/^[a-z]{5,25}$/.test(words[i]))continue;
+  const key=words.map((w,j)=>i===j?'*':w).join(' ');
+  for(const row of typoIndex.get(key)||[])if(wordDistanceOne(words[i],row.word)&&!shadowBlock(row.q))matches.set(row.q,row.id);
+ }
+ if(matches.size!==1)return null;
+ const [phrase,id]=matches.entries().next().value;
+ return {phrase,id};
+}
+assert.ok(wordDistanceOne('genrate','generate'));
+assert.ok(wordDistanceOne('flowchrat','flowchart'));
+assert.ok(!wordDistanceOne('scanner','generate'));
+const typoProbes=[],typoSeen=new Set();
+for(const row of typoRows){
+ const words=row.q.split(' '),i=words.findIndex(wordOK);
+ if(i<0||words.length<2)continue;
+ const w=words[i],pos=Math.floor(w.length/2);
+ if(w[pos]===w[pos+1])continue;
+ const mutated=words.map((x,j)=>j===i?w.slice(0,pos)+w[pos+1]+w[pos]+w.slice(pos+2):x).join(' ');
+ if(typoSeen.has(mutated)||fine.resolve(mutated).id||topics.resolve(mutated))continue;
+ typoSeen.add(mutated);typoProbes.push({q:mutated,id:row.id,locale:row.locale});
+}
+let recovered=0,wrongTypo=0,negativeTypo=0;
+for(const x of typoProbes){const r=recoverTypo(x.q);if(r?.id===x.id)recovered++;else if(r)wrongTypo++;}
+const typoNegatives=typoProbes.slice(0,120).flatMap(x=>[x.q+' without upload','do not recommend '+x.q,x.q+' and start a countdown timer']);
+for(const q of typoNegatives)if(recoverTypo(q))negativeTypo++;
+const typoNovel=[...shadowTest,...freshCases,...propertyPairs].filter(x=>!x.expected);
+const typoNovelFalse=typoNovel.filter(x=>recoverTypo(x.q)).map(x=>({q:x.q,locale:x.locale}));
+console.log('SINGLE_TOKEN_TYPO_SHADOW_REPORT',JSON.stringify({referenceCount:typoRows.length,signatureCount:typoIndex.size,generated:typoProbes.length,recovered,wrongTypo,negativeProbes:typoNegatives.length,negativeTypo,novelNegatives:typoNovel.length,novelFalse:typoNovelFalse,releaseEligible:false}));
