@@ -229,6 +229,33 @@ async function verified(p){
   variedTimes.push(actual.wall);
   const rejected=await rank(q+' without upload',false);rejectTimes.push(rejected.wall);
  }
+
+ // Measure the actual Worker path for full-query composition independently of
+ // the reviewed exact alias tables.
+ const structuredQueries=[
+  ['join my four PDFs into one document','pdf-merge'],
+  ['divide this PDF report into separate pages','pdf-split'],
+  ['reduce the file size of my JPEG for email','image-compress'],
+  ['set this picture background transparent','image-background'],
+  ['see whether my DNS update has propagated globally','dns-propagation'],
+  ['look up the AAAA records for my domain','dns-lookup'],
+  ['test whether this regex matches a string','regex-test'],
+  ['把这份PDF按页分成多个文件','pdf-split'],
+  ['把这张照片文件体积压小一些','image-compress'],
+  ['确认我的DNS更新在全球是否生效','dns-propagation']
+ ];
+ const structureTimes=[];
+ for(const [q,id] of structuredQueries){
+  const index=AVENQIR_RESEARCH_MULTILINGUAL.tasks.indexOf(id);
+  yes(index>=0,'missing structured task '+id);
+  const actual=await rank(q),expected=await rank(queries[index]);
+  yes(JSON.stringify(actual.urls)===JSON.stringify(expected.urls),'structured parity '+q);
+  structureTimes.push(actual.wall);
+  await rank(q+' without upload',false);
+ }
+ metrics.structuredQueries=structureTimes.length;
+ metrics.structuredWallP95=quantile(structureTimes.sort((a,b)=>a-b),.95);
+ yes(metrics.structuredWallP95<1000,'structured latency budget exceeded');
  const propertyCases=['PDF Passwort wiederherstellen','PDFの電子署名を確認','Chci obnovit zapomenuté heslo souboru PDF','QR 코드 스캔','QR-Code auslesen','อ่านข้อมูลในคิวอาร์โค้ด','PDF ทำงานอย่างไร','ＰＤＦ ทำงานอย่างไร','PDF ทํางานอย่างไร','Einen beschädigten PDF reparieren','Die Funktionsweise eines QR-Codes erklären','Comprimir un PDF sin enviar datos a nadie'];
  for(const q of propertyCases){const r=await rank(q,false);rejectTimes.push(r.wall);}
  metrics.propertyQueries=propertyCases.length;
