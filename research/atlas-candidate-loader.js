@@ -3,7 +3,8 @@
 (function(root){
  const CACHE='avenqir-semantic-model-v2-candidate';
  const MIME=new Set(['application/json','application/octet-stream','text/plain','text/json']);
- function create(specs,env=root){
+ function create(specs,env=root,storageTimeout=5000){
+  if(!Number.isInteger(storageTimeout)||storageTimeout<50||storageTimeout>10000)throw Error('storage_timeout_config');
   if(!Array.isArray(specs)||!specs.length||specs.length>4)throw Error('manifest');
   const manifest=specs.map(s=>{const u=new URL(s.file,env.location.href);
    if(u.origin!==env.location.origin||u.username||u.password||u.hash||!Number.isInteger(s.bytes)||s.bytes<1||s.bytes>512*1024||!/^[a-f0-9]{64}$/.test(s.sha256))throw Error('manifest');
@@ -11,6 +12,20 @@
   if(new Set(manifest.map(s=>s.url)).size!==manifest.length)throw Error('manifest');
   let running=false,controller=null,revision=0,active=null;
   const total=manifest.reduce((n,s)=>n+s.bytes,0);
+  // CacheStorage has no AbortSignal. Bound the caller's wait independently.
+  function bounded(operation){
+   let timer;return Promise.race([Promise.resolve().then(operation),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('storage_timeout')),storageTimeout);})]).finally(()=>clearTimeout(timer));
+  }
+  async function discardCache(){if(env.caches)await bounded(()=>env.caches.delete(CACHE));}
+  async function cachedBytes(response,s){
+   if(response.body?.getReader){
+    const reader=response.body.getReader(),out=new Uint8Array(s.bytes);let n=0;
+    try{while(true){const {done,value}=await bounded(()=>reader.read());if(done)break;if(n+value.length>s.bytes)throw Error('integrity');out.set(value,n);n+=value.length;}if(n!==s.bytes)throw Error('integrity');return out;}
+    finally{try{Promise.resolve(reader.cancel()).catch(()=>{});}catch{}}
+   }
+   if(response.headers?.get('content-length')!==String(s.bytes))throw Error('integrity');
+   return new Uint8Array(await bounded(()=>response.arrayBuffer()));
+  }
   async function verify(bytes,s){
    if(bytes.byteLength!==s.bytes)throw Error('integrity');
    if(!env.crypto?.subtle)throw Error('crypto_unavailable');
@@ -46,11 +61,11 @@
    let timedOut=false;const deadline=setTimeout(()=>{timedOut=true;ctl.abort();},45000);
    let cache=null,downloaded=0,staged=[],persisted=false;const started=performance.now();
    try{
-    try{if(env.caches)cache=await env.caches.open(CACHE);}catch{}
+    try{if(env.caches)cache=await bounded(()=>env.caches.open(CACHE));}catch{}
     if(restore&&!cache)return {state:'missing'};
     for(const s of manifest){
      alive(id,ctl.signal);let bytes;
-     if(restore){const r=await cache.match(s.url);if(!r)return {state:'missing'};bytes=new Uint8Array(await r.arrayBuffer());}
+     if(restore){const r=await bounded(()=>cache.match(s.url));if(!r)return {state:'missing'};bytes=await cachedBytes(r,s);}
      else bytes=await fetchOne(s,ctl.signal,n=>onProgress({bytes:downloaded+n,total,rate:(downloaded+n)/Math.max(.05,(performance.now()-started)/1000)}));
      const value=await verify(bytes,s);staged.push({s,bytes,value});downloaded+=bytes.length;
     }
@@ -63,17 +78,17 @@
     clearTimeout(deadline);controller=null;
     active?.close();active=candidate;
     // Only the candidate cache participates in restore; no legacy model is needed.
-    if(!restore&&cache){try{for(const x of staged)await cache.put(x.s.url,new Response(x.bytes,{headers:{'Content-Type':'application/json'}}));persisted=true;}catch{try{await env.caches.delete(CACHE);}catch{}}}
+    if(!restore&&cache){try{for(const x of staged)await bounded(()=>cache.put(x.s.url,new Response(x.bytes,{headers:{'Content-Type':'application/json','Content-Length':String(x.bytes.length)}})));persisted=true;}catch{try{await discardCache();}catch{}}}
     else persisted=restore;
     return {state:'ready',persisted,bytes:downloaded};
    }catch(e){
-    if(restore&&cache){try{await env.caches.delete(CACHE);}catch{}}
-    const known=new Set(['integrity','crypto_unavailable','model_format','network','http','rate_limited','origin','mime','stream','cancelled','activate']);
+    if(restore&&cache){try{await discardCache();}catch{}}
+    const known=new Set(['integrity','crypto_unavailable','model_format','network','http','rate_limited','origin','mime','stream','cancelled','activate','storage_timeout']);
     throw Error(timedOut?'timeout':ctl.signal.aborted?'cancelled':known.has(e.message)?e.message:'load');
    }finally{clearTimeout(deadline);running=false;controller=null;}
   }
   function cancel(){controller?.abort();}
-  async function remove(){if(running)throw Error('busy');revision++;active?.close();active=null;if(env.caches)await env.caches.delete(CACHE);}
+  async function remove(){if(running)throw Error('busy');revision++;active?.close();active=null;await discardCache();}
   return Object.freeze({load,cancel,remove,active:()=>!!active,total});
  }
  const api=Object.freeze({create,CACHE});if(typeof module==='object'&&module.exports)module.exports=api;else root.AVENQIR_RESEARCH_LOADER=api;
