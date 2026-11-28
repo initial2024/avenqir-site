@@ -117,10 +117,11 @@ async function verified(p){
  }
  await expectCode(async()=>new Response('<html>verification required</html>',{headers:{'Content-Type':'text/html'}}),'mime');
  await expectCode(async()=>new Response('',{status:404}),'http');
+ await expectCode(async()=>new Response(bytes,{status:206,headers:{'Content-Type':'application/json','Content-Range':'bytes 0-9/10'}}),'http');
  await expectCode(async()=>new Response(bytes.slice(0,-1),{headers:{'Content-Type':'application/octet-stream'}}),'integrity');
  await expectCode(async()=>{throw TypeError('network');},'network');
- await expectCode(async()=>({ok:true,headers:new Headers({'Content-Type':'application/octet-stream'}),body:null,arrayBuffer:async()=>bytes.buffer}),'stream');
- const limited=AVENQIR_RESEARCH_LOADER.create(specs,envFor(async()=>({ok:true,headers:new Headers({'Content-Type':'application/octet-stream','Content-Length':String(bytes.length)}),body:null,arrayBuffer:async()=>bytes.buffer}),{open:async()=>{throw Error('storage denied');}}));
+ await expectCode(async()=>({ok:true,status:200,headers:new Headers({'Content-Type':'application/octet-stream'}),body:null,arrayBuffer:async()=>bytes.buffer}),'stream');
+ const limited=AVENQIR_RESEARCH_LOADER.create(specs,envFor(async()=>({ok:true,status:200,headers:new Headers({'Content-Type':'application/octet-stream','Content-Length':String(bytes.length)}),body:null,arrayBuffer:async()=>bytes.buffer}),{open:async()=>{throw Error('storage denied');}}));
  const sessionOnly=await limited.load({consent:true,activate});
  yes(sessionOnly.state==='ready'&&!sessionOnly.persisted,'session-only fallback');
  current.query('QR 코드 생성');await wait(()=>current.hits.length);
@@ -202,6 +203,9 @@ async function verified(p){
   variedTimes.push(actual.wall);
   const rejected=await rank(q+' without upload',false);rejectTimes.push(rejected.wall);
  }
+ const propertyCases=['PDF Passwort wiederherstellen','PDFの電子署名を確認','Chci obnovit zapomenuté heslo souboru PDF','QR 코드 스캔','QR-Code auslesen','อ่านข้อมูลในคิวอาร์โค้ด'];
+ for(const q of propertyCases){const r=await rank(q,false);rejectTimes.push(r.wall);}
+ metrics.propertyQueries=propertyCases.length;
  metrics.variedQueries=varied.length;metrics.variedWallP95=quantile(variedTimes.sort((a,b)=>a-b),.95);
  metrics.rejectedQueries=rejectTimes.length;metrics.rejectedWallP95=quantile(rejectTimes.sort((a,b)=>a-b),.95);
  yes(metrics.variedWallP95<1000&&metrics.rejectedWallP95<1000,'varied query latency budget exceeded');
