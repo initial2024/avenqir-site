@@ -1,0 +1,86 @@
+name: AVENQIR v154 public browser model diagnosis (read only)
+on:
+  push:
+    branches: [package-v154-2d25890c]
+    paths: ['.github/workflows/semantic-v154-public-browser-check.yml']
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Identify returned HTML without executing or bypassing challenge
+        run: |
+          python3 - <<'PY'
+          import urllib.request,gzip,json
+          url='https://avenqir.bg5.net/semantic-v2/atlas-semantic-bundle-v2-dc1c46e99d38a4476592b83f.json'
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self,*a,**kw):return None
+          try:
+              req=urllib.request.Request(url,headers={'Accept':'application/json','Accept-Encoding':'gzip, identity'})
+              with urllib.request.build_opener(NoRedirect()).open(req,timeout=15) as r:
+                  b=r.read(524289)
+                  if len(b)>524288:raise ValueError('response too large')
+                  if r.headers.get('Content-Encoding')=='gzip':
+                      import io
+                      with gzip.GzipFile(fileobj=io.BytesIO(b)) as s:b=s.read(524289)
+                  print('PUBLIC_RAW_DIAGNOSIS',json.dumps({'status':r.status,'mime':r.headers.get_content_type(),'knownHostChallenge':b'slowAES.decrypt' in b and b'/aes.js' in b,'html':b.lstrip().startswith(b'<'),'bytes':len(b)}))
+          except Exception as e:print('PUBLIC_RAW_DIAGNOSIS_ERROR',type(e).__name__)
+          PY
+      - name: Ordinary public Chromium navigation and same-origin download
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          import os from 'node:os';
+          import path from 'node:path';
+          import {spawn} from 'node:child_process';
+          const profile=fs.mkdtempSync(path.join(os.tmpdir(),'aq-public-check-'));
+          const child=spawn('google-chrome',['--headless','--no-sandbox','--disable-dev-shm-usage','--no-first-run','--no-default-browser-check','--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{stdio:'ignore'});
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          let ws;
+          try{
+            const f=path.join(profile,'DevToolsActivePort');
+            for(let i=0;i<100&&!fs.existsSync(f);i++)await sleep(100);
+            const port=fs.readFileSync(f,'utf8').split('\n')[0];
+            let page;
+            for(let i=0;i<50&&!page;i++){
+              try{page=(await (await fetch('http://127.0.0.1:'+port+'/json/list')).json()).find(x=>x.type==='page');}catch{}
+              if(!page)await sleep(200);
+            }
+            if(!page)throw Error('No browser page');
+            ws=new WebSocket(page.webSocketDebuggerUrl);
+            await new Promise((ok,bad)=>{ws.addEventListener('open',ok,{once:true});ws.addEventListener('error',bad,{once:true});});
+            let id=0;const pending=new Map();
+            ws.addEventListener('message',e=>{const m=JSON.parse(e.data);const p=pending.get(m.id);if(p){pending.delete(m.id);m.error?p[1](Error(m.error.message)):p[0](m.result);}});
+            const call=(method,params={})=>new Promise((ok,bad)=>{const key=++id;pending.set(key,[ok,bad]);ws.send(JSON.stringify({id:key,method,params}));});
+            await call('Page.enable');await call('Runtime.enable');
+            await call('Page.navigate',{url:'https://avenqir.bg5.net/directory.html'});
+            let ready=false,last={};
+            // No challenge solving, cookie injection, user-agent override or retries.
+            for(let i=0;i<50;i++){
+              await sleep(400);
+              try{last=(await call('Runtime.evaluate',{expression:"({origin:location.origin,directory:!!document.getElementById('atlasQuery'),challenge:document.documentElement?.innerHTML.includes('slowAES.decrypt')&&document.documentElement?.innerHTML.includes('/aes.js')})",returnByValue:true})).result.value||{};}catch{}
+              if(last.origin==='https://avenqir.bg5.net'&&last.directory){ready=true;break;}
+            }
+            if(!ready){console.log('PUBLIC_BROWSER_DIAGNOSIS',JSON.stringify({ready:false,reason:'directory_not_accessible',challenge:!!last.challenge}));process.exitCode=1;}
+            else{
+              const expression=`(async()=>{try{
+                const r=await fetch('/semantic-v2/atlas-semantic-bundle-v2-dc1c46e99d38a4476592b83f.json',{cache:'no-store',credentials:'same-origin',redirect:'error',signal:AbortSignal.timeout(15000)});
+                const mime=(r.headers.get('content-type')||'').split(';')[0].trim().toLowerCase();
+                const reader=r.body.getReader();let n=0;const chunks=[];
+                try{while(true){const x=await reader.read();if(x.done)break;n+=x.value.length;if(n>524288)throw Error('size');chunks.push(x.value);}}finally{reader.cancel().catch(()=>{});}
+                const b=new Uint8Array(n);let off=0;for(const c of chunks){b.set(c,off);off+=c.length;}
+                const sha=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',b)),x=>x.toString(16).padStart(2,'0')).join('');
+                const html=mime==='text/html'?new TextDecoder().decode(b):'';
+                return {ready:r.status===200&&!r.headers.has('content-range')&&['application/json','application/octet-stream','text/plain','text/json'].includes(mime)&&n===92260&&sha==='dc1c46e99d38a4476592b83f16a80f73e2222b1aa1ce0044d97f46118bcaa0b2',status:r.status,mime,bytes:n,sha,knownHostChallenge:html.includes('slowAES.decrypt')&&html.includes('/aes.js')};
+              }catch(e){return {ready:false,reason:e.name};}})()`;
+              const result=(await call('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true})).result.value;
+              console.log('PUBLIC_BROWSER_DIAGNOSIS',JSON.stringify(result));
+              if(!result?.ready)process.exitCode=1;
+            }
+          }catch(e){console.log('PUBLIC_BROWSER_DIAGNOSIS_ERROR',e.name);process.exitCode=1;}
+          finally{try{ws?.close();}catch{}child.kill('SIGTERM');}
+          JS
