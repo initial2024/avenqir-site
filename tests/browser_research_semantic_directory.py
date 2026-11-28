@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Actual directory UI with full v2 candidate injected only into localhost QA."""
-import http.server, pathlib, shutil, subprocess, tempfile, threading, time, sys, atexit, socket, hashlib
+import http.server, pathlib, shutil, subprocess, tempfile, threading, time, sys, atexit, socket, hashlib, re
 from urllib.parse import urlsplit
 SITE=pathlib.Path(__file__).resolve().parents[1]/'site'
 CHROME=shutil.which('google-chrome') or shutil.which('chromium')
@@ -28,6 +28,7 @@ assert 'atlas-semantic-directory-adapter.js' in DIRECTORY
 DIRECTORY_JS=(SITE/'directory.js').read_text(encoding='utf-8')
 assert 'T,()=>records);' in DIRECTORY_JS
 requests=[]
+runtime_requests=[]
 mode='bad'
 FIXTURE="""<!doctype html><title>Model QA</title><iframe id="frame" style="width:390px;height:844px;border:0" src="/directory.html"></iframe><script>
 const wait=async f=>{for(let i=0;i<400;i++){if(f())return;await new Promise(r=>setTimeout(r,30));}throw Error('timed out');};
@@ -45,6 +46,10 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
   const caches=await w.caches.keys();
   for(const key of caches){const c=await w.caches.open(key);yes(!await c.match(modelURL()),'model in cache before consent');}
   yes(w.performance.getEntriesByName(modelURL()).length===0,'worker preloaded optional weights');
+  if(modelURL().includes('/semantic-v2/')){
+   let rejected=false;try{await w.fetch('/semantic-v2/atlas-search-worker.js?v=154-0000000000000000');}catch{rejected=true;}
+   yes(rejected,'cross-revision runtime request not rejected');
+  }
  }
  query('githbu');
  yes(!panel().hidden,'first search must offer download');
@@ -179,7 +184,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def log_message(self,*args):pass
     def do_GET(self):
         global mode
-        p=urlsplit(self.path).path
+        parsed=urlsplit(self.path);p=parsed.path
+        if (p.startswith('/semantic-v2/') and p.endswith('.js')) or p=='/atlas-domain-embedding.js':runtime_requests.append((p,parsed.query))
         if p=='/qa.html':data=FIXTURE.encode();kind='text/html; charset=utf-8'
         elif p=='/fixture-valid':mode='valid';data=b'ok';kind='text/plain'
         elif p=='/fixture-html':mode='html';data=b'ok';kind='text/plain'
@@ -240,5 +246,13 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
     assert sum(x[0]=='rate-limit' for x in requests)==1 and sum(x[0]=='truncated' for x in requests)==1,requests
     assert sum(x[0]=='partial' for x in requests)==1 and sum(x[0]=='redirect' for x in requests)==1,requests
     assert not any(x[0]=='redirect-followed' for x in requests),requests
+    if PACKAGED:
+        revision=re.search(r'avenqir-v154-semantic-candidate-([0-9a-f]{16})',(SITE/'sw.js').read_text()).group(1)
+        expected_query='v=154-'+revision
+        for name in ['atlas-search-worker.js','atlas-model-codec.js','atlas-unicode-runtime.js','atlas-multilingual-intents.js','atlas-multilingual-topics.js','atlas-retrieval-runtime.js']:
+            assert ('/semantic-v2/'+name,expected_query) in runtime_requests,(name,runtime_requests)
+        assert ('/atlas-domain-embedding.js',expected_query) in runtime_requests,runtime_requests
+        assert not any(q=='v=154-0000000000000000' for _,q in runtime_requests),runtime_requests
+        print('RUNTIME_REVISION_PASS',revision,'worker and six imports')
     print('PACKAGED' if PACKAGED else 'RESEARCH', 'FIREFOX' if FIREFOX else 'CHROMIUM', 'PASS real 390x844 candidate directory, full bundle consent, cancel/retry, integrity, progress, Korean result, locale switch, real HTTP HTML/503/429/206/redirect/truncated-body failure and retry, worker activation/cache race, quota session fallback, corrupted cache restore, mixed language and typo retrieval, reload and deletion')
     server.shutdown()
