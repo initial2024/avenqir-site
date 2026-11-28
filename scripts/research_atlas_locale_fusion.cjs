@@ -759,7 +759,8 @@ for(const r of referenceRows)for(const key of r.features){
  featureClasses.get(key).add(r.id);
 }
 const featureWeight=new Map([...featureClasses].map(([k,ids])=>[k,Math.pow(Math.log(65/(1+ids.size)),2)]));
-const totalWeight=set=>[...set].reduce((n,k)=>n+(featureWeight.get(k)||0),0);
+// Unseen query features count in the norm, so unrelated extra text is not free.
+const totalWeight=set=>[...set].reduce((n,k)=>n+(featureWeight.get(k)??1),0);
 for(const r of referenceRows)r.weight=totalWeight(r.features);
 const residualCache=new Map();
 function residualRank(q){
@@ -799,3 +800,39 @@ const evidencePolicy=evidenceWinner?.policy||{score:Infinity,margin:Infinity,agr
 const evidenceReport=Object.fromEntries(localeModes.map(mode=>[mode,compact(selective(evidenceRows(precompute(shadowTest,mode,'global'),evidenceWinner?.minimum??Infinity,evidenceWinner?.margin??Infinity),evidencePolicy))]));
 const evidenceRelease=false;
 console.log('OPERATION_EVIDENCE_SHADOW_REPORT',JSON.stringify({referenceCount:referenceRows.length,features:featureWeight.size,chosen:evidenceWinner?{minimum:evidenceWinner.minimum,margin:evidenceWinner.margin,policy:evidenceWinner.policy,metrics:compact(evidenceWinner.m)}:null,holdout:evidenceReport,releaseEligible:evidenceRelease}));
+
+
+// Fresh authored challenge, not used for fitting or architecture selection.
+// The old holdout was inspected to diagnose failure modes, so do not call it blind.
+const freshCases=[
+ ['en','Shrink several scanned PDF pages so I can email the file','pdf-compress'],
+ ['en','Show me how to repair a PDF with a broken cross-reference table',null],
+ ['zh-Hans','把两个合同文档拼成一个PDF','pdf-merge'],
+ ['zh-Hans','想把打印出来的二维码读进手机',null],
+ ['zh-Hant','量一下網站打開所花的時間','web-performance'],
+ ['zh-Hant','PDF檔案的數位簽章是不是有效',null],
+ ['ja','ウェブサイトの読み込み時間を計測したい','web-performance'],
+ ['ja','PDFの破損したページを修復したい',null],
+ ['ko','사진 파일의 용량을 줄이는 도구를 찾아요','image-compress'],
+ ['ko','종이에 인쇄된 QR 코드의 내용을 확인하고 싶어요',null],
+ ['fr','Réduire le poids de mon fichier PDF','pdf-compress'],
+ ['fr','Comprendre la structure interne des paquets DNS',null],
+ ['de','Die Ladezeit einer Internetseite bestimmen','web-performance'],
+ ['de','Den Inhalt eines ausgedruckten QR-Codes auslesen',null],
+ ['es','Unir tres archivos PDF en un único documento','pdf-merge'],
+ ['es','Verificar la firma electrónica de un PDF',null],
+ ['ru','Измерить время загрузки интернет-страницы','web-performance'],
+ ['ru','Восстановить повреждённый документ PDF',null],
+ ['ar','تقليل حجم ملف PDF كبير','pdf-compress'],
+ ['ar','التحقق من توقيع إلكتروني داخل ملف PDF',null],
+ ['hi','कई तस्वीरों को एक कोलाज में जोड़ना चाहता हूं','image-collage'],
+ ['hi','कागज पर छपे QR कोड का मतलब पढ़ना है',null],
+ ['th','อยากลดขนาดไฟล์ภาพถ่าย','image-compress'],
+ ['th','อยากอ่านข้อมูลในคิวอาร์โค้ดที่พิมพ์อยู่บนกระดาษ',null]
+].map(([locale,q,expected])=>({locale,q,expected}));
+const allKnown=new Set([...exact,...evalPhrases,...devKeys,...frozenKeys,...calibrationHard.map(x=>fine.normalize(x.q)),...augmentation.rows.flatMap(r=>r.slice(1)).map(fine.normalize)]);
+for(const x of freshCases)assert.ok(!allKnown.has(fine.normalize(x.q)),x.q);
+assert.equal(freshCases.filter(x=>x.expected).length,12);
+const freshScored=precompute(freshCases,'unknown','global');
+const freshMetrics=compact(selective(evidenceRows(freshScored,evidenceWinner?.minimum??Infinity,evidenceWinner?.margin??Infinity),evidencePolicy));
+console.log('FRESH_OPERATION_CHALLENGE_REPORT',JSON.stringify({n:freshCases.length,metrics:freshMetrics,releaseEligible:false,oldHoldoutInspected:true}));
