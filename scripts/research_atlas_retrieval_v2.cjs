@@ -714,3 +714,34 @@ const normalizationControls=[
 ];
 for(const q of normalizationControls)for(const form of ['NFC','NFD','NFKC','NFKD'])assert.ok(!technicalAbstention(q.normalize(form)),'normalization false refusal '+q);
 console.log('UNICODE_GUARD_REGRESSION_REPORT',JSON.stringify({normalizedRejected,controls:normalizationControls.length*4,forms:4}));
+
+const {structuredIntent}=require('../research/atlas-retrieval-runtime.js');
+const structureCases=[
+ ['join my four PDFs into one document','pdf-merge'],
+ ['divide this PDF report into separate pages','pdf-split'],
+ ['reduce the file size of my JPEG for email','image-compress'],
+ ['set this picture background transparent','image-background'],
+ ['see whether my DNS update has propagated globally','dns-propagation'],
+ ['look up the AAAA records for my domain','dns-lookup'],
+ ['test whether this regex matches a string','regex-test'],
+ ['把这四份PDF拼成一个文件','pdf-merge'],
+ ['把这份PDF按页分成多个文件','pdf-split'],
+ ['把这张照片文件体积压小一些','image-compress'],
+ ['把这张图片背景设为透明','image-background'],
+ ['确认我的DNS更新在全球是否生效','dns-propagation'],
+ ['查看这个域名的AAAA记录','dns-lookup'],
+ ['验证这段正则表达式能否匹配测试文本','regex-test']
+];
+let structureRanked=0,structureBlocked=0;
+for(const [q,id] of structureCases){
+ assert.equal(structuredIntent(q),id,q);
+ const canonical=multilingual.rows[0][multilingual.tasks.indexOf(id)+1];
+ const expected=fused.rank(canonical);
+ assert.ok(expected.length,q);
+ assert.deepEqual(fused.rank(q),expected,q);structureRanked++;
+ for(const extra of [' without upload',' 免费']){
+  assert.equal(structuredIntent(q+extra),null,q+extra);
+  assert.equal(fused.rank(q+extra).length,0,q+extra);structureBlocked++;
+ }
+}
+console.log('STRUCTURED_RETRIEVAL_REPORT',JSON.stringify({structureRanked,structureBlocked,scope:'full-query grammar'}));
