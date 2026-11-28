@@ -9,18 +9,30 @@ authorization. The default branch and public host remain unchanged.
   length, SHA-256, schema and Worker activation before persistence.
 - Local search and catalog-grounded ranking; no transmission of search text for
   model inference. The ordinary search remains usable without the model.
-- 40 locales, 64 intent classes, reviewed exact variants and bounded unique
-  adjacent-letter corrections in allowlisted operation words.
-- Unrestricted typo correction, open intent classification and low-confidence
-  suggestion lists remain research-only until they meet a separately reviewed
-  quality gate. Never describe them as implemented user-facing capabilities.
+- 40 localized interface/intent packs, 64 intent classes, reviewed exact variants,
+  bounded unique adjacent-letter corrections in allowlisted operation words.
+- Nine task classes have bounded full-query grammars across eight languages
+  (not every class in every language). The grammar must match the entire query.
+- Optional single-edit spelling suggestions for reviewed English operation verbs
+  only: no semantic or ordinary catalog result, unique correction, existing
+  catalog evidence, explicit user selection, no automatic URL navigation.
+  All 40 interface packs carry a suggestion prompt; that is not 40-language
+  spelling correction. Suggestions do not alter the query until selected.
+- Unrestricted typo correction, open intent classification and open semantic
+  suggestion lists remain research-only. Never describe them as shipped.
+- Freeze the candidate feature scope after these bounded features pass. Further
+  grammar coverage is not a release prerequisite unless a verified regression
+  or actual user need justifies it. Independent evidence remains mandatory for
+  any future expansion of automatic classification.
 
 ## Before any production upload
 
 For the same candidate HEAD, obtain successful feature checks, Chromium smoke,
 Firefox research checks, and full verify workflow. Read the actual job logs,
-including the generated mixed-language, colloquial, correction, constraint and
-browser metrics reports. A canceled or failed run is not a complete success.
+including the generated mixed-language, colloquial, correction, constraint,
+actual catalog relevance, suggestion and browser metrics reports. Require actual
+Worker suggestion counters and the real 390x844 directory interaction metrics;
+verify reversible input edits, IME suppression and localized prompts. A canceled or failed run is not a complete success.
 
 Run these checks from the repository root (no server credentials needed):
 
@@ -36,7 +48,8 @@ python3 tests/browser_research_semantic_directory.py --packaged --firefox
 
 Generate the staging directory outside the repository. Record its revision,
 complete file manifest, full model digest and decoded byte count. Compare two
-independent builds. Confirm the model is absent from shell precache and the
+independent builds. Keep the immutable model digest separate from runtime
+revision and record the full staged site file manifest. Confirm the model is absent from shell precache and the
 legacy downloader is absent from the staged directory. Check deployed file
 allowlist and dependency-first transfer order. Do not upload research fixtures,
 test sources, credentials, or private host paths.
@@ -71,7 +84,7 @@ Report acceptance precision, correct positive coverage, false acceptance rate,
 and catalog relevance separately. Zero errors on a small authored set does not
 prove zero real-world errors. Do not relax constraints merely to improve coverage.
 
-For open classification, suggestions or unrestricted typo correction, require a
+For open classification, open semantic suggestions or unrestricted typo correction, require a
 new representative evaluation set not used for tuning, including unsupported
 actions, ambiguous queries and mixed-language constraints. Proposed minimum:
 at least 95% accepted precision, at most 1% negative false acceptance, at least
