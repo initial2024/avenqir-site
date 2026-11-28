@@ -64,12 +64,28 @@ legacy downloader is absent from the staged directory. Check deployed file
 allowlist and dependency-first transfer order. Do not upload research fixtures,
 test sources, credentials, or private host paths.
 
-The normal FTPS workflow still reads the repository's `site/` directory; the
-external staged candidate is not selected by that workflow. Before release,
-review an explicitly authorized candidate promotion procedure that uses the
-exact audited staged tree and verifies the manifest, without changing the
-ordinary default-branch deployment silently. A green candidate build alone
-does not authorize or accomplish that promotion.
+The normal FTPS workflow still reads the repository's `site/` directory.
+A separate explicit staged-tree entry point now supports offline preparation:
+
+```sh
+python3 scripts/ftps_deploy.py --semantic-stage "$stage_parent/site" \
+  --candidate-commit "$reviewed_commit" \
+  --manifest-sha256 "$reviewed_manifest_sha256" --plan-only
+```
+
+The reviewed full commit and manifest digest must come from successful CI for
+that exact source, not from a newly generated unchecked staging directory.
+Plan-only does not read FTPS credentials or contact the host. The checkout must
+match the reviewed commit and be free of tracked modifications. The stage must
+be external to the repository, and its entire audited manifest must match.
+Actual transfer remains disabled unless separately authorized by the owner;
+only then may an authorized operator supply the matching explicit approval
+and standard FTPS credentials. The uploader rechecks each file's digest before
+FTP directory operations and records the candidate revision and manifest digest
+in deployment metadata. Existing remote custom media and protected snapshots
+are still preserved: this is not a promise that all public host bytes equal the
+staged manifest. No workflow auto-promotion was enabled. A green candidate build
+alone neither authorizes nor accomplishes production transfer.
 
 Do not merge, upload or activate the candidate unless the user has authorized
 release after review. Desktop browser evidence does not establish Android or
