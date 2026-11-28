@@ -53,9 +53,9 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  }
  query('githbu');
  yes(panel().hidden,'first ordinary search opened model panel');
- query('GitHub');yes(panel().hidden,'repeated ordinary search opened model panel');
- $('atlasSemanticOpen').click();yes(!panel().hidden&&$('atlasSemanticOpen').getAttribute('aria-expanded')==='true','explicit management entry did not open');
  yes([...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>a.textContent.includes('GitHub')),'typo result must work without model');
+ query('GitHub');yes(panel().hidden&&w.getComputedStyle(panel()).display==='none','repeated ordinary search opened model panel');
+ $('atlasSemanticOpen').click();yes(!panel().hidden&&w.getComputedStyle(panel()).display!=='none'&&$('atlasSemanticOpen').getAttribute('aria-expanded')==='true','explicit management entry did not open');
  yes($('atlasSemanticSize').textContent.includes('90.1 KiB'),'actual pinned size not shown');
  yes(w.performance.getEntriesByName(modelURL()).length===0,'download before consent');
  $('atlasSemanticLater').click();
@@ -260,7 +260,7 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  const prior=w.document;w.location.reload();
  await wait(()=>w.document!==prior&&w.document.getElementById('atlasSemanticPanel')?.dataset.state==='ready');
  await wait(()=>w.document.querySelector('#atlasResults .atlas-semantic-match'));
- yes(panel().hidden&&$('atlasSemanticOpen').getAttribute('aria-expanded')==='false','cached query reload unexpectedly opened model panel');
+ yes(panel().hidden&&w.getComputedStyle(panel()).display==='none'&&$('atlasSemanticOpen').getAttribute('aria-expanded')==='false','cached query reload unexpectedly opened model panel');
  // Damage the persisted model while offline, then verify fail-closed restore.
  const damaged=await w.caches.open('avenqir-semantic-model-v2-candidate');
  await damaged.put(modelURL(),new w.Response('corrupted cache',{headers:{'Content-Type':'application/json'}}));
