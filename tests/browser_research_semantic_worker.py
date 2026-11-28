@@ -9,11 +9,13 @@ import shutil
 import subprocess
 import tempfile
 import threading
+import sys
 from urllib.parse import urlsplit
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CHROME = shutil.which('google-chrome') or shutil.which('chromium')
-assert CHROME
+FIREFOX='--firefox' in sys.argv
+if not FIREFOX: assert CHROME
 SCRIPTS = ['atlas-paths','atlas-expansion','atlas-specialist','atlas-depth-a','atlas-depth-b','atlas-depth-c','atlas-depth-d','atlas-ai','atlas-regional','atlas-everyday','atlas-regional-ext','atlas-everyday-ext','atlas-popular-links','atlas-catalog-core']
 MODEL = '/research/atlas-model-v2.packed.json'
 FULL = '/research/atlas-semantic-bundle-v2.json'
@@ -181,10 +183,14 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().do_GET()
 with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
     threading.Thread(target=server.serve_forever,daemon=True).start()
-    with tempfile.TemporaryDirectory() as profile:
-        subprocess.run(['node',str(ROOT/'tests'/'chrome_real_time.cjs'),CHROME,profile,f'http://127.0.0.1:{server.server_port}/qa.html'],timeout=75,check=True)
+    url=f'http://127.0.0.1:{server.server_port}/qa.html'
+    if FIREFOX:
+        subprocess.run([sys.executable,str(ROOT/'tests'/'firefox_real_time.py'),url],timeout=105,check=True)
+    else:
+        with tempfile.TemporaryDirectory() as profile:
+            subprocess.run(['node',str(ROOT/'tests'/'chrome_real_time.cjs'),CHROME,profile,url],timeout=75,check=True)
     assert requests.count(MODEL)==4,requests
     assert requests.count(FULL)==1,requests
     assert '/site/atlas-semantic-model-v1.json' not in requests,requests
-    print('PASS real Chromium packed model digest, worker, stale query rejection, Korean and Arabic retrieval, constraint and ungrounded abstention, corrupt payload rejection, fresh single-model install, real worker activation, cancellation and retry, verified cache restore and deletion, MIME/404/truncated/network rejection, bounded non-stream fallback and session-only storage denial, localized broad topics and polite request constraints, full gzip model transfer and 36 cold/warm worker queries')
+    print('PASS real '+('Firefox' if FIREFOX else 'Chromium')+' packed model digest, worker, stale query rejection, Korean and Arabic retrieval, constraint and ungrounded abstention, corrupt payload rejection, fresh single-model install, real worker activation, cancellation and retry, verified cache restore and deletion, MIME/404/truncated/network rejection, bounded non-stream fallback and session-only storage denial, localized broad topics and polite request constraints, full gzip model transfer and 36 cold/warm worker queries')
     server.shutdown()
