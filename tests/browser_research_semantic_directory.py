@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Actual directory UI with full v2 candidate injected only into localhost QA."""
-import http.server, pathlib, shutil, subprocess, tempfile, threading, time, sys, atexit
+import http.server, pathlib, shutil, subprocess, tempfile, threading, time, sys, atexit, socket
 from urllib.parse import urlsplit
 SITE=pathlib.Path(__file__).resolve().parents[1]/'site'
 CHROME=shutil.which('google-chrome') or shutil.which('chromium')
@@ -62,7 +62,7 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  yes(!await failedCache.match(modelURL()),'corrupt model saved');
 
  // Real HTTP responses, not synthetic fetch replacement: hosting challenge and temporary outage.
- for(const [endpoint,code] of [['/fixture-html','mime'],['/fixture-unavailable','http']]){
+ for(const [endpoint,code] of [['/fixture-html','mime'],['/fixture-unavailable','http'],['/fixture-rate-limit','rate_limited'],['/fixture-truncated','network']]){
   await fetch(endpoint);
   $('atlasSemanticDownload').click();
   await wait(()=>panel().dataset.state==='error');
@@ -136,9 +136,18 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         elif p=='/fixture-valid':mode='valid';data=b'ok';kind='text/plain'
         elif p=='/fixture-html':mode='html';data=b'ok';kind='text/plain'
         elif p=='/fixture-unavailable':mode='unavailable';data=b'ok';kind='text/plain'
+        elif p=='/fixture-rate-limit':mode='rate-limit';data=b'ok';kind='text/plain'
+        elif p=='/fixture-truncated':mode='truncated';data=b'ok';kind='text/plain'
         elif p=='/fixture-block':mode='block';data=b'ok';kind='text/plain'
         elif p==MODEL_PATH:
             requests.append((mode,self.path))
+            if mode=='rate-limit':self.send_error(429);return
+            if mode=='truncated':
+                self.send_response(200);self.send_header('Content-Type','application/octet-stream');self.send_header('Content-Length',str(len(MODEL)));self.end_headers()
+                self.wfile.write(MODEL[:4096]);self.wfile.flush();self.close_connection=True
+                try:self.connection.shutdown(socket.SHUT_WR)
+                except OSError:pass
+                return
             if mode in ('block','unavailable'):self.send_error(503);return
             if mode=='html':data=b'<!doctype html><html><body>Host verification required</body></html>';kind='text/html'
             else:data=MODEL if mode=='valid' else b'X'+MODEL[1:];kind='application/octet-stream' if mode=='valid' else 'application/json'
@@ -165,5 +174,6 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
     assert len([x for x in requests if x[0]=='valid'])==2,requests
     assert not any(x[0]=='block' or '?' in x[1] for x in requests),requests
     assert sum(x[0]=='html' for x in requests)==1 and sum(x[0]=='unavailable' for x in requests)==1,requests
-    print('PACKAGED' if PACKAGED else 'RESEARCH', 'PASS real 390x844 candidate directory, full bundle consent, cancel/retry, integrity, progress, Korean result, locale switch, real HTTP HTML/503 failure and retry, worker activation/cache race, reload and deletion')
+    assert sum(x[0]=='rate-limit' for x in requests)==1 and sum(x[0]=='truncated' for x in requests)==1,requests
+    print('PACKAGED' if PACKAGED else 'RESEARCH', 'PASS real 390x844 candidate directory, full bundle consent, cancel/retry, integrity, progress, Korean result, locale switch, real HTTP HTML/503/429/truncated-body failure and retry, worker activation/cache race, reload and deletion')
     server.shutdown()
