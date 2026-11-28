@@ -648,8 +648,9 @@ function shadowBlock(raw){
  }
  return false;
 }
-function precompute(cases,localeMode='correct'){
+function precompute(cases,localeMode='correct',scoring='legacy'){
  return cases.map(x=>{const rank=shadowEngine.rank(x.q,localeMode==='correct'?x.locale:localeMode==='unknown'?null:x.locale==='en'?'ja':'en');
+ if(scoring!=='legacy'){for(const r of rank)r.score=scoring==='global'?.90*r.global+.10*r.prototype:.70*r.global+.20*Math.max(r.local,r.global*.65)+.10*r.prototype;rank.sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id));}
  const first=rank[0],second=rank[1],global=rank.slice().sort((a,b)=>b.global-a.global||a.id.localeCompare(b.id))[0];
  return {...x,blocked:shadowBlock(x.q),id:first?.id,score:first?.score||0,margin:(first?.score||0)-(second?.score||0),agreement:first?.id===global?.id};});
 }
@@ -669,8 +670,49 @@ for(const score of [.25,.35,.45,.55,.65,.75])for(const margin of [.04,.08,.12,.1
 policies.sort((a,b)=>b.m.correct-a.m.correct||a.m.wrongPositive-b.m.wrongPositive||b.policy.score-a.policy.score||b.policy.margin-a.policy.margin||Number(b.policy.agreement)-Number(a.policy.agreement));
 const chosen=policies[0]?.policy||{score:Infinity,margin:Infinity,agreement:true};
 const holdout=selective(precompute(shadowTest),chosen),unknown=selective(precompute(shadowTest,'unknown'),chosen),wrong=selective(precompute(shadowTest,'wrong'),chosen);
-// Keep the score-only baseline above comparable via an explicit ablation report.
+// Record deterministic guard coverage separately from threshold selection.
 const guardAudit={devBlocked:devScored.filter(x=>x.blocked).length,devNegativesBlocked:devScored.filter(x=>x.blocked&&!x.expected).length,devPositivesBlocked:devScored.filter(x=>x.blocked&&x.expected).length};
 console.log('SHADOW_GUARD_AUDIT',JSON.stringify(guardAudit));
 const researchGate=!!policies.length&&holdout.accepted>=16&&holdout.falseAccept===0&&holdout.precision>=.95&&holdout.positiveCoverage>=.4&&unknown.falseAccept===0&&wrong.falseAccept===0;
 console.log('SELECTIVE_SHADOW_REPORT',JSON.stringify({policy:policies[0]?.policy||null,dev:policies[0]?.m||null,holdout,unknown,wrong,researchGate,releaseEligible:false,reason:'Author-written tests; not independent production or device validation'}));
+
+// New calibration probes must be disjoint from both the reference corpus and
+// frozen challenge set. These are operation/property mismatches, not just nonsense.
+const calibrationHard=[
+ ['en','Remove a watermark from a PDF without uploading it'],
+ ['en','Inspect the source code of a QR decoding library'],
+ ['zh-Hans','如何恢复损坏的PDF文档而不是压缩它'],
+ ['zh-Hans','手机摄像头如何读取印在纸上的条码'],
+ ['ja','PDFの電子署名が正しいか検証する方法'],
+ ['ko','QR 코드에 담긴 문자를 카메라로 읽기'],
+ ['fr','Vérifier la signature numérique d’un fichier PDF'],
+ ['de','Einen beschädigten PDF-Datensatz wiederherstellen'],
+ ['es','Leer los datos de un código QR con la cámara'],
+ ['ru','Проверить цифровую подпись в документе PDF'],
+ ['ar','التحقق من التوقيع الرقمي داخل مستند PDF'],
+ ['hi','पीडीएफ में डिजिटल हस्ताक्षर की पुष्टि करनी है']
+].map(([locale,q])=>({locale,q,expected:null}));
+const frozenKeys=new Set(shadowTest.map(x=>fine.normalize(x.q)));
+for(const x of calibrationHard){const k=fine.normalize(x.q);assert.ok(!frozenKeys.has(k)&&!exact.has(k)&&!devKeys.has(k),x.q);}
+const calibrationCases=shadowDev.concat(devNegatives,calibrationHard);
+function compact(m){const {byLocale,errors,...rest}=m;return {...rest,errors:errors.slice(0,8)};}
+function calibrate(rows){
+ const candidates=[];
+ for(const score of [.25,.35,.45,.55,.65,.75])for(const margin of [.04,.08,.12,.16])for(const agreement of [false,true]){
+  const policy={score,margin,agreement},m=selective(rows,policy);
+  if(m.accepted>=8&&m.falseAccept===0&&m.precision>=.95)candidates.push({policy,m});
+ }
+ candidates.sort((a,b)=>b.m.correct-a.m.correct||a.m.wrongPositive-b.m.wrongPositive||b.policy.score-a.policy.score||b.policy.margin-a.policy.margin||Number(b.policy.agreement)-Number(a.policy.agreement));
+ return candidates[0]||null;
+}
+const localeModes=['correct','unknown','wrong'],scoringModes=['legacy','global','adaptive'];
+const calibrated=scoringModes.map(scoring=>{
+ const byMode=localeModes.map(mode=>precompute(calibrationCases,mode,scoring));
+ // Tune using all three UI-locale conditions, never on the frozen challenge.
+ const rows=byMode.flat(),selected=calibrate(rows),ablation=calibrate(rows.map(x=>({...x,blocked:false})));
+ return {scoring,selected,ablation};
+});
+calibrated.sort((a,b)=>(b.selected?.m.correct||0)-(a.selected?.m.correct||0));
+const winner=calibrated[0],frozenPolicy=winner.selected?.policy||{score:Infinity,margin:Infinity,agreement:true};
+const frozenResults=Object.fromEntries(localeModes.map(mode=>[mode,compact(selective(precompute(shadowTest,mode,winner.scoring),frozenPolicy))]));
+console.log('ROBUST_SHADOW_REPORT',JSON.stringify({calibrationHard:calibrationHard.length,variants:calibrated.map(x=>({scoring:x.scoring,guarded:x.selected?{policy:x.selected.policy,metrics:compact(x.selected.m)}:null,unguarded:x.ablation?{policy:x.ablation.policy,metrics:compact(x.ablation.m)}:null})),chosen:winner.scoring,policy:winner.selected?.policy||null,frozenResults,releaseEligible:false}));
