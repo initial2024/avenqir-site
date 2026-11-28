@@ -25,13 +25,15 @@ function build(dest){
   fs.writeFileSync(path.join(sub,name),data);
  }
  fs.writeFileSync(path.join(sub,hostedName),bundle);
+ // Bind the shell revision to the candidate's actual runtime and weight bytes.
+ const revision=digest(Buffer.concat([...assets,hostedName].map(name=>fs.readFileSync(path.join(sub,name))).concat([fs.readFileSync(path.join(target,'directory.js')),fs.readFileSync(path.join(target,'directory.html')),fs.readFileSync(path.join(target,'sw.js'))]))).slice(0,16);
  const htmlPath=path.join(target,'directory.html');
  let html=fs.readFileSync(htmlPath,'utf8');
- html=replaceOnce(html,'<script src="atlas-semantic-download.js?v=150" defer></script>',entries.map(n=>'<script src="semantic-v2/'+n+'?v=154" defer></script>').join(''));
- for(const [name,v] of [['directory.js',152],['atlas-catalog-core.js',147],['atlas-expansion.js',126],['atlas-personalize.js',16],['atlas-personalize-ui.js',29]])html=replaceOnce(html,name+'?v='+v,name+'?v=154');
+ html=replaceOnce(html,'<script src="atlas-semantic-download.js?v=150" defer></script>',entries.map(n=>'<script src="semantic-v2/'+n+'?v=154-'+revision+'" defer></script>').join(''));
+ for(const [name,v] of [['directory.js',152],['atlas-catalog-core.js',147],['atlas-expansion.js',126],['atlas-personalize.js',16],['atlas-personalize-ui.js',29]])html=replaceOnce(html,name+'?v='+v,name+'?v=154-'+revision);
  fs.writeFileSync(htmlPath,html);
  const swPath=path.join(target,'sw.js');let sw=fs.readFileSync(swPath,'utf8');
- sw=replaceOnce(sw,"'avenqir-v152-static-20261127-search-refinement'","'avenqir-v154-semantic-candidate'");
+ sw=replaceOnce(sw,"'avenqir-v152-static-20261127-search-refinement'","'avenqir-v154-semantic-candidate-"+revision+"'");
  sw=replaceOnce(sw,"'./atlas-semantic-download.js'",assets.map(n=>"'./semantic-v2/"+n+"'").join(','));
  sw=replaceOnce(sw,"'atlas-semantic-download.js'",entries.map(n=>"'semantic-v2/"+n+"'").join(','));
  assert.ok(!sw.includes(spec.file)&&!sw.includes(hostedName),'Model must never be precached by shell');
@@ -42,7 +44,7 @@ function build(dest){
  assert.ok(!html.includes('/research/'),'No research server path');
  assert.equal(digest(fs.readFileSync(path.join(sub,hostedName))),spec.sha256);
  const files=[...assets,hostedName].map(name=>{const data=fs.readFileSync(path.join(sub,name));return {name,bytes:data.length,sha256:digest(data)};});
- console.log('RELEASE_CANDIDATE_BUILD',JSON.stringify({path:target,modelBytes:bundle.length,hostedModelPath:'semantic-v2/'+hostedName,hostedModelSHA256:spec.sha256,scriptBytes:files.filter(f=>f.name.endsWith('.js')).reduce((n,f)=>n+f.bytes,0),files}));
+ console.log('RELEASE_CANDIDATE_BUILD',JSON.stringify({path:target,candidateRevision:revision,modelBytes:bundle.length,hostedModelPath:'semantic-v2/'+hostedName,hostedModelSHA256:spec.sha256,scriptBytes:files.filter(f=>f.name.endsWith('.js')).reduce((n,f)=>n+f.bytes,0),files}));
  return target;
 }
 if(require.main===module){
