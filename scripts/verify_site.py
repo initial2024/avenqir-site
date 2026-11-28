@@ -9,13 +9,14 @@ ALLOWED={'.html','.css','.js','.php','.json','.webmanifest','.webp','.svg','.png
 MAX_FILE=3*1024*1024
 MAX_TOTAL=12*1024*1024
 
-def validate():
-    if not SITE.is_dir():raise ValueError('Missing site directory')
-    if not (SITE/'index.html').is_file() or not (SITE/'feedback-admin.php').is_file():raise ValueError('Site root missing key files')
+def validate(root=None):
+    root=SITE if root is None else Path(root)
+    if not root.is_dir():raise ValueError('Missing site directory')
+    if not (root/'index.html').is_file() or not (root/'feedback-admin.php').is_file():raise ValueError('Site root missing key files')
     total=0
     files=[]
-    for p in SITE.rglob('*'):
-        rel=p.relative_to(SITE)
+    for p in root.rglob('*'):
+        rel=p.relative_to(root)
         if p.is_symlink():raise ValueError(f'Symlink not allowed: {rel}')
         if p.is_dir():continue
         if not p.is_file():raise ValueError(f'Unknown file type: {rel}')
