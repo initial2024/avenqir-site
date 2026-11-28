@@ -21,16 +21,16 @@
   function alive(id,signal){if(id!==revision||signal.aborted)throw Error('cancelled');}
   async function fetchOne(s,signal,report){
    let r;try{r=await env.fetch(s.url,{credentials:'same-origin',redirect:'error',cache:'no-store',signal,referrerPolicy:'no-referrer'});}catch{throw Error('network');}
-   if(!r.ok)throw Error('http');
+   if(!r.ok)throw Error(r.status===429?'rate_limited':'http');
    if(r.url&&new URL(r.url).origin!==env.location.origin)throw Error('origin');
    if(!MIME.has(String(r.headers.get('content-type')||'').split(';')[0].trim().toLowerCase()))throw Error('mime');
    const out=new Uint8Array(s.bytes);let n=0;
    if(r.body?.getReader){
-    const reader=r.body.getReader();try{while(true){const {done,value}=await reader.read();if(signal.aborted)throw Error('cancelled');if(done)break;if(n+value.length>s.bytes)throw Error('integrity');out.set(value,n);n+=value.length;report(n);}}finally{try{await reader.cancel();}catch{}}
+    const reader=r.body.getReader();try{while(true){let chunk;try{chunk=await reader.read();}catch{throw Error(signal.aborted?'cancelled':'network');}const {done,value}=chunk;if(signal.aborted)throw Error('cancelled');if(done)break;if(n+value.length>s.bytes)throw Error('integrity');out.set(value,n);n+=value.length;report(n);}}finally{try{await reader.cancel();}catch{}}
    }else{
     // No streaming API: only accept a bounded advertised length.
     if(r.headers.get('content-length')!==String(s.bytes))throw Error('stream');
-    const data=new Uint8Array(await r.arrayBuffer());if(data.length!==s.bytes)throw Error('integrity');out.set(data);n=data.length;report(n);
+    let data;try{data=new Uint8Array(await r.arrayBuffer());}catch{throw Error(signal.aborted?'cancelled':'network');}if(data.length!==s.bytes)throw Error('integrity');out.set(data);n=data.length;report(n);
    }
    if(n!==s.bytes)throw Error('integrity');return out;
   }
@@ -64,7 +64,7 @@
     return {state:'ready',persisted,bytes:downloaded};
    }catch(e){
     if(restore&&cache){try{await env.caches.delete(CACHE);}catch{}}
-    const known=new Set(['integrity','crypto_unavailable','model_format','network','http','origin','mime','stream','cancelled','activate']);
+    const known=new Set(['integrity','crypto_unavailable','model_format','network','http','rate_limited','origin','mime','stream','cancelled','activate']);
     throw Error(timedOut?'timeout':ctl.signal.aborted?'cancelled':known.has(e.message)?e.message:'load');
    }finally{clearTimeout(deadline);running=false;controller=null;}
   }
