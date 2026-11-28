@@ -886,7 +886,7 @@ const unsupportedPdfProperties=[
 ];
 function propertyGuard(rows){
  return directionGuard(rows).map(r=>{
-  const pdf=/\bpdf\b|पीडीएफ|পিডিএফ/iu.test(r.q);
+  const pdf=/\bpdfs?\b|पीडीएफ|পিডিএফ/iu.test(r.q);
   return {...r,blocked:r.blocked||(pdf&&unsupportedPdfProperties.some(re=>re.test(r.q)))};
  });
 }
