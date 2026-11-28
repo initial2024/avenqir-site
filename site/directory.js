@@ -554,7 +554,7 @@
    clearSearchNext();
    replaceQuery(value.trim());suggestClose();input.blur();
    pendingNoMatchQuery=query.trim();rememberSearch(pendingNoMatchQuery);
-   if(pendingNoMatchQuery)semantic?.offer();
+   if(pendingNoMatchQuery)semantic?.onSearch?.();
    if(loaded)completeSearch();
    else {committedQuery=pendingNoMatchQuery;updateSearchNext(committedQuery,false);scrollToResults();}
  }
@@ -635,7 +635,7 @@
  window.addEventListener('offline',()=>{remoteReady=false;source.textContent=T('当前离线 · 已加载目录仍可浏览','Offline · loaded directory remains available');});
  const initialLocalQuery=pendingNoMatchQuery;
  // Local results are usable immediately; the no-match verdict waits for the bounded public sync.
- if(initialLocalQuery){committedQuery=initialLocalQuery;updateSearchNext(initialLocalQuery,false);scrollToResults();semantic?.offer();}
+ if(initialLocalQuery){committedQuery=initialLocalQuery;updateSearchNext(initialLocalQuery,false);scrollToResults();}
  requestAnimationFrame(()=>setTimeout(()=>{try{updateApprovals();drawPaths();choiceBar();mountOptionalRecommendations()}catch{}},0));
  if($('atlasStartupNotice'))$('atlasStartupNotice').hidden=true;
  catalog.load().then(data=>{

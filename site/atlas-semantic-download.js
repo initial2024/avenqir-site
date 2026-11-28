@@ -7,7 +7,7 @@
   if(!panel||!open)return null;
   const size=$('atlasSemanticSize'),status=$('atlasSemanticStatus'),progress=$('atlasSemanticProgress'),detail=$('atlasSemanticDetail'),start=$('atlasSemanticDownload'),later=$('atlasSemanticLater'),cancel=$('atlasSemanticCancel'),remove=$('atlasSemanticRemove'),dismiss=$('atlasSemanticClose');
   const url=new URL(spec.file,location.href).href;
-  let model=null,controller=null,phase='idle',busy=false,attempt=0,readBytes=0,rate=0,persisted=false,offered=false,errorKind='',memo=null;
+  let model=null,controller=null,phase='idle',busy=false,attempt=0,readBytes=0,rate=0,persisted=false,errorKind='',memo=null;
   const getPref=()=>{try{return localStorage.getItem(PREF)||'';}catch{return '';}};
   const setPref=value=>{try{localStorage.setItem(PREF,value);}catch{}};
   const format=n=>n>=1048576?(n/1048576).toFixed(2)+' MiB':(n/1024).toFixed(1)+' KiB';
@@ -34,11 +34,12 @@
    const messages={idle:t('下载需你确认，不会自动开始。','Download requires approval.'),checking:t('正在校验本地模型…','Checking local model…'),downloading:t('正在下载模型…','Downloading model…'),verifying:t('正在校验 SHA-256…','Verifying SHA-256…'),ready:persisted?t('已启用 · 本机缓存可离线复用','Enabled · cached for offline reuse'):t('已启用 · 本次会话可用，未保存到浏览器缓存','Enabled for this session; cache unavailable'),error:(errorMessages[errorKind]||t('下载或加载失败','Download or load failed'))+' ['+(errorKind||'unknown')+'] '+t('；普通搜索仍可用。','; normal search still works.'),cancelled:t('已取消，未保存不完整模型。','Cancelled; no partial model stored.')};
    status.textContent=messages[phase]||messages.idle;
   }
-  function show(){panel.hidden=false;draw();}
-  function offer(){if(!offered&&!model&&!busy&&getPref()!=='declined'){offered=true;show();}}
-  function close(){panel.hidden=true;}
+  function show(){panel.hidden=false;open.setAttribute('aria-expanded','true');draw();}
+  function onSearch(){if(model&&!busy)close();}
+  function close(){panel.hidden=true;open.setAttribute('aria-expanded','false');}
+  open.setAttribute('aria-controls',panel.id);open.setAttribute('aria-expanded',String(!panel.hidden));
   open.addEventListener('click',()=>{if(panel.hidden)show();else close();});
-  later.addEventListener('click',()=>{setPref('declined');offered=true;close();});dismiss.addEventListener('click',close);
+  later.addEventListener('click',()=>{setPref('declined');close();});dismiss.addEventListener('click',close);
   function stop(){attempt++;controller?.abort();controller=null;busy=false;phase='cancelled';readBytes=0;rate=0;draw();}
   cancel.addEventListener('click',stop);
   async function restore(){
@@ -89,7 +90,7 @@
   });
   root.addEventListener('aq:language-change',draw);
   draw();restore();
-  return Object.freeze({offer,show,active:()=>!!model,scores(query,items){
+  return Object.freeze({onSearch,show,active:()=>!!model,scores(query,items){
     if(!model||!query.trim())return null;
     if(memo?.query===query&&memo.items===items)return memo.value;
     const value=model.rank(query,items);memo={query,items,value};return value;

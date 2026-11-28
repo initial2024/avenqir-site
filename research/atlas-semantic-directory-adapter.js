@@ -11,7 +11,7 @@
   const revision=scriptURL.searchParams.get('v');
   if(/^154-[a-f0-9]{16}$/.test(revision||''))workerURL.searchParams.set('v',revision);
   const loader=root.AVENQIR_RESEARCH_LOADER.create([{...spec,file:new URL(spec.file,baseURL).href}]);
-  let busy=false,phase='idle',error='',session=null,persisted=false,offered=false,bytes=0,rate=0,lastItems=null,lastQuery='',result=null,serial=0,rankTimer=null,suggested=null,composing=false,elapsed=null;
+  let busy=false,phase='idle',error='',session=null,persisted=false,bytes=0,rate=0,lastItems=null,lastQuery='',result=null,serial=0,rankTimer=null,suggested=null,composing=false,elapsed=null;
   const pref=()=>{try{return localStorage.getItem(PREF)||'';}catch{return '';}};
   const save=v=>{try{localStorage.setItem(PREF,v);}catch{}};
   const lang=()=>locales.get(root.AVENQIR_I18N?.locale||'en');
@@ -99,7 +99,7 @@
   function format(n){return (n/1024).toFixed(1)+' KiB';}
   function draw(){
    const l=lang();panel.dataset.state=phase;panel.dataset.execution=session?.mode||'';
-   open.textContent=session?l.on:l.title;drawStatus();
+   open.textContent=session?l.on:l.title;open.setAttribute('aria-expanded',String(!panel.hidden));drawStatus();
    $('atlasSemanticTitle').textContent=l.title;$('atlasSemanticNote').textContent=l.note;
    $('atlasSemanticSize').textContent=format(spec.bytes)+' ('+spec.bytes.toLocaleString()+' B)';
    $('atlasSemanticStatus').textContent=phase==='ready'?((persisted?l.ready:l.session)+(session?.mode==='local'?' [compat]':'')):phase==='error'?l.error+' ['+error+']':busy?l.loading:phase==='cancelled'?l.cancel:'';
@@ -110,8 +110,11 @@
   function resetRank(){clearTimeout(rankTimer);rankTimer=null;lastQuery='';result=null;suggested=null;elapsed=null;drawSuggestions();}
   function workerFailure(id,code='worker'){if(id!==serial)return;serial++;session?.close();session=null;resetRank();phase='error';error=code;draw();notify();}
   function notify(){onChange?.();drawSuggestions();}
+  // Search and cached restoration never open the management panel. Only an
+  // explicit management action does. Leave an in-progress download visible.
   function show(){panel.hidden=false;draw();}
-  function offer(){if(!offered&&!session&&!busy&&pref()!=='declined'){offered=true;show();}}
+  function hide(){panel.hidden=true;open.setAttribute('aria-expanded','false');}
+  function onSearch(){if(session&&!busy)hide();}
   function scores(q,items){
    if(!q.trim()){resetRank();return null;}
    if(!session||!items?.length)return null;
@@ -140,9 +143,10 @@
    }catch(e){if(id===serial){phase=e.message==='cancelled'?'cancelled':'error';error=String(e.message||'load');if(restore&&e.message!=='cancelled')save('');}bytes=0;rate=0;}
    finally{busy=false;draw();if(!session)notify();}
   }
-  open.addEventListener('click',()=>{panel.hidden?show():panel.hidden=true;});
-  $('atlasSemanticClose').addEventListener('click',()=>{panel.hidden=true;});
-  $('atlasSemanticLater').addEventListener('click',()=>{save('declined');offered=true;panel.hidden=true;});
+  open.setAttribute('aria-controls',panel.id);
+  open.addEventListener('click',()=>{panel.hidden?show():hide();});
+  $('atlasSemanticClose').addEventListener('click',hide);
+  $('atlasSemanticLater').addEventListener('click',()=>{save('declined');hide();});
   $('atlasSemanticDownload').addEventListener('click',()=>begin(false));
   $('atlasSemanticCancel').addEventListener('click',()=>loader.cancel());
   $('atlasSemanticRemove').addEventListener('click',async()=>{
@@ -152,7 +156,7 @@
   root.addEventListener('aq:language-change',()=>{draw();drawSuggestions();});draw();
   // Defer restoration until the directory finishes initializing its own bindings.
   if(pref()==='enabled')Promise.resolve().then(()=>begin(true));
-  return Object.freeze({show,offer,scores,pending(q,items){return !!q.trim()&&((busy&&phase==='checking')||!!session&&lastItems===items&&lastQuery===q&&result===null);},active:()=>!!session});
+  return Object.freeze({show,onSearch,scores,pending(q,items){return !!q.trim()&&((busy&&phase==='checking')||!!session&&lastItems===items&&lastQuery===q&&result===null);},active:()=>!!session});
  }
  root.AVENQIR_SEMANTIC_DOWNLOAD=Object.freeze({mount});
 })(window);

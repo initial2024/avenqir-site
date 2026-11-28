@@ -52,7 +52,9 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
   }
  }
  query('githbu');
- yes(!panel().hidden,'first search must offer download');
+ yes(panel().hidden,'first ordinary search opened model panel');
+ query('GitHub');yes(panel().hidden,'repeated ordinary search opened model panel');
+ $('atlasSemanticOpen').click();yes(!panel().hidden&&$('atlasSemanticOpen').getAttribute('aria-expanded')==='true','explicit management entry did not open');
  yes([...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>a.textContent.includes('GitHub')),'typo result must work without model');
  yes($('atlasSemanticSize').textContent.includes('90.1 KiB'),'actual pinned size not shown');
  yes(w.performance.getEntriesByName(modelURL()).length===0,'download before consent');
@@ -131,10 +133,16 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  yes($('atlasSemanticProgress').value===w.AVENQIR_RESEARCH_MANIFEST.bytes,'complete byte progress missing');
  yes($('atlasSemanticDetail').textContent.includes('100%'),'100% not shown');
  yes(w.localStorage.getItem('avenqir.semantic.preference.v2')==='enabled','consent not saved');
+ yes(!panel().hidden,'explicit download progress panel unexpectedly closed');
  query('QR 코드 생성');
+ yes(panel().hidden&&$('atlasSemanticOpen').getAttribute('aria-expanded')==='false','active search did not collapse management panel');
  yes(!$('atlasNoMatchDialog').open,'premature no-match dialog while worker is pending');
  await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent)));
  yes(w.document.querySelector('#atlasResults .atlas-semantic-match'),'semantic result not labelled');
+ yes(panel().hidden,'semantic result reopened management panel');
+ $('atlasSemanticOpen').click();yes(!panel().hidden,'enabled model management cannot be opened manually');
+ $('atlasSemanticClose').click();yes(panel().hidden,'manual close failed');
+ query('QR 코드 생성');yes(panel().hidden,'repeated active search reopened management panel');
  // Mixed language and reviewed typing variants must reach real worker retrieval.
  for(const q of ['生成 QR code','genrate a qr code','QR code 만들기','genertae a qr code']){
   query(q);
@@ -252,12 +260,14 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  const prior=w.document;w.location.reload();
  await wait(()=>w.document!==prior&&w.document.getElementById('atlasSemanticPanel')?.dataset.state==='ready');
  await wait(()=>w.document.querySelector('#atlasResults .atlas-semantic-match'));
+ yes(panel().hidden&&$('atlasSemanticOpen').getAttribute('aria-expanded')==='false','cached query reload unexpectedly opened model panel');
  // Damage the persisted model while offline, then verify fail-closed restore.
  const damaged=await w.caches.open('avenqir-semantic-model-v2-candidate');
  await damaged.put(modelURL(),new w.Response('corrupted cache',{headers:{'Content-Type':'application/json'}}));
  const damagedDoc=w.document;w.location.reload();
  await wait(()=>w.document!==damagedDoc&&w.document.getElementById('atlasSemanticPanel')?.dataset.state==='error');
  yes($('atlasSemanticStatus').textContent.includes('[integrity]'),'corrupt cache not diagnosed');
+ yes(panel().hidden,'failed cache restoration opened model panel');
  yes(w.localStorage.getItem('avenqir.semantic.preference.v2')!=='enabled','failed restore left enabled preference');
  query('GitHub');yes([...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>a.textContent.includes('GitHub')),'ordinary search failed after cache corruption');
  // Manually re-enable with the real directory UI and a denied Worker.
@@ -273,7 +283,7 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  query('QR 코드 생성');
  await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent))&&w.document.querySelector('#atlasResults .atlas-semantic-match'));
  w.Worker=beforeCompat;
- document.documentElement.dataset.metrics=JSON.stringify({...JSON.parse(document.documentElement.dataset.metrics),compatibleDirectoryActivation:true});
+ document.documentElement.dataset.metrics=JSON.stringify({...JSON.parse(document.documentElement.dataset.metrics),compatibleDirectoryActivation:true,manualPanelOnly:true,activeSearchCollapsesPanel:true,cachedQueryReloadClosed:true});
  await fetch('/fixture-block');
  w.confirm=()=>true;
  if(panel().hidden)$('atlasSemanticOpen').click();$('atlasSemanticRemove').click();
