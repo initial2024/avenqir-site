@@ -673,3 +673,22 @@ for(const [locale,pdf,negativePdf,qr,negativeQr] of propertyContrast){
 // Verify the full reviewed corpus is unaffected by this new property guard.
 for(const row of multilingual.rows)for(const q of row.slice(1))assert.ok(!unsupportedProperties(q),'canonical property collision '+q);
 console.log('RUNTIME_PROPERTY_GUARD_REPORT',JSON.stringify({propertyRejected,propertyControl,canonicalUnchanged:1440}));
+
+const {technicalAbstention}=require('../research/atlas-retrieval-runtime.js');
+const explanationNegatives=[
+ 'Explain how PDF compression works','解释PDF压缩的原理','比較不同PDF壓縮技術','PDF圧縮の仕組みを知りたい','PDF 압축 원리 설명',
+ 'Expliquer la compression PDF','Warum kann man PDF komprimieren','Explicar la compresión PDF','Explicar como comprimir PDF','Принцип сжатия PDF',
+ 'كيف يعمل ضغط PDF','PDF संपीड़न क्यों होता है','PDF ทำงานอย่างไร','Busco una herramienta para comprimir PDF que nunca suba datos',
+ 'Explain the mathematics behind a QR code','二维码解码算法的实现原理','QRコードの仕組みを調べたい','QR 코드의 원리 설명','شرح طريقة عمل رمز QR'
+];
+for(const q of explanationNegatives){
+ assert.ok(technicalAbstention(q),q);
+ assert.equal(fused.rank(q).length,0,q);
+}
+const nonExplanationControls=[
+ ...multilingual.rows.flatMap(r=>r.slice(1)),...topics.rows.flatMap(r=>r.slice(1)),
+ ...multilingual.variantRows.flatMap(r=>r.slice(1)),...multilingual.mixedAliases.flatMap(r=>r[1]),
+ ...multilingual.colloquialRows.flatMap(r=>r.slice(1))
+];
+for(const q of nonExplanationControls)assert.ok(!technicalAbstention(q),'explanation guard collision '+q);
+console.log('TECHNICAL_ABSTENTION_REPORT',JSON.stringify({rejected:explanationNegatives.length,controls:nonExplanationControls.length}));
