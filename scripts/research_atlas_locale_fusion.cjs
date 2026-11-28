@@ -520,3 +520,85 @@ for(const [locale,...qs] of augmentation.rows)for(const q of qs)if(q){assert.ok(
 const expanded={...fine,tasks:fine.tasks.concat(augmentation.tasks),rows:fine.rows.map((r,i)=>{assert.equal(r[0],augmentation.rows[i][0]);return r.concat(augmentation.rows[i].slice(1));})};
 const augmented=assess(create(expanded,topics,uni,u),fine,dev,challenge);
 console.log('AUGMENTED_REFERENCE_REPORT',JSON.stringify({addedCount,...augmented}));
+
+
+// Shadow-only selective classification. Calibrate on dev positives and generated
+// dev negatives, freeze the threshold, then report held-out positives and novel
+// multilingual out-of-scope probes. Never make these scores a release decision.
+const shadowEngine=create(expanded,topics,uni,u);
+const shadowDev=dev.flatMap(([locale,...cases])=>cases.flatMap((q,i)=>i%2?[]:[{q,locale,expected:cases[i+1]}]));
+const devNegatives=fine.rows.flatMap(([locale,...phrases],i)=>{
+ const q=phrases[(i*11)%fine.tasks.length],next=phrases[(i*11+1)%fine.tasks.length];
+ const [,prefix,suffix,join]=fine.negativeFrames[i];
+ return [{q:prefix+q+suffix,locale,expected:null},{q:q+' '+fine.localeConstraints[i][2],locale,expected:null},{q:q+join+next,locale,expected:null}];
+});
+const novelNegatives=[
+ ["en","My screen cracked; where can I get it repaired?"],
+ ["zh-Hans","怎么给自行车换刹车片"],
+ ["zh-Hant","電鍋一直跳起來該怎麼辦"],
+ ["ja","自転車のパンクを修理したい"],
+ ["ko","오늘 저녁에 먹을 반찬을 추천해 주세요"],
+ ["fr","Comment changer une roue de voiture crevée ?"],
+ ["de","Wo kann ich meinen defekten Wasserkocher reparieren lassen?"],
+ ["es","¿Cómo limpio una mancha de café de mi camisa?"],
+ ["pt","Como trocar a corrente de uma bicicleta?"],
+ ["it","Come riparare un rubinetto che perde?"],
+ ["nl","Hoe verwijder ik een vlek uit mijn jas?"],
+ ["sv","Hur lagar jag ett trasigt cykeldäck?"],
+ ["no","Hvordan bytter jeg en ødelagt lyspære?"],
+ ["da","Hvordan reparerer jeg en utæt vandhane?"],
+ ["fi","Miten vaihdan polkupyörän renkaan?"],
+ ["pl","Jak naprawić cieknący kran?"],
+ ["cs","Jak opravit prasklou podrážku boty?"],
+ ["sk","Ako vymeniť pokazenú žiarovku?"],
+ ["hu","Hogyan javítsam meg a csöpögő csapot?"],
+ ["ro","Cum repar o ușă care scârțâie?"],
+ ["bg","Как да поправя спукана гума на велосипед?"],
+ ["hr","Kako popraviti slavinu koja curi?"],
+ ["sr","Kako da zamenim pokvarenu sijalicu?"],
+ ["sl","Kako popravim pipo, ki pušča?"],
+ ["el","Πώς να επισκευάσω ένα ποδήλατο με σκασμένο λάστιχο;"],
+ ["ru","Как починить протекающий кран на кухне?"],
+ ["uk","Як відремонтувати зламану блискавку на куртці?"],
+ ["tr","Damlayan musluğu nasıl tamir ederim?"],
+ ["ar","كيف أصلح إطار دراجة مثقوبا؟"],
+ ["he","איך מתקנים ברז מטפטף במטבח?"],
+ ["fa","چگونه شیر آب چکه کننده را تعمیر کنم؟"],
+ ["hi","साइकिल के पंक्चर टायर को कैसे ठीक करूं?"],
+ ["bn","সাইকেলের চাকা ফুটো হলে কীভাবে সারাব?"],
+ ["ur","ٹپکتے ہوئے نل کو کیسے ٹھیک کروں؟"],
+ ["th","ซ่อมก๊อกน้ำที่รั่วอย่างไร"],
+ ["vi","Làm sao sửa vòi nước bị rò rỉ?"],
+ ["id","Bagaimana memperbaiki keran air yang bocor?"],
+ ["ms","Bagaimana membaiki tayar basikal yang pancit?"],
+ ["fil","Paano ayusin ang tumutulong gripo?"],
+ ["af","Hoe herstel ek 'n lekkende kraan?"]
+].map(([locale,q])=>({locale,q,expected:null}));
+assert.equal(novelNegatives.length,40);
+assert.deepEqual(novelNegatives.map(x=>x.locale),fine.locales);
+const shadowTest=challenge.map(([locale,q,expected])=>({locale,q,expected})).concat(novelNegatives);
+const devKeys=new Set(shadowDev.concat(devNegatives).map(x=>fine.normalize(x.q)));
+for(const x of shadowTest)assert.ok(!devKeys.has(fine.normalize(x.q))&&!exact.has(fine.normalize(x.q)),x.q);
+function precompute(cases,localeMode='correct'){
+ return cases.map(x=>{const rank=shadowEngine.rank(x.q,localeMode==='correct'?x.locale:localeMode==='unknown'?null:x.locale==='en'?'ja':'en');
+ const first=rank[0],second=rank[1],global=rank.slice().sort((a,b)=>b.global-a.global||a.id.localeCompare(b.id))[0];
+ return {...x,id:first?.id,score:first?.score||0,margin:(first?.score||0)-(second?.score||0),agreement:first?.id===global?.id};});
+}
+function selective(rows,policy){
+ let positives=0,negatives=0,accepted=0,correct=0,wrongPositive=0,falseAccept=0;const errors=[],byLocale={};
+ for(const r of rows){const b=byLocale[r.locale]??={positives:0,negatives:0,correct:0,falseAccept:0,wrongPositive:0};if(r.expected){positives++;b.positives++;}else{negatives++;b.negatives++;}
+  if(!(r.score>=policy.score&&r.margin>=policy.margin&&(!policy.agreement||r.agreement)))continue;
+  accepted++;if(r.expected&&r.id===r.expected){correct++;b.correct++;}else{if(r.expected){wrongPositive++;b.wrongPositive++;}else{falseAccept++;b.falseAccept++;}errors.push({locale:r.locale,q:r.q,expected:r.expected,predicted:r.id,score:r.score,margin:r.margin});}
+ }
+ return {positives,negatives,accepted,correct,wrongPositive,falseAccept,precision:accepted?correct/accepted:null,positiveCoverage:positives?correct/positives:0,errors,byLocale};
+}
+const devScored=precompute(shadowDev.concat(devNegatives)),policies=[];
+for(const score of [.25,.35,.45,.55,.65,.75])for(const margin of [.04,.08,.12,.16])for(const agreement of [false,true]){
+ const policy={score,margin,agreement},m=selective(devScored,policy);
+ if(m.accepted>=8&&m.falseAccept===0&&m.precision>=.95)policies.push({policy,m});
+}
+policies.sort((a,b)=>b.m.correct-a.m.correct||a.m.wrongPositive-b.m.wrongPositive||b.policy.score-a.policy.score||b.policy.margin-a.policy.margin||Number(b.policy.agreement)-Number(a.policy.agreement));
+const chosen=policies[0]?.policy||{score:Infinity,margin:Infinity,agreement:true};
+const holdout=selective(precompute(shadowTest),chosen),unknown=selective(precompute(shadowTest,'unknown'),chosen),wrong=selective(precompute(shadowTest,'wrong'),chosen);
+const researchGate=!!policies.length&&holdout.accepted>=16&&holdout.falseAccept===0&&holdout.precision>=.95&&holdout.positiveCoverage>=.4&&unknown.falseAccept===0&&wrong.falseAccept===0;
+console.log('SELECTIVE_SHADOW_REPORT',JSON.stringify({policy:policies[0]?.policy||null,dev:policies[0]?.m||null,holdout,unknown,wrong,researchGate,releaseEligible:false,reason:'Author-written tests; not independent production or device validation'}));
