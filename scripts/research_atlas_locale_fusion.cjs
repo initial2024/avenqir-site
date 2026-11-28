@@ -836,3 +836,37 @@ assert.equal(freshCases.filter(x=>x.expected).length,12);
 const freshScored=precompute(freshCases,'unknown','global');
 const freshMetrics=compact(selective(evidenceRows(freshScored,evidenceWinner?.minimum??Infinity,evidenceWinner?.margin??Infinity),evidencePolicy));
 console.log('FRESH_OPERATION_CHALLENGE_REPORT',JSON.stringify({n:freshCases.length,metrics:freshMetrics,releaseEligible:false,oldHoldoutInspected:true}));
+
+
+// QR creation is directional: generic similarity to the object does not
+// establish that the user wants to generate a code. Explicit positive action
+// anchors are intentionally conservative; absence means abstain in this study.
+// This does not replace existing reviewed aliases or affect production search.
+const qrCreationActions=Object.freeze([
+ /\b(?:creat(?:e|ing)|generat(?:e|ing)|mak(?:e|ing))\b/iu,
+ /生成|制作|製作|创建|建立|作成|作る|作り|生成する/u,
+ /생성|만들/u,
+ /\b(?:créer|création|générer|génération|erstellen|erzeugen|generieren|crear|generar|criar|gerar|creare|generare|aanmaken|genereren|maken)\b/iu,
+ /\b(?:skapa|generera|opprette|generere|oprette|generere|luoda|luonti|generoida|utworzyć|wygenerować|tworzyć|vytvořit|vygenerovat|vytvoriť|vygenerovať|létrehoz|generál|crea|genera)\w*/iu,
+ /създа|генерира|izrad|naprav|generira|kreira|ustvar|δημιουργ|созда|сгенер|створи|згенер|oluştur|üret/iu,
+ /إنشاء|توليد|انشاء|יצירת|ליצור|สร้าง|تولید|ایجاد|बनाना|बनाएं|बनाने|जनरेट|তৈরি|বানাতে|بنانا|بنائیں|تیار/u,
+ /tạo|buat|hasilkan|mencipta|gumawa|lumikha|skep|genereer/iu
+]);
+function qrAction(raw){
+ const q=fine.normalize(raw);
+ return qrCreationActions.some(re=>re.test(q));
+}
+assert.ok(qrAction('generate a QR code'));
+assert.ok(qrAction('生成二维码'));
+assert.ok(qrAction('QRコードを作る'));
+assert.equal(qrAction('read an existing QR code'),false);
+assert.equal(qrAction('扫描已有二维码'),false);
+function directionGuard(rows){
+ return rows.map(r=>({...r,blocked:r.blocked||(r.id==='qr-create'&&!qrAction(r.q))}));
+}
+// Freeze the previous calibration result, measure the additional guard's
+// impact without retuning on any evaluation set.
+const directionReports=Object.fromEntries(localeModes.map(mode=>[mode,compact(selective(directionGuard(evidenceRows(precompute(shadowTest,mode,'global'),evidenceWinner?.minimum??Infinity,evidenceWinner?.margin??Infinity)),evidencePolicy))]));
+const directionFresh=compact(selective(directionGuard(evidenceRows(freshScored,evidenceWinner?.minimum??Infinity,evidenceWinner?.margin??Infinity)),evidencePolicy));
+const directionDev=compact(selective(directionGuard(evidenceRows(residualInputs,evidenceWinner?.minimum??Infinity,evidenceWinner?.margin??Infinity)),evidencePolicy));
+console.log('DIRECTIONAL_QR_SHADOW_REPORT',JSON.stringify({calibration:directionDev,previouslyInspected:directionReports,previouslyInspectedFresh:directionFresh,releaseEligible:false}));
