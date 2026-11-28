@@ -51,8 +51,8 @@
     // Do not resurrect a closed session or retain the failed activation's cache.
     if(id!==serial){next?.close();try{await loader.remove();persisted=false;}catch{error='storage';}return;}
     if(state.state==='missing'){phase='idle';persisted=false;save('');return;}
-    session=next;persisted=state.persisted;bytes=spec.bytes;rate=0;phase='ready';save('enabled');resetRank();notify();
-   }catch(e){if(id===serial){phase=e.message==='cancelled'?'cancelled':'error';error=String(e.message||'load');}bytes=0;rate=0;}
+    session=next;persisted=state.persisted;bytes=spec.bytes;rate=0;phase='ready';save(persisted?'enabled':'');resetRank();notify();
+   }catch(e){if(id===serial){phase=e.message==='cancelled'?'cancelled':'error';error=String(e.message||'load');if(restore&&e.message!=='cancelled')save('');}bytes=0;rate=0;}
    finally{busy=false;draw();if(!session)notify();}
   }
   open.addEventListener('click',()=>{panel.hidden?show():panel.hidden=true;});
