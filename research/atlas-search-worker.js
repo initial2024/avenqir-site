@@ -41,6 +41,8 @@ self.onmessage=e=>{
   if(m.type!=='rank'||!state||m.epoch!==epoch||typeof m.query!=='string')throw Error('STALE_OR_NOT_READY');
   const started=performance.now();
   const urls=state.session.rank(m.query);
-  self.postMessage({type:'result',id:m.id,epoch,urls,elapsedMs:performance.now()-started});
+  // No automatic substitution: suggestions are separate data and never URLs.
+  const suggestions=urls.length?[]:state.session.suggest(m.query);
+  self.postMessage({type:'result',id:m.id,epoch,urls,suggestions,elapsedMs:performance.now()-started});
  }catch(e){self.postMessage({type:'error',id:m.id,epoch,code:String(e.message||'WORKER_ERROR').slice(0,80)});}
 };
