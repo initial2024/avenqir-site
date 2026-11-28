@@ -91,6 +91,28 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  w.Worker=NativeWorker;w.Cache.prototype.put=originalPut;
  query('GitHub');
  yes([...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>a.textContent.includes('GitHub')),'ordinary search failed after worker error');
+ // The actual browser can deny persistent writes (quota/private mode).
+ // Verified bytes and a live worker should still work for this page session.
+ w.Cache.prototype.put=async function(key,response){
+  if(String(key)===modelURL())throw new w.DOMException('fixture quota exceeded','QuotaExceededError');
+  return originalPut.call(this,key,response);
+ };
+ $('atlasSemanticDownload').click();
+ await wait(()=>panel().dataset.state==='ready');
+ yes(!await w.caches.has('avenqir-semantic-model-v2-candidate'),'quota failure left partial cache');
+ query('QR 코드 생성');
+ await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent)));
+ yes(w.document.querySelector('#atlasResults .atlas-semantic-match'),'session fallback did not rank');
+ w.Cache.prototype.put=originalPut;
+ // A fresh page must not fetch the optional model just because the previous
+ // session was enabled but could not persist its verified bytes.
+ await fetch('/fixture-block');
+ const sessionDoc=w.document;w.location.reload();
+ await wait(()=>w.document!==sessionDoc&&w.document.getElementById('atlasSemanticPanel')?.dataset.state==='idle');
+ yes(!w.localStorage.getItem('avenqir.semantic.preference.v2'),'missing cache preference not reset');
+ await fetch('/fixture-valid');
+ $('atlasSemanticOpen').click();
+ if(panel().hidden)$('atlasSemanticOpen').click();
  let intermediate=false;
  const obs=new w.MutationObserver(()=>{const v=$('atlasSemanticProgress').value;const txt=$('atlasSemanticDetail').textContent;if(v>0&&v<w.AVENQIR_RESEARCH_MANIFEST.bytes&&txt.includes('/s'))intermediate=true;});
  obs.observe($('atlasSemanticDetail'),{childList:true,subtree:true,characterData:true});
@@ -171,9 +193,9 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
     threading.Thread(target=server.serve_forever,daemon=True).start()
     with tempfile.TemporaryDirectory() as profile:
         subprocess.run(['node',str(ROOT/'tests'/'chrome_real_time.cjs'),CHROME,profile,f'http://127.0.0.1:{server.server_port}/qa.html'],timeout=75,check=True)
-    assert len([x for x in requests if x[0]=='valid'])==2,requests
+    assert len([x for x in requests if x[0]=='valid'])==3,requests
     assert not any(x[0]=='block' or '?' in x[1] for x in requests),requests
     assert sum(x[0]=='html' for x in requests)==1 and sum(x[0]=='unavailable' for x in requests)==1,requests
     assert sum(x[0]=='rate-limit' for x in requests)==1 and sum(x[0]=='truncated' for x in requests)==1,requests
-    print('PACKAGED' if PACKAGED else 'RESEARCH', 'PASS real 390x844 candidate directory, full bundle consent, cancel/retry, integrity, progress, Korean result, locale switch, real HTTP HTML/503/429/truncated-body failure and retry, worker activation/cache race, reload and deletion')
+    print('PACKAGED' if PACKAGED else 'RESEARCH', 'PASS real 390x844 candidate directory, full bundle consent, cancel/retry, integrity, progress, Korean result, locale switch, real HTTP HTML/503/429/truncated-body failure and retry, worker activation/cache race, quota session fallback, reload and deletion')
     server.shutdown()
