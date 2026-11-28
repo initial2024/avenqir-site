@@ -1910,6 +1910,29 @@ for(const [id,phrases] of mixedAliases)for(const phrase of phrases){
  if(old&&old!==id)throw Error('mixed alias collision');
  index.set(k,id);strict.add(k);
 }
+// Authored colloquial whole-query variants for four previously underrepresented
+// actions. Exact routing only: no removal of extra words or user constraints.
+const colloquialTasks=['dns-propagation','meeting-zone','citation','image-background'];
+const colloquialRows=[
+ ['en','see whether my DNS change has reached other countries','find a time that works for people in different time zones','format the sources for my bibliography','make the background of my photo transparent'],
+ ['zh-Hans','看看域名解析在各地有没有生效','找个不同国家的人都方便开会的时间','把论文引用整理成参考文献','把照片背景变成透明的'],
+ ['zh-Hant','看看網域解析在各地是否生效','找一個不同時區的人都方便開會的時間','把論文引用整理成參考文獻','把照片背景變成透明的'],
+ ['ja','DNSの変更が世界各地に反映されたか確認したい','時差のある相手と会議できる時間を探す','論文で引用した資料の一覧を整える','写真の背景を透明にしたい'],
+ ['ko','DNS 변경이 여러 나라에 반영됐는지 확인','시차가 있는 사람들과 회의할 시간을 찾기','논문에 인용한 자료의 목록 정리','사진의 배경을 투명하게 만들기'],
+ ['fr','voir si mon changement DNS est visible dans plusieurs pays','trouver une heure de réunion adaptée à plusieurs fuseaux horaires','mettre en forme les sources de ma bibliographie','rendre transparent le fond de ma photo'],
+ ['de','prüfen ob die DNS Änderung weltweit angekommen ist','einen passenden Besprechungstermin über mehrere Zeitzonen finden','die Quellen für mein Literaturverzeichnis formatieren','den Hintergrund meines Fotos transparent machen'],
+ ['es','ver si el cambio DNS llegó a otros países','encontrar una hora de reunión para distintas zonas horarias','dar formato a las fuentes de mi bibliografía','hacer transparente el fondo de mi foto'],
+ ['pt','ver se a alteração DNS chegou a outros países','encontrar um horário de reunião para diferentes fusos horários','formatar as fontes da minha bibliografia','deixar transparente o fundo da minha foto'],
+ ['ru','проверить дошли ли изменения DNS до других стран','найти удобное время встречи для разных часовых поясов','оформить источники для списка литературы','сделать фон фотографии прозрачным'],
+ ['ar','التحقق من وصول تغيير DNS إلى بلدان مختلفة','إيجاد موعد اجتماع يناسب مناطق زمنية مختلفة','تنسيق المصادر لقائمة المراجع','جعل خلفية صورتي شفافة'],
+ ['id','memeriksa apakah perubahan DNS sudah sampai ke negara lain','mencari waktu rapat yang cocok untuk zona waktu berbeda','menata sumber untuk daftar pustaka saya','membuat latar belakang foto menjadi transparan']
+];
+for(const [locale,...phrases] of colloquialRows)phrases.forEach((phrase,i)=>{
+ const k=normalize(phrase),id=colloquialTasks[i],old=index.get(k);
+ if(old&&old!==id)throw Error('colloquial alias collision');
+ if(old===id)throw Error('duplicate colloquial alias');
+ index.set(k,id);strict.add(k);
+});
 const negativeFrames=[["en","do not recommend ",""," and "],["zh-Hans","不要推荐","","以及"],["zh-Hant","不要推薦","","以及"],["ja",""," は不要です"," と "],["ko",""," 추천하지 마세요"," 그리고 "],["fr","ne recommande pas ",""," et "],["de","nicht empfehlen: ",""," und "],["es","no recomiendes ",""," y "],["pt","não recomende ",""," e "],["it","non consigliare ",""," e "],["nl","raad niet aan: ",""," en "],["sv","rekommendera inte ",""," och "],["no","ikke anbefal ",""," og "],["da","anbefal ikke ",""," og "],["fi","älä suosittele ",""," ja "],["pl","nie polecaj ",""," i "],["cs","nedoporučuj ",""," a "],["sk","neodporúčaj ",""," a "],["hu","ne ajánld: ",""," és "],["ro","nu recomanda ",""," și "],["bg","не препоръчвай ",""," и "],["hr","nemoj preporučiti ",""," i "],["sr","nemoj preporučiti ",""," i "],["sl","ne priporočaj ",""," in "],["el","μην προτείνεις ",""," και "],["ru","не рекомендуй ",""," и "],["uk","не рекомендуй ",""," і "],["tr",""," önerme"," ve "],["ar","لا تقترح ",""," و "],["he","אל תמליץ על ",""," וגם "],["fa",""," پیشنهاد نده"," و "],["hi",""," की सिफारिश मत करें"," और "],["bn",""," সুপারিশ করবেন না"," এবং "],["ur",""," تجویز نہ کریں"," اور "],["th","อย่าแนะนำ",""," และ "],["vi","đừng đề xuất ",""," và "],["id","jangan rekomendasikan ",""," dan "],["ms","jangan cadangkan ",""," dan "],["fil","huwag irekomenda ang ",""," at "],["af","moenie aanbeveel nie: ",""," en "]];
 const constraintIndex=new Set(localeConstraints.flatMap(r=>r.slice(1)).map(normalize));
 const nonWord=ch=>!ch||!/[\p{L}\p{M}\p{N}]/u.test(ch);
@@ -1953,6 +1976,6 @@ function recoverSwap(raw){
  const [phrase,id]=options.entries().next().value;
  return {phrase,id};
 }
-const api=Object.freeze({recoverSwap,mixedAliases:Object.freeze(mixedAliases.map(([id,phrases])=>Object.freeze([id,Object.freeze(phrases)]))),variantTasks:Object.freeze(variantTasks),variantRows:Object.freeze(variantRows.map(Object.freeze)),tasks,locales:Object.freeze(rows.map(x=>x[0])),rows:Object.freeze(rows.map(x=>Object.freeze(x))),resolve,normalize,hasConstraint,negated,negativeFrames:Object.freeze(negativeFrames.map(Object.freeze)),localeConstraints:Object.freeze(localeConstraints.map(r=>Object.freeze(r)))});
+const api=Object.freeze({colloquialTasks:Object.freeze(colloquialTasks),colloquialRows:Object.freeze(colloquialRows.map(Object.freeze)),recoverSwap,mixedAliases:Object.freeze(mixedAliases.map(([id,phrases])=>Object.freeze([id,Object.freeze(phrases)]))),variantTasks:Object.freeze(variantTasks),variantRows:Object.freeze(variantRows.map(Object.freeze)),tasks,locales:Object.freeze(rows.map(x=>x[0])),rows:Object.freeze(rows.map(x=>Object.freeze(x))),resolve,normalize,hasConstraint,negated,negativeFrames:Object.freeze(negativeFrames.map(Object.freeze)),localeConstraints:Object.freeze(localeConstraints.map(r=>Object.freeze(r)))});
 if(typeof module==='object'&&module.exports)module.exports=api;else root.AVENQIR_RESEARCH_MULTILINGUAL=api;
 })(typeof self!=='undefined'?self:globalThis);
