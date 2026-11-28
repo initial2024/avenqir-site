@@ -242,7 +242,15 @@ async function verified(p){
   ['test whether this regex matches a string','regex-test'],
   ['把这份PDF按页分成多个文件','pdf-split'],
   ['把这张照片文件体积压小一些','image-compress'],
-  ['确认我的DNS更新在全球是否生效','dns-propagation']
+  ['确认我的DNS更新在全球是否生效','dns-propagation'],
+  ['pretty print my JSON document with indentation','json-edit'],
+  ['调整这张照片的像素尺寸','image-resize'],
+  ['三つのPDFファイルを一つの文書にまとめたい','pdf-merge'],
+  ['사진의 용량을 줄여서 보내고 싶어요','image-compress'],
+  ['Hacer el fondo de una imagen transparente','image-background'],
+  ['consulter les enregistrements AAAA de mon domaine','dns-lookup'],
+  ['meine JSON-Datei formatieren','json-edit'],
+  ['ลดขนาดไฟล์รูปภาพเพื่อส่งอีเมล','image-compress']
  ];
  const structureTimes=[];
  for(const [q,id] of structuredQueries){
