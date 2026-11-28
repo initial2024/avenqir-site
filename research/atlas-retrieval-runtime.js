@@ -161,7 +161,7 @@ const extraStructuredRules=[
  ['image-background',/^(?:hacer|dejar) (?:el fondo de (?:mi|esta|una) (?:foto|imagen|fotografía)) transparente$/iu],
  ['dns-lookup',/^(?:consultar|buscar|comprobar) los registros (?:mx|txt|aaaa|cname|a) de (?:mi|este|un) dominio$/iu],
  ['json-edit',/^(?:formatear|organizar) (?:mi|este|un) (?:archivo|documento) json$/iu],
- ['pdf-merge',/^(?:assembler|fusionner|combiner) (?:mes|ces|plusieurs) (?:(?:deux|trois|quatre) )?(?:fichiers )?pdfs? en un seul (?:fichier|document|pdf)$/iu],
+ ['pdf-merge',/^(?:assembler|fusionner|combiner) (?:(?:mes|ces|plusieurs) )?(?:(?:deux|trois|quatre) )?(?:fichiers )?pdfs? en un seul (?:fichier|document|pdf)$/iu],
  ['image-compress',/^(?:réduire|diminuer) la taille du fichier de (?:ma|cette|une) (?:photo|image)$/iu],
  ['image-background',/^rendre le fond de (?:ma|cette|une) (?:photo|image) transparent$/iu],
  ['dns-lookup',/^(?:consulter|vérifier) les enregistrements (?:mx|txt|aaaa|cname|a) de (?:mon|ce|un) domaine$/iu],
