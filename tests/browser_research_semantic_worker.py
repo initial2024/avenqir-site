@@ -229,7 +229,7 @@ async function verified(p){
   variedTimes.push(actual.wall);
   const rejected=await rank(q+' without upload',false);rejectTimes.push(rejected.wall);
  }
- const propertyCases=['PDF Passwort wiederherstellen','PDFの電子署名を確認','Chci obnovit zapomenuté heslo souboru PDF','QR 코드 스캔','QR-Code auslesen','อ่านข้อมูลในคิวอาร์โค้ด'];
+ const propertyCases=['PDF Passwort wiederherstellen','PDFの電子署名を確認','Chci obnovit zapomenuté heslo souboru PDF','QR 코드 스캔','QR-Code auslesen','อ่านข้อมูลในคิวอาร์โค้ด','PDF ทำงานอย่างไร','ＰＤＦ ทำงานอย่างไร','PDF ทํางานอย่างไร','Einen beschädigten PDF reparieren','Die Funktionsweise eines QR-Codes erklären','Comprimir un PDF sin enviar datos a nadie'];
  for(const q of propertyCases){const r=await rank(q,false);rejectTimes.push(r.wall);}
  metrics.propertyQueries=propertyCases.length;
  metrics.variedQueries=varied.length;metrics.variedWallP95=quantile(variedTimes.sort((a,b)=>a-b),.95);
