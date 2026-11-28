@@ -745,3 +745,54 @@ for(const [q,id] of structureCases){
  }
 }
 console.log('STRUCTURED_RETRIEVAL_REPORT',JSON.stringify({structureRanked,structureBlocked,scope:'full-query grammar'}));
+
+const multilingualStructure=[
+ ['en','pretty print my JSON document with indentation','json-edit'],
+ ['en','adjust the width and height of this photo','image-resize'],
+ ['zh-Hans','把这个JSON数据整理成缩进格式','json-edit'],
+ ['zh-Hans','调整这张照片的像素尺寸','image-resize'],
+ ['ja','三つのPDFファイルを一つの文書にまとめたい','pdf-merge'],
+ ['ja','PDFをページ単位に分割したい','pdf-split'],
+ ['ja','写真の容量を減らしたい','image-compress'],
+ ['ja','画像の背景を透明にするツールを探す','image-background'],
+ ['ja','自分のドメインのAAAAレコードを確認したい','dns-lookup'],
+ ['ja','JSONデータを整形したい','json-edit'],
+ ['ko','PDF 문서 세 개를 하나로 합치고 싶어요','pdf-merge'],
+ ['ko','사진의 용량을 줄여서 보내고 싶어요','image-compress'],
+ ['ko','이미지의 배경을 투명하게 바꾸고 싶어요','image-background'],
+ ['ko','내 도메인의 TXT 레코드를 조회하고 싶어요','dns-lookup'],
+ ['ko','JSON 데이터를 포맷하고 싶어요','json-edit'],
+ ['es','combinar tres PDFs en un único documento','pdf-merge'],
+ ['es','Reducir el tamaño del archivo de una fotografía','image-compress'],
+ ['es','Hacer el fondo de una imagen transparente','image-background'],
+ ['es','consultar los registros MX de mi dominio','dns-lookup'],
+ ['es','formatear este archivo JSON','json-edit'],
+ ['fr','fusionner trois fichiers PDF en un seul document','pdf-merge'],
+ ['fr','Réduire la taille du fichier de ma photo','image-compress'],
+ ['fr','Rendre le fond de cette image transparent','image-background'],
+ ['fr','consulter les enregistrements AAAA de mon domaine','dns-lookup'],
+ ['fr','indenter ce fichier JSON','json-edit'],
+ ['de','drei PDF-Dateien zu einem Dokument zusammenfügen','pdf-merge'],
+ ['de','die Dateigröße meines Fotos verkleinern','image-compress'],
+ ['de','den Hintergrund meines Fotos transparent machen','image-background'],
+ ['de','die TXT-Einträge meiner Domain prüfen','dns-lookup'],
+ ['de','meine JSON-Datei formatieren','json-edit'],
+ ['th','ลดขนาดไฟล์รูปภาพเพื่อส่งอีเมล','image-compress'],
+ ['th','ทำให้พื้นหลังภาพถ่ายโปร่งใส','image-background'],
+ ['th','ตรวจสอบระเบียน MX ของโดเมนของฉัน','dns-lookup']
+];
+let multilingualStructureHits=0,multilingualStructureBlocks=0;
+for(const [locale,q,id] of multilingualStructure){
+ const i=multilingual.locales.indexOf(locale);
+ assert.ok(i>=0,locale);
+ assert.equal(structuredIntent(q),id,q);
+ const expected=fused.rank(multilingual.rows[0][multilingual.tasks.indexOf(id)+1]);
+ assert.ok(expected.length,q);
+ assert.deepEqual(fused.rank(q),expected,q);multilingualStructureHits++;
+ for(const c of multilingual.localeConstraints[i].slice(1)){
+  const bad=q+' '+c;
+  assert.equal(structuredIntent(bad),null,bad);
+  assert.equal(fused.rank(bad).length,0,bad);multilingualStructureBlocks++;
+ }
+}
+console.log('MULTILINGUAL_STRUCTURE_REPORT',JSON.stringify({locales:8,positive:multilingualStructureHits,nativeConstraints:multilingualStructureBlocks}));
