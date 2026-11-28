@@ -576,7 +576,54 @@ const novelNegatives=[
 ].map(([locale,q])=>({locale,q,expected:null}));
 assert.equal(novelNegatives.length,40);
 assert.deepEqual(novelNegatives.map(x=>x.locale),fine.locales);
-const shadowTest=challenge.map(([locale,q,expected])=>({locale,q,expected})).concat(novelNegatives);
+
+// Hard negatives deliberately share words with supported tool intents but ask
+// for a different operation or an unverified property. They are not training data.
+const nearDomainNegatives=[
+ ["en","Extract the hidden password from an encrypted PDF document"],
+ ["zh-Hans","把照片里的二维码识别出来并读取内容"],
+ ["zh-Hant","找一款完全不需網路且不上傳圖片的去背程式"],
+ ["ja","QRコードの画像を読み取って中のURLを調べたい"],
+ ["ko","암호를 잊어버린 PDF 파일의 잠금을 해제하고 싶어요"],
+ ["fr","Je veux lire le contenu d’un code QR déjà imprimé"],
+ ["de","Wie funktioniert das DNS-Protokoll auf Paketebene?"],
+ ["es","Busco una herramienta para comprimir PDF que nunca suba datos"],
+ ["pt","Quero recuperar a senha esquecida de um documento PDF"],
+ ["it","Leggere un codice QR già stampato su un foglio"],
+ ["nl","Een PDF verkleinen zonder het bestand te uploaden"],
+ ["sv","Jag vill läsa av en befintlig QR-kod med kameran"],
+ ["no","Komprimere PDF uten at filen sendes til en server"],
+ ["da","Hvordan virker DNS-protokollen teknisk?"],
+ ["fi","Haluan lukea jo tulostetun QR-koodin sisällön"],
+ ["pl","Chcę odczytać kod QR z wydrukowanej kartki"],
+ ["cs","Chci obnovit zapomenuté heslo souboru PDF"],
+ ["sk","Ako funguje protokol DNS na úrovni paketov?"],
+ ["hu","Egy már kinyomtatott QR-kód tartalmát szeretném beolvasni"],
+ ["ro","Vreau să recuperez parola uitată a unui PDF"],
+ ["bg","Искам да прочета вече отпечатан QR код"],
+ ["hr","Želim vratiti zaboravljenu lozinku PDF dokumenta"],
+ ["sr","Kako DNS protokol radi na nivou paketa?"],
+ ["sl","Želim prebrati vsebino že natisnjene kode QR"],
+ ["el","Θέλω να διαβάσω έναν ήδη τυπωμένο κωδικό QR"],
+ ["ru","Хочу восстановить забытый пароль от документа PDF"],
+ ["uk","Хочу зчитати вже надрукований QR-код"],
+ ["tr","Şifresini unuttuğum PDF dosyasının parolasını kurtarmak istiyorum"],
+ ["ar","أريد قراءة محتوى رمز QR مطبوع على الورق"],
+ ["he","אני רוצה לשחזר סיסמה שנשכחה לקובץ PDF"],
+ ["fa","می خواهم محتوای یک کد QR چاپ شده را بخوانم"],
+ ["hi","पहले से छपे हुए QR कोड को स्कैन करके पढ़ना है"],
+ ["bn","পিডিএফ ফাইলের ভুলে যাওয়া পাসওয়ার্ড উদ্ধার করতে চাই"],
+ ["ur","پہلے سے چھپے ہوئے QR کوڈ کا مواد پڑھنا ہے"],
+ ["th","อยากกู้รหัสผ่านไฟล์ PDF ที่ลืมไปแล้ว"],
+ ["vi","Tôi muốn đọc nội dung mã QR đã in trên giấy"],
+ ["id","Saya ingin memulihkan kata sandi PDF yang terlupa"],
+ ["ms","Saya mahu membaca kandungan kod QR yang sudah dicetak"],
+ ["fil","Gusto kong basahin ang laman ng QR code na naka-print na"],
+ ["af","Ek wil die vergete wagwoord van 'n PDF herstel"]
+].map(([locale,q])=>({locale,q,expected:null}));
+assert.deepEqual(nearDomainNegatives.map(x=>x.locale),fine.locales);
+
+const shadowTest=challenge.map(([locale,q,expected])=>({locale,q,expected})).concat(novelNegatives,nearDomainNegatives);
 const devKeys=new Set(shadowDev.concat(devNegatives).map(x=>fine.normalize(x.q)));
 for(const x of shadowTest)assert.ok(!devKeys.has(fine.normalize(x.q))&&!exact.has(fine.normalize(x.q)),x.q);
 function precompute(cases,localeMode='correct'){
