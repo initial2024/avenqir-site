@@ -135,6 +135,27 @@ async function verified(p){
  await limited.remove().catch(()=>{});
  yes(!limited.active(),'session fallback removal');
 
+ // Fault-inject stalled storage on real browser cryptography/Response APIs.
+ // No network calls are necessary; these assertions are separate from HTTP fixtures.
+ const hang=()=>new Promise(()=>{});
+ const good=async()=>new Response(bytes,{headers:{'Content-Type':'application/octet-stream'}});
+ const dummy=async()=>({close(){}});
+ const startHang=performance.now();
+ const hungOpen=AVENQIR_RESEARCH_LOADER.create(specs,envFor(good,{open:hang}),80);
+ const openState=await hungOpen.load({consent:true,activate:dummy});
+ yes(openState.state==='ready'&&!openState.persisted&&hungOpen.active(),'hung open must permit session-only use');
+ let discarded=0;
+ const hungPut=AVENQIR_RESEARCH_LOADER.create(specs,envFor(good,{open:async()=>({put:hang}),delete:async()=>{discarded++;return true;}}),80);
+ const putState=await hungPut.load({consent:true,activate:dummy});
+ yes(putState.state==='ready'&&!putState.persisted&&discarded===1,'hung write must discard cache and permit session-only use');
+ const hungMatch=AVENQIR_RESEARCH_LOADER.create(specs,envFor(async()=>{throw Error('restore must never fetch');},{open:async()=>({match:hang}),delete:async()=>true}),80);
+ let restoreError='';try{await hungMatch.load({consent:true,restore:true,activate:dummy});}catch(e){restoreError=e.message;}
+ yes(restoreError==='storage_timeout'&&!hungMatch.active(),'hung restore did not terminate');
+ const oversizedCache=AVENQIR_RESEARCH_LOADER.create(specs,envFor(good,{open:async()=>({match:async()=>new Response(new Uint8Array(bytes.length+1))}),delete:async()=>true}),80);
+ let oversizedError='';try{await oversizedCache.load({consent:true,restore:true,activate:dummy});}catch(e){oversizedError=e.message;}
+ yes(oversizedError==='integrity'&&!oversizedCache.active(),'oversized cached payload accepted');
+ yes(performance.now()-startHang<3000,'storage fault waits exceeded bound');
+ await hungOpen.remove().catch(()=>{});await hungPut.remove();
  // Exercise the full production bundle over real gzip HTTP transfer.
  const fullPath=Object.keys(hashes)[1];
  const fullLoader=AVENQIR_RESEARCH_LOADER.create([{file:fullPath,bytes:sizes[fullPath],sha256:hashes[fullPath]}]);
@@ -192,5 +213,5 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
     assert requests.count(MODEL)==4,requests
     assert requests.count(FULL)==1,requests
     assert '/site/atlas-semantic-model-v1.json' not in requests,requests
-    print('PASS real '+('Firefox' if FIREFOX else 'Chromium')+' packed model digest, worker, stale query rejection, Korean and Arabic retrieval, constraint and ungrounded abstention, corrupt payload rejection, fresh single-model install, real worker activation, cancellation and retry, verified cache restore and deletion, MIME/404/truncated/network rejection, bounded non-stream fallback and session-only storage denial, localized broad topics and polite request constraints, full gzip model transfer and 36 cold/warm worker queries')
+    print('PASS real '+('Firefox' if FIREFOX else 'Chromium')+' packed model digest, worker, stale query rejection, Korean and Arabic retrieval, constraint and ungrounded abstention, corrupt payload rejection, fresh single-model install, real worker activation, cancellation and retry, verified cache restore and deletion, MIME/404/truncated/network rejection, bounded non-stream fallback and session-only storage denial, localized broad topics and polite request constraints, bounded stalled storage and oversized cache rejection, full gzip model transfer and 36 cold/warm worker queries')
     server.shutdown()
