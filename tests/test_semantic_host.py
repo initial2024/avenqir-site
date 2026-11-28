@@ -39,7 +39,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
         if mode=='bad':data=b'X'+RAW[1:]
         if mode=='oversize':data=b'x'*(512*1024+1)
         if mode=='short':data=RAW[:1024]
-        self.send_response(200);self.send_header('Content-Type',mime)
+        self.send_response(206 if mode=='partial-status' else 200);self.send_header('Content-Type',mime)
+        if mode in ('partial-status','partial-header'):self.send_header('Content-Range',f'bytes 0-{len(RAW)-1}/{len(RAW)}')
         if encoding:self.send_header('Content-Encoding',encoding)
         self.send_header('Content-Length',str(len(RAW) if mode=='truncated-wire' else len(data)));self.end_headers()
         try:self.wfile.write(data)
@@ -51,13 +52,13 @@ class SemanticHost(unittest.TestCase):
             thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
             try:
                 origin=f'http://127.0.0.1:{server.server_port}'
-                for mode,expected in [('valid',None),('gzip',None),('broken-gzip','encoding'),('gzip-bomb','integrity'),('truncated-wire','wire_length'),('html','mime'),('bad','integrity'),('short','integrity'),('oversize','wire_limit'),('redirect','redirect'),('rate','rate_limited'),('missing','http')]:
+                for mode,expected in [('valid',None),('gzip',None),('partial-status','http'),('partial-header','partial'),('broken-gzip','encoding'),('gzip-bomb','integrity'),('truncated-wire','wire_length'),('html','mime'),('bad','integrity'),('short','integrity'),('oversize','wire_limit'),('redirect','redirect'),('rate','rate_limited'),('missing','http')]:
                     with self.subTest(mode=mode):
                         server.mode=mode
                         result=probe(origin)
                         self.assertEqual(result['ready'],expected is None,result)
                         self.assertEqual(result.get('error'),expected,result)
-                self.assertEqual(server.requests,[PATH]*12)
+                self.assertEqual(server.requests,[PATH]*14)
             finally:server.shutdown();thread.join()
     def test_staged_host_payload(self):
         self.assertIsNotNone(shutil.which('node'),'Node required for candidate build')
