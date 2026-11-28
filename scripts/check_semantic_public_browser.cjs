@@ -31,7 +31,7 @@ let ws;
   if(cache?.bytes!==92260||cache.sha!=='dc1c46e99d38a4476592b83f16a80f73e2222b1aa1ce0044d97f46118bcaa0b2')throw Error('Browser cache integrity failure');
   await evaluate("document.getElementById('atlasQuery').value='QR 코드 생성';document.getElementById('atlasForm').requestSubmit();true");
   await wait("[...document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent))&&!!document.querySelector('#atlasResults .atlas-semantic-match')",12000);
-  await wait("[...document.scripts].some(s=>s.src.includes('atlas-semantic-directory-adapter.js?v=154-15ca06299ff36d17'))&&document.getElementById('atlasSemanticQueryState')?.dataset.state==='hit'",12000);
+  await wait("[...document.scripts].some(s=>s.src.includes('atlas-semantic-directory-adapter.js?v=154-6c5bde1d762cc189'))&&document.getElementById('atlasSemanticQueryState')?.dataset.state==='hit'",12000);
   await evaluate("document.getElementById('atlasQuery').value='큐알코드 만들기';document.getElementById('atlasForm').requestSubmit();true");
   await wait("document.getElementById('atlasSemanticQueryState')?.dataset.state==='hit'&&[...document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent))",12000);
   await evaluate("document.getElementById('atlasQuery').value='코드 생성';document.getElementById('atlasForm').requestSubmit();true");
@@ -40,7 +40,17 @@ let ws;
   if(JSON.stringify(choices)!==JSON.stringify(['QR 코드 생성','프로그래밍 자료','AI 도구']))throw Error('Public ambiguity choices differ');
   await evaluate("document.getElementById('atlasSemanticDialogClarification').querySelector('button').click();true");
   await wait("document.getElementById('atlasQuery').value==='QR 코드 생성'&&document.getElementById('atlasSemanticQueryState')?.dataset.state==='hit'&&!!document.querySelector('#atlasResults .atlas-semantic-match')",12000);
-  console.log('PUBLIC_V154_BROWSER_PASS',JSON.stringify({consent:true,download:true,cacheBytes:cache.bytes,cacheSHA256:cache.sha,semanticQuery:true,revision:'15ca06299ff36d17',shortKorean:true,ambiguityChoice:true,queryState:true}));
+  const closed="document.getElementById('atlasSemanticPanel').hidden&&getComputedStyle(document.getElementById('atlasSemanticPanel')).display==='none'";
+  if(!await evaluate(closed))throw Error('Panel remained open after semantic search');
+  await evaluate("document.getElementById('atlasSemanticOpen').click();true");
+  if(!await evaluate("!document.getElementById('atlasSemanticPanel').hidden"))throw Error('Manual management entry failed');
+  await evaluate("document.getElementById('atlasQuery').value='GitHub';document.getElementById('atlasForm').requestSubmit();true");
+  await wait(closed,5000);
+  await call('Page.reload');
+  await wait("document.getElementById('atlasSemanticPanel')?.dataset.state==='ready'&&"+closed,30000);
+  await evaluate("document.getElementById('atlasQuery').value='QR 코드 생성';document.getElementById('atlasForm').requestSubmit();true");
+  await wait("document.getElementById('atlasSemanticQueryState')?.dataset.state==='hit'&&"+closed,12000);
+  console.log('PUBLIC_V154_BROWSER_PASS',JSON.stringify({consent:true,download:true,cacheBytes:cache.bytes,cacheSHA256:cache.sha,semanticQuery:true,revision:'6c5bde1d762cc189',shortKorean:true,ambiguityChoice:true,queryState:true,manualPanelOnly:true,cachedReloadClosed:true}));
  }catch(e){console.error('PUBLIC_V154_BROWSER_FAIL',e.message);process.exitCode=1;}
  finally{try{ws?.close()}catch{}child.kill('SIGTERM');}
 })().catch(e=>{console.error(e.message);process.exitCode=1;child.kill('SIGTERM');});
