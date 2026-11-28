@@ -1,11 +1,15 @@
 "use strict";
 // Research directory adapter. This does not replace the production script until release review.
 (function(root){
- const baseURL=new URL('.',document.currentScript.src),PREF='avenqir.semantic.preference.v2';
+ const scriptURL=new URL(document.currentScript.src),baseURL=new URL('.',scriptURL),PREF='avenqir.semantic.preference.v2';
  const spec=root.AVENQIR_RESEARCH_MANIFEST,locales=root.AVENQIR_RESEARCH_SEMANTIC_LOCALE;
  function mount(onChange,t,getItems){
   const $=id=>document.getElementById(id),panel=$('atlasSemanticPanel'),open=$('atlasSemanticOpen');
   if(!panel||!open||!spec||!locales||typeof getItems!=='function')return null;
+  // Only the runtime follows the candidate revision; the immutable model URL does not.
+  const workerURL=new URL('atlas-search-worker.js',baseURL);
+  const revision=scriptURL.searchParams.get('v');
+  if(/^154-[a-f0-9]{16}$/.test(revision||''))workerURL.searchParams.set('v',revision);
   const loader=root.AVENQIR_RESEARCH_LOADER.create([{...spec,file:new URL(spec.file,baseURL).href}]);
   let busy=false,phase='idle',error='',session=null,persisted=false,offered=false,bytes=0,rate=0,lastItems=null,lastQuery='',result=null,serial=0,rankTimer=null;
   const pref=()=>{try{return localStorage.getItem(PREF)||'';}catch{return '';}};
@@ -41,7 +45,7 @@
    try{
     const state=await loader.load({consent:true,restore,onProgress:p=>{if(id===serial){bytes=p.bytes;rate=p.rate;draw();}},activate:async(values,signal)=>{
      const items=getItems();
-     next=await root.AVENQIR_RESEARCH_ACTIVATION.activate({values,items,signal,workerURL:new URL('atlas-search-worker.js',baseURL).href,onResult:(urls,q)=>{
+     next=await root.AVENQIR_RESEARCH_ACTIVATION.activate({values,items,signal,workerURL:workerURL.href,onResult:(urls,q)=>{
       if(id!==serial||!session||q!==lastQuery)return;
       clearTimeout(rankTimer);rankTimer=null;result=new Map(urls.map((url,i)=>[url,1.99-i*.02]));notify();
      },onError:()=>workerFailure(id)});
