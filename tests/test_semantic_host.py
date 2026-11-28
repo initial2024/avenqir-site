@@ -11,11 +11,13 @@ import shutil
 import hashlib
 import re
 import json
+import os
+from unittest import mock
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts'))
 from check_semantic_host import pinned,probe
 from verify_site import validate
-from ftps_deploy import deploy_order
+from ftps_deploy import deploy_order,upload
 from audit_semantic_candidate import audit
 SPEC,PATH=pinned()
 RAW=(ROOT/'research'/SPEC['file']).read_bytes()
@@ -98,6 +100,31 @@ class SemanticHost(unittest.TestCase):
             self.assertEqual(one['modelSHA256'],SPEC['sha256'])
             self.assertEqual(one['files'][-1]['path'],'sw.js')
             print('CANDIDATE_MANIFEST_REPORT',json.dumps({k:v for k,v in one.items() if k!='files'},sort_keys=True))
+            # Real offline CLI must verify the reviewed commit and manifest,
+            # without needing credentials or constructing an FTP client.
+            commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+            args=[sys.executable,str(ROOT/'scripts'/'ftps_deploy.py'),'--semantic-stage',str(target),'--manifest-sha256',one['manifestSHA256'],'--candidate-commit',commit]
+            env=dict(os.environ)
+            for key in ('FTPS_USERNAME','FTPS_PASSWORD','AVENQIR_SEMANTIC_RELEASE_APPROVAL','GITHUB_SHA'):env.pop(key,None)
+            plan=subprocess.run(args+['--plan-only'],env=env,capture_output=True,text=True,check=True)
+            report=json.loads(plan.stdout.split('SEMANTIC_RELEASE_PLAN ',1)[1])
+            self.assertEqual(report['manifestSHA256'],one['manifestSHA256'])
+            self.assertEqual(report['commit'],commit)
+            self.assertFalse(report['uploadAuthorized'])
+            denied=subprocess.run(args,env=env,capture_output=True,text=True)
+            self.assertNotEqual(denied.returncode,0)
+            self.assertIn('Explicit candidate upload approval required',denied.stderr)
+            for flag,bad,reason in [('--manifest-sha256','0'*64,'differs from approved manifest'),('--candidate-commit','0'*40,'Checkout differs')]:
+                invalid=args.copy();invalid[invalid.index(flag)+1]=bad
+                result=subprocess.run(invalid+['--plan-only'],env=env,capture_output=True,text=True)
+                self.assertNotEqual(result.returncode,0)
+                self.assertIn(reason,result.stderr)
+            # A changed audited file must fail before the uploader touches FTP.
+            with mock.patch('ftps_deploy.safe_mkdir') as mkdir:
+                with self.assertRaisesRegex(RuntimeError,'Audited file changed'):
+                    upload(None,target/'directory.html',commit,'/unused',root=target,expected_sha256='0'*64)
+                mkdir.assert_not_called()
+            print('SEMANTIC_PROMOTION_GATE_REPORT',json.dumps({'planOnly':True,'uploadWithoutApprovalRejected':True,'wrongManifestRejected':True,'wrongCommitRejected':True,'fileMutationBeforeFTPRejected':True}))
             # Verify content changes affect manifest, and a corrupted pinned weight fails.
             directory=second/'directory.html'
             directory.write_bytes(directory.read_bytes()+b'\\n')
