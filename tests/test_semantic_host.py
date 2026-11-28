@@ -131,6 +131,53 @@ class SemanticHost(unittest.TestCase):
             self.assertNotEqual(audit(second)['manifestSHA256'],one['manifestSHA256'])
             (second/PATH.lstrip('/')).write_bytes(b'X'+RAW[1:])
             with self.assertRaises((ValueError,AssertionError)):audit(second)
+
+    def test_ftps_publication_safety(self):
+        # In-memory FTPS double: no socket or credential access. The actual
+        # upload() function is exercised, including staging and readback.
+        class MemoryFTP:
+            def __init__(self,files,mode='normal'):
+                self.files=dict(files);self.mode=mode;self.stores=[];self.renames=[];self.deleted=[];self.failed=False
+            def cwd(self,path):pass
+            def nlst(self):return list(self.files)
+            def retrbinary(self,command,callback,blocksize=65536):
+                callback(self.files[command[5:]])
+            def storbinary(self,command,stream,blocksize=65536):
+                name=command[5:];data=stream.read();self.stores.append(name)
+                self.files[name]=data
+                if name.endswith('.tmp') and self.mode=='race':self.files['directory.html']=b'concurrent change'
+                if name.endswith('.tmp') and self.mode=='bad-stage':self.files[name]=b'corrupt temporary'
+                if name=='directory.html' and self.mode=='bad-write' and not self.failed:
+                    self.failed=True;self.files[name]=b'partial';raise OSError('interrupted write')
+            def rename(self,src,dst):self.renames.append((src,dst));self.files[dst]=self.files.pop(src)
+            def delete(self,name):self.deleted.append(name);del self.files[name]
+        with tempfile.TemporaryDirectory() as td:
+            root=pathlib.Path(td)
+            page=root/'directory.html';page.write_bytes(b'new')
+            commit='a'*40
+            for mode,expected in [('normal',b'new'),('race',b'concurrent change'),('bad-stage',b'old'),('bad-write',b'old')]:
+                with self.subTest(mode=mode):
+                    ftp=MemoryFTP({'directory.html':b'old'},mode)
+                    if mode=='normal':upload(ftp,page,commit,'/unused',root=root)
+                    else:
+                        with self.assertRaises(RuntimeError):upload(ftp,page,commit,'/unused',root=root)
+                    self.assertEqual(ftp.files,{'directory.html':expected})
+                    if mode in ('race','bad-stage'):self.assertNotIn('directory.html',ftp.stores)
+            fresh=MemoryFTP({})
+            upload(fresh,page,commit,'/unused',root=root)
+            self.assertEqual(fresh.files,{'directory.html':b'new'})
+            self.assertEqual(len(fresh.renames),1)
+            model=root/PATH.lstrip('/')
+            model.parent.mkdir();model.write_bytes(RAW)
+            conflict=MemoryFTP({model.name:b'wrong model'})
+            with self.assertRaisesRegex(RuntimeError,'Immutable model path'):
+                upload(conflict,model,commit,'/unused',root=root)
+            self.assertEqual(conflict.files,{model.name:b'wrong model'})
+            self.assertEqual(conflict.stores,[])
+            same=MemoryFTP({model.name:RAW})
+            upload(same,model,commit,'/unused',root=root)
+            self.assertEqual(same.stores,[])
+        print('FTPS_PUBLICATION_SAFETY_REPORT',json.dumps({'temporaryIntegrity':True,'concurrentChangeRefused':True,'interruptedOverwriteRestored':True,'newFileReadback':True,'immutableModelConflictRefused':True,'identicalModelUnchanged':True,'networkUsed':False}))
     def test_origin_restrictions(self):
         for origin in ['http://avenqir.bg5.net','https://example.com','https://avenqir.bg5.net/other','https://avenqir.bg5.net?token=x','https://avenqir.bg5.net.evil.example']:
             with self.subTest(origin=origin),self.assertRaises(ValueError):probe(origin)
