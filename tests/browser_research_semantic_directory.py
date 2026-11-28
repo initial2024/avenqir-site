@@ -104,12 +104,12 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  $('atlasSemanticDownload').click();
  await wait(()=>panel().dataset.state==='ready');
  yes(!await w.caches.has('avenqir-semantic-model-v2-candidate'),'quota failure left partial cache');
+ yes(w.localStorage.getItem('avenqir.semantic.preference.v2')!=='enabled','session-only model persisted enabled preference');
  query('QR 코드 생성');
  await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent)));
  yes(w.document.querySelector('#atlasResults .atlas-semantic-match'),'session fallback did not rank');
  w.Cache.prototype.put=originalPut;
- // A fresh page must not fetch the optional model just because the previous
- // session was enabled but could not persist its verified bytes.
+ // A session-only install must never imply persistent enablement or fetch on reload.
  await fetch('/fixture-block');
  const sessionDoc=w.document;w.location.reload();
  await wait(()=>w.document!==sessionDoc&&w.document.getElementById('atlasSemanticPanel')?.dataset.state==='idle');
@@ -144,8 +144,21 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  const prior=w.document;w.location.reload();
  await wait(()=>w.document!==prior&&w.document.getElementById('atlasSemanticPanel')?.dataset.state==='ready');
  await wait(()=>w.document.querySelector('#atlasResults .atlas-semantic-match'));
+ // Damage the persisted model while offline, then verify fail-closed restore.
+ const damaged=await w.caches.open('avenqir-semantic-model-v2-candidate');
+ await damaged.put(modelURL(),new w.Response('corrupted cache',{headers:{'Content-Type':'application/json'}}));
+ const damagedDoc=w.document;w.location.reload();
+ await wait(()=>w.document!==damagedDoc&&w.document.getElementById('atlasSemanticPanel')?.dataset.state==='error');
+ yes($('atlasSemanticStatus').textContent.includes('[integrity]'),'corrupt cache not diagnosed');
+ yes(w.localStorage.getItem('avenqir.semantic.preference.v2')!=='enabled','failed restore left enabled preference');
+ query('GitHub');yes([...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>a.textContent.includes('GitHub')),'ordinary search failed after cache corruption');
+ // Manually re-enable after explicit consent, then exercise existing removal path.
+ await fetch('/fixture-valid');
+ if(panel().hidden)$('atlasSemanticOpen').click();
+ $('atlasSemanticDownload').click();await wait(()=>panel().dataset.state==='ready');
+ await fetch('/fixture-block');
  w.confirm=()=>true;
- $('atlasSemanticOpen').click();$('atlasSemanticRemove').click();
+ if(panel().hidden)$('atlasSemanticOpen').click();$('atlasSemanticRemove').click();
  await wait(()=>panel().dataset.state==='idle'&&!$('atlasSemanticDownload').hidden);
  yes(w.localStorage.getItem('avenqir.semantic.preference.v2')==='declined','disable preference not saved');
  yes(!await w.caches.has('avenqir-semantic-model-v2-candidate'),'model not deleted');
@@ -201,9 +214,9 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler) as server:
     else:
         with tempfile.TemporaryDirectory() as profile:
             subprocess.run(['node',str(ROOT/'tests'/'chrome_real_time.cjs'),CHROME,profile,url],timeout=75,check=True)
-    assert len([x for x in requests if x[0]=='valid'])==3,requests
+    assert len([x for x in requests if x[0]=='valid'])==4,requests
     assert not any(x[0]=='block' or '?' in x[1] for x in requests),requests
     assert sum(x[0]=='html' for x in requests)==1 and sum(x[0]=='unavailable' for x in requests)==1,requests
     assert sum(x[0]=='rate-limit' for x in requests)==1 and sum(x[0]=='truncated' for x in requests)==1,requests
-    print('PACKAGED' if PACKAGED else 'RESEARCH', 'FIREFOX' if FIREFOX else 'CHROMIUM', 'PASS real 390x844 candidate directory, full bundle consent, cancel/retry, integrity, progress, Korean result, locale switch, real HTTP HTML/503/429/truncated-body failure and retry, worker activation/cache race, quota session fallback, reload and deletion')
+    print('PACKAGED' if PACKAGED else 'RESEARCH', 'FIREFOX' if FIREFOX else 'CHROMIUM', 'PASS real 390x844 candidate directory, full bundle consent, cancel/retry, integrity, progress, Korean result, locale switch, real HTTP HTML/503/429/truncated-body failure and retry, worker activation/cache race, quota session fallback, corrupted cache restore, reload and deletion')
     server.shutdown()
