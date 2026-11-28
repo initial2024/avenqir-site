@@ -72,23 +72,29 @@ def upload(ftp, file, commit, target_root, root=SITE, listing_cache=None, expect
     if old is not None and sha(old)==sha(new):
         print('UNCHANGED',rel)
         return
+    if old is not None and rel.startswith('semantic-v2/atlas-semantic-bundle-v2-') and rel.endswith('.json'):
+        raise RuntimeError('Immutable model path already contains different bytes: '+rel)
     if old is not None and file.suffix.lower() in PRESERVE_EXISTING_MEDIA:
         # The server copy wins for binaries unless an owner-approved asset
         # replacement procedure is used separately from routine code deploys.
         print('PRESERVED_REMOTE_MEDIA',rel,'remote_bytes='+str(len(old)))
         return
-    if listing_cache is not None:
-        # Fresh listing before any mutation; abort if presence changed during this pass.
-        listing_cache.pop(parent,None)
-        current=remote_names(ftp)
-        if (name in current)!=(old is not None):
-            raise RuntimeError('Remote file presence changed during deployment: '+rel)
+    # Recheck even without a listing cache; never use a stale listing to own a scratch file.
+    if listing_cache is not None:listing_cache.pop(parent,None)
+    current=remote_names(ftp)
+    if (name in current)!=(old is not None):
+        raise RuntimeError('Remote file presence changed during deployment: '+rel)
     temp=name+'.avenqir-upload-'+commit[:12]+'.tmp'
     if temp in current: raise RuntimeError('Unexpected pre-existing temporary file: '+rel)
     try:
         ftp.storbinary('STOR '+temp,io.BytesIO(new),blocksize=65536)
         if sha(retrieve(ftp,temp))!=sha(new):
             raise RuntimeError('Temp integrity check failed: '+rel)
+        # Recheck remote content immediately before final publication. This
+        # narrows but cannot eliminate races with a separate FTPS writer.
+        latest=remote_names(ftp)
+        if (name in latest)!=(old is not None) or (old is not None and sha(retrieve(ftp,name))!=sha(old)):
+            raise RuntimeError('Remote file changed before publication: '+rel)
         if old is None:
             ftp.rename(temp,name)
         else:
@@ -164,6 +170,12 @@ def main():
     files=validate(root)
     if candidate is not None and {p.relative_to(root).as_posix() for p in files}!=set(expected):
         raise RuntimeError('Candidate file set changed after audit')
+    # Verify the entire staged tree again before connecting. The per-file
+    # digest guard also protects against changes later in the transfer.
+    if candidate is not None:
+        for file in files:
+            if file.is_symlink() or sha(file.read_bytes())!=expected[file.relative_to(root).as_posix()]:
+                raise RuntimeError('Candidate changed before connection: '+file.relative_to(root).as_posix())
     username=credential('FTPS_USERNAME')
     passwd=credential('FTPS_PASSWORD')
     if (root/'deploy-state.json').exists():
