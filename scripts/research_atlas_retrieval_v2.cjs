@@ -796,3 +796,23 @@ for(const [locale,q,id] of multilingualStructure){
  }
 }
 console.log('MULTILINGUAL_STRUCTURE_REPORT',JSON.stringify({locales:8,positive:multilingualStructureHits,nativeConstraints:multilingualStructureBlocks}));
+
+
+// A reviewed full grammar may contain the same-intent alias, but the
+// alias resolver must still refuse extra unreviewed terms by default.
+const thaiComposite='ลดขนาดไฟล์รูปภาพเพื่อส่งอีเมล';
+assert.equal(multilingual.resolve(thaiComposite).blocked,true);
+assert.equal(multilingual.structuredCompatible(thaiComposite,'image-compress'),true);
+assert.equal(multilingual.structuredCompatible(thaiComposite,'image-resize'),false);
+assert.equal(structuredIntent(thaiComposite),'image-compress');
+for(const q of [thaiComposite+' zq-unverified-extra',thaiComposite+' ฟรี','อย่าแนะนำ'+thaiComposite,thaiComposite+' และ ปรับขนาดรูปภาพ']){
+ assert.equal(structuredIntent(q),null,q);
+ assert.equal(fused.rank(q).length,0,q);
+}
+for(const q of ['ลดขนาดไฟล์รูปภาพเพื่อแชร์','ลดขนาดไฟล์ภาพถ่ายเพื่อส่งอีเมล']){
+ assert.equal(structuredIntent(q),'image-compress',q);
+ assert.deepEqual(fused.rank(q),fused.rank('compress an image'),q);
+}
+assert.equal(structuredIntent('please join my four PDFs into one document'),null);
+assert.deepEqual(fused.rank('please join my four PDFs into one document'),fused.rank('merge PDF files'));
+console.log('STRUCTURED_ALIAS_COMPATIBILITY_REPORT',JSON.stringify({sameIntent:true,conflictRejected:true,additionalRefusals:4,alternatePhrases:2,reviewedWrapper:true}));
