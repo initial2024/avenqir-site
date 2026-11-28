@@ -123,8 +123,8 @@ function technicalAbstention(raw){
 const structuredPatterns=normalizedPatterns([
  /^(?:i (?:want|need) to )?(?:combine|merge|join) (?:my |these |the )?(?:(?:two|three|four|five|several|[2-9]) )?pdfs?(?: files| documents)? into (?:one|a single) (?:pdf|file|document)$/iu,
  /^(?:i (?:want|need) to )?(?:split|divide|separate) (?:my |this |the )?pdf(?: file| document| report)? into (?:separate|individual) (?:pages|files)$/iu,
- /^(?:i (?:want|need) to )?(?:reduce|shrink|compress) (?:the )?(?:file size of )?(?:my |this |the )?(?:jpeg|png|photo|image|picture)(?: file)?(?: for (?:email|sharing))?$/iu,
- /^(?:i (?:want|need) to )?(?:make|set) (?:the )?(?:background of )?(?:my |this |the )?(?:photo|image|picture)(?: background)? transparent$/iu,
+ /^(?:i (?:want|need) to )?(?:(?:reduce|shrink) (?:the )?file size of |compress )(?:my |this |the )?(?:jpeg|png|photo|image|picture)(?: file)?(?: for (?:email|sharing))?$/iu,
+ /^(?:i (?:want|need) to )?(?:make|set) (?:(?:the )?background of (?:my |this |the )?(?:photo|image|picture)|(?:my |this |the )?(?:photo|image|picture) background) transparent$/iu,
  /^(?:i (?:want|need) to )?(?:check|see|find out) whether (?:my |the )?dns (?:change|update) (?:has|have) (?:spread|propagated) (?:worldwide|globally|to other countries)$/iu,
  /^(?:i (?:want|need) to )?(?:look up|check|find) (?:the )?(?:mx|txt|aaaa|cname|a) records? (?:of|for) (?:my |a |this |the )?domain$/iu,
  /^(?:i (?:want|need) to )?(?:test|check|validate) (?:whether|if) (?:my|this|the) (?:regex|regular expression) (?:matches|can match) (?:a string|text|sample text)$/iu,
