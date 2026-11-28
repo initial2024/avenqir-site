@@ -204,9 +204,9 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  const verifiedText=await (await cache.match(modelURL())).text();
  const workerScript=[...w.document.scripts].find(s=>s.src.includes('/atlas-search-worker.js')).src;
  const realWorker=w.Worker;
- for(const failure of ['constructor','startup']){
+ for(const failure of ['constructor','startup','timeout']){
   const hits=[],errors=[],ctrl=new w.AbortController();
-  w.Worker=failure==='constructor'?class{constructor(){throw new w.DOMException('fixture','SecurityError');}}:class{postMessage(){w.setTimeout(()=>this.onerror?.(new w.Event('error')),0);}terminate(){this.closed=true;}};
+  w.Worker=failure==='constructor'?class{constructor(){throw new w.DOMException('fixture','SecurityError');}}:class{postMessage(){if(failure==='startup')w.setTimeout(()=>this.onerror?.(new w.Event('error')),0);}terminate(){this.closed=true;}};
   const local=await w.AVENQIR_RESEARCH_ACTIVATION.activate({values:[verifiedText],items:w.AVENQIR_ATLAS_CATALOG.catalog(),signal:ctrl.signal,workerURL:workerScript,onResult:(urls,q,ms,suggestions)=>hits.push({urls,q,suggestions}),onError:e=>errors.push(e)});
   yes(local.mode==='local','local engine not activated '+failure);
   local.query('generate a qr code');local.query('QR 코드 생성');
@@ -216,7 +216,7 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
   await new Promise(r=>setTimeout(r,30));yes(hits.length===1,'closed local engine returned a result');
  }
  w.Worker=realWorker;
- document.documentElement.dataset.metrics=JSON.stringify({...JSON.parse(document.documentElement.dataset.metrics),workerConstructorFallback:true,workerStartupFallback:true,localLatestWins:true,localClose:true});
+ document.documentElement.dataset.metrics=JSON.stringify({...JSON.parse(document.documentElement.dataset.metrics),workerConstructorFallback:true,workerStartupFallback:true,workerTimeoutFallback:true,localLatestWins:true,localClose:true});
  for(const key of await w.caches.keys())if(key!=='avenqir-semantic-model-v2-candidate'){
   yes(!await (await w.caches.open(key)).match(modelURL()),'weight duplicated in shell cache');
  }
@@ -233,10 +233,20 @@ const yes=(v,m)=>{if(!v)throw Error(m)};
  yes($('atlasSemanticStatus').textContent.includes('[integrity]'),'corrupt cache not diagnosed');
  yes(w.localStorage.getItem('avenqir.semantic.preference.v2')!=='enabled','failed restore left enabled preference');
  query('GitHub');yes([...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>a.textContent.includes('GitHub')),'ordinary search failed after cache corruption');
- // Manually re-enable after explicit consent, then exercise existing removal path.
+ // Manually re-enable with the real directory UI and a denied Worker.
+ // The same verified model must activate in local compatibility mode and
+ // save only after successful initialization, then removal still works.
  await fetch('/fixture-valid');
+ const beforeCompat=w.Worker;
+ w.Worker=class{constructor(){throw new w.DOMException('fixture','SecurityError');}};
  if(panel().hidden)$('atlasSemanticOpen').click();
  $('atlasSemanticDownload').click();await wait(()=>panel().dataset.state==='ready');
+ yes(panel().dataset.execution==='local'&&$('atlasSemanticStatus').textContent.includes('[compat]'),'directory compatibility state missing');
+ yes(w.localStorage.getItem('avenqir.semantic.preference.v2')==='enabled','compatible activation not persisted');
+ query('QR 코드 생성');
+ await wait(()=>[...w.document.querySelectorAll('#atlasResults .atlas-result-title')].some(a=>/QRCode Monkey/i.test(a.textContent))&&w.document.querySelector('#atlasResults .atlas-semantic-match'));
+ w.Worker=beforeCompat;
+ document.documentElement.dataset.metrics=JSON.stringify({...JSON.parse(document.documentElement.dataset.metrics),compatibleDirectoryActivation:true});
  await fetch('/fixture-block');
  w.confirm=()=>true;
  if(panel().hidden)$('atlasSemanticOpen').click();$('atlasSemanticRemove').click();
