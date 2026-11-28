@@ -559,3 +559,19 @@ for(let i=0;i<topics.requestFrames.length;i++){
 }
 assert.equal(requestMatches,2680);assert.equal(requestRefusals,13400);
 console.log('REQUEST_FRAME_REPORT',JSON.stringify({requestMatches,requestRefusals}));
+
+let mixedHits=0,mixedRefused=0,mixedWrapped=0;
+for(const [id,phrases] of multilingual.mixedAliases){
+ const canonical=multilingual.rows[0][multilingual.tasks.indexOf(id)+1],expected=fused.rank(canonical);
+ assert.ok(expected.length,id);
+ for(const q of phrases){
+  assert.equal(multilingual.resolve(q).id,id,q);
+  assert.deepEqual(fused.rank(q),expected,q);mixedHits++;
+  assert.deepEqual(fused.rank('please '+q),expected,q);mixedWrapped++;
+  for(const bad of [q+' without upload',q+' 不上传',q+' 무료', 'do not recommend '+q,q+' and '+multilingual.rows[0][multilingual.tasks.indexOf(id==='timer'?'qr-create':'timer')+1],q+' zq-unverified-extra']){
+   assert.equal(fused.rank(bad).length,0,bad);mixedRefused++;
+  }
+ }
+}
+assert.equal(mixedHits,48);assert.equal(mixedWrapped,48);assert.equal(mixedRefused,288);
+console.log('REVIEWED_MIXED_ALIAS_REPORT',JSON.stringify({mixedHits,mixedWrapped,mixedRefused,releaseScope:'exact reviewed expressions only'}));
