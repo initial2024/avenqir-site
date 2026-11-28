@@ -45,6 +45,7 @@ def probe(origin,timeout=20):
         with opener.open(req,timeout=timeout) as response:
             result.update(status=response.status,mime=response.headers.get_content_type(),encoding=response.headers.get('Content-Encoding','identity'),cacheControl=response.headers.get('Cache-Control',''))
             if response.status!=200:raise ValueError('http')
+            if response.headers.get('Content-Range') is not None:raise ValueError('partial')
             if result['mime'] not in MIME:raise ValueError('mime')
             data=response.read(MAX_WIRE+1)
             if len(data)>MAX_WIRE:raise ValueError('wire_limit')
@@ -58,7 +59,8 @@ def probe(origin,timeout=20):
             result['decodedBytes']=len(data)
             result['sha256']=hashlib.sha256(data).hexdigest()
             if len(data)!=spec['bytes'] or result['sha256']!=spec['sha256']:raise ValueError('integrity')
-            if json.loads(data).get('schema')!='aq-semantic-bundle-2':raise ValueError('schema')
+            parsed=json.loads(data)
+            if not isinstance(parsed,dict) or parsed.get('schema')!='aq-semantic-bundle-2':raise ValueError('schema')
             result['ready']=True
     except urllib.error.HTTPError as e:
         try:result.update(status=e.code,error='redirect' if 300<=e.code<400 else 'rate_limited' if e.code==429 else 'http')
