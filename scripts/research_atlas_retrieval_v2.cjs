@@ -641,3 +641,35 @@ for(const [locale,...phrases] of multilingual.colloquialRows){
 }
 assert.equal(colloquialHits,48);assert.equal(colloquialWrapped,48);assert.equal(colloquialBlocked,384);
 console.log('COLLOQUIAL_ACTION_REPORT',JSON.stringify({locales:multilingual.colloquialRows.length,colloquialHits,colloquialWrapped,colloquialBlocked,scope:'exact authored variants, not blind generalization'}));
+
+const {unsupportedProperties}=require('../research/atlas-retrieval-runtime.js');
+const propertyContrast=[
+ ['en','merge PDF files','merge PDF files and recover the password','generate a qr code','generate a QR code reader'],
+ ['zh-Hans','合并PDF文件','合并加密PDF文件并恢复密码','生成二维码','生成二维码并扫描已有二维码'],
+ ['zh-Hant','合併PDF檔案','合併PDF檔案並驗證數位簽章','產生二維碼','產生二維碼並解碼'],
+ ['ja','PDFファイルを結合','PDFの電子署名を確認','QRコードを作成','QRコードを読み取る'],
+ ['ko','PDF 파일 병합','PDF 파일의 암호 복구','QR 코드 생성','QR 코드 스캔'],
+ ['fr','fusionner des PDF','fusionner des PDF protégés par mot de passe','générer un code QR','lire un code QR'],
+ ['de','PDF-Dateien zusammenführen','PDF Passwort wiederherstellen','QR-Code erstellen','QR-Code auslesen'],
+ ['es','unir archivos PDF','unir PDF sin subir archivos','generar un código QR','leer un código QR'],
+ ['ru',null,'Восстановить пароль PDF',null,'Сканировать QR код'],
+ ['ar',null,'دمج PDF دون رفع الملفات',null,'قراءة رمز QR'],
+ ['cs',null,'Chci obnovit zapomenuté heslo souboru PDF',null,null],
+ ['no',null,'Komprimere PDF uten at filen sendes til en server',null,null],
+ ['th',null,'PDF รหัสผ่าน',null,'อ่านข้อมูลในคิวอาร์โค้ด']
+];
+let propertyRejected=0,propertyControl=0;
+for(const [locale,pdf,negativePdf,qr,negativeQr] of propertyContrast){
+ for(const q of [negativePdf,negativeQr].filter(Boolean)){
+  assert.ok(unsupportedProperties(q),locale+' guard '+q);
+  assert.equal(fused.rank(q).length,0,locale+' ranking '+q);
+  propertyRejected++;
+ }
+ for(const q of [pdf,qr].filter(Boolean)){
+  assert.ok(!unsupportedProperties(q),locale+' control '+q);
+  propertyControl++;
+ }
+}
+// Verify the full reviewed corpus is unaffected by this new property guard.
+for(const row of multilingual.rows)for(const q of row.slice(1))assert.ok(!unsupportedProperties(q),'canonical property collision '+q);
+console.log('RUNTIME_PROPERTY_GUARD_REPORT',JSON.stringify({propertyRejected,propertyControl,canonicalUnchanged:1440}));
