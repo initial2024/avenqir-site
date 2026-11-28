@@ -1266,3 +1266,34 @@ console.log('SUGGESTION_V2_ABSTENTION_REPORT',JSON.stringify({
  extended:suggestionOnlyV2(extendedChallenge),
  userSelectionRequired:true,automaticPromotion:false,releaseEligible:false
 }));
+
+
+// Evaluate suggestions against the actual candidate Worker-equivalent session.
+// Unlike V2, "resolved" here means that the real ranking returned catalog URLs.
+const liveSite= require('node:path').resolve(__dirname,'../site');
+for(const name of ['atlas-paths','atlas-expansion','atlas-specialist','atlas-depth-a','atlas-depth-b','atlas-depth-c','atlas-depth-d','atlas-ai','atlas-regional','atlas-everyday','atlas-regional-ext','atlas-everyday-ext','atlas-popular-links'])require(require('node:path').join(liveSite,name+'.js'));
+const liveCatalog=require('../site/atlas-catalog-core.js').catalog(),liveEmbed=require('../site/atlas-domain-embedding.js');
+const liveSession=candidateRuntime.createSession(liveCatalog,domain,liveEmbed.features,liveEmbed.create({schema:'aq-domain-embedding-1',bins:domain.bins,classes:domain.classes.slice(0,28)}),u);
+const liveURLs=new Set(liveCatalog.map(x=>x.url));
+function liveSuggestionAudit(cases){
+ let positives=0,negatives=0,rankedPositives=0,rankedNegatives=0,blocked=0,eligiblePositives=0,eligibleNegatives=0,correct=0,wrong=0,falseSuggestions=0;
+ const errors=[];
+ for(const c of cases){
+  if(c.expected)positives++;else negatives++;
+  const ranked=liveSession.rank(c.q);
+  assert.ok(ranked.every(url=>liveURLs.has(url)),c.q);
+  if(ranked.length){if(c.expected)rankedPositives++;else{rankedNegatives++;errors.push({kind:'existing-negative-result',locale:c.locale,q:c.q,urls:ranked.slice(0,3)});}continue;}
+  if(shadowBlock(c.q)||technicalAbstention(c.q)){blocked++;continue;}
+  if(c.expected)eligiblePositives++;else eligibleNegatives++;
+  const proof=new Set([composedClass(c.q),extendedClass(c.q)].filter(Boolean));
+  if(proof.size!==1)continue;
+  const id=[...proof][0],i=fine.tasks.indexOf(id);
+  if(i<0)continue;
+  const selected=fine.rows[0][i+1],urls=liveSession.rank(selected);
+  if(!urls.length||!urls.every(url=>liveURLs.has(url)))continue;
+  if(id===c.expected)correct++;
+  else {if(c.expected)wrong++;else falseSuggestions++;errors.push({kind:'suggestion',locale:c.locale,q:c.q,expected:c.expected,suggested:id});}
+ }
+ return {positives,negatives,rankedPositives,rankedNegatives,blocked,eligiblePositives,eligibleNegatives,correct,wrong,falseSuggestions,errors};
+}
+console.log('LIVE_CATALOG_SUGGESTION_AUDIT',JSON.stringify({catalog:liveCatalog.length,prior:liveSuggestionAudit(shadowTest),properties:liveSuggestionAudit(propertyPairs),composition:liveSuggestionAudit(compositionNext),extended:liveSuggestionAudit(extendedChallenge),releaseEligible:false}));
