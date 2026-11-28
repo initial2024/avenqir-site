@@ -588,3 +588,35 @@ for(const [q,id] of swapCases){
 }
 for(const q of ['generate a rq code','genrate a qr code','generate a qr code','scan a QR code','generate a qr code without upload','genertae a qr code zq-unverified-extra'])assert.equal(multilingual.recoverSwap(q),null,q);
 console.log('BOUNDED_ACTION_SWAP_REPORT',JSON.stringify({positive:swapCases.length,negative:swapCases.length*5,excluded:6,scope:'adjacent letters in allowlisted action; exact full-query remainder'}));
+
+const swapActionSet=new Set(['generate','compress','validate','measure','translate','inspect','practice','convert','preview','remove','resize']);
+const swapAudit=new Map();
+const sourcePairs=multilingual.rows.flatMap(row=>row.slice(1).map((q,i)=>[multilingual.tasks[i],q])).concat(multilingual.variantRows.flatMap(row=>row.slice(1).map((q,i)=>[multilingual.variantTasks[i],q])),multilingual.mixedAliases.flatMap(([id,qs])=>qs.map(q=>[id,q])));
+for(const [id,raw] of sourcePairs){
+ const phrase=multilingual.normalize(raw),words=phrase.split(' ');
+ if(words.length<2||words.length>8)continue;
+ for(let i=0;i<words.length;i++){
+  const w=words[i];if(!swapActionSet.has(w))continue;
+  for(let j=0;j<w.length-1;j++){
+   if(w[j]===w[j+1])continue;
+   const q=words.map((x,k)=>k===i?w.slice(0,j)+w[j+1]+w[j]+w.slice(j+2):x).join(' ');
+   if(!swapAudit.has(q))swapAudit.set(q,new Set());
+   swapAudit.get(q).add(id);
+  }
+ }
+}
+let autoRecovered=0,autoAbstained=0,autoConflicts=0,autoRejectedExtra=0;
+for(const [q,ids] of swapAudit){
+ const r=multilingual.recoverSwap(q);
+ if(!r){autoAbstained++;continue;}
+ assert.equal(ids.size,1,q);
+ assert.ok(ids.has(r.id),q);
+ const actual=fused.rank(q),expected=fused.rank(r.phrase);
+ if(!actual.length){autoConflicts++;continue;}
+ assert.deepEqual(actual,expected,q);autoRecovered++;
+ for(const extra of [' without upload',' 免费',' zq-unverified-extra']){
+  assert.equal(fused.rank(q+extra).length,0,q+extra);autoRejectedExtra++;
+ }
+}
+assert.ok(autoRecovered>=30,'insufficient scoped correction coverage');
+console.log('ACTION_SWAP_EXHAUSTIVE_REPORT',JSON.stringify({generated:swapAudit.size,autoRecovered,autoAbstained,autoConflicts,autoRejectedExtra}));
