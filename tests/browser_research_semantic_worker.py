@@ -170,10 +170,10 @@ async function verified(p){
  const entry=performance.getEntriesByName(new URL(fullPath,location.href).href).at(-1);
  yes(entry&&entry.encodedBodySize>0&&entry.encodedBodySize<entry.decodedBodySize&&entry.decodedBodySize===sizes[fullPath],'real gzip transfer not observed');
  const queries=AVENQIR_RESEARCH_MULTILINGUAL.rows[0].slice(1);
- async function rank(q){
+ async function rank(q,expectHits=true){
   const started=performance.now();
   const r=await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('benchmark rank timeout')),4000);resolveRank=x=>{clearTimeout(timer);resolveRank=null;resolve(x);};workerSession.query(q);});
-  yes(r&&r.q===q&&r.urls.length>0,'benchmark missing '+q);
+  yes(r&&r.q===q&&(expectHits?r.urls.length>0:r.urls.length===0),'benchmark result mismatch '+q);
   return {urls:r.urls,worker:r.ms,wall:performance.now()-started};
  }
  const cold=[],warm=[];
@@ -183,6 +183,28 @@ async function verified(p){
  const quantile=(arr,p)=>arr[Math.ceil(arr.length*p)-1];
  const metrics={catalog:items.length,queries:queries.length,initMs,encodedBytes:entry.encodedBodySize,decodedBytes:entry.decodedBodySize,coldWorkerP95:quantile(sorted(cold,'worker'),.95),warmWorkerP95:quantile(sorted(warm,'worker'),.95),coldWallP95:quantile(sorted(cold,'wall'),.95),warmWallP95:quantile(sorted(warm,'wall'),.95)};
  yes(metrics.queries===36&&metrics.coldWallP95<2000&&metrics.warmWallP95<2000,'query latency budget exceeded');
+ // Real Worker checks cover the new runtime path, not merely canonical aliases.
+ const varied=[
+  ['genertae a qr code','generate a qr code'],
+  ['please genertae a qr code','generate a qr code'],
+  ['comprses a PDF','compress a PDF'],
+  ['valdiate HTML','validate HTML'],
+  ['生成 QR code','generate a qr code'],
+  ['看看域名解析在各地有没有生效','check DNS propagation'],
+  ['時差のある相手と会議できる時間を探す','plan a meeting across time zones'],
+  ['사진의 배경을 투명하게 만들기','remove image background'],
+  ['تنسيق المصادر لقائمة المراجع','generate a bibliography']
+ ];
+ const variedTimes=[],rejectTimes=[];
+ for(const [q,canonical] of varied){
+  const actual=await rank(q),expected=await rank(canonical);
+  yes(JSON.stringify(actual.urls)===JSON.stringify(expected.urls),'varied parity '+q);
+  variedTimes.push(actual.wall);
+  const rejected=await rank(q+' without upload',false);rejectTimes.push(rejected.wall);
+ }
+ metrics.variedQueries=varied.length;metrics.variedWallP95=quantile(variedTimes.sort((a,b)=>a-b),.95);
+ metrics.rejectedQueries=rejectTimes.length;metrics.rejectedWallP95=quantile(rejectTimes.sort((a,b)=>a-b),.95);
+ yes(metrics.variedWallP95<1000&&metrics.rejectedWallP95<1000,'varied query latency budget exceeded');
  await fullLoader.remove();
  yes(!await caches.has(AVENQIR_RESEARCH_LOADER.CACHE),'full model cache retained');
  document.documentElement.dataset.metrics=JSON.stringify(metrics);
