@@ -3,6 +3,8 @@
 import argparse
 import gzip
 import hashlib
+import http.client
+import zlib
 import io
 import json
 import re
@@ -59,8 +61,13 @@ def probe(origin,timeout=20):
             if json.loads(data).get('schema')!='aq-semantic-bundle-2':raise ValueError('schema')
             result['ready']=True
     except urllib.error.HTTPError as e:
-        result.update(status=e.code,error='redirect' if 300<=e.code<400 else 'rate_limited' if e.code==429 else 'http')
-    except (ValueError,OSError,EOFError) as e:
+        try:result.update(status=e.code,error='redirect' if 300<=e.code<400 else 'rate_limited' if e.code==429 else 'http')
+        finally:e.close()
+    except http.client.IncompleteRead:
+        result['error']='wire_length'
+    except (gzip.BadGzipFile,zlib.error,EOFError):
+        result['error']='encoding'
+    except (ValueError,OSError) as e:
         result['error']=str(e) if isinstance(e,ValueError) else type(e).__name__
     return result
 
