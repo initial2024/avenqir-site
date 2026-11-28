@@ -1918,6 +1918,8 @@ function negated(raw){const n=normalize(raw);return negativeFrames.some(([,prefi
 function resolve(q){const n=normalize(q);if(n.length>512||hasConstraint(n)||negated(n))return {id:null,blocked:true};const id=index.get(n);if(id)return {id,blocked:false};if(n.length>512)return {id:null,blocked:true};
  // Added conditions or additional requests are not supported by exact aliases.
  for(const phrase of strict)if(n.includes(phrase))return {id:null,blocked:true};
+ // A corrupted reviewed phrase plus extra requirements must not fall back to a broad rule.
+ if(!swapIndex.has(n))for(const phrase of swapIndex.keys())if(n.includes(phrase))return {id:null,blocked:true};
  return {id:null,blocked:false};
 }
 
