@@ -81,7 +81,11 @@ function intent(q,model){
  if(body.length<3&&!alias.id&&!topics.resolve(body))return null;
  const broad=!alias.id&&topics.resolve(body);
  if(broad){const row=model.classes.find(x=>x[0]===broad);return row&&evidence[broad]?{id:broad,guard:evidence[broad],weights:row[1],broad:true}:null;}
- const matches=alias.id?rules.filter(([id])=>id===alias.id):rules.filter(([,p])=>p.test(q));
+ const swap=alias.id?null:multilingual.recoverSwap(body);
+ const rawMatches=alias.id?[]:rules.filter(([,p])=>p.test(q));
+ // A typo correction cannot override a conflicting recognized operation.
+ if(swap&&rawMatches.some(([id])=>id!==swap.id))return null;
+ const matches=alias.id||swap?rules.filter(([id])=>id===(alias.id||swap.id)):rawMatches;
  if(matches.length>1)return null;
  if(!matches.length)return {fallback:true};
  const [id,,guard]=matches[0];
