@@ -999,3 +999,78 @@ for(const q of typoNegatives)if(recoverTypo(q))negativeTypo++;
 const typoNovel=[...shadowTest,...freshCases,...propertyPairs].filter(x=>!x.expected);
 const typoNovelFalse=typoNovel.filter(x=>recoverTypo(x.q)).map(x=>({q:x.q,locale:x.locale}));
 console.log('SINGLE_TOKEN_TYPO_SHADOW_REPORT',JSON.stringify({referenceCount:typoRows.length,signatureCount:typoIndex.size,generated:typoProbes.length,recovered,wrongTypo,negativeProbes:typoNegatives.length,negativeTypo,novelNegatives:typoNovel.length,novelFalse:typoNovelFalse,releaseEligible:false}));
+
+
+// Compositional experiment: a technical object and an unambiguous operation
+// must be evidenced separately. Model ranking is a corroboration channel, not
+// permission to ignore an unsupported property or multiple requested actions.
+const runtimePropertyGuard=require('../research/atlas-retrieval-runtime.js').unsupportedProperties;
+const operationLexicon=[
+ ['pdf-merge',/\b(?:merge|combine|join|unite|assemble|fusionner|assembler|zusammenfügen|vereinen|unir|juntar|combinar)\b|合并|合併|拼成|合成|結合|ひとつに|一つに|병합|하나로|합치|объедин|соедин|دمج|जोड़|मिलाना|รวมไฟล์/iu],
+ ['pdf-compress',/\b(?:compress|shrink|reduce|réduire|compresser|verkleinern|komprimieren|reducir|comprimir|reduzir)\b|压缩|壓縮|体积压小|體積縮小|减小|減小|圧縮|軽く|容量を減|압축|크기를 줄|용량을 줄|сжать|уменьш|تقليل|ضغط|आकार कम|छोटा|ลดขนาด/iu],
+ ['pdf-split',/\b(?:split|divide|separate|extract|diviser|séparer|teilen|aufteilen|dividir|separar)\b|拆分|拆成|分割|分成|分離|分け|분할|나누|раздел|извлеч|تقسيم|فصل|अलग|विभाज|แยกไฟล์/iu],
+ ['qr-create',/\b(?:generate|create|make|générer|créer|erstellen|erzeugen|generar|crear|gerar|criar)\b|生成|產生|制作|製作|创建|作成|作る|作り|생성|만들|созда|сгенер|إنشاء|توليد|बनाना|बनाएं|बनाने|สร้าง/iu]
+];
+const explanatory=/\b(?:why|what is|how does|explain|definition|theory|source code|tutorial|documentation|compare|comparison)\b|为什么|為什麼|是什么|是什麼|原理|教程|比较|比較|仕組み|とは何|なぜ|원리|비교|pourquoi|expliquer|vergleich|warum|por qué|explicar|почему|принцип|كيف يعمل|لماذا|क्या है|क्यों|ทำงานอย่างไร/iu;
+function composedClass(raw){
+ const q=fine.normalize(raw);
+ if(shadowBlock(q)||runtimePropertyGuard(q)||explanatory.test(q))return null;
+ const pdf=/\bpdfs?\b|पीडीएफ|পিডিএফ/iu.test(q),qr=/\bqr(?:[\s-]*code)?\b|二维码|二維碼|qrコード|คิวอาร์โค้ด|क्यूआर कोड/iu.test(q);
+ if(pdf===qr)return null;
+ const matches=operationLexicon.filter(([id,re])=>(pdf?id.startsWith('pdf-'):id==='qr-create')&&re.test(q));
+ if(matches.length!==1)return null;
+ // A different technical object is a conflict, not a removable stop word.
+ const objects=anchorInfo(q).groups;
+ if(objects.length>1)return null;
+ const id=matches[0][0];
+ const rank=shadowEngine.rank(q,null).map(x=>({...x,score:.9*x.global+.1*x.prototype})).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id));
+ const residual=residualRank(q).rank;
+ if(!rank.slice(0,3).some(x=>x.id===id)&&!residual.slice(0,3).some(x=>x.id===id&&x.score>=.15))return null;
+ return id;
+}
+const compositionChallenge=[
+ ['en','Join my scanned PDFs into one file','pdf-merge','Explain how PDF compression works'],
+ ['en','Separate the pages of this PDF into individual files','pdf-split','Split a PDF and restore its password'],
+ ['zh-Hans','把这些PDF拼成一个文件发给同学','pdf-merge','解释PDF压缩的原理'],
+ ['zh-Hans','把PDF里的页面拆成单独的文档','pdf-split','把PDF压缩并验证数字签名'],
+ ['zh-Hant','把幾份PDF合成一份文件','pdf-merge','把PDF合併但不上傳'],
+ ['zh-Hant','將這份PDF分割成不同文件','pdf-split','比較不同PDF壓縮技術'],
+ ['ja','PDFをひとつにまとめるツール','pdf-merge','PDF圧縮の仕組みを知りたい'],
+ ['ja','PDFをページごとに分けたい','pdf-split','PDFの電子署名を検証したい'],
+ ['ko','PDF 여러 개를 하나로 만들고 싶어요','pdf-merge','PDF 압축 원리 설명'],
+ ['ko','PDF를 페이지별로 나누고 싶어요','pdf-split','QR 코드 스캔 도구'],
+ ['fr','Assembler mes factures en un PDF','pdf-merge','Expliquer la compression PDF'],
+ ['fr','Séparer les pages de ce PDF','pdf-split','Fusionner des PDF sans envoi'],
+ ['de','Mehrere Rechnungen als PDF zusammenfügen','pdf-merge','Warum kann man PDF komprimieren'],
+ ['de','Ein PDF in einzelne Seiten aufteilen','pdf-split','PDF mit Passwort komprimieren'],
+ ['es','Combinar mis apuntes en un PDF','pdf-merge','Explicar la compresión PDF'],
+ ['es','Separar las páginas de mi PDF','pdf-split','Crear un QR y leer un QR impreso'],
+ ['pt','Combinar os relatórios num PDF','pdf-merge','Explicar como comprimir PDF'],
+ ['pt','Dividir meu PDF em páginas individuais','pdf-split','Comprimir PDF sem enviar arquivos'],
+ ['ru','Соединить мои счета в один PDF','pdf-merge','Принцип сжатия PDF'],
+ ['ru','Разделить документ PDF на страницы','pdf-split','Восстановить пароль PDF'],
+ ['ar','دمج فواتيري في ملف PDF واحد','pdf-merge','كيف يعمل ضغط PDF'],
+ ['ar','تقسيم مستند PDF إلى صفحات منفصلة','pdf-split','ضغط PDF دون رفع الملفات'],
+ ['hi','कई बिल एक PDF में जोड़ना है','pdf-merge','PDF संपीड़न क्यों होता है'],
+ ['hi','PDF के पन्ने अलग करना है','pdf-split','PDF का पासवर्ड हटाना है'],
+ ['th','รวมไฟล์ PDF ใบเสร็จให้เป็นไฟล์เดียว','pdf-merge','PDF ทำงานอย่างไร'],
+ ['th','แยกไฟล์ PDF เป็นหน้าๆ','pdf-split','อ่านข้อมูลในคิวอาร์โค้ด']
+].flatMap(([locale,q,expected,bad])=>[{locale,q,expected},{locale,q:bad,expected:null}]);
+// These authored examples are disjoint from the known model reference and
+// previously evaluated cases. They are not independent human traffic.
+const compositionKnown=new Set([...priorKeys,...propertyPairs.map(x=>fine.normalize(x.q)),...fine.colloquialRows.flatMap(r=>r.slice(1)).map(fine.normalize),...fine.mixedAliases.flatMap(r=>r[1]).map(fine.normalize)]);
+for(const c of compositionChallenge)assert.ok(!compositionKnown.has(fine.normalize(c.q)),c.q);
+function compositionStudy(cases){
+ const baseline=propertyGuard(evidenceRows(precompute(cases,'unknown','global'),evidenceWinner?.minimum??Infinity,evidenceWinner?.margin??Infinity));
+ const original=selective(baseline,evidencePolicy);
+ const combined=baseline.map(r=>{
+  // Do not override an existing accepted result: this channel may only recover
+  // abstentions. Original hard guards remain authoritative.
+  if(!r.blocked&&r.score>=evidencePolicy.score&&r.margin>=evidencePolicy.margin&&(!evidencePolicy.agreement||r.agreement))return r;
+  const id=composedClass(r.q);
+  if(!id||shadowBlock(r.q)||runtimePropertyGuard(r.q))return r;
+  return {...r,id,blocked:false,score:1,margin:1,agreement:true};
+ });
+ return {original:compact(original),combined:compact(selective(combined,evidencePolicy))};
+}
+console.log('COMPOSITIONAL_SHADOW_REPORT',JSON.stringify({scope:'PDF operations and QR creation, authored research only',previouslyInspected:compositionStudy(shadowTest),freshAuthored:compositionStudy(compositionChallenge),releaseEligible:false}));
