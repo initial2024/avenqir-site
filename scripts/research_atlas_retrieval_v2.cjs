@@ -816,3 +816,18 @@ for(const q of ['ลดขนาดไฟล์รูปภาพเพื่อ
 assert.equal(structuredIntent('please join my four PDFs into one document'),null);
 assert.deepEqual(fused.rank('please join my four PDFs into one document'),fused.rank('merge PDF files'));
 console.log('STRUCTURED_ALIAS_COMPATIBILITY_REPORT',JSON.stringify({sameIntent:true,conflictRejected:true,additionalRefusals:4,alternatePhrases:2,reviewedWrapper:true}));
+
+let structuredTop1=0,structuredTop5=0,structuredGrounded=0;
+const structuredPerClass={};
+for(const [q,id] of [...structureCases,...multilingualStructure.map(([,q,id])=>[q,id])]){
+ const index=multilingual.tasks.indexOf(id),pattern=expected[index],urls=fused.rank(q);
+ assert.ok(pattern&&urls.length,q);
+ assert.equal(new Set(urls).size,urls.length,q+' duplicated URL');
+ assert.ok(urls.every(u=>byURL.has(u)),q+' ungrounded URL');
+ const names=urls.map(u=>byURL.get(u)),one=pattern.test(names[0]||''),five=names.slice(0,5).some(n=>pattern.test(n));
+ assert.ok(five,q+' expected catalog service missing: '+names.slice(0,5).join(', '));
+ structuredGrounded++;structuredTop1+=Number(one);structuredTop5+=Number(five);
+ const stats=structuredPerClass[id]??={queries:0,top1:0,top5:0};
+ stats.queries++;stats.top1+=Number(one);stats.top5+=Number(five);
+}
+console.log('STRUCTURED_CATALOG_RELEVANCE_REPORT',JSON.stringify({grounded:structuredGrounded,top1:structuredTop1,top5:structuredTop5,perClass:structuredPerClass}));
