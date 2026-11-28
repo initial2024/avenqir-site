@@ -575,3 +575,16 @@ for(const [id,phrases] of multilingual.mixedAliases){
 }
 assert.equal(mixedHits,48);assert.equal(mixedWrapped,48);assert.equal(mixedRefused,288);
 console.log('REVIEWED_MIXED_ALIAS_REPORT',JSON.stringify({mixedHits,mixedWrapped,mixedRefused,releaseScope:'exact reviewed expressions only'}));
+
+const swapCases=[['genertae a qr code','qr-create'],['comprses a PDF','pdf-compress'],['valdiate HTML','html-validate'],['meausre page loading performance','web-performance'],['trasnlate a paragraph','text-translate']];
+for(const [q,id] of swapCases){
+ const r=multilingual.recoverSwap(q);assert.equal(r?.id,id,q);
+ assert.deepEqual(fused.rank(q),fused.rank(r.phrase),q);
+ assert.ok(fused.rank(q).length,q);
+ for(const bad of [q+' without upload',q+' 不上传','do not recommend '+q,q+' and start a countdown timer',q+' zq-unverified-extra']){
+  assert.equal(multilingual.recoverSwap(bad),null,bad);
+  assert.equal(fused.rank(bad).length,0,bad);
+ }
+}
+for(const q of ['generate a rq code','genrate a qr code','generate a qr code','scan a QR code','generate a qr code without upload','genertae a qr code zq-unverified-extra'])assert.equal(multilingual.recoverSwap(q),null,q);
+console.log('BOUNDED_ACTION_SWAP_REPORT',JSON.stringify({positive:swapCases.length,negative:swapCases.length*5,excluded:6,scope:'adjacent letters in allowlisted action; exact full-query remainder'}));
